@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Deco Art — Aprende</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Jost:wght@200;300;400;500&amp;family=Pinyon+Script&amp;display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; background: #ffffff; }
+    body { margin: 0; -webkit-font-smoothing: antialiased; }
+    .lda-nav-links a { opacity: .4; transition: opacity 0.3s; }
+    .lda-nav-links a:hover, .lda-nav-links a.on { opacity: 1; }
+    .lda-badge { display: inline-flex; align-items: center; line-height: 1; transform: translateY(2px); font-family: 'Jost', sans-serif; font-size: 8.8px; letter-spacing: .1em; text-transform: uppercase; padding: .3rem .6rem; border-radius: 0; background: #0cc0df; color: #fff; font-weight: 500; }
+    .lda-nav-cta { display: inline-flex; align-items: center; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; background: #0cc0df; color: #fff; text-decoration: none; font-weight: 400; padding: .9rem 1.8rem; border: 1px solid #0cc0df; border-radius: 0; transition: background .3s, border-color .3s; }
+    .lda-nav-cta:hover { background: #0aa2bd; border-color: #0aa2bd; }
+    .lda-img-ph { background-image: repeating-linear-gradient(45deg, #e3f7fa, #e3f7fa 10px, #d5f0f5 10px, #d5f0f5 20px); }
+    .lda-taller-card:hover, .lda-curso-card:hover { transform: translateY(-4px); }
+    @media(max-width: 900px) {
+      nav div[style*="padding: 2rem 60px"] { padding: 1.5rem 2rem !important; flex-wrap: wrap; gap: 1rem; }
+      .lda-nav-links { display: none !important; }
+      section[style*="padding: 6rem 60px 3.5rem"] h1 { font-size: 44px !important; }
+      section[style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; gap: 2.5rem !important; }
+      section[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr 1fr !important; padding-left: 2rem !important; padding-right: 2rem !important; }
+      section h2[style*="font-size: 70px"] { font-size: 40px !important; }
+    }
+    @media(max-width: 600px) {
+      section[style*="grid-template-columns: repeat(3, 1fr)"] { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#faf8f4"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="58" font-family="Georgia, serif" font-size="30" text-anchor="middle" fill="#0cc0df">LD</text></svg></template>
+<div style="font-family: 'Jost', sans-serif; color: #1c1a17; background: #ffffff; overflow-x: hidden;" data-screen-label="Aprende">
+
+  <nav style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000;">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 95px; padding: 0 60px; background-color: #ffffff; box-sizing: border-box;">
+      <div style="display: flex; align-items: center; gap: .6rem;">
+        <a href="index.html" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 400; color: #1c1a17; text-decoration: none; letter-spacing: .02em;">Life Deco Art</a>
+        <span class="lda-badge">Aprende</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 2.5rem;">
+        <ul class="lda-nav-links" style="display: flex; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0;">
+          <li><a href="sobre-mi.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Sobre Mí</a></li>
+          <li><a href="tienda.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Tienda</a></li>
+          <li><a href="#" class="on" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Aprende</a></li>
+        </ul>
+        <a href="contacto.html" class="lda-nav-cta">Contacto</a>
+      </div>
+    </div>
+  </nav>
+
+  <section style="text-align: center; padding: 6rem 60px 3.5rem;">
+    <span style="display: block; font-size: 10.4px; letter-spacing: .35em; text-transform: uppercase; color: #0cc0df; opacity: .85; margin-bottom: 1.6rem;">La Escuela</span>
+    <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.12; color: #1c1a17; max-width: 900px; margin: 0 auto 1.8rem">Aprende a tu propio ritmo</h1>
+    <p style="font-weight: 300; font-size: 16px; line-height: 1.7; color: #8b795e; max-width: 560px; margin: 0 auto;">Cursos, talleres y recursos gratuitos — todo en un solo lugar para que crees sin presión.</p>
+  </section>
+
+  <nav style="position: sticky; top: 82px; z-index: 50; background: #ffffff;">
+    <div style="max-width: 700px; margin: 0 auto; display: flex; justify-content: center; gap: 2.5rem; height: 56px; align-items: center;">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.label }}</button>
+      </sc-for>
+    </div>
+  </nav>
+
+  <section style="max-width: 1100px; margin: 0 auto; padding: 3.5rem 60px 2rem;">
+
+    <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div class="lda-curso-card" style="display: flex; flex-direction: column; transition: transform .4s ease;">
+          <div class="lda-img-ph" style="aspect-ratio: 4/3; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 10.4px; color: #6bb3c0;">foto del curso</span>
+          </div>
+          <span style="font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #0cc0df; margin-bottom: .4rem">Principiante · Online</span>
+          <h3 style="font-weight: 500; font-size: 15px; margin: 0 0 .5rem">Lettering para NO creativos</h3>
+          <p style="font-weight: 300; font-size: 15px; color: #8b795e; line-height: 1.6; flex: 1; margin: 0 0 .8rem">Aprende lettering desde cero aunque nunca hayas dibujado. Técnica real, práctica constante y resultados visibles desde el primer módulo — sin necesitar talento previo.</p>
+          <div style="display: flex; gap: .4rem; margin-bottom: 1rem; flex-wrap: wrap;">
+            <span style="font-size: 9.6px; letter-spacing: .08em; text-transform: uppercase; color: #0cc0df; border: 1px solid #0cc0df; padding: .25rem .6rem; border-radius: 2rem;">Lettering</span>
+            <span style="font-size: 9.6px; letter-spacing: .08em; text-transform: uppercase; color: #0cc0df; border: 1px solid #0cc0df; padding: .25rem .6rem; border-radius: 2rem;">Desde cero</span>
+            <span style="font-size: 9.6px; letter-spacing: .08em; text-transform: uppercase; color: #0cc0df; border: 1px solid #0cc0df; padding: .25rem .6rem; border-radius: 2rem;">Online</span>
+          </div>
+          <span style="display: block; text-align: center; background: #0cc0df; color: #fff; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; padding: .9rem 1.8rem; border-radius: 0">Quiero aprender</span>
+        </div>
+
+        <div class="lda-curso-card" style="display: flex; flex-direction: column; transition: transform .4s ease; opacity: .7;">
+          <div class="lda-img-ph" style="aspect-ratio: 4/3; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; opacity: .5;">
+            <span style="font-size: 11px; color: #6bb3c0">próximo curso</span>
+          </div>
+          <span style="font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #8b795e; margin-bottom: .4rem">Próximamente</span>
+          <h3 style="font-weight: 500; font-size: 15px; margin: 0 0 .5rem; color: #8b795e">Nuevo curso en desarrollo</h3>
+          <p style="font-weight: 300; font-size: 15px; color: #8b795e; line-height: 1.6; flex: 1; margin: 0 0 .8rem">Algo especial está en camino. Únete a la comunidad para ser la primera en enterarte y acceder al precio de lanzamiento antes que nadie.</p>
+          <span style="display: block; text-align: center; border: 1px solid #8b795e; color: #8b795e; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; padding: .9rem 1.8rem; border-radius: 0">Avisarme cuando abra</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isTalleres }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        <div class="lda-taller-card" style="transition: transform .4s ease; padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0;">
+          <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 300; color: #d5f0f5; display: block; margin-bottom: 1rem;">01</span>
+          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 20.8px; margin: 0 0 .8rem;">Experiencias creativas</h3>
+          <p style="font-weight: 300; font-size: 15px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem">Sesiones abiertas donde practicamos, nos inspiramos y salimos con algo hecho con nuestras manos. Perfectas si quieres probar el lettering por primera vez en un ambiente cálido y sin presión.</p>
+          <span style="font-size: 15px; color: #0cc0df; text-decoration: none">Consultar fechas →</span>
+        </div><div class="lda-taller-card" style="transition: transform .4s ease; padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0;">
+          <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 300; color: #d5f0f5; display: block; margin-bottom: 1rem;">02</span>
+          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 20.8px; margin: 0 0 .8rem;">Talleres privados</h3>
+          <p style="font-weight: 300; font-size: 15px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem">Una sesión diseñada a tu medida — para ti sola, con amigas o como actividad de equipo. Dime tu idea y lo armamos juntas desde cero.</p>
+          <span style="font-size: 12px; color: #0cc0df; text-decoration: none;">Consultar →</span>
+        </div>
+        
+        <div class="lda-taller-card" style="transition: transform .4s ease; padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0;">
+          <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; font-weight: 300; color: #d5f0f5; display: block; margin-bottom: 1rem;">03</span>
+          <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 20.8px; margin: 0 0 .8rem;">Talleres corporativos</h3>
+          <p style="font-weight: 300; font-size: 15px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem">Actividades creativas para equipos de trabajo, eventos de empresa o team building. El lettering como experiencia de conexión — una forma diferente de crear juntos.</p>
+          <span style="font-size: 12px; color: #0cc0df; text-decoration: none;">Cotizar →</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isGratis }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;">
+        <div style="padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0; text-align: center;">
+          <h3 style="font-weight: 500; font-size: 15.2px; margin: 0 0 .6rem;">Guía de trazos básicos</h3>
+          <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem;">Alfabeto completo con instrucciones de dirección del trazo. Imprimible en A4.</p>
+          <span style="font-size: 12px; color: #0cc0df;">Obtener gratis →</span>
+        </div>
+        <div style="padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0; text-align: center;">
+          <h3 style="font-weight: 500; font-size: 15.2px; margin: 0 0 .6rem;">Plantilla de composición</h3>
+          <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem;">Cuadrícula de práctica para aprender a distribuir textos con equilibrio visual.</p>
+          <span style="font-size: 12px; color: #0cc0df;">Obtener gratis →</span>
+        </div>
+        <div style="padding: 2rem; border: 1px solid rgba(139,121,94,.15); border-radius: 0; text-align: center;">
+          <h3 style="font-weight: 500; font-size: 15.2px; margin: 0 0 .6rem;">Guía de materiales</h3>
+          <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1.2rem;">Qué marcadores, papeles y herramientas usar cuando empiezas. Sin gastar de más.</p>
+          <span style="font-size: 12px; color: #0cc0df;">Obtener gratis →</span>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Técnica</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">Cómo sostener el marcador: el error que comete el 90% de los principiantes</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">Un pequeño ajuste en la posición de tu mano puede cambiarlo todo.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Materiales</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">Mis herramientas favoritas: guía honesta para quien empieza</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">Sin marcas de lujo ni listas interminables — lo que yo misma uso.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Ideas creativas</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">5 superficies que no sabías que podías lettering</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">El papel es solo el comienzo — cinco superficies sorprendentes.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Proceso real</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">Así se ve mi proceso creativo de principio a fin</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">Desde la idea en una servilleta hasta la pieza terminada.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Organización</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">Cómo practicar lettering 15 minutos al día sin agobiarte</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">La constancia no es disciplina de acero, es estructura inteligente.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+        <div style="background: #faf8f4; border: 1px solid rgba(139,121,94,.1); overflow: hidden;">
+          <div style="aspect-ratio: 16/9; background: #e3f7fa; display: flex; align-items: center; justify-content: center;"><span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 32px; opacity: .2;">✏</span></div>
+          <div style="padding: 1.5rem;">
+            <span style="font-size: 8.8px; letter-spacing: .16em; text-transform: uppercase; color: #0cc0df; margin-bottom: .6rem; display: block;">Recomendados</span>
+            <h3 style="font-weight: 400; font-size: 15.2px; color: #1c1a17; line-height: 1.4; margin: 0 0 .8rem;">Recursos, tiendas y cuentas de lettering que sigo y recomiendo</h3>
+            <p style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; margin: 0 0 1rem;">Una selección honesta de lo que me ha servido a mí.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(139,121,94,.1); padding-top: .8rem;">
+              <span style="font-size: 9.6px; letter-spacing: .08em; color: #8b795e; opacity: .5;">Próximamente</span>
+              <span style="font-size: 9.6px; letter-spacing: .1em; text-transform: uppercase; color: #0cc0df;">Leer →</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+        <div>
+          <p style="font-weight: 300; font-size: 15.2px; line-height: 1.7; color: #8b795e; margin: 0 0 1.5rem;">Un espacio íntimo donde comparto lo que no publico en redes — tips creativos, ideas para practicar, procesos reales y acceso anticipado a todo lo que viene.</p>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: .8rem; margin: 0; padding: 0;">
+            <li style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; top: .55em; width: 5px; height: 5px; background: #0cc0df; border-radius: 50%;"></span>Tips creativos para mejorar tu lettering cada semana</li>
+            <li style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; top: .55em; width: 5px; height: 5px; background: #0cc0df; border-radius: 50%;"></span>Ideas prácticas para mantener la constancia sin presión</li>
+            <li style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; top: .55em; width: 5px; height: 5px; background: #0cc0df; border-radius: 50%;"></span>Invitaciones especiales a talleres y preventa de cursos</li>
+            <li style="font-weight: 300; font-size: 13.6px; color: #8b795e; line-height: 1.6; padding-left: 1.2rem; position: relative;"><span style="position: absolute; left: 0; top: .55em; width: 5px; height: 5px; background: #0cc0df; border-radius: 50%;"></span>Contenido exclusivo que no existe en ningún otro lado</li>
+          </ul>
+          <p style="font-size: 12.5px; color: #8b795e; opacity: .7; margin-top: 1.5rem;">Sin spam. Sin algoritmos. Solo lo bueno, cuando hay algo bueno que contar.</p>
+        </div>
+        <div style="border: 1px solid rgba(12,192,223,.2); background: #f5f0e6; padding: 2rem; display: flex; flex-direction: column; gap: .8rem;">
+          <span style="font-size: 9.9px; letter-spacing: .3em; text-transform: uppercase; color: #0cc0df; margin-bottom: .4rem;">Suscríbete gratis</span>
+          <div style="display: flex; flex-direction: column; gap: .4rem;">
+            <label style="font-size: 9.6px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e;">Tu nombre</label>
+            <input type="text" placeholder="¿Cómo te llamas?" style="background: #ffffff; border: 1px solid rgba(12,192,223,.2); color: #1c1a17; padding: .75rem 1rem; font-family: 'Jost', sans-serif; font-size: 14.1px; outline: none; box-sizing: border-box;">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: .4rem;">
+            <label style="font-size: 9.6px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e;">Tu email</label>
+            <input type="email" placeholder="tu@email.com" style="background: #ffffff; border: 1px solid rgba(12,192,223,.2); color: #1c1a17; padding: .75rem 1rem; font-family: 'Jost', sans-serif; font-size: 14.1px; outline: none; box-sizing: border-box;">
+          </div>
+          <button style="width: 100%; margin-top: .5rem; background: #0cc0df; color: #fff; font-family: 'Jost', sans-serif; font-size: 10.9px; letter-spacing: .12em; text-transform: uppercase; padding: .9rem; border: none; cursor: pointer;">Quiero recibir el newsletter</button>
+          <p style="font-size: 11.5px; color: #8b795e; opacity: .6; margin-top: .3rem;">Puedes darte de baja cuando quieras.</p>
+        </div>
+      </div>
+    </sc-if>
+
+  </section>
+
+  <section style="max-width: 780px; margin: 3rem auto 0; padding: 5rem 60px; border-top: 1px solid rgba(139,121,94,0.15);">
+    <span style="display: block; text-align: center; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #0cc0df; opacity: .85; margin-bottom: 1.2rem">Preguntas Frecuentes</span>
+    <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.2; text-align: center; color: #1c1a17; margin: 0 0 3rem">Antes de empezar</h2>
+    <div>
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
+        <div style="border-bottom: 1px solid rgba(139,121,94,0.2);">
+          <button onClick="{{ f.onClick }}" style="width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 1rem; background: none; border: none; cursor: pointer; text-align: left; padding: 1.3rem 0; font-family: 'Cormorant Garamond', Georgia, serif; font-size: 19.2px; font-weight: 400; color: #1c1a17;">
+            <span>{{ f.q }}</span>
+            <span style="font-size: 17.6px; color: #0cc0df; flex-shrink: 0;">{{ f.icon }}</span>
+          </button>
+          <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+            <p style="font-weight: 300; font-size: 14.7px; line-height: 1.7; color: #8b795e; margin: 0 0 1.4rem; max-width: 660px;">{{ f.a }}</p>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background: #f0fafd; text-align: center; padding: 5rem 60px;">
+    <span style="display: block; text-align: center; font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #0cc0df; opacity: .85; margin-bottom: 1.2rem">¿Nunca has hecho lettering?</span>
+    <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.2; max-width: 660px; margin: 0 auto 1.2rem">Aquí no hace falta saber por dónde empezar.</h2>
+    <p style="font-weight: 300; font-size: 15.2px; line-height: 1.7; color: #8b795e; max-width: 560px; margin: 0 auto 2rem;">El lettering se aprende trazo a trazo, no de un día para otro. Elige el curso a tu propio ritmo, o vive la experiencia en un taller en vivo — sola, con amigas o en grupo.</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <span style="background: #0cc0df; color: #fff; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; padding: .9rem 1.8rem; border-radius: 0;">Recursos gratuitos</span>
+      <span style="border: 1px solid #0cc0df; color: #0cc0df; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; padding: .9rem 1.8rem; border-radius: 0;">Consultar disponibilidad</span>
+    </div>
+  </section>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const TABS = [
+  { key: 'cursos', label: 'Cursos' },
+  { key: 'talleres', label: 'Talleres' },
+  { key: 'gratis', label: 'Gratis' },
+  { key: 'blog', label: 'Blog' },
+  { key: 'comunidad', label: 'Comunidad' }
+];
+
+const FAQS = [
+  { q: '¿Necesito saber dibujar para tomar algún curso?', a: 'Para nada. El lettering es una técnica que se aprende paso a paso, no un talento con el que se nace. Si puedes sostener un lápiz, puedes aprender lettering.' },
+  { q: '¿Cuánto tiempo debo dedicarle a la semana?', a: 'Con 15 a 20 minutos diarios es suficiente para avanzar. Nuestros recursos están diseñados para encajar en tu rutina, no para interrumpirla.' },
+  { q: '¿Puedo asistir a un taller si ya tengo experiencia en lettering?', a: 'Sí. Los talleres se adaptan al nivel del grupo. Si vienes con experiencia, el enfoque será perfeccionar tu técnica.' },
+  { q: '¿Otorgan certificados al finalizar?', a: 'Sí, al completar nuestros cursos y talleres recibes un certificado digital que confirma la finalización del curso.' },
+  { q: '¿Hay límite de edad para participar?', a: 'No hay límite de edad. Tanto los cursos como los talleres están abiertos a cualquier persona interesada en aprender lettering.' },
+  { q: '¿Tiene algún costo unirme a la comunidad?', a: 'No, el acceso es completamente gratuito.' }
+];
+
+class Component extends DCLogic {
+  state = { tab: 'cursos', openFaq: null };
+
+  renderVals() {
+    const { tab, openFaq } = this.state;
+
+    const faqs = FAQS.map((f, i) => ({
+      q: f.q,
+      a: f.a,
+      open: openFaq === i,
+      icon: openFaq === i ? '−' : '+',
+      onClick: () => this.setState({ openFaq: openFaq === i ? null : i })
+    }));
+    const tabs = TABS.map(t => ({
+      key: t.key,
+      label: t.label,
+      onClick: () => this.setState({ tab: t.key }),
+      style: {
+        background: 'none',
+        border: 'none',
+        borderBottom: t.key === tab ? '1px solid #0cc0df' : '1px solid transparent',
+        cursor: 'pointer',
+        fontFamily: "'Jost', sans-serif",
+        fontSize: '11px',
+        letterSpacing: '.18em',
+        textTransform: 'uppercase',
+        color: t.key === tab ? '#1c1a17' : '#8b795e',
+        padding: '0 0 4px 0'
+      }
+    }));
+
+    return {
+      tabs,
+      isCursos: tab === 'cursos',
+      isTalleres: tab === 'talleres',
+      isGratis: tab === 'gratis',
+      isBlog: tab === 'blog',
+      isComunidad: tab === 'comunidad',
+      faqs
+    };
+  }
+}
+
+</script>
+</body>
+</html>
