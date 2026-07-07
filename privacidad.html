@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Jost:wght@200;300;400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; background: #ffffff; }
+    body { margin: 0; -webkit-font-smoothing: antialiased; }
+    .ldg-nav-links a { opacity: .4; transition: opacity 0.3s; }
+    .ldg-nav-links a:hover, .ldg-nav-links a.on { opacity: 1; }
+    .ldg-nav-cta { display: inline-flex; align-items: center; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; background: #8b795e; color: #fff; text-decoration: none; font-weight: 400; padding: .9rem 1.8rem; border: 1px solid #8b795e; transition: background .3s, border-color .3s; }
+    .ldg-nav-cta:hover { background: #6b5c48; border-color: #6b5c48; }
+    .ldg-body h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 26px; color: #1c1a17; margin: 2.4rem 0 .8rem; }
+    .ldg-body p, .ldg-body li { font-weight: 300; font-size: 15px; line-height: 1.75; color: #55483a; }
+    .ldg-body ul { padding-left: 1.2rem; margin: .5rem 0; }
+    @media(max-width: 700px) {
+      .ldg-nav-links { display: none !important; }
+    }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#faf8f4"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="58" font-family="Georgia, serif" font-size="30" text-anchor="middle" fill="#8b795e">LD</text></svg></template>
+<div style="font-family: 'Jost', sans-serif; color: #1c1a17; background: #ffffff; overflow-x: hidden;" data-screen-label="Política de Privacidad">
+
+  <nav style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000;">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 95px; padding: 0 60px; background-color: #ffffff; box-sizing: border-box;">
+      <a href="index.html" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 25.6px; font-weight: 400; color: #1c1a17; text-decoration: none; letter-spacing: .02em;">Life Deco Art</a>
+      <div style="display: flex; align-items: center; gap: 2.5rem;">
+        <ul class="ldg-nav-links" style="display: flex; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0;">
+          <li><a href="sobre-mi.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Sobre Mí</a></li>
+          <li><a href="tienda.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Tienda</a></li>
+          <li><a href="aprende.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Aprende</a></li>
+        </ul>
+        <a href="contacto.html" class="ldg-nav-cta">Contacto</a>
+      </div>
+    </div>
+  </nav>
+
+  <section style="max-width: 760px; margin: 0 auto; padding: 5rem 60px 6rem;">
+    <span style="display: block; font-size: 11px; letter-spacing: .35em; text-transform: uppercase; color: #8b795e; opacity: .85; margin-bottom: 1.4rem; text-align: center">Con Confianza</span>
+    <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 52px; line-height: 1.2; color: #1c1a17; margin: 0 0 2.5rem; text-align: center">Política de Privacidad</h1>
+
+    <div class="ldg-body">
+      <p>Tu privacidad es importante para nosotros. Esta política explica qué información recopilamos, cómo la usamos y qué derechos tienes sobre ella.</p>
+
+      <h2>Qué información recopilamos</h2>
+      <ul>
+        <li>Datos de contacto que nos proporcionas voluntariamente: nombre, correo electrónico, número de teléfono.</li>
+        <li>Detalles de personalización de tu pedido (nombres, fechas, frases) necesarios para elaborar tu pieza.</li>
+        <li>Información que compartes al escribirnos por WhatsApp, correo o formularios del sitio.</li>
+      </ul>
+
+      <h2>Cómo usamos tu información</h2>
+      <ul>
+        <li>Para procesar y entregar tus pedidos o servicios contratados.</li>
+        <li>Para responder tus consultas y coordinar detalles de talleres o cursos.</li>
+        <li>Para enviarte novedades solo si te suscribes voluntariamente a nuestra comunidad o newsletter.</li>
+      </ul>
+
+      <h2>Con quién compartimos tu información</h2>
+      <p>No vendemos ni compartimos tus datos personales con terceros para fines publicitarios. Solo compartimos la información estrictamente necesaria con servicios de envío para completar la entrega de tu pedido.</p>
+
+      <h2>Cómo protegemos tu información</h2>
+      <p>Tomamos medidas razonables para proteger tus datos frente a accesos no autorizados. Sin embargo, ningún medio de transmisión por internet es 100% seguro.</p>
+
+      <h2>Tus derechos</h2>
+      <p>Puedes solicitar en cualquier momento acceder, corregir o eliminar tus datos personales que tengamos almacenados, escribiéndonos directamente.</p>
+
+      <h2>Cambios a esta política</h2>
+      <p>Podemos actualizar esta política ocasionalmente. La fecha de la última actualización se indica al final de esta página.</p>
+
+      <p style="margin-top: 2.5rem; opacity: .7;">Última actualización: julio de 2026. Para cualquier consulta sobre esta política, escríbenos a <a href="mailto:info@lifedecoart.com" style="color: #8b795e;">info@lifedecoart.com</a>.</p>
+    </div>
+  </section>
+
+</div>
+
+</x-dc>
+</body>
+</html>

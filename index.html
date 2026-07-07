@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <meta name="ext-resource-dependency" content="uploads/IMG_8078.JPEG" data-resource-id="heroPhoto0" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Jost:wght@200;300;400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; background: #ffffff; }
+    body { margin: 0; -webkit-font-smoothing: antialiased; }
+    .ldl-nav-links a { opacity: .4; transition: opacity 0.3s; }
+    .ldl-nav-links a:hover, .ldl-nav-links a.on { opacity: 1; }
+    .ldl-nav-cta { display: inline-flex; align-items: center; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; background: #8b795e; color: #fff; text-decoration: none; font-weight: 400; padding: .9rem 1.8rem; border: 1px solid #8b795e; transition: background .3s, border-color .3s; }
+    .ldl-nav-cta:hover { background: #6b5c48; border-color: #6b5c48; }
+    .ldl-fp:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.06); }
+    .ldl-fp:hover .ldl-fp-arrow { transform: translateX(8px); }
+    @media(max-width: 900px) {
+      nav > div { padding: 1.5rem 2rem !important; flex-wrap: wrap; gap: 1rem; row-gap: .8rem; }
+      section[style*="bottom: 70px"] h1 { font-size: 34px !important; }
+      section[style*="bottom: 70px"] i { font-size: 34px !important; }
+      section[style*="bottom: 70px"] { left: 24px !important; right: 24px !important; bottom: 40px !important; }
+      section[style*="min-height: 80vh"] { flex-direction: column !important; padding: 2rem 24px 3rem 24px !important; height: auto !important; min-height: auto !important; }
+      .ldl-fp { height: auto !important; min-height: 360px !important; }
+      .ldl-fp h2 { font-size: 40px !important; }
+    }
+    @media(max-width: 600px) {
+      section[style*="bottom: 70px"] h1 { font-size: 26px !important; }
+      section[style*="bottom: 70px"] i { font-size: 26px !important; }
+    }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#faf8f4"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="58" font-family="Georgia, serif" font-size="30" text-anchor="middle" fill="#8b795e">LD</text></svg></template>
+<div style="font-family: 'Jost', sans-serif; color: #1c1a17; background: #ffffff; overflow-x: hidden;" data-screen-label="Inicio">
+
+  <nav style="position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 2rem 60px; background-color: #ffffff;">
+      <a href="index.html" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 400; color: #1c1a17; text-decoration: none; letter-spacing: .02em">Life Deco Art</a>
+      <div style="display: flex; align-items: center; gap: 2.5rem;">
+        <ul style="display: flex; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0;">
+          <li><a href="sobre-mi.html" class="ldl-nav-links" style="font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400">Sobre Mí</a></li>
+          <li><a href="tienda.html" class="ldl-nav-links" style="font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400">Tienda</a></li>
+          <li><a href="aprende.html" class="ldl-nav-links" style="font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400">Aprende</a></li>
+        </ul>
+        <a href="contacto.html" class="ldl-nav-cta" style="font-size: 11px">Contacto</a>
+      </div>
+    </div>
+  </nav>
+
+  <div style="position: relative; width: 100%;">
+    <section style="height: 100vh; box-sizing: border-box; position: relative; width: 100%; overflow: hidden; position: fixed; top: 0; left: 0; z-index: 1;">
+      <sc-for list="{{ heroPhotos }}" as="ph" hint-placeholder-count="3">
+        <img key="{{ $index }}" src="{{ ph.src }}" alt="" style="{{ ph.style }}">
+      </sc-for>
+      <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(255,255,255,.92) 25%, transparent 60%); opacity: {{ heroTextOpacity }};"></div>
+      <div style="position: absolute; bottom: 70px; left: 60px; right: 60px; text-align: right; opacity: {{ heroTextOpacity }};">
+        <span style="display: block; font-size: 11px; letter-spacing: .32em; text-transform: uppercase; color: #1c1a17; opacity: .85; margin-bottom: 14px">Lettering · Diseño · Manualidades</span>
+        
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.3; color: #1c1a17; margin: 0 0 14px"><i style="font-size: 70px">Antes de ser un obsequio,</i><br>FUE UNA EMOCIÓN.</h1><p style="font-size: 16px; font-weight: 300; line-height: 1.6; color: #1c1a17; margin: 0 0 0 auto; width: 100%; max-width: 540px">Creamos piezas personalizadas, recursos creativos y experiencias de aprendizaje para personas, marcas y eventos que buscan hacer algo memorable.</p>
+      </div>
+    </section>
+    <div style="height: 100vh; width: 100%;"></div>
+
+    <section style="position: relative; z-index: 2; display: flex; align-items: center; justify-content: center; box-sizing: border-box; width: 100%; min-height: 80vh; padding: 2.5rem 60px 3rem 60px; gap: 1.5rem;">
+      <a href="tienda.html" class="ldl-fp" style="flex: 1; height: 520px; background: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 2.5rem; text-decoration: none; color: #1c1a17; position: relative; overflow: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 24px 60px rgba(0,0,0,0.18);">
+        <div>
+          <span style="font-size: 11px; letter-spacing: .3em; text-transform: uppercase; font-weight: 400; display: block; margin-bottom: 2rem; color: #f65091">COMPRAR</span>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.15; margin: 0 0 1rem 0">Un <i>regalo</i></h2>
+          <p style="font-size: 15px; font-weight: 300; line-height: 1.6; color: #1C1A17; max-width: 360px; margin: 0">Revisa el catálogo o solicita un encargo personalizado según tu historia, ocasión y estilo.</p>
+        </div>
+        <span class="ldl-fp-arrow" style="font-size: 24px; font-weight: 200; transition: transform 0.4s ease; display: inline-block; color: #F8509F">→</span>
+      </a>
+      <a href="aprende.html" class="ldl-fp" style="flex: 1; height: 520px; background: #ffffff; display: flex; flex-direction: column; justify-content: space-between; padding: 2.5rem; text-decoration: none; color: #1c1a17; position: relative; overflow: hidden; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 24px 60px rgba(0,0,0,0.18);">
+        <div>
+          <span style="font-size: 11px; letter-spacing: .3em; text-transform: uppercase; font-weight: 400; display: block; margin-bottom: 2rem; color: #0cc0df">APRENDER</span>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 70px; line-height: 1.15; margin: 0 0 1rem 0">Una <i>habilidad</i></h2>
+          <p style="font-size: 15px; font-weight: 300; line-height: 1.6; color: #1C1A17; max-width: 360px; margin: 0">Explora cursos, materiales y talleres para desarrollar tu técnica creativa paso a paso, a tu ritmo.</p>
+        </div>
+        <span class="ldl-fp-arrow" style="font-size: 24px; font-weight: 200; transition: transform 0.4s ease; display: inline-block; color: #0CC0DF">→</span>
+      </a>
+    </section>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+function getHeroPhotos() {
+  return [
+    (typeof window !== 'undefined' && window.__resources && window.__resources.heroPhoto0) || 'uploads/IMG_8078.JPEG',
+    'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=1600&q=80',
+    'https://images.unsplash.com/photo-1579783901586-d88db74b4fe4?w=1600&q=80'
+  ];
+}
+
+class Component extends DCLogic {
+  state = { scrollY: 0, activePhoto: 0 };
+
+  componentDidMount() {
+    this.onScroll = () => this.setState({ scrollY: window.scrollY || window.pageYOffset || 0 });
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.photoTimer = setInterval(() => {
+      this.setState(s => ({ activePhoto: (s.activePhoto + 1) % getHeroPhotos().length }));
+    }, 4000);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this.onScroll);
+    clearInterval(this.photoTimer);
+  }
+
+  renderVals() {
+    const vh = (typeof window !== 'undefined' ? window.innerHeight : 800) || 800;
+    const fadeDistance = vh * 0.55;
+    const heroTextOpacity = Math.max(0, 1 - this.state.scrollY / fadeDistance);
+
+    const heroPhotos = getHeroPhotos().map((src, i) => ({
+      src,
+      style: `position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: ${i === this.state.activePhoto ? 1 : 0}; transition: opacity 1.4s ease;`
+    }));
+
+    return { heroTextOpacity, heroPhotos };
+  }
+}
+</script>
+</body>
+</html>
