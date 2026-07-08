@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Deco Art — Contacto</title>
+<meta name="description" content="Escríbeme para contar tu idea, encargar una pieza personalizada o resolver dudas sobre cursos y talleres. Respondo por WhatsApp e Instagram.">
+<meta property="og:title" content="Contacto — Life Deco Art">
+<meta property="og:description" content="Esa idea que tienes en mente merece existir. Escríbeme y la hacemos juntas.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="og-image.jpg">
+<link rel="icon" type="image/png" href="favicon.png">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&amp;family=Jost:wght@200;300;400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    html { scroll-behavior: smooth; background: #ffffff; }
+    body { margin: 0; -webkit-font-smoothing: antialiased; }
+    .ldc-nav-links a { opacity: .4; transition: opacity 0.3s; }
+    .ldc-nav-links a:hover, .ldc-nav-links a.on { opacity: 1; }
+    .ldc-nav-cta { display: inline-flex; align-items: center; font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; background: #6b5c48; color: #fff; text-decoration: none; font-weight: 400; padding: .9rem 1.8rem; border: 1px solid #6b5c48; }
+    .ldc-whatsapp:hover { background: #1c1a17 !important; color: #ffffff !important; }
+    .ldc-nav-cta:hover { background: #1c1a17 !important; }
+    .ldc-social:hover { opacity: 1 !important; }
+    .ldc-hamburger { display: none; }
+    .ldc-hamburger span { display: block; width: 20px; height: 1px; background: #1c1a17; }
+    @media(max-width: 900px) {
+      nav > div { padding: 1.2rem 1.5rem !important; height: auto !important; min-height: 72px; }
+      .ldc-nav-links { display: none !important; }
+      .ldc-nav-cta { display: none !important; }
+      .ldc-hamburger { display: flex !important; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 32px; height: 32px; background: none; border: none; padding: 0; cursor: pointer; }
+    }
+    @media(max-width: 900px) {
+      div[style*="justify-content: center; text-align: center; padding: 4rem 60px"] { justify-content: flex-start !important; padding-top: 3rem !important; padding-bottom: 0 !important; padding-left: 2rem !important; padding-right: 2rem !important; flex: none !important; }
+      div[style*="justify-content: center; text-align: center; padding: 4rem 60px"] h1 { font-size: 44px !important; line-height: 1.12 !important; }
+      .ldc-socials { flex-direction: column !important; align-items: center; gap: 1.2rem !important; }
+      .ldc-whatsapp { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center; justify-content: center; padding: .9rem 1.8rem !important; font-size: 11.2px !important; }
+    }
+    @media(max-width: 700px) {
+      .ldc-socials { gap: 1.2rem !important; }
+    }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail" data-bg-color="#faf8f4"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="58" font-family="Georgia, serif" font-size="30" text-anchor="middle" fill="#8b795e">LD</text></svg></template>
+<div style="font-family: 'Jost', sans-serif; color: #1c1a17; background: #ffffff; overflow-x: hidden; min-height: 100vh; display: flex; flex-direction: column;" data-screen-label="Contacto">
+
+  <nav style="position: sticky; top: 0; left: 0; width: 100%; z-index: 1000;">
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 95px; padding: 0 60px; background-color: #ffffff; box-sizing: border-box;">
+      <a href="index.html" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 26px; font-weight: 400; color: #1c1a17; text-decoration: none; letter-spacing: .02em;">Life Deco Art</a>
+      <div style="display: flex; align-items: center; gap: 2.5rem;">
+        <ul class="ldc-nav-links" style="display: flex; align-items: center; gap: 2.5rem; list-style: none; margin: 0; padding: 0;">
+          <li><a href="sobre-mi.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Sobre Mí</a></li>
+          <li><a href="tienda.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Tienda</a></li>
+          <li><a href="aprende.html" style="font-size: 11.2px; letter-spacing: .25em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Aprende</a></li>
+        </ul>
+        <a href="#" class="ldc-nav-cta" style="background-color: #8B795E">Contacto</a>
+        <button class="ldc-hamburger" onClick="{{ toggleMenu }}" aria-label="Menú">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position: absolute; top: 100%; left: 0; right: 0; background: #ffffff; box-shadow: 0 16px 32px rgba(0,0,0,0.1); padding: 1.6rem 1.5rem; display: flex; flex-direction: column; gap: 1.4rem;">
+        <a href="sobre-mi.html" style="font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Sobre Mí</a>
+        <a href="tienda.html" style="font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Tienda</a>
+        <a href="aprende.html" style="font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: #1c1a17; text-decoration: none; font-weight: 400;">Aprende</a>
+        <a href="#" style="display: inline-flex; justify-content: center; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; background: #8b795e; color: #fff; text-decoration: none; font-weight: 400; padding: .9rem 1.8rem;">Contacto</a>
+      </div>
+    </sc-if>
+  </nav>
+
+  
+
+  <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 4rem 60px; box-sizing: border-box;" class="reveal">
+    <span style="font-size: 11px; letter-spacing: .35em; text-transform: uppercase; color: #8B795E; opacity: 1">Hablemos</span>
+    <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-style: normal; font-size: 70px; margin: 1rem 0 .8rem; line-height: 1.3; max-width: 854px; width: 100%;">Esa idea que tienes en mente, merece existir.</h1>
+    
+
+    
+    <p style="font-size: 16px; font-weight: 300; line-height: 1.6; color: #8B795E; margin: 0 0 2.5rem; max-width: 548px; width: 100%;">Cuéntamela como te salga — sin formato, sin apuro. Yo me encargo de convertirla en algo que se pueda tocar, regalar o guardar para siempre.</p><a href="#" class="ldc-whatsapp" onClick="{{ sendWhatsApp }}" style="display: inline-flex; align-items: center; gap: .8rem; background: #8B795E; color: #fff; text-decoration: none; padding: .9rem 1.8rem; font-size: 11.2px; letter-spacing: .2em; text-transform: uppercase; font-weight: 400; margin-bottom: 1.4rem; cursor: pointer; transition: background .3s;">Escríbeme por WhatsApp →</a><a href="mailto:info@lifedecoart.com" style="font-size: 16px; font-weight: 300; line-height: 1.6; color: #8b795e; text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; font-style: italic">prefiero el correo — info@lifedecoart.com</a>
+  </div><div style="display: flex; flex-direction: column; align-items: center; gap: 1.6rem; padding: 0 60px 3rem; max-width: 1039px; width: 100%; margin: 2.5rem auto 0 auto; box-sizing: border-box;" class="reveal">
+    <div class="ldc-socials" style="display: flex; gap: 2.75rem;">
+      <a href="https://www.instagram.com/lifedecoart" target="_blank" rel="noopener" class="ldc-social" style="font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e; opacity: .8; text-decoration: none; transition: opacity .3s;">Instagram</a>
+      <a href="https://www.tiktok.com/@lifedecoart" target="_blank" rel="noopener" class="ldc-social" style="font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e; opacity: .8; text-decoration: none; transition: opacity .3s;">TikTok</a>
+      <a href="https://www.pinterest.com/lifedecoart/" target="_blank" rel="noopener" class="ldc-social" style="font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e; opacity: .8; text-decoration: none; transition: opacity .3s;">Pinterest</a>
+      <a href="https://web.facebook.com/lifedecoart/" target="_blank" rel="noopener" class="ldc-social" style="font-size: 11.2px; letter-spacing: .12em; text-transform: uppercase; color: #8b795e; opacity: .8; text-decoration: none; transition: opacity .3s;">Facebook</a>
+    </div>
+    <div style="width: 100%; max-width: 700px; border-top: 1px solid rgba(139,121,94,.15); padding-top: 1.4rem; display: flex; justify-content: center; gap: 2.5rem;">
+      <a href="terminos.html" style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8b795e; opacity: .55; text-decoration: none">Términos y Condiciones</a>
+      <a href="privacidad.html" style="font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #8b795e; opacity: .55; text-decoration: none">Política de Privacidad</a>
+    </div>
+  </div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { menuOpen: false };
+
+  componentDidMount() {
+    this.revealTimer = setTimeout(() => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+    }, 1200);
+    const els = document.querySelectorAll('.reveal');
+    this.revealIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          this.revealIO.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -5% 0px' });
+    els.forEach(el => this.revealIO.observe(el));
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.revealTimer);
+    if (this.revealIO) this.revealIO.disconnect();
+  }
+
+  sendWhatsApp = (e) => {
+    e.preventDefault();
+    const phone = '18495390410';
+    const text = 'Hola, tengo una idea que me gustaría contarte.';
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  renderVals() {
+    return {
+      sendWhatsApp: this.sendWhatsApp,
+      menuOpen: this.state.menuOpen,
+      toggleMenu: () => this.setState(s => ({ menuOpen: !s.menuOpen }))
+    };
+  }
+}
+
+</script>
+</body>
+</html>
