@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="./support.js"></script>
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<title>Life Deco Art | Inicio</title>
+<meta name="description" content="Regalos personalizados y lettering hecho a mano para bodas, cumpleaños, talleres y ocasiones especiales. Desde Santo Domingo.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Life Deco Art | Inicio — Letras Bonitas y con Propósito">
+<meta property="og:description" content="Regalos personalizados y lettering hecho a mano para bodas, cumpleaños, talleres y ocasiones especiales. Desde Santo Domingo.">
+<meta property="og:site_name" content="Life Deco Art">
+<meta property="og:image" content="https://lifedecoart.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://lifedecoart.com/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Life Deco Art | Inicio — Letras Bonitas y con Propósito">
+<meta name="twitter:description" content="Regalos personalizados y lettering hecho a mano para bodas, cumpleaños, talleres y ocasiones especiales. Desde Santo Domingo.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Life Deco Art","description":"Lettering personalizado, piezas hechas a mano y experiencias de aprendizaje, con sede en Santo Domingo y alcance 100% online.","address":{"@type":"PostalAddress","addressLocality":"Santo Domingo","addressCountry":"DO"},"areaServed":"Worldwide","sameAs":[]}</script>
+<link rel="canonical" href="https://lifedecoart.com/">
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  @font-face { font-family: 'Bellaboo'; src: url('./uploads/bellaboo-1.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Cintarini'; src: url('./uploads/Cintarini.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+  @font-face { font-family: 'Le Jour Script'; src: url('./uploads/Le Jour Script Personal Use Only.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+  body { margin: 0; background: #FFFFFF; animation: lda-page-fade .3s ease; }
+  @keyframes lda-page-fade { from { opacity: 0; } to { opacity: 1; } }
+  a { color: #000000; }
+  a:hover { color: #8B795E; }
+  @keyframes ticker-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+</style>
+</helmet>
+
+<dc-import name="NavBar" active-page="inicio" hint-size="100%,80px"></dc-import>
+<div style="height:{{ navGap }};"></div>
+
+<section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+
+  <!-- 1. LA EMOCIÓN — HERO (versión 1f) -->
+  <div data-reveal="" style="position:relative;height:100vh;min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:{{ heroPad }};opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);background:#1a1a1a;">
+    <video autoplay="{{ true }}" loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" poster="./uploads/hero-video-poster.jpg" src="{{ heroVideoSrc }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></video>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.18) 40%,rgba(0,0,0,.5) 100%);z-index:1;"></div>
+    <div style="position:relative;z-index:2;font-size:{{ heroKickerSize }};letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:{{ heroKickerGap }};">Lettering · Diseño · Manualidades</div>
+    <h1 style="position: relative; z-index: 2; font-size: {{ heroTitleSize }}; line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 18px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
+    <p style="position:relative;z-index:2;font-size:{{ heroSubSize }};line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:-14px 0 32px;">{{ heroSubtitle }}</p>
+    <div style="position:relative;z-index:2;display:flex;gap:14px;flex-direction:{{ heroBtnDir }};width:{{ heroBtnWidth }};">
+      <a href="Tienda.dc.html" style="text-decoration:none;background:#F65091;color:#fff;font-size:15px;font-weight:500;padding:{{ heroBtnPad }};border-radius:4px;text-align:center;flex:{{ heroBtnFlex }};transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Comprar</a>
+      <a href="Aprende.dc.html" style="text-decoration:none;background:transparent;border:1px solid #fff;color:#fff;font-size:15px;font-weight:500;padding:{{ heroBtnPad2 }};border-radius:4px;text-align:center;flex:{{ heroBtnFlex }};transition:background .25s ease,border-color .25s ease;" style-hover="background:#0CC0DF;border-color:#0CC0DF;">Aprender</a>
+    </div>
+    <div style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:2;width:1px;height:44px;background:rgba(255,255,255,0.5);"></div>
+  </div>
+
+  <!-- 1b. BARRA DE OFERTAS -->
+  <div style="background:#0CC0DF;padding:12px 0;overflow:hidden;">
+    <div style="display:flex;width:max-content;animation:ticker-scroll 65s linear infinite;">
+      <span style="display:flex;align-items:center;gap:14px;padding-right:14px;">
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+      </span>
+      <span style="display:flex;align-items:center;gap:14px;padding-right:14px;">
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+        <span style="color:#FFFFFF;font-size:13px;font-weight:600;text-transform:uppercase;white-space:nowrap;">10% OFF primera compra</span>
+        <span style="color:rgba(255,255,255,0.5);">·</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- 2. CONÓCEME -->
+  <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ blockPad }};margin-top:45px;display:grid;grid-template-columns:{{ conoceCols }};gap:32px;align-items:center;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+    <div style="aspect-ratio:4/5;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+      <image-slot id="inicio-melani" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+    </div>
+    <div style="padding-top:48px;">
+      <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Conóceme</div>
+      <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000; line-height: 1.35; margin-bottom: 20px">Soy Melani, me apasionan<br>los&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em;">detalles</span>.</div>
+      <p style="font-size:15px;line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 28px;"><span style="font-size: 16px;">Trabajo con personas, marcas y espacios que tienen algo importante que decir y quieren decirlo con belleza.&nbsp;</span></p>
+      <a href="Sobre Mi.dc.html" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;background:#000000;color:#FFFFFF;font-size:14px;font-weight:500;padding:15px 30px;border-radius:4px;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">Ver mi historia<br><span></span></a>
+    </div>
+  </div>
+
+  <!-- 4. SERVICIOS — qué hago -->
+  <div style="margin-top: 0; padding: {{ blockPad }};">
+  <div data-reveal="" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+    <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:20px;text-align:center;">Servicios</div>
+    <div style="font-size: {{ h2Size }}; line-height: 1.2; color: #000000; font-weight: 300; text-align: center">En qué puedo <span style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">ayudarte</span></div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:{{ servCols }};gap:20px;">
+    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:{{ servHeight }};opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1),transform 0.95s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+      <image-slot id="serv-personalizados" shape="rect" style="width:100%;height:100%;" placeholder="Personalizados"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
+      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
+    </div>
+    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:{{ servHeight }};opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .08s,transform 0.95s cubic-bezier(.22,1,.36,1) .08s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+      <image-slot id="serv-rotulacion" shape="rect" style="width:100%;height:100%;" placeholder="Rotulación"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
+      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
+    </div>
+    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:{{ servHeight }};opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .16s,transform 0.95s cubic-bezier(.22,1,.36,1) .16s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+      <image-slot id="serv-packaging" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="Packaging"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
+      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
+    </div>
+    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:{{ servHeight }};opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .24s,transform 0.95s cubic-bezier(.22,1,.36,1) .24s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+      <image-slot id="serv-souvenirs" shape="rect" style="width:100%;height:100%;" placeholder="Souvenirs"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
+      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
+    </div>
+  </div>
+  </div>
+
+<!-- 5. CÓMO TRABAJAMOS — escalera con línea de tiempo -->
+  <div style="background: #F3EEE4; margin-top: 50px; padding: {{ timelineBlockPad }};">
+  <div style="max-width: 1240px; margin: 0 auto; padding: 0; display: grid; grid-template-columns: {{ timelineCols }}; gap: {{ timelineGap }};">
+    <div>
+    <div style="position:{{ timelineSticky }};top:150px;">
+      <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Cómo trabajamos</div>
+      <div style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; max-width: 426px;">Un proceso artesanal, respaldado por <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em">garantías reales</span>.</div>
+    </div>
+    </div>
+    <div style="padding-left:{{ timelinePadLeft }};">
+      <div style="position:{{ timelineSticky }};top:150px;z-index:1;background:#F3EEE4;padding:20px 0;border-top:1px solid #DCD2BC;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">01.</span><span style="font-size:16px;font-weight:500;color:#000000;">Cuéntame tu idea</span></div>
+        <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-cuentame" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: mensaje/nota inicial"></image-slot></div>
+      </div>
+      <div style="height:{{ timelineSpacer }};"></div>
+      <div style="position:{{ timelineSticky }};top:188px;z-index:2;background:#F3EEE4;padding:20px 0;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">02.</span><span style="font-size:16px;font-weight:500;color:#000000;">Boceto y aprobación</span></div>
+        <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Te comparto un boceto digital antes de empezar a producir.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-boceto" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: boceto a lápiz"></image-slot></div>
+      </div>
+      <div style="height:{{ timelineSpacer }};"></div>
+      <div style="position:{{ timelineSticky }};top:226px;z-index:3;background:#F3EEE4;padding:20px 0;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">03.</span><span style="font-size:16px;font-weight:500;color:#000000;">Trazo a mano</span></div>
+        <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Cada letra se dibuja con cuidado, cuidando cada detalle.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-trazo" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: trazo a mano en proceso"></image-slot></div>
+      </div>
+      <div style="height:{{ timelineSpacer }};"></div>
+      <div style="position:{{ timelineSticky }};top:264px;z-index:4;background:#F3EEE4;padding:20px 0;border-bottom:1px solid #DCD2BC;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">04.</span><span style="font-size:16px;font-weight:500;color:#000000;">Entrega</span></div>
+        <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Recibes tu pieza lista, empacada con el mismo cuidado con que se hizo.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-final" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: pieza final terminada"></image-slot></div>
+      </div>
+      <div style="height:{{ timelineSpacerLast }};"></div>
+    </div>
+  </div>
+  </div>
+
+<!-- 6. LA PRUEBA — CITA -->
+  <div data-reveal="" style="padding:{{ gapPx }} {{ sidePad }} 12px;text-align:center;opacity:0;transform:translateY(12px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+    <div style="font-size:64px;line-height:1;color:#E4DCCB;font-weight:700;font-family:Georgia,serif;margin-bottom:8px;">"</div>
+    <div style="font-size: {{ quoteSize }}; line-height: 1.5; color: #000000; font-weight: 300; max-width: 640px; margin: 0 auto 20px">{{ testimonialQuote }}</div>
+    <div style="font-size:13px;color:#8B795E;font-weight:300;">{{ testimonialAuthor }}</div>
+  </div>
+
+<!-- 6. EL RESULTADO — PIEZAS RECIENTES -->
+  <div data-reveal="" style="max-width:1240px;margin:{{ gapPx }} auto 0;padding:0 {{ sidePad }};opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+    <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
+      <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000">Piezas <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">recientes</span></div>
+      <a href="Tienda.dc.html" style="text-decoration:none;font-size:13px;font-weight:500;color:#F65091;border-bottom:1px solid #F65091;padding-bottom:2px;">Ver la tienda</a>
+    </div>
+    <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};">
+      <a href="Tienda.dc.html#producto-p1" style="text-decoration:none;color:inherit;display:block;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+        <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
+          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Bestseller</span>
+          <image-slot id="inicio-pieza-1" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: bandeja Te Elijo Hoy"></image-slot>
+        </div>
+        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Bandeja "Te Elijo Hoy"</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Madera lacada, lettering pintado a mano</div>
+        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$2,220</div>
+      </a>
+      <a href="Tienda.dc.html#producto-p11" style="text-decoration:none;color:inherit;display:block;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+        <div style="aspect-ratio:4/5;border-radius:6px;background:#EFE7D8;display:flex;align-items:center;justify-content:center;margin-bottom:18px;overflow:hidden;">
+          <image-slot id="inicio-pieza-2" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: cartel de propuesta"></image-slot>
+        </div>
+        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Cartel de Propuesta</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Lienzo con flores pintadas a mano</div>
+        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$1,600</div>
+      </a>
+      <a href="Tienda.dc.html#producto-p9" style="text-decoration:none;color:inherit;display:block;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+        <div style="aspect-ratio:4/5;border-radius:6px;background:#E4DCCB;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
+          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Bestseller</span>
+          <image-slot id="inicio-pieza-3" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: caja recuerdo de nacimiento"></image-slot>
+        </div>
+        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Caja Recuerdo de Nacimiento</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Resina en forma de corazón, para ecografías</div>
+        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$1,870</div>
+      </a>
+      <a href="Tienda.dc.html#producto-p3" style="text-decoration:none;color:inherit;display:block;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+        <div style="aspect-ratio:4/5;border-radius:6px;background:#DED3BC;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
+          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Nuevo</span>
+          <image-slot id="inicio-pieza-4" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: caja sorpresa personalizada"></image-slot>
+        </div>
+        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Caja Sorpresa Personalizada</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Caja kraft con lazo de raso, diseñada a mano para anuncios especiales.</div>
+        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">Próximamente</div>
+      </a>
+    </div>
+  </div>
+
+<!-- 7. SI ELIGES APRENDER — SPOTLIGHT DE CURSO -->
+  <div data-reveal="" style="padding: {{ spotlightTopPad }} {{ sidePad }} 130px; text-align: center; margin-top: {{ gapPx }}; opacity: 0; transform: translateY(12px); transition: opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1); background-color: #0CC0DF">
+    <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y también&nbsp;<span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em;">aprendes</span>&nbsp;a hacerlo?</div>
+  </div>
+  <div style="max-width:1240px;margin:{{ spotlightNegMargin }} auto 0;padding:0 {{ sidePad }};position:relative;">
+    <div style="border-radius:8px;overflow:hidden;display:flex;align-items:stretch;flex-direction:{{ spotlightDir }};">
+      <div style="background:#000000;color:#FFFFFF;padding:{{ spotlightCardPad }};display:flex;flex-direction:column;justify-content:center;flex:0.75;min-width:0;">
+        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:600;margin-bottom:20px;">Inscripciones abiertas</div>
+        <div style="font-size:{{ h2Size }};font-weight:400;line-height:1.2;margin-bottom:24px;">Lettering desde cero</div>
+        <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:300;line-height:1.7;margin:0 0 28px;">Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+          <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
+            <span>📅</span> Inicio: 3 de agosto, 2026
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
+            <span>📍</span> Modalidad: Online / Presencial
+          </div>
+        </div>
+        <a href="Aprende.dc.html" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">Reservar mi plaza</a>
+      </div>
+      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">
+        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="foto: taller de lettering en vivo, alumnas trabajando"></image-slot>
+      </div>
+    </div>
+  </div>
+
+<!-- 9. CIERRE -->
+  <div data-reveal="" style="max-width: 1240px; margin: 0 auto; padding: 60px {{ sidePad }} 80px;opacity:0;transform:translateY(13px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+    <div style="max-width:640px;margin:0 auto;padding:{{ closingPad }};text-align:center;">
+      <h2 style="font-size: {{ h2Size }}; color: #000000; font-weight: 300; margin: 0 0 18px">¿Hacemos algo <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">increíble&nbsp;</span>juntos?</h2>
+      <p style="font-size:16px;color:#8B795E;font-weight:300;margin:0 0 32px;line-height:1.7;">{{ closingText }}</p>
+      <div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;align-items:center;">
+        <a href="{{ whatsappLink }}" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:15px 30px;border-radius:4px;font-size:14px;font-weight:500;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">WhatsApp</a>
+        <a href="Contacto.dc.html" style="text-decoration:none;color:#000000;font-size:14px;font-weight:500;letter-spacing:0.02em;padding:6px 0;background-image:linear-gradient(#000,#000);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Escribir por correo</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;sectionGap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:96,&quot;min&quot;:40,&quot;max&quot;:200,&quot;step&quot;:8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Espaciado&quot;}}">
+class Component extends DCLogic {
+  state = { content: {}, isMobile: false };
+  checkMobile = () => this.setState({ isMobile: window.innerWidth < 860 });
+  async loadContent() {
+    try {
+      const cms = await import('./cms.js');
+      const data = await cms.getPageContent('inicio');
+      this.setState({ content: data });
+      setTimeout(() => {
+        const v = document.querySelector('video');
+        if (v) { v.muted = true; v.loop = true; v.playsInline = true; v.load(); v.play().catch(() => {}); }
+      }, 100);
+      setTimeout(() => {
+        const v = document.querySelector('video');
+        if (v && v.paused) v.play().catch(() => {});
+      }, 1200);
+    } catch (e) {}
+  }
+  componentDidMount() {
+    this.loadContent();
+    this.checkMobile();
+    Array.from(document.querySelectorAll('[data-cw-item]')).forEach((item) => {
+      const idx = item.getAttribute('data-cw-item');
+      const body = document.querySelector(`[data-cw-body="${idx}"]`);
+      const icon = document.querySelector(`[data-cw-icon="${idx}"]`);
+      let locked = idx === '2';
+      const doOpen = () => { body.style.maxHeight = body.scrollHeight + 'px'; body.style.opacity = '1'; if (icon) icon.textContent = '−'; };
+      const doClose = () => { body.style.maxHeight = '0px'; body.style.opacity = '0'; if (icon) icon.textContent = '+'; };
+      item.addEventListener('mouseenter', () => { if (!locked) doOpen(); });
+      item.addEventListener('mouseleave', () => { if (!locked) doClose(); });
+      item.addEventListener('click', () => { locked = !locked; if (locked) doOpen(); else doClose(); });
+    });
+    const heroVideo = document.querySelector('video');
+    if (heroVideo) {
+      heroVideo.muted = true; heroVideo.loop = true; heroVideo.playsInline = true;
+      heroVideo.play().catch(() => {});
+      heroVideo.addEventListener('ended', () => { heroVideo.currentTime = 0; heroVideo.play().catch(() => {}); });
+      document.addEventListener('visibilitychange', () => { if (!document.hidden && heroVideo.paused) heroVideo.play().catch(() => {}); });
+    }
+    const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; el.setAttribute('data-revealed', '1'); };
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    let io;
+    try {
+      io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.05, rootMargin: '0px 0px -8% 0px' });
+      els.forEach((el) => io.observe(el));
+    } catch (err) {}
+    // Fallback: if the observer never fires (or misses elements already in view on load), reveal manually.
+    const sweep = () => {
+      els.forEach((el) => {
+        if (el.getAttribute('data-revealed')) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) { reveal(el); if (io) io.unobserve(el); }
+      });
+    };
+    requestAnimationFrame(sweep);
+    setTimeout(sweep, 400);
+    setTimeout(sweep, 1200);
+  }
+  renderVals() {
+    const gap = this.props.sectionGap ?? 96;
+    const c = this.state.content || {};
+    const m = this.state.isMobile;
+    return {
+      navGap: m ? '64px' : '88px',
+      heroPad: m ? '0 24px' : '0 48px',
+      heroKickerSize: m ? '11px' : '13px',
+      heroKickerGap: m ? '18px' : '28px',
+      heroTitleSize: m ? 'clamp(26px, 8vw, 34px)' : 'clamp(28px, 5.2vw, 70px)',
+      heroSubSize: m ? '15px' : '18px',
+      heroBtnDir: m ? 'column' : 'row',
+      heroBtnWidth: m ? '100%' : 'auto',
+      heroBtnFlex: m ? '1' : '0 0 auto',
+      heroBtnPad: m ? '16px 0' : '17px 60px',
+      heroBtnPad2: m ? '15px 0' : '16px 60px',
+      blockPad: m ? '48px 24px' : '64px 48px 64px',
+      conoceCols: m ? '1fr' : '0.85fr 1.15fr',
+      h2Size: m ? '24px' : '32px',
+      servCols: m ? '1fr' : 'repeat(2,1fr)',
+      servHeight: m ? '320px' : '560px',
+      timelineBlockPad: m ? '56px 24px 60px' : '140px 48px 100px',
+      timelineCols: m ? '1fr' : '0.8fr 1.2fr',
+      timelineGap: m ? '32px' : '80px',
+      timelineSticky: m ? 'static' : 'sticky',
+      timelinePadLeft: m ? '0' : '40px',
+      timelineSpacer: m ? '24px' : '34vh',
+      timelineSpacerLast: m ? '0' : '38vh',
+      sidePad: m ? '24px' : '48px',
+      quoteSize: m ? '20px' : '26px',
+      piezasCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+      piezasGap: m ? '16px' : '28px',
+      spotlightTopPad: m ? '56px' : '80px',
+      spotlightNegMargin: m ? '-60px' : '-100px',
+      spotlightDir: m ? 'column' : 'row',
+      spotlightCardPad: m ? '48px 28px' : '100px 56px',
+      spotlightImgMinH: m ? '260px' : '0',
+      closingPad: m ? '56px 24px' : '100px 48px',
+      gapPx: gap + 'px',
+      heroTitlePre: c.heroTitlePre ?? 'La evolución de una',
+      heroTitleCursive: c.heroTitleCursive ?? 'idea',
+      heroSubtitle: c.heroSubtitle ?? 'Convierto momentos importantes: una boda, un cumpleaños, un "gracias", en piezas atemporales.',
+      testimonialQuote: c.testimonialQuote ?? '"La bandeja quedó preciosa, mi mamá lloró al verla."',
+      testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
+      closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
+      heroVideoSrc: c.heroVideoUrl || './uploads/4347858-hd_1920_1080_25fps.mp4',
+      onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
+      whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410'
+    };
+  }
+}
+</script>
+</body>
+</html>
