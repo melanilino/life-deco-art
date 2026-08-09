@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700&family=Homemade+Apple&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #F3EEE4; font-family: 'Montserrat', sans-serif; }
+  a { color: #F65091; }
+  a:hover { color: #000000; }
+</style>
+</helmet>
+
+<sc-if value="{{ showLogin }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+  <div style="width:100%;max-width:380px;background:#FFFFFF;border-radius:8px;padding:48px 40px;box-shadow:0 4px 24px rgba(0,0,0,.06);">
+    <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:8px;text-align:center;">Life Deco Art</div>
+    <div style="font-size:26px;font-weight:300;color:#000000;margin-bottom:28px;text-align:center;">Panel de <span style="font-family:'Homemade Apple',cursive;font-size:30px;">operación</span></div>
+    <input type="email" placeholder="Correo" value="{{ email }}" onChange="{{ onEmailChange }}" style="width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #E4DCCB;border-radius:4px;font-size:14px;margin-bottom:12px;font-family:Montserrat;">
+    <input type="password" placeholder="Contraseña" value="{{ password }}" onChange="{{ onPasswordChange }}" style="width:100%;box-sizing:border-box;padding:13px 14px;border:1px solid #E4DCCB;border-radius:4px;font-size:14px;margin-bottom:16px;font-family:Montserrat;">
+    <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:13px;color:#C0392B;margin-bottom:16px;">{{ error }}</div>
+    </sc-if>
+    <button onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;background:#000000;color:#FFFFFF;border:none;padding:14px;border-radius:4px;font-size:14px;font-weight:500;cursor:pointer;font-family:Montserrat;" style-hover="background:#2a2a2a;">{{ loginBtnText }}</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ showDashboard }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;min-height:100vh;">
+  <div style="width:250px;background:#000000;color:#FFFFFF;padding:32px 24px;flex-shrink:0;">
+    <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:6px;">Life Deco Art</div>
+    <div style="font-size:20px;font-weight:300;margin-bottom:36px;">Panel de operación</div>
+    <sc-for list="{{ items }}" as="p" hint-placeholder-count="3">
+      <div style="padding:11px 14px;border-radius:4px;font-size:14px;margin-bottom:3px;color:rgba(255,255,255,.5);">{{ p.label }}</div>
+    </sc-for>
+    <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.15);padding-top:20px;">
+      <a href="./CMS.dc.html" style="display:block;font-size:13px;color:#0CC0DF;text-decoration:none;margin-bottom:14px;">→ Ir al CMS de contenido web</a>
+      <div onClick="{{ onLogout }}" style="font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;" style-hover="color:#FFFFFF;">Cerrar sesión</div>
+    </div>
+  </div>
+  <div style="flex:1;padding:48px 56px;max-width:680px;">
+    <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:8px;">Módulos de operación</div>
+    <div style="font-size:28px;font-weight:300;color:#000000;margin-bottom:24px;">Próximamente</div>
+    <div style="background:#FFFFFF;border-radius:8px;padding:40px;color:#8B795E;font-size:14px;line-height:1.7;">Citas / Calendario, Facturación y Contabilidad se agregan aquí como módulos, cuando definamos su alcance.</div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { cms: null, user: null, authChecked: false, email: '', password: '', error: '', loggingIn: false };
+
+  items = [
+    { label: 'Citas / Calendario' },
+    { label: 'Facturación' },
+    { label: 'Contabilidad' }
+  ];
+
+  async componentDidMount() {
+    const cms = await import('./cms.js');
+    this.setState({ cms });
+    cms.onAuthStateChanged(cms.auth, (user) => { this.setState({ user, authChecked: true }); });
+  }
+
+  handleLogin = async () => {
+    this.setState({ loggingIn: true, error: '' });
+    try {
+      await this.state.cms.signInWithEmailAndPassword(this.state.cms.auth, this.state.email, this.state.password);
+    } catch (e) {
+      this.setState({ error: 'Correo o contraseña incorrectos.', loggingIn: false });
+    }
+  };
+
+  handleLogout = () => { this.state.cms.signOut(this.state.cms.auth); };
+
+  renderVals() {
+    const s = this.state;
+    return {
+      showLogin: s.authChecked && !s.user,
+      showDashboard: s.authChecked && !!s.user,
+      email: s.email, password: s.password,
+      onEmailChange: (e) => this.setState({ email: e.target.value }),
+      onPasswordChange: (e) => this.setState({ password: e.target.value }),
+      hasError: !!s.error, error: s.error,
+      onLogin: this.handleLogin, loggingIn: s.loggingIn,
+      loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
+      onLogout: this.handleLogout,
+      items: this.items
+    };
+  }
+}
+</script>
+</body>
+</html>
