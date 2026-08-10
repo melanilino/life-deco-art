@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="canonical" href="https://lifedecoart.com/tienda">
+<script src="./support.js"></script>
+<script data-lda="LDA_HEAD_ZOOM_BLOCK">
+(function(){
+  if (window.__ldaPinchZoomBlocked) return;
+  window.__ldaPinchZoomBlocked = true;
+  document.documentElement.style.touchAction = 'manipulation';
+  document.addEventListener('gesturestart', function(e){ e.preventDefault(); }, { passive: false });
+  document.addEventListener('gesturechange', function(e){ e.preventDefault(); }, { passive: false });
+  document.addEventListener('touchmove', function(e){ if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  var lastTouchEnd = 0;
+  document.addEventListener('touchend', function(e){
+    var now = Date.now();
+    if (now - lastTouchEnd <= 300) e.preventDefault();
+    lastTouchEnd = now;
+  }, false);
+})();
+</script>
+
+<link rel="icon" type="image/svg+xml" href="./favicon.svg">
+<title>Life Deco Art | Tienda</title>
+<meta name="description" content="Cuadros, llaveros, bandejas, cajas sorpresa y más hechos a mano. Encuentra el regalo personalizado perfecto, explora la colección completa.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Life Deco Art | Tienda — Letras Bonitas y con Propósito">
+<meta property="og:description" content="Cuadros, llaveros, bandejas, cajas sorpresa y más hechos a mano. Encuentra el regalo personalizado perfecto, explora la colección completa.">
+<meta property="og:site_name" content="Life Deco Art">
+<meta property="og:image" content="https://lifedecoart.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://lifedecoart.com/og-image.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Life Deco Art | Tienda — Letras Bonitas y con Propósito">
+<meta name="twitter:description" content="Cuadros, llaveros, bandejas, cajas sorpresa y más hechos a mano. Encuentra el regalo personalizado perfecto, explora la colección completa.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Life Deco Art","description":"Lettering personalizado, piezas hechas a mano y experiencias de aprendizaje.","sameAs":[]}</script>
+<link rel="canonical" href="https://lifedecoart.com/tienda">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo sé si mi pieza quedará como la imagino?","acceptedAnswer":{"@type":"Answer","text":"Antes de crear tu pieza te comparto un boceto digital para tu aprobación, con ajustes incluidos. Solo empiezo a producir una vez que lo apruebas."}},{"@type":"Question","name":"¿Cómo funcionan los envíos?","acceptedAnswer":{"@type":"Answer","text":"Hacemos entregas a todo el país vía Uber Moto, Vimenpaq o BM Cargo, según tu ubicación."}},{"@type":"Question","name":"¿Qué pasa si necesito mi pedido con urgencia?","acceptedAnswer":{"@type":"Answer","text":"Escríbeme antes de ordenar — si el tiempo lo permite, puedo priorizar tu pedido con un cargo adicional por urgencia."}},{"@type":"Question","name":"¿Qué pasa si quiero algo que no está en el catálogo?","acceptedAnswer":{"@type":"Answer","text":"Acepto encargos especiales fuera de catálogo — instalaciones, piezas grandes, colaboraciones. Escríbeme tu idea y lo construimos juntos."}},{"@type":"Question","name":"¿Cuáles son las formas de pago disponibles?","acceptedAnswer":{"@type":"Answer","text":"Transferencia bancaria: 50% de anticipo para separar tu encargo y el resto al momento de la entrega."}}]}</script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="./image-slot.js"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; max-width: 100%; overflow-x: clip; }
+  body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
+  @keyframes lda-page-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lda-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  a { color: #F65091; }
+  a:hover { color: #000000; }
+  @font-face { font-family: 'Le Jour Script'; src: url('./uploads/Le Jour Script Personal Use Only.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+</style>
+</helmet>
+<dc-import name="NavBar" active-page="tienda" hint-size="100%,80px" style="position: absolute; left: 4px; top: 1px"></dc-import>
+<div style="height:{{ navGap }};"></div>
+
+<section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+
+  <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};text-align:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
+    <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:16px;">EL ESTUDIO</div>
+    <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0;">Eso que buscas, para <span style="font-family: 'Homemade Apple', cursive; font-weight: 200; font-size: 1.22em">ti</span> o para <span style="font-family: 'Homemade Apple', cursive; font-weight: 300; font-size: 1.22em; position: relative; top: 0px">alguien</span> más</h1>
+    <p style="font-size:15px;color:#8B795E;font-weight:300;max-width:480px;margin:20px auto 0;">Diseños listos y encargos a medida — cada pieza <br>se dibuja a mano, trazo a trazo.</p>
+  </div>
+
+  <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1240px;margin:0 auto;padding:80px 48px;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Cargando…</div>
+  </sc-if>
+  <sc-if value="{{ isLoaded }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1240px;margin:0 auto;padding:{{ shopPad }};display:grid;grid-template-columns:{{ shopCols }};gap:{{ shopGap }};min-width:0;">
+
+    <div>
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#8B795E;font-weight:600;height:20px;display:flex;align-items:center;margin-bottom:24px;">Categorías</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div onClick="{{ onSelectAll }}" style="cursor:pointer;font-size:14px;font-weight:{{ allWeight }};color:{{ allColor }};transition:color .2s ease;">Todos</div>
+
+        <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="4">
+          <div>
+            <div onClick="{{ cat.onClick }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+              <span style="font-size:14px;font-weight:{{ cat.weight }};color:{{ cat.color }};transition:color .2s ease;">{{ cat.label }}</span>
+              <span style="display:inline-flex;transform:{{ cat.arrow }};transition:transform 0.15s;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{ cat.color }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+              </span>
+            </div>
+            <sc-if value="{{ cat.expanded }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;padding-top:12px;animation:lda-fade-in .25s ease;">
+                <sc-for list="{{ cat.subcategories }}" as="sub" hint-placeholder-count="4">
+                  <span onClick="{{ sub.onClick }}" style="cursor:pointer;font-size:13px;font-weight:{{ sub.weight }};color:{{ sub.color }};border-left:{{ sub.borderLeft }};padding-left:12px;">{{ sub.label }}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div>
+      <div style="display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;">
+        <div onClick="{{ toggleSort }}" style="position:relative;display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+          <span style="color:#8B795E;">Ordenar:</span>
+          <span style="display:flex;align-items:center;gap:5px;color:#000;">
+            {{ sortLabel }}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ sortArrow }};transition:transform 0.15s;"><path d="M6 9l6 6 6-6"></path></svg>
+          </span>
+          <sc-if value="{{ sortOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:24px;right:0;background:#FFFFFF;box-shadow:0 4px 16px rgba(0,0,0,0.12);border-radius:6px;padding:8px 0;z-index:10;min-width:200px;animation:lda-fade-in .2s ease;">
+              <sc-for list="{{ sortOptions }}" as="opt" hint-placeholder-count="5">
+                <div onClick="{{ opt.onClick }}" style="padding:9px 18px;font-size:13px;color:{{ opt.color }};font-weight:{{ opt.weight }};cursor:pointer;">{{ opt.label }}</div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:{{ productCols }};gap:{{ productGap }};align-content:start;min-width:0;">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
+        <div id="producto-{{ p.id }}" style="min-width:0;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease;" style-hover="transform:translateY(-6px);">
+          <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
+            <image-slot id="tienda-{{ p.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
+            <sc-if value="{{ p.tag }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;">{{ p.tag }}</span>
+            </sc-if>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:15px;font-weight:400;color:#000000;">{{ p.name }}</div>
+            <a href="{{ p.whatsappUrl }}" target="_blank" title="Pedir por WhatsApp" style="width:26px;height:26px;border-radius:999px;background:#F65091;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;transition:transform .25s ease;" style-hover="transform:scale(1.15);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"><path d="M12 4v16M4 12h16"></path></svg>
+            </a>
+          </div>
+          <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;max-width:85%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ p.desc }}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.price }}</div>
+            <div style="display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8B795E; font-weight: 300">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8B795E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
+              {{ p.delivery }}
+            </div>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ noProducts }}" hint-placeholder-val="{{ false }}">
+        <div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Todavía no hay piezas en esta categoría — muy pronto.</div>
+      </sc-if>
+      </div>
+    </div>
+
+  </div>
+  </sc-if>
+
+  <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin:{{ bannerMargin }};">
+    <image-slot id="tienda-banner-espacio" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ bannerImageUrl }}" placeholder="foto: pieza terminada en un espacio real (mesa, pared, evento)"></image-slot>
+  </div>
+
+  <div style="max-width:820px;margin:0 auto;padding:{{ faqPad }};">
+    <div style="display:grid;grid-template-columns:{{ faqCols }};gap:48px;align-items:center;min-width:0;">
+      <div>
+        <div style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:16px;">Preguntas frecuentes</div>
+        <div style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400">Todo lo que debes saber antes de <span style="font-family:'Homemade Apple', cursive;font-weight:400;font-size:1.2em;">comprar</span></div>
+        <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:16px;">Tiempos, pagos y envíos — resuelto en un vistazo.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
+          <div style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
+            <div onClick="{{ f.onClick }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;">
+              <span style="font-size:14px;color:#2B2420;font-weight:400;">{{ f.q }}</span>
+              <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ f.arrow }};transition:transform 0.3s cubic-bezier(.16,1,.3,1);"><path d="M6 9l6 6 6-6"></path></svg>
+              </span>
+            </div>
+            <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:12px 0 0;animation:lda-fade-in .35s ease;">{{ f.a }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:0 {{ sidePad }} 80px;">
+    <div style="background:#F65091;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;">
+      <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300; position: relative">¿No encuentras lo que <span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em; position: relative; top: 0px">imaginas</span>?</div>
+      <p style="font-size:{{ ctaTextSize }};color:#FCE3ED;font-weight:300;margin-top:{{ ctaTextGap }};">Hagamos un encargo 100% a medida, desde cero.</p>
+      <div style="display:flex;gap:{{ ctaBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ ctaBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
+        <a href="https://wa.me/18495390410" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:{{ ctaWaRadius }};font-size:{{ ctaWaSize }};font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">WhatsApp</a>
+        <a href="Aprende.dc.html" style="text-decoration:none;color:#FFFFFF;padding:6px 0;font-size:14px;font-weight:500;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Aprende algo nuevo</a>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  setupReveal() {
+    const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; el.setAttribute('data-revealed', '1'); };
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    let io;
+    try {
+      io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { reveal(e.target); io.unobserve(e.target); } });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      els.forEach((el) => io.observe(el));
+    } catch (err) {}
+    const sweep = () => {
+      els.forEach((el) => {
+        if (el.getAttribute('data-revealed')) return;
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) { reveal(el); if (io) io.unobserve(el); }
+      });
+    };
+    requestAnimationFrame(sweep);
+    setTimeout(sweep, 400);
+    setTimeout(sweep, 1200);
+  }
+  state = { category: null, subcategory: null, expanded: null, sortBy: 'entrega', sortOpen: false, faqOpen: null, tiendaData: null, loading: false, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+
+  async componentDidMount() {
+    this.setupReveal();
+    if (window.location.hash) {
+      this.setState({ category: null, subcategory: null });
+      const tryScroll = (n) => {
+        const el = document.getElementById(window.location.hash.slice(1));
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.style.boxShadow = '0 0 0 2px #F65091';
+          setTimeout(() => { el.style.boxShadow = ''; }, 1800);
+        } else if (n < 10) {
+          setTimeout(() => tryScroll(n + 1), 200);
+        }
+      };
+      setTimeout(() => tryScroll(0), 300);
+    }
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    try {
+      const cms = await import('./cms.js');
+      const data = await cms.getPageContent('tienda');
+      const merged = {
+        categories: (data.categories && data.categories.length) ? data.categories : this.DEFAULT_CATEGORIES,
+        products: (data.products && data.products.length) ? data.products : this.DEFAULT_PRODUCTS,
+        bannerImageUrl: data.bannerImageUrl || '',
+      };
+      this.setState({ tiendaData: merged, loading: false });
+    } catch (e) {
+      this.setState({ tiendaData: { categories: this.DEFAULT_CATEGORIES, products: this.DEFAULT_PRODUCTS }, loading: false });
+    }
+  }
+
+  FAQS = [
+    { q: '¿Cómo sé si mi pieza quedará como la imagino?', a: 'Antes de crear tu pieza te comparto un boceto digital para tu aprobación, con ajustes incluidos. Solo empiezo a producir una vez que lo apruebas.' },
+    { q: '¿Cómo funcionan los envíos?', a: 'Hacemos entregas a todo el país vía Uber Moto, Vimenpaq o BM Cargo, según tu ubicación.' },
+    { q: '¿Qué pasa si necesito mi pedido con urgencia?', a: 'Escríbeme antes de ordenar — si el tiempo lo permite, puedo priorizar tu pedido con un cargo adicional por urgencia.' },
+    { q: '¿Qué pasa si quiero algo que no está en el catálogo?', a: 'Acepto encargos especiales fuera de catálogo — instalaciones, piezas grandes, colaboraciones. Escríbeme tu idea y lo construimos juntos.' },
+    { q: '¿Cuáles son las formas de pago disponibles?', a: 'Transferencia bancaria: 50% de anticipo para separar tu encargo y el resto al momento de la entrega.' },
+  ];
+  SORT_OPTIONS = [
+    { value: 'entrega', label: 'Entrega más rápida' },
+    { value: 'precio_asc', label: 'Precio, menor a mayor' },
+    { value: 'precio_desc', label: 'Precio, mayor a menor' },
+    { value: 'nuevos', label: 'Más nuevos' },
+    { value: 'alfabetico', label: 'Alfabético' },
+  ];
+  DEFAULT_CATEGORIES = [
+    { id: 'c1', name: 'Digitales', subcategories: [{ id: 's1', name: 'Ebooks' }, { id: 's2', name: 'Plantillas' }] },
+    { id: 'c2', name: 'Personalizados', subcategories: ['Bandejas', 'Bolsos', 'Cajas', 'Carteles', 'Cuadros', 'Llaveros', 'Vineras'].map((n, i) => ({ id: 's1' + i, name: n })) },
+    { id: 'c3', name: 'Ocasión', subcategories: ['Bebés y Revelación', 'Belleza', 'Bodas', 'Corporativos', 'Cumpleaños', 'Escolares', 'Graduación', 'Madres', 'Navidad', 'Padres', 'Quinceañeras', 'San Valentín'].map((n, i) => ({ id: 's2' + i, name: n })) },
+  ];
+  DEFAULT_PRODUCTS = [
+    { id: 'p1', name: 'Bandeja "Te Elijo Hoy"', price: 'RD$2,220', category: 'Personalizados', subcategory: 'Bandejas', desc: 'Bandeja de madera lacada en negro, lettering blanco pintado a mano.', tag: 'Bestseller', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p2', name: 'Cuadro Personalizado 8x10', price: 'RD$700', category: 'Personalizados', subcategory: 'Cuadros', desc: 'Cuadro enmarcado en tela con frase inspiracional ilustrada a mano.', tag: '', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p3', name: 'Caja Sorpresa Personalizada', price: 'Próximamente', category: 'Personalizados', subcategory: 'Cajas', desc: 'Caja kraft con lazo de raso, diseñada a mano para anuncios especiales.', tag: 'Ed. Limitada', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p4', name: 'Letrero "Feliz Navidad"', price: 'RD$2,400', category: 'Ocasión', subcategory: 'Navidad', desc: 'Letrero redondo de madera pintado a mano con detalles navideños.', tag: 'Nuevo', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p5', name: 'Vinera Personalizada', price: 'RD$895', category: 'Personalizados', subcategory: 'Vineras', desc: 'Vinera de madera con nombre pintado a mano, ideal para regalar.', tag: '', delivery: '7-10 días', imageUrl: '' },
+    { id: 'p6', name: 'Cartuchera Personalizada', price: 'RD$230', category: 'Personalizados', subcategory: 'Bolsos', desc: 'Cartuchera de lona con nombre en tipografía cursiva.', tag: '', delivery: '3-5 días', imageUrl: '' },
+    { id: 'p7', name: 'Letrero de Nombre Colgante', price: 'RD$1,000', category: 'Personalizados', subcategory: 'Carteles', desc: 'Letrero de madera pintado a mano con nombre y flores.', tag: '', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p8', name: 'Llavero con Foto', price: 'RD$500', category: 'Personalizados', subcategory: 'Llaveros', desc: 'Llavero acrílico personalizado con tu fotografía favorita.', tag: '', delivery: '3-5 días', imageUrl: '' },
+    { id: 'p9', name: 'Caja Recuerdo de Nacimiento', price: 'RD$1,870', category: 'Ocasión', subcategory: 'Bebés y Revelación', desc: 'Caja en resina con forma de corazón para ecografías y recuerdos del nacimiento.', tag: 'Bestseller', delivery: '7-10 días', imageUrl: '' },
+    { id: 'p10', name: 'Cuadro de Hitos "One Month"', price: 'RD$500', category: 'Ocasión', subcategory: 'Bebés y Revelación', desc: 'Cuadro ilustrado a mano para conmemorar cada mes de vida del bebé.', tag: '', delivery: '5-7 días', imageUrl: '' },
+    { id: 'p11', name: 'Cartel de Propuesta', price: 'RD$1,600', category: 'Ocasión', subcategory: 'Bodas', desc: 'Cartel en lienzo con flores pintadas a mano para inmortalizar el "sí quiero".', tag: '', delivery: '7-10 días', imageUrl: '' },
+  ];
+  renderVals() {
+    const { category, subcategory, expanded, sortBy, sortOpen, faqOpen, tiendaData, loading } = this.state;
+    const data = tiendaData || { categories: this.DEFAULT_CATEGORIES, products: this.DEFAULT_PRODUCTS };
+    const bannerImageUrl = data.bannerImageUrl || '';
+
+    const faqs = this.FAQS.map((f, i) => ({
+      ...f,
+      open: faqOpen === i,
+      arrow: faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
+      onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i }),
+    }));
+
+    const toggleSort = () => this.setState({ sortOpen: !sortOpen });
+    const sortLabelMap = {};
+    this.SORT_OPTIONS.forEach(o => { sortLabelMap[o.value] = o.label; });
+    const sortOptions = this.SORT_OPTIONS.map(o => ({
+      label: o.label,
+      color: sortBy === o.value ? '#F65091' : '#000000',
+      weight: sortBy === o.value ? 500 : 400,
+      onClick: () => this.setState({ sortBy: o.value, sortOpen: false }),
+    }));
+
+    const onSelectAll = () => this.setState({ category: null, subcategory: null, expanded: null });
+    const allActive = !category;
+
+    const categories = data.categories.map(cat => {
+      const isActive = category === cat.name;
+      const isExpanded = expanded === cat.name;
+      const onClick = () => this.setState({
+        category: cat.name,
+        subcategory: null,
+        expanded: isExpanded ? null : cat.name,
+      });
+      const subcategories = cat.subcategories.map(sub => {
+        const subActive = isActive && subcategory === sub.name;
+        return {
+          label: sub.name,
+          weight: subActive ? 500 : 400,
+          color: '#8B795E',
+          borderLeft: subActive ? '2px solid #F65091' : '2px solid transparent',
+          onClick: () => this.setState({ category: cat.name, subcategory: sub.name, expanded: cat.name }),
+        };
+      });
+      return {
+        label: cat.name,
+        weight: isActive ? 600 : 400,
+        color: isActive ? '#F65091' : '#000000',
+        arrow: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+        expanded: isExpanded,
+        onClick,
+        subcategories,
+      };
+    });
+
+    const whatsappNumber = '18496346455';
+    const deliveryDays = (d) => { const m = String(d || '').match(/\d+/g); return m ? parseInt(m[m.length - 1], 10) : 99; };
+    const rawProducts = data.products.filter(p => {
+      if (subcategory) return p.category === category && p.subcategory === subcategory;
+      if (category) return p.category === category;
+      return true;
+    });
+    const sorted = [...rawProducts].sort((a, b) => {
+      const num = (p) => parseFloat(String(p).replace(/[^0-9.]/g, ''));
+      if (sortBy === 'precio_asc') return num(a.price) - num(b.price);
+      if (sortBy === 'precio_desc') return num(b.price) - num(a.price);
+      if (sortBy === 'nuevos') return data.products.indexOf(b) - data.products.indexOf(a);
+      if (sortBy === 'alfabetico') return a.name.localeCompare(b.name);
+      return deliveryDays(a.delivery) - deliveryDays(b.delivery);
+    });
+    const products = sorted.map(p => {
+      const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;
+      return { ...p, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
+    });
+
+    const m = this.state.isMobile;
+    return {
+      navGap: m ? '64px' : '88px',
+      heroPad: m ? '36px 26px 20px' : '76px 48px 8px',
+      h1Size: m ? '26px' : '44px',
+      shopPad: m ? '16px 26px 24px' : '80px 48px 100px',
+      shopCols: m ? '1fr' : '200px 1fr',
+      shopGap: m ? '32px' : '72px',
+      productCols: m ? 'repeat(2,1fr)' : 'repeat(2,1fr)',
+      productGap: m ? '28px 16px' : '40px 36px',
+      faqPad: m ? '8px 26px 48px' : '80px 48px',
+      faqCols: m ? '1fr' : '0.8fr 1.2fr',
+      h2Size: m ? '22px' : '32px',
+      sidePad: m ? '26px' : '48px',
+      ctaPad: m ? '56px 24px' : '100px 48px',
+      ctaRadius: m ? '16px' : '24px',
+      ctaTextSize: m ? '13.5px' : '16px',
+      ctaTextGap: m ? '14px' : '18px',
+      ctaBtnGap: m ? '14px' : '24px',
+      ctaBtnDir: m ? 'column' : 'row',
+      ctaBtnMarginTop: m ? '24px' : '28px',
+      ctaWaPad: m ? '13px 26px' : '15px 30px',
+      ctaWaRadius: m ? '6px' : '4px',
+      ctaWaSize: m ? '13.5px' : '14px',
+      bannerMargin: m ? '32px 0' : '0',
+      isLoading: loading,
+      isLoaded: !loading,
+      onSelectAll,
+      toggleSort,
+      sortOpen,
+      sortLabel: sortLabelMap[sortBy],
+      sortArrow: sortOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      sortOptions,
+      faqs,
+      allColor: allActive ? '#F65091' : '#000000',
+      allWeight: allActive ? 600 : 400,
+      categories,
+      products,
+      noProducts: products.length === 0,
+      bannerImageUrl,
+    };
+  }
+}
+</script>
+</body>
+</html>
