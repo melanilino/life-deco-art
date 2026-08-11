@@ -1,0 +1,40 @@
+name: Fix Del estudio optical gap
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-del-estudio-optical-gap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Tighten optical gap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Inicio.dc.html')
+          t=p.read_text(encoding='utf-8')
+          old='''<div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>\n    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">'''
+          new='''<div class="lda-section-eyebrow lda-eyebrow-del-estudio" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>\n    <div class="lda-del-estudio-title-row" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">'''
+          if old not in t:
+              raise SystemExit('Del estudio block not found')
+          t=t.replace(old,new,1)
+          css='''\n<style id="lda-del-estudio-optical-gap">\n  .lda-eyebrow-del-estudio{margin-bottom:8px!important;}\n  .lda-del-estudio-title-row{margin-top:-6px!important;}\n  @media(max-width:859px){\n    .lda-eyebrow-del-estudio{margin-bottom:6px!important;}\n    .lda-del-estudio-title-row{margin-top:-4px!important;}\n  }\n</style>\n'''
+          if 'id="lda-del-estudio-optical-gap"' not in t:
+              t=t.replace('</helmet>',css+'</helmet>',1)
+          p.write_text(t,encoding='utf-8')
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html'
+          git commit -m "Tighten Del estudio eyebrow optical spacing"
+          git push
