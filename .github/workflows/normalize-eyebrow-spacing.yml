@@ -1,0 +1,95 @@
+name: Normalize eyebrow spacing
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-eyebrow-spacing.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Normalize section eyebrow spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = [
+              Path('Inicio.dc.html'),
+              Path('Sobre Mi.dc.html'),
+              Path('Tienda.dc.html'),
+              Path('Aprende.dc.html'),
+              Path('Contacto.dc.html'),
+          ]
+
+          css = '''\n<style id="lda-eyebrow-spacing-system">\n  .lda-section-eyebrow{margin-bottom:16px!important;}\n  .lda-section-eyebrow + h1,.lda-section-eyebrow + h2,.lda-section-eyebrow + p{margin-top:0!important;}\n  .lda-eyebrow-que-hago{margin-bottom:0!important;}\n  .lda-eyebrow-que-hago + div > div:first-child{padding-top:16px!important;}\n  @media(max-width:859px){\n    .lda-section-eyebrow{margin-bottom:12px!important;}\n    .lda-eyebrow-que-hago{margin-bottom:0!important;}\n    .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}\n  }\n</style>\n'''
+
+          eyebrow_re = re.compile(r'<div(?P<attrs>[^>]*style="[^"]*text-transform:uppercase[^"]*"[^>]*)>(?P<text>[^<]+)</div>', re.I)
+
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+
+              def repl(m):
+                  attrs = m.group('attrs')
+                  label = m.group('text').strip()
+                  # Preserve the Inicio hero kicker exactly as requested.
+                  if label == 'Lettering · Diseño · Manualidades':
+                      return m.group(0)
+                  classes = ['lda-section-eyebrow']
+                  if label.lower() == 'qué hago':
+                      classes.append('lda-eyebrow-que-hago')
+                  class_value = ' '.join(classes)
+                  if re.search(r'\bclass="', attrs):
+                      attrs = re.sub(r'\bclass="([^"]*)"', lambda mm: f'class="{mm.group(1)} {class_value}"', attrs, count=1)
+                  else:
+                      attrs = f' class="{class_value}"' + attrs
+                  return f'<div{attrs}>{m.group("text")}</div>'
+
+              new = eyebrow_re.sub(repl, text)
+
+              if 'id="lda-eyebrow-spacing-system"' not in new:
+                  marker = '</helmet>'
+                  if marker not in new:
+                      raise SystemExit(f'No </helmet> marker in {path}')
+                  new = new.replace(marker, css + marker, 1)
+
+              path.write_text(new, encoding='utf-8')
+
+          # Guardrails
+          inicio = Path('Inicio.dc.html').read_text(encoding='utf-8')
+          hero_match = re.search(r'>Lettering · Diseño · Manualidades</div>', inicio)
+          if not hero_match:
+              raise SystemExit('Inicio hero kicker missing')
+          hero_start = inicio.rfind('<div', 0, hero_match.start())
+          hero_tag = inicio[hero_start:hero_match.end()]
+          if 'lda-section-eyebrow' in hero_tag:
+              raise SystemExit('Hero kicker was modified')
+
+          for path in files:
+              t = path.read_text(encoding='utf-8')
+              if 'lda-eyebrow-spacing-system' not in t:
+                  raise SystemExit(f'Spacing CSS missing in {path}')
+
+          about = Path('Sobre Mi.dc.html').read_text(encoding='utf-8')
+          if 'lda-eyebrow-que-hago' not in about:
+              raise SystemExit('Qué hago exception was not tagged')
+          PY
+
+      - name: Commit normalized spacing
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html' 'Tienda.dc.html' 'Aprende.dc.html' 'Contacto.dc.html'
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Normalize visual eyebrow spacing across main pages"
+            git push
+          fi
