@@ -127,6 +127,11 @@ body{margin:0;background:#fff}
     .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}
   }
 </style>
+<style id="lda-aprende-faq-mobile-align">
+  @media(max-width:859px){
+    .lda-aprende-faq{margin-top:-88px!important;}
+  }
+</style>
 </helmet>
 <div class="lda-nav-spacer" aria-hidden="true"></div>
 
@@ -361,7 +366,7 @@ body{margin:0;background:#fff}
     </div>
   </sc-if>
   <sc-if value="{{ hasFaqs }}" hint-placeholder-val="{{ true }}">
-  <div style="max-width:820px;margin:0 auto;padding:{{ faqPad }};">
+  <div class="lda-aprende-faq" style="max-width:820px;margin:0 auto;padding:{{ faqPad }};">
     <div style="display:grid;grid-template-columns:{{ faqCols }};gap:{{ faqGap }};align-items:center;min-width:0;">
       <div>
         <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">Preguntas frecuentes</div>
