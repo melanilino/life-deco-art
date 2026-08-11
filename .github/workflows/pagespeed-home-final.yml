@@ -1,0 +1,133 @@
+name: PageSpeed Home Final
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Optimize home startup
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('Inicio.dc.html')
+          s = p.read_text(encoding='utf-8')
+
+          s = re.sub(r'<helmet>\s*<link rel="preconnect" href="https://fonts.googleapis.com">\s*<link href="https://fonts.googleapis.com/css2\?family=Montserrat:[^>]+rel="stylesheet">\s*', '<helmet>\n', s, count=1, flags=re.S)
+
+          old_load = '''  async loadContent() {
+            try {
+              const cms = await import('./cms.js');
+              const data = await cms.getPageContent('inicio');
+              this.setState({ content: data });
+              this.scheduleHeroVideo();
+              const tiendaData = await cms.getPageContent('tienda');
+              if (tiendaData && tiendaData.products) {
+                const map = {};
+                tiendaData.products.forEach((p) => { if (p.imageUrl) map[p.id] = p.imageUrl; });
+                this.setState({ tiendaProducts: map });
+              }
+            } catch (e) {}
+          }'''
+          old_load = old_load.replace('          ', '')
+
+          new_load = '''  async loadContent() {
+            try {
+              const cms = await import('./cms.js');
+              const data = await cms.getPageContent('inicio');
+              this.setState({ content: data });
+              this.scheduleHeroVideo();
+              this.scheduleTiendaProducts(cms);
+            } catch (e) {}
+          }
+          loadTiendaProducts = async (cms) => {
+            if (this._tiendaLoaded || !cms) return;
+            this._tiendaLoaded = true;
+            try {
+              const tiendaData = await cms.getPageContent('tienda');
+              if (tiendaData && tiendaData.products) {
+                const map = {};
+                tiendaData.products.forEach((p) => { if (p.imageUrl) map[p.id] = p.imageUrl; });
+                this.setState({ tiendaProducts: map });
+              }
+            } catch (e) {}
+          };
+          scheduleTiendaProducts = (cms) => {
+            clearTimeout(this.tiendaProductsTimer);
+            const run = () => this.loadTiendaProducts(cms);
+            if ('requestIdleCallback' in window) this.tiendaProductsIdle = window.requestIdleCallback(run, { timeout: 12000 });
+            else this.tiendaProductsTimer = setTimeout(run, 10000);
+          };'''
+          new_load = new_load.replace('          ', '')
+
+          if old_load not in s:
+            raise SystemExit('loadContent block not found')
+          s = s.replace(old_load, new_load, 1)
+
+          old_schedule = '''  scheduleHeroVideo = () => {
+            clearTimeout(this.heroVideoTimer);
+            this.heroVideoTimer = setTimeout(this.startHeroVideo, 1400);
+          };'''.replace('          ', '')
+
+          new_schedule = '''  scheduleHeroVideo = () => {
+            if (this._heroVideoScheduled) return;
+            this._heroVideoScheduled = true;
+            const start = () => {
+              if (this._heroVideoStarted) return;
+              this._heroVideoStarted = true;
+              this.removeHeroVideoTriggers();
+              this.startHeroVideo();
+            };
+            this._heroVideoStartHandler = start;
+            ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((type) => {
+              window.addEventListener(type, start, { once: true, passive: type !== 'keydown' });
+            });
+            clearTimeout(this.heroVideoTimer);
+            this.heroVideoTimer = setTimeout(start, 15000);
+          };
+          removeHeroVideoTriggers = () => {
+            if (!this._heroVideoStartHandler) return;
+            ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((type) => window.removeEventListener(type, this._heroVideoStartHandler));
+          };'''.replace('          ', '')
+
+          if old_schedule not in s:
+            raise SystemExit('scheduleHeroVideo block not found')
+          s = s.replace(old_schedule, new_schedule, 1)
+
+          old_unmount = '''  componentWillUnmount() {
+            window.removeEventListener('resize', this.checkMobile);
+            window.removeEventListener('load', this.scheduleHeroVideo);
+            clearTimeout(this.heroVideoTimer);
+          }'''.replace('          ', '')
+
+          new_unmount = '''  componentWillUnmount() {
+            window.removeEventListener('resize', this.checkMobile);
+            window.removeEventListener('load', this.scheduleHeroVideo);
+            this.removeHeroVideoTriggers();
+            clearTimeout(this.heroVideoTimer);
+            clearTimeout(this.tiendaProductsTimer);
+            if (this.tiendaProductsIdle && 'cancelIdleCallback' in window) window.cancelIdleCallback(this.tiendaProductsIdle);
+          }'''.replace('          ', '')
+
+          if old_unmount not in s:
+            raise SystemExit('componentWillUnmount block not found')
+          s = s.replace(old_unmount, new_unmount, 1)
+
+          p.write_text(s, encoding='utf-8')
+          Path('.github/workflows/pagespeed-home-final.yml').unlink(missing_ok=True)
+
+      - name: Commit optimization
+        run: |
+          git config user.name "Life Deco Art Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add "Inicio.dc.html" .github/workflows/pagespeed-home-final.yml
+          git commit -m "Optimize home startup for PageSpeed"
+          git push
