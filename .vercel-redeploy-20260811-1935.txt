@@ -1,0 +1,1 @@
+Force production deployment for Tienda hero: only “buscas” uses Homemade Apple; all remaining text uses Montserrat.
