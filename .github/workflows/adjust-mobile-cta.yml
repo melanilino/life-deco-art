@@ -1,0 +1,51 @@
+name: Adjust mobile CTA spacing
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/adjust-mobile-cta.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  adjust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Reduce mobile CTA spacing only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('Inicio.dc.html'): [
+                  ("padding: 72px {{ sidePad }} 72px;", "padding: 56px {{ sidePad }} 56px;"),
+                  ("closingPad: m ? '56px 24px' : '100px 48px',", "closingPad: m ? '48px 24px' : '100px 48px',"),
+              ],
+              Path('Sobre Mi.dc.html'): [
+                  ("closingOuterPad: m ? '40px 24px 64px' : '72px 48px 72px',", "closingOuterPad: m ? '32px 24px 48px' : '72px 48px 72px',"),
+                  ("closingPad: m ? '48px 24px' : '100px 48px',", "closingPad: m ? '40px 24px' : '100px 48px',"),
+              ],
+          }
+
+          for path, pairs in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly 1 occurrence of {old!r}, found {count}')
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit CTA adjustment and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/adjust-mobile-cta.yml
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html'
+          git commit -m "Tighten mobile CTA spacing on Inicio and Sobre Mi"
+          git push origin main
