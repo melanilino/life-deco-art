@@ -1,0 +1,53 @@
+name: Balance mobile CTA margins
+
+on:
+  push:
+    paths:
+      - '.github/workflows/balance-mobile-cta-margins.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  balance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Balance mobile CTA top and bottom whitespace
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          files = ['Inicio.dc.html','Sobre Mi.dc.html','Tienda.dc.html','Aprende.dc.html']
+          for path in files:
+              p = Path(path)
+              t = p.read_text(encoding='utf-8')
+              old_region = "ctaRegionHeight: m ? '440px'"
+              new_region = "ctaRegionHeight: m ? '472px'"
+              old_top = "ctaTopPad: m ? '48px'"
+              new_top = "ctaTopPad: m ? '80px'"
+              if old_region not in t:
+                  raise SystemExit(f'Missing mobile CTA region pattern in {path}')
+              if old_top not in t:
+                  raise SystemExit(f'Missing mobile CTA top padding pattern in {path}')
+              t = t.replace(old_region, new_region, 1)
+              t = t.replace(old_top, new_top, 1)
+              p.write_text(t, encoding='utf-8')
+
+          # Guardrails: mobile CTA boxes remain 312px high, so 80 + 312 + 80 = 472.
+          for path in files:
+              t = Path(path).read_text(encoding='utf-8')
+              checks = [
+                  "ctaRegionHeight: m ? '472px'",
+                  "ctaTopPad: m ? '80px'",
+                  "ctaBoxHeight: m ? '312px'",
+              ]
+              for check in checks:
+                  if check not in t:
+                      raise SystemExit(f'Guardrail failed: {check} missing in {path}')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html' 'Tienda.dc.html' 'Aprende.dc.html'
+          git commit -m "Balance mobile CTA whitespace above and below"
+          git push
