@@ -1,0 +1,35 @@
+name: Match Tienda FAQ top gap
+
+on:
+  push:
+    paths:
+      - '.github/workflows/match-tienda-faq-top-gap.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Match Tienda FAQ top whitespace to lower spacing
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          t = p.read_text(encoding='utf-8')
+          old = "faqPad: m ? '48px 24px 0' : '72px 48px',"
+          new = "faqPad: m ? '20px 24px 0' : '72px 48px',"
+          if old not in t:
+              raise SystemExit('faqPad mobile pattern not found')
+          t = t.replace(old, new, 1)
+          p.write_text(t, encoding='utf-8')
+          if new not in t:
+              raise SystemExit('faqPad guardrail failed')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Tienda.dc.html'
+          git commit -m "Match Tienda FAQ top whitespace to lower spacing"
+          git push
