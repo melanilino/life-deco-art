@@ -200,7 +200,7 @@ body{margin:0;background:#fff}
             </sc-if>
           </div>
           <div class="lda-product-title-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-            <div class="lda-product-title" style="font-size:15px;font-weight:400;color:#000000;">{{ p.name }}</div>
+            <div class="lda-product-title" style="font-size:15px;font-weight:400;color:#000000;">{{ p.displayName }}</div>
             <a href="{{ p.whatsappUrl }}" target="_blank" title="Pedir por WhatsApp" style="width:26px;height:26px;border-radius:999px;background:#F65091;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;transition:transform .25s ease;" style-hover="transform:scale(1.15);">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"><path d="M12 4v16M4 12h16"></path></svg>
             </a>
@@ -433,7 +433,15 @@ class Component extends DCLogic {
     });
     const products = sorted.map(p => {
       const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;
-      return { ...p, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
+      const titleUpgrades = {
+        'Bandeja "Te Elijo Hoy"': 'Bandeja Personalizada "Te Elijo Hoy"',
+        'Cartuchera Personalizada': 'Cartuchera Personalizada con Nombre',
+        'Llavero con Foto': 'Llavero Personalizado con Foto',
+        'Letrero "Feliz Navidad"': 'Letrero Navideño de Madera Personalizado',
+        'Vinera Personalizada': 'Vinera de Madera Personalizada',
+        'Cartel de Propuesta': 'Cartel Personalizado para Propuesta de Matrimonio',
+      };
+      return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
     });
 
     const m = this.state.isMobile;
