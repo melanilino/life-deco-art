@@ -1,0 +1,86 @@
+name: Finalize mobile CTA reference alignment
+
+on:
+  push:
+    paths:
+      - '.github/workflows/finalize-mobile-cta-reference.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Align final mobile CTA regions to reference
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new, label):
+              p = Path(path)
+              t = p.read_text(encoding='utf-8')
+              if old not in t:
+                  raise SystemExit(f'Missing pattern for {label} in {path}')
+              t = t.replace(old, new, 1)
+              p.write_text(t, encoding='utf-8')
+
+          # Tienda/Aprende already use a 48px CTA top gap. Their FAQ also had 48px
+          # bottom padding, so mobile was effectively getting 96px before the CTA.
+          # Remove that duplicated lower gap only on mobile.
+          replace_once(
+              'Tienda.dc.html',
+              "faqPad: m ? '48px 24px 48px' : '72px 48px',",
+              "faqPad: m ? '48px 24px 0' : '72px 48px',",
+              'Tienda mobile FAQ bottom spacing'
+          )
+          replace_once(
+              'Aprende.dc.html',
+              "faqPad: m ? '48px 24px 48px' : '72px 48px',",
+              "faqPad: m ? '48px 24px 0' : '72px 48px',",
+              'Aprende mobile FAQ bottom spacing'
+          )
+
+          # Guardrails: all four final mobile regions use the same geometry.
+          expected = {
+              'Inicio.dc.html': [
+                  "ctaRegionHeight: m ? '440px' : '508px'",
+                  "ctaTopPad: m ? '48px' : '72px'",
+                  "ctaBoxHeight: m ? '312px' : '356px'",
+                  "closingTextSize: m ? '13.5px' : '16px'",
+                  "closingBtnPad: m ? '13px 26px' : '15px 30px'",
+              ],
+              'Sobre Mi.dc.html': [
+                  "testimonialSectionPad: m ? '48px 24px 0' : '72px 48px 0'",
+                  "ctaRegionHeight: m ? '440px' : '508px'",
+                  "ctaTopPad: m ? '48px' : '72px'",
+                  "ctaBoxHeight: m ? '312px' : '356px'",
+                  "closingTextSize: m ? '13.5px' : '16px'",
+              ],
+              'Tienda.dc.html': [
+                  "faqPad: m ? '48px 24px 0' : '72px 48px'",
+                  "ctaRegionHeight: m ? '440px' : '508px'",
+                  "ctaTopPad: m ? '48px' : '72px'",
+                  "ctaBoxHeight: m ? '312px' : '356px'",
+                  "ctaTextSize: m ? '13.5px' : '16px'",
+              ],
+              'Aprende.dc.html': [
+                  "faqPad: m ? '48px 24px 0' : '72px 48px'",
+                  "ctaRegionHeight: m ? '440px' : 'auto'",
+                  "ctaTopPad: m ? '48px' : '0'",
+                  "ctaBoxHeight: m ? '312px' : 'auto'",
+                  "ctaTextSize: m ? '13.5px' : '16px'",
+              ],
+          }
+          for path, patterns in expected.items():
+              text = Path(path).read_text(encoding='utf-8')
+              for pattern in patterns:
+                  if pattern not in text:
+                      raise SystemExit(f'Guardrail failed: {pattern} missing in {path}')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Tienda.dc.html' 'Aprende.dc.html'
+          git commit -m "Align mobile CTA spacing to approved reference"
+          git push
