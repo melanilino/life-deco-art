@@ -1,0 +1,41 @@
+name: Match Sobre Mi CTA to Inicio desktop
+
+on:
+  push:
+    paths:
+      - '.github/workflows/match-sobremi-cta-to-inicio-desktop.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Match desktop CTA dimensions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Sobre Mi.dc.html')
+          t=p.read_text(encoding='utf-8')
+          old="closingOuterPad: m ? '24px 24px 48px' : '32px 48px 72px',\n      closingPad: m ? '24px 24px' : '32px 48px',"
+          new="closingOuterPad: m ? '24px 24px 48px' : '56px 48px 56px',\n      closingPad: m ? '24px 24px' : '100px 48px',"
+          if old not in t:
+              raise SystemExit('Current Sobre Mi CTA spacing values not found')
+          t=t.replace(old,new,1)
+          p.write_text(t,encoding='utf-8')
+          # Guardrails: desktop matches Inicio; mobile preserved.
+          out=p.read_text(encoding='utf-8')
+          assert "closingOuterPad: m ? '24px 24px 48px' : '56px 48px 56px'" in out
+          assert "closingPad: m ? '24px 24px' : '100px 48px'" in out
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Sobre Mi.dc.html'
+          git commit -m "Match Sobre Mi desktop CTA spacing to Inicio"
+          git push
