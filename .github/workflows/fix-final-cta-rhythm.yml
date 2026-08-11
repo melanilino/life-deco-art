@@ -1,0 +1,54 @@
+name: Fix final CTA rhythm
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-final-cta-rhythm.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Correct final CTA rhythm against Tienda
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # Tienda's visible lead-in is supplied by the FAQ section's bottom pad
+          # plus the CTA's own internal top pad. Sobre Mi already has the same
+          # section bottom pad on its testimonial block, so adding another outer
+          # top pad was double-counting that whitespace. Inicio does not have that
+          # preceding bottom pad, so its current outer top pad is intentionally kept.
+
+          p = Path('Sobre Mi.dc.html')
+          t = p.read_text(encoding='utf-8')
+          old = "closingOuterPad: m ? '48px 24px 80px' : '72px 48px 80px',"
+          new = "closingOuterPad: m ? '0 24px 80px' : '0 48px 80px',"
+          if old not in t:
+              raise SystemExit('Sobre Mi closingOuterPad not found')
+          t = t.replace(old, new, 1)
+          p.write_text(t, encoding='utf-8')
+
+          # Guardrails: Sobre Mi relies on the preceding sectionPad for the lead-in;
+          # internal CTA padding and Inicio values stay matched to Tienda.
+          sobre = Path('Sobre Mi.dc.html').read_text(encoding='utf-8')
+          inicio = Path('Inicio.dc.html').read_text(encoding='utf-8')
+          assert "sectionPad: m ? '48px 24px' : '72px 48px'" in sobre
+          assert "closingOuterPad: m ? '0 24px 80px' : '0 48px 80px'" in sobre
+          assert "closingPad: m ? '64px 24px' : '96px 48px'" in sobre
+          assert "closingOuterPad: m ? '48px 24px 80px' : '72px 48px 80px'" in inicio
+          assert "closingPad: m ? '64px 24px' : '96px 48px'" in inicio
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Sobre Mi.dc.html'
+          git commit -m "Correct Sobre Mi CTA visual rhythm to Tienda"
+          git push
