@@ -10,7 +10,7 @@ x-dc{display:none!important}
 #dc-boot-fallback{position:fixed;inset:0;z-index:2147482999;background:#fff;font-family:Montserrat,Arial,sans-serif;color:#000}
 #dc-boot-fallback .dc-fb-nav{height:80px;display:flex;align-items:center;padding:0 48px;box-sizing:border-box;background:#fff}
 #dc-boot-fallback .dc-fb-brand{font-size:20px;font-weight:400;letter-spacing:.13px;white-space:nowrap}
-#dc-boot-fallback .dc-fb-hero{height:calc(100vh - 38px);min-height:560px;background:#1a1a1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 48px 0;box-sizing:border-box}
+#dc-boot-fallback .dc-fb-hero{height:calc(100vh - 80px);min-height:560px;background:#1a1a1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 48px 0;box-sizing:border-box}
 #dc-boot-fallback .dc-fb-kicker{font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:28px}
 #dc-boot-fallback .dc-fb-title{font-size:clamp(28px,5.2vw,70px);line-height:1.25;font-weight:200;margin:10px 0 18px}
 #dc-boot-fallback .dc-fb-sub{font-size:18px;line-height:1.6;color:rgba(255,255,255,.82);font-weight:300;max-width:600px;margin:0 0 32px}
@@ -100,7 +100,7 @@ body{margin:0;background:#fff}
 
   <!-- 1. LA EMOCIÓN — HERO (versión 1f) -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-  <div data-reveal="" style="position:relative;height:calc(100vh - 38px);min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:56px 48px 0;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);background:#1a1a1a;">
+  <div data-reveal="" style="position:relative;height:calc(100vh - 80px);min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:56px 48px 0;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="none" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.18) 40%,rgba(0,0,0,.5) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:28px;">Lettering · Diseño · Manualidades</div>
