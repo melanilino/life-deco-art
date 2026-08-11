@@ -1,0 +1,38 @@
+name: Clean Tienda product titles
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/tienda-remove-personalizado-titles.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace repetitive product display titles
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          replacements = {
+            "'Bandeja \"Te Elijo Hoy\"': 'Bandeja Personalizada \"Te Elijo Hoy\"'": "'Bandeja \"Te Elijo Hoy\"': 'Bandeja de Madera \"Te Elijo Hoy\"'",
+            "'Cartuchera Personalizada': 'Cartuchera Personalizada con Nombre'": "'Cartuchera Personalizada': 'Cartuchera de Lona con Nombre'",
+            "'Llavero con Foto': 'Llavero Personalizado con Foto'": "'Llavero con Foto': 'Llavero Acrílico con Fotografía'",
+            "'Letrero \"Feliz Navidad\"': 'Letrero Navideño de Madera Personalizado'": "'Letrero \"Feliz Navidad\"': 'Letrero de Madera \"Feliz Navidad\"'",
+            "'Vinera Personalizada': 'Vinera de Madera Personalizada'": "'Vinera Personalizada': 'Vinera de Madera con Nombre'",
+            "'Cartel de Propuesta': 'Cartel Personalizado para Propuesta de Matrimonio'": "'Cartel de Propuesta': 'Cartel para Propuesta de Matrimonio'",
+          }
+          for old, new in replacements.items():
+              if old not in s:
+                  raise SystemExit(f'Missing expected text: {old}')
+              s = s.replace(old, new)
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tienda.dc.html
+          git commit -m 'Use cleaner descriptive Tienda product titles'
+          git push
