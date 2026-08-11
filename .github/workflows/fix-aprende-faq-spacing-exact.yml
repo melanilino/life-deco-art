@@ -1,0 +1,33 @@
+name: Fix Aprende FAQ spacing exact
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-aprende-faq-spacing-exact.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set exact 60px visual gap above FAQ
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p = Path('Aprende.dc.html')
+          t = p.read_text(encoding='utf-8')
+          old = "faqPad: m ? (category === 'Esenciales' ? '20px 24px 0' : '60px 24px 0') : '72px 48px',"
+          new = "faqPad: m ? '20px 24px 0' : '72px 48px',"
+          if old not in t:
+              raise SystemExit('Expected current faqPad pattern not found')
+          t = t.replace(old, new, 1)
+          p.write_text(t, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Aprende.dc.html'
+          git commit -m "Fix Aprende mobile FAQ spacing to exact 60px"
+          git push
