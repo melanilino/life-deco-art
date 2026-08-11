@@ -1,0 +1,49 @@
+name: Set mobile CTA margins to 60px
+
+on:
+  push:
+    paths:
+      - '.github/workflows/set-mobile-cta-60.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set mobile CTA top and bottom whitespace to 60px
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+
+          files = ['Inicio.dc.html','Sobre Mi.dc.html','Tienda.dc.html','Aprende.dc.html']
+          for path in files:
+              p = Path(path)
+              t = p.read_text(encoding='utf-8')
+              if "ctaRegionHeight: m ? '472px'" not in t:
+                  raise SystemExit(f'Missing 472px mobile region in {path}')
+              if "ctaTopPad: m ? '80px'" not in t:
+                  raise SystemExit(f'Missing 80px mobile top pad in {path}')
+              if "ctaBoxHeight: m ? '312px'" not in t:
+                  raise SystemExit(f'Missing 312px mobile CTA box in {path}')
+              t = t.replace("ctaRegionHeight: m ? '472px'", "ctaRegionHeight: m ? '432px'", 1)
+              t = t.replace("ctaTopPad: m ? '80px'", "ctaTopPad: m ? '60px'", 1)
+              p.write_text(t, encoding='utf-8')
+
+          for path in files:
+              t = Path(path).read_text(encoding='utf-8')
+              for check in [
+                  "ctaRegionHeight: m ? '432px'",
+                  "ctaTopPad: m ? '60px'",
+                  "ctaBoxHeight: m ? '312px'",
+              ]:
+                  if check not in t:
+                      raise SystemExit(f'Guardrail failed: {check} missing in {path}')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html' 'Tienda.dc.html' 'Aprende.dc.html'
+          git commit -m "Set mobile CTA whitespace to 60px"
+          git push
