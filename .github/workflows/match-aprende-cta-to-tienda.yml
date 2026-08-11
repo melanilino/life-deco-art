@@ -1,0 +1,51 @@
+name: Match Aprende CTA to Tienda
+
+on:
+  push:
+    paths:
+      - '.github/workflows/match-aprende-cta-to-tienda.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Match Aprende CTA spacing to Tienda
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('Aprende.dc.html')
+          t=p.read_text(encoding='utf-8')
+
+          # Match the FAQ-to-CTA vertical rhythm to Tienda on desktop and mobile.
+          old="faqPad: m ? '40px 24px 48px' : '48px 48px 72px',"
+          new="faqPad: m ? '48px 24px 48px' : '72px 48px',"
+          if old not in t:
+              raise SystemExit('Aprende faqPad not found')
+          t=t.replace(old,new,1)
+
+          # Match CTA box padding exactly to Tienda, including mobile horizontal padding.
+          old2="ctaPad: m ? '64px 28px' : '96px 48px',"
+          new2="ctaPad: m ? '64px 24px' : '96px 48px',"
+          if old2 not in t:
+              raise SystemExit('Aprende ctaPad not found')
+          t=t.replace(old2,new2,1)
+
+          p.write_text(t,encoding='utf-8')
+
+          out=p.read_text(encoding='utf-8')
+          assert "faqPad: m ? '48px 24px 48px' : '72px 48px'" in out
+          assert "ctaPad: m ? '64px 24px' : '96px 48px'" in out
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Aprende.dc.html'
+          git commit -m "Match Aprende CTA spacing to Tienda"
+          git push
