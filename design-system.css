@@ -4,6 +4,16 @@
   --lda-page-gutter: 48px;
   --lda-page-gutter-mobile: 24px;
 
+  /* Vertical rhythm */
+  --lda-section-sm: 48px;
+  --lda-section-md: 72px;
+  --lda-section-lg: 96px;
+  --lda-section-xl: 120px;
+  --lda-section-mobile-sm: 40px;
+  --lda-section-mobile-md: 48px;
+  --lda-section-mobile-lg: 64px;
+  --lda-section-mobile-xl: 80px;
+
   /* Core brand colors */
   --lda-black: #000000;
   --lda-white: #FFFFFF;
