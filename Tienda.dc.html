@@ -125,8 +125,8 @@ body{margin:0;background:#fff}
 </style>
 <style id="lda-mobile-product-grid-alignment">
   @media(max-width:859px){
-    .lda-product-title-row{min-height:59px;}
-    .lda-product-title{line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .lda-product-title-row{height:59px;min-height:59px;}
+    .lda-product-title{line-height:1.3;height:58.5px;min-height:58.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
     .lda-product-desc{line-height:1.5;min-height:39px;max-height:39px;}
     .lda-product-meta{min-height:24px;}
   }
@@ -207,7 +207,7 @@ body{margin:0;background:#fff}
           </div>
           <div class="lda-product-desc" style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;max-width:85%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ p.desc }}</div>
           <div class="lda-product-meta" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-            <div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.price }}</div>
+            <div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.displayPrice }}</div>
             <div style="display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8B795E; font-weight: 300">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8B795E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
               {{ p.delivery }}
@@ -433,7 +433,7 @@ class Component extends DCLogic {
     });
     const products = sorted.map(p => {
       const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;
-      return { ...p, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
+      return { ...p, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
     });
 
     const m = this.state.isMobile;
