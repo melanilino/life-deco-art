@@ -92,6 +92,18 @@ body{margin:0;background:#fff}
   a { color: #000000; }
   a:hover { color: #8B795E; }
 </style>
+
+<style id="lda-eyebrow-spacing-system">
+  .lda-section-eyebrow{margin-bottom:16px!important;}
+  .lda-section-eyebrow + h1,.lda-section-eyebrow + h2,.lda-section-eyebrow + p{margin-top:0!important;}
+  .lda-eyebrow-que-hago{margin-bottom:0!important;}
+  .lda-eyebrow-que-hago + div > div:first-child{padding-top:16px!important;}
+  @media(max-width:859px){
+    .lda-section-eyebrow{margin-bottom:12px!important;}
+    .lda-eyebrow-que-hago{margin-bottom:0!important;}
+    .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}
+  }
+</style>
 </helmet>
 <div class="lda-nav-spacer" aria-hidden="true"></div>
 
@@ -103,7 +115,7 @@ body{margin:0;background:#fff}
       <image-slot id="sobremi-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ heroImageUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
     <div>
-      <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Sobre mí</div>
+      <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Sobre mí</div>
       <h1 style="font-size: {{ h1Size }}; line-height: 1.2; font-weight: 300; color: #000000; margin: 0">Soy Melani, me apasionan <br>los <span style="font-family: &quot;Homemade Apple&quot;, cursive; font-weight: 300; font-size: 1.22em; position: relative;">detalles</span>.</h1>
       <div style="font-size:{{ subtitleSize }};line-height:1.7;color:#8B795E;font-weight:300;font-style:italic;margin-top:24px;border-left:1px solid #000000;padding-left:20px;">"Cada encargo es único porque cada historia también lo es."</div>
       <p style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:32px 0 0;">Mis manos nunca aprendieron a estar quietas. De niña dibujaba, reciclaba, transformaba, construía. Aprendí a escribir corrido, luego en molde. Y en algún punto entre todo eso, sin manual ni permiso, empecé a mezclarlo. A hacerlo mío.</p>
@@ -121,7 +133,7 @@ body{margin:0;background:#fff}
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-reveal="" style="padding:{{ heroPad }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
-    <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Sobre mí</div>
+    <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Sobre mí</div>
     <h1 style="font-size: {{ h1Size }}; line-height: 1.2; font-weight: 300; color: #000000; margin: 0">Soy Melani, me apasionan <br>los <span style="font-family: &quot;Homemade Apple&quot;, cursive; font-weight: 300; font-size: 1.22em; position: relative;">detalles</span>.</h1>
     <div style="font-size:{{ subtitleSize }};line-height:1.7;color:#8B795E;font-weight:300;font-style:italic;margin-top:24px;border-left:1px solid #000000;padding-left:20px;">"Cada encargo es único porque cada historia también lo es."</div>
     <p style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:32px 0 0;">Mis manos nunca aprendieron a estar quietas. De niña dibujaba, reciclaba, transformaba, construía. Aprendí a escribir corrido, luego en molde. Y en algún punto entre todo eso, sin manual ni permiso, empecé a mezclarlo. A hacerlo mío.</p>
@@ -141,7 +153,7 @@ body{margin:0;background:#fff}
   <div data-reveal="" style="background:#F3EEE4;padding:{{ blockPad }};margin-top:{{ queHagoTopGap }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:{{ heroCols }};gap:48px;align-items:start;min-width:0;">
       <div>
-        <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Qué hago</div>
+        <div class="lda-section-eyebrow lda-eyebrow-que-hago" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Qué hago</div>
         <div style="display:flex;flex-direction:column;gap:0;">
           <div style="padding:{{ queHagoPad }};border-bottom:1px solid #D8CDB7;font-size:{{ queHagoSize }};font-weight:400;color:#000000;">Personalizados</div>
           <div style="padding:{{ queHagoPad }};border-bottom:1px solid #D8CDB7;font-size:{{ queHagoSize }};font-weight:400;color:#000000;">Rotulación</div>
@@ -150,7 +162,7 @@ body{margin:0;background:#fff}
         </div>
       </div>
       <div>
-        <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Mi proceso</div>
+        <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Mi proceso</div>
         <p style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:0 0 18px;">No empieza cuando tomo el marcador. Empieza cuando te escucho. Cuando entiendo tu historia y descifro la emoción que quieres dejar grabada.</p>
         <p style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:0;">Solo entonces trazo la primera línea, buscando que al recibir cualquier encargo, sientas que no pudo haber sido hecho de otra manera.</p>
       </div>
@@ -158,7 +170,7 @@ body{margin:0;background:#fff}
   </div>
 
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ sectionPad }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
-    <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">FOTOGRAFÍA DESTACADA</div>
+    <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">FOTOGRAFÍA DESTACADA</div>
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);border-radius:6px;background:#F3EEE4;overflow:hidden;">
       <image-slot id="sobremi-proceso" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ featuredImageUrl }}" placeholder="pieza destacada en proceso de creación"></image-slot>
     </div>
@@ -166,7 +178,7 @@ body{margin:0;background:#fff}
 
   <div data-reveal="" style="background:#000000;padding:{{ blockPad }};text-align:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div style="max-width:660px;margin:0 auto;">
-      <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Filosofía</div>
+      <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Filosofía</div>
       <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
       <p style="font-size:{{ philoSize }};line-height:1.6;color:#FFFFFF;margin:0;font-weight:300;">En Life Deco Art diseñamos&nbsp;&nbsp;<span data-cc-id="cc-1" style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.3em;">experiencias</span>&nbsp; visuales,<br><span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.3em;">cuidando</span>&nbsp; cada trazo como parte de una historia que <span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.3em; font-weight: 300;">merece</span>&nbsp; ser contada con&nbsp;&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.3em;">excelencia</span>.</p>
       </sc-if>
@@ -177,7 +189,7 @@ body{margin:0;background:#fff}
   </div>
 
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ sectionPad }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
-    <div style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Lo que dicen</div>
+    <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Lo que dicen</div>
     <div style="display:grid;grid-template-columns:{{ testimonialCols }};gap:{{ testimonialGap }};min-width:0;">
       <div style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};transition:transform .3s ease;" style-hover="transform:translateY(-5px);">
         <p style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"Melani capturó exactamente lo que quería sin que yo supiera cómo explicarlo. La bandeja quedó preciosa y mi mamá lloró cuando la vio."</p>
