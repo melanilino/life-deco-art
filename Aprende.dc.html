@@ -127,6 +127,9 @@ body{margin:0;background:#fff}
     .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}
   }
 </style>
+<style id="lda-faq-accent-color">
+  .lda-faq-eyebrow{color:#0CC0DF!important;}
+</style>
 </helmet>
 <div class="lda-nav-spacer" aria-hidden="true"></div>
 
@@ -364,7 +367,7 @@ body{margin:0;background:#fff}
   <div style="max-width:820px;margin:0 auto;padding:{{ faqPad }};">
     <div style="display:grid;grid-template-columns:{{ faqCols }};gap:{{ faqGap }};align-items:center;min-width:0;">
       <div>
-        <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">Preguntas frecuentes</div>
+        <div class="lda-section-eyebrow lda-faq-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">Preguntas frecuentes</div>
         <div style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400">{{ faqBefore }}<span style="font-family:'Homemade Apple', cursive;font-weight:400;font-size:1.2em;">{{ faqHighlight }}</span>{{ faqAfter }}</div>
         <p style="font-size:{{ bodySize }};color:#8B795E;font-weight:300;line-height:1.6;margin:16px 0 0;">{{ faqSubtitle }}</p>
       </div>
