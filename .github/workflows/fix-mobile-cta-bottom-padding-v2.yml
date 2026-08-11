@@ -1,0 +1,59 @@
+name: Fix mobile CTA bottom padding v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mobile-cta-bottom-padding-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Match mobile CTA bottom padding to 60px
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re
+
+          files = ['Inicio.dc.html','Sobre Mi.dc.html','Tienda.dc.html','Aprende.dc.html']
+          for path in files:
+              p = Path(path)
+              t = p.read_text(encoding='utf-8')
+
+              if "ctaBottomPad:" not in t:
+                  pat = r"(ctaTopPad:\s*m \? '60px' : '[^']+',)"
+                  m = re.search(pat, t)
+                  if not m:
+                      raise SystemExit(f'Missing CTA top-pad variable in {path}')
+                  t = t[:m.end()] + "\n      ctaBottomPad: m ? '60px' : '80px'," + t[m.end():]
+
+              old = "padding:{{ ctaTopPad }} {{ sidePad }} 80px;"
+              new = "padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};"
+              if old in t:
+                  t = t.replace(old, new, 1)
+              elif new not in t:
+                  raise SystemExit(f'Missing CTA outer padding pattern in {path}')
+
+              p.write_text(t, encoding='utf-8')
+
+          for path in files:
+              t = Path(path).read_text(encoding='utf-8')
+              checks = [
+                  "ctaRegionHeight: m ? '432px'",
+                  "ctaBottomPad: m ? '60px' : '80px'",
+                  "ctaBoxHeight: m ? '312px'",
+                  "padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};",
+              ]
+              for check in checks:
+                  if check not in t:
+                      raise SystemExit(f'Guardrail failed: {check} missing in {path}')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html' 'Tienda.dc.html' 'Aprende.dc.html'
+          git commit -m "Fix mobile CTA bottom padding at 60px"
+          git push
