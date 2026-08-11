@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<style>
+.lda-footer-email:-webkit-autofill, .lda-footer-email:-webkit-autofill:hover, .lda-footer-email:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #141414 inset; -webkit-text-fill-color: #FFFFFF; transition: background-color 9999s ease-in-out 0s; }
+</style>
+</helmet>
+<footer style="background:#000000;color:#FFFFFF;font-family:'Montserrat',sans-serif;padding:{{ padding }};">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:{{ gridCols }};gap:40px;min-width:0;">
+    <div>
+      <div style="font-size:16px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#FFFFFF;line-height:1;"><span style="color: rgb(247, 243, 247); font-size: 30px; letter-spacing: normal; text-transform: none; font-weight: 400; width: 230px; height: 88px">Letras <br><b style="color: rgb(246, 80, 145);">BONITAS&nbsp;<br></b>y con <br><b style="color: rgb(12, 192, 223); font-family: 'Homemade Apple', cursive; font-weight: 400; text-transform: lowercase; font-size: 35px">propósito</b>.&nbsp;</span></div>
+      
+    </div>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <div>
+      <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Navegación</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <a href="/" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Inicio</a>
+        <a href="/sobre-mi" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Sobre Mí</a>
+        <a href="/tienda" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Tienda</a>
+        <a href="/aprende" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Aprende</a>
+        <a href="/contacto" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Contacto</a>
+      </div>
+    </div>
+    </sc-if>
+    <div>
+      <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Sígueme</div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;">
+        <a href="https://web.facebook.com/lifedecoart/" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">FB</a>
+        <a href="https://www.instagram.com/lifedecoart" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">IG</a>
+        <a href="https://www.tiktok.com/@lifedecoart" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">TT</a>
+        <a href="https://www.pinterest.com/lifedecoart/" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">PIN</a>
+      </div>
+      <a href="/contacto" style="font-size:13px;font-weight:300;color:#FFFFFF;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">hola@lifedecoart.com</a>
+      <a href="https://wa.me/18495390410" target="_blank" style="font-size:13px;font-weight:300;color:#FFFFFF;margin-top:8px;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">+1 849-539-0410</a>
+    </div>
+    <div>
+      <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Comunidad</div>
+      <p style="font-size: 13px; font-weight: 300; color: #FFFFFF; line-height: 1.6; margin: 0 0 14px">Ideas y novedades directo a tu correo.</p>
+      <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ onSubmit }}" style="display:flex;gap:8px;">
+          <input type="email" class="lda-footer-email" value="{{ email }}" onChange="{{ onEmailChange }}" required="required" placeholder="Tu email" style="flex:1;min-width:0;padding:10px 12px;border-radius:4px;border:1px solid #262626;background:#141414;color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;" style-focus="outline:none;border-color:#262626;box-shadow:none;">
+          <button type="submit" style="background: #FFFFFF; color: #000000; border: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: Montserrat; transition: background .25s ease,transform .25s ease;" style-hover="background:#e8e8e8;transform:translateY(-2px);">Unirme</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ subscribed }}" hint-placeholder-val="{{ false }}">
+        <p style="font-size:13px;font-weight:300;color:#FFFFFF;line-height:1.6;margin:0;font-family:'Montserrat',sans-serif;">¡Gracias por suscribirte!</p>
+      </sc-if>
+    </div>
+  </div>
+  <div style="max-width:1200px;margin:40px auto 0;padding-top:24px;border-top:1px solid #262626;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+    <div style="font-size: 11px; font-weight: 300; color: #FFFFFF;">© 2026</div>
+    <div style="display:flex;gap:24px;flex-wrap:wrap;">
+      <a href="/politica-de-privacidad" style="font-size:11px;font-weight:300;color:#FFFFFF;text-decoration:none;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Política de Privacidad</a>
+      <a href="/terminos-y-condiciones" style="font-size:11px;font-weight:300;color:#FFFFFF;text-decoration:none;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Términos y Condiciones</a>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:360}}">class Component extends DCLogic {
+  state = { subscribed: false, email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    this._resizeHandler = check;
+    window.addEventListener('resize', this._resizeHandler, { passive: true });
+  }
+  componentWillUnmount() {
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+  }
+  renderVals() {
+    return {
+      gridCols: this.state.isMobile ? '1fr' : 'repeat(4,1fr)',
+      isDesktop: !this.state.isMobile,
+      padding: this.state.isMobile ? '48px 24px 40px' : '64px 48px 56px',
+      subscribed: this.state.subscribed,
+      notSubscribed: !this.state.subscribed,
+      email: this.state.email,
+      onEmailChange: (e) => this.setState({ email: e.target.value }),
+      onSubmit: (e) => {
+        e.preventDefault();
+        const email = this.state.email;
+        if (!email) return;
+        const body = new URLSearchParams({ EMAIL: email, email_address_check: '', locale: 'es' });
+        fetch('https://89ab9516.sibforms.com/serve/MUIFAMSaY1ivtOV72aaFecvV98Fj2n909HATZUJAJBq-8554DySSkKmJFacXUWh7sUgixF0l-vHog0NjyOrT4W_Oo9OwhPXPVBQnXvDN7rDCAc7lDywnn2m_klLzx5bIrW_GD27oktV8IyExFC1gFbDCT4RWOrPBw_3wRU3oQXNiOQOu4DlIHNYFrrJ8nOIIDL9UOWLaudIkazpI-w==', {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+        }).then(() => {
+          this.setState({ subscribed: true });
+        }).catch((e) => {
+          console.error('No se pudo completar la suscripción.', e);
+        });
+      },
+    };
+  }
+}</script>
+</body>
+</html>
