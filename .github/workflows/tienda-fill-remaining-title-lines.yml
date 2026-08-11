@@ -1,0 +1,40 @@
+name: Fill remaining Tienda title lines
+on:
+  push:
+    paths:
+      - '.github/workflows/tienda-fill-remaining-title-lines.yml'
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand remaining short display titles
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          reps = {
+            "'Caja Sorpresa Personalizada': 'Caja Sorpresa Personalizada'": "'Caja Sorpresa Personalizada': 'Caja Sorpresa Kraft para Regalo'",
+            "'Llavero con Foto': 'Llavero Acrílico con Fotografía'": "'Llavero con Foto': 'Llavero Acrílico con Foto Impresa'",
+            "'Caja Recuerdo de Nacimiento': 'Caja Recuerdo de Nacimiento'": "'Caja Recuerdo de Nacimiento': 'Caja Recuerdo de Nacimiento para Bebé'",
+            "'Cuadro de Hitos \"One Month\"': 'Cuadro de Hitos \"One Month\"'": "'Cuadro de Hitos \"One Month\"': 'Cuadro de Hitos del Bebé \"One Month\"'",
+          }
+          # Insert missing explicit mappings after current titleUpgrades opening if needed
+          marker = "      const titleUpgrades = {\n"
+          assert marker in s
+          # replace existing Llavero mapping
+          s = s.replace("'Llavero con Foto': 'Llavero Acrílico con Fotografía'", "'Llavero con Foto': 'Llavero Acrílico con Foto Impresa'")
+          # Add entries for titles not currently mapped
+          insert = "        'Caja Sorpresa Personalizada': 'Caja Sorpresa Kraft para Regalo',\n        'Caja Recuerdo de Nacimiento': 'Caja Recuerdo de Nacimiento para Bebé',\n        'Cuadro de Hitos \"One Month\"': 'Cuadro de Hitos del Bebé \"One Month\"',\n"
+          if "'Caja Sorpresa Personalizada': 'Caja Sorpresa Kraft para Regalo'" not in s:
+              s = s.replace(marker, marker + insert)
+          p.write_text(s)
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add Tienda.dc.html
+          git commit -m "Expand remaining short Tienda titles to three lines"
+          git push
