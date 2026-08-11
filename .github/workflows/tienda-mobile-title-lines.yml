@@ -1,0 +1,46 @@
+name: Tienda mobile title layout
+on:
+  push:
+    paths:
+      - '.github/workflows/tienda-mobile-title-lines.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply mobile product title and price display adjustments
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+
+          old_css = """    .lda-product-title-row{min-height:59px;}\n    .lda-product-title{line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}\n    .lda-product-desc{line-height:1.5;min-height:39px;max-height:39px;}\n    .lda-product-meta{min-height:24px;}"""
+          new_css = """    .lda-product-title-row{height:59px;min-height:59px;}\n    .lda-product-title{line-height:1.3;height:58.5px;min-height:58.5px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}\n    .lda-product-desc{line-height:1.5;min-height:39px;max-height:39px;}\n    .lda-product-meta{min-height:24px;}"""
+          if old_css not in s:
+              raise SystemExit('Expected mobile product CSS block not found')
+          s = s.replace(old_css, new_css, 1)
+
+          old_map = "return { ...p, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };"
+          new_map = "return { ...p, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };"
+          if old_map not in s:
+              raise SystemExit('Expected product mapping not found')
+          s = s.replace(old_map, new_map, 1)
+
+          old_price = '<div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.price }}</div>'
+          new_price = '<div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.displayPrice }}</div>'
+          if old_price not in s:
+              raise SystemExit('Expected product price template not found')
+          s = s.replace(old_price, new_price, 1)
+
+          p.write_text(s)
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tienda.dc.html
+          git commit -m "Standardize Tienda mobile titles and shorten upcoming price"
+          git push
