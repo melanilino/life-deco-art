@@ -1,0 +1,31 @@
+name: Tienda hero buscas script
+on:
+  push:
+    paths:
+      - '.github/workflows/tienda-hero-buscas-script.yml'
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move script emphasis to buscas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          old = '<h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0;">Eso que buscas, para <span style="font-family:\'Montserrat\',sans-serif;font-weight:300;font-size:1em;">ti</span> o para <span style="font-family: \'Homemade Apple\', cursive; font-weight: 300; font-size: 1.22em; position: relative; top: 0px">alguien</span> más</h1>'
+          new = '<h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0;">Eso que <span style="font-family:\'Homemade Apple\',cursive;font-weight:300;font-size:1.22em;">buscas</span>, para ti o para alguien más</h1>'
+          assert old in s, 'Target hero heading not found'
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add 'Tienda.dc.html'
+          git commit -m 'Move Tienda hero script emphasis to buscas'
+          git push
