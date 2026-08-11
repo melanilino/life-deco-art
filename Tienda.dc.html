@@ -123,6 +123,14 @@ body{margin:0;background:#fff}
 <style id="lda-faq-accent-color">
   .lda-faq-eyebrow{color:#F65091!important;}
 </style>
+<style id="lda-mobile-product-grid-alignment">
+  @media(max-width:859px){
+    .lda-product-title-row{min-height:59px;}
+    .lda-product-title{line-height:1.3;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .lda-product-desc{line-height:1.5;min-height:39px;max-height:39px;}
+    .lda-product-meta{min-height:24px;}
+  }
+</style>
 </helmet>
 <div class="lda-nav-spacer" aria-hidden="true"></div>
 
@@ -191,14 +199,14 @@ body{margin:0;background:#fff}
               <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;">{{ p.tag }}</span>
             </sc-if>
           </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div style="font-size:15px;font-weight:400;color:#000000;">{{ p.name }}</div>
+          <div class="lda-product-title-row" style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+            <div class="lda-product-title" style="font-size:15px;font-weight:400;color:#000000;">{{ p.name }}</div>
             <a href="{{ p.whatsappUrl }}" target="_blank" title="Pedir por WhatsApp" style="width:26px;height:26px;border-radius:999px;background:#F65091;display:flex;align-items:center;justify-content:center;text-decoration:none;flex-shrink:0;transition:transform .25s ease;" style-hover="transform:scale(1.15);">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"><path d="M12 4v16M4 12h16"></path></svg>
             </a>
           </div>
-          <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;max-width:85%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ p.desc }}</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+          <div class="lda-product-desc" style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;max-width:85%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ p.desc }}</div>
+          <div class="lda-product-meta" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
             <div style="font-size:14px;font-weight:500;color:#F65091;">{{ p.price }}</div>
             <div style="display: flex; align-items: center; gap: 5px; font-size: 13px; color: #8B795E; font-weight: 300">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8B795E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
