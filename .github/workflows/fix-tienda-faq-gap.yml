@@ -1,0 +1,30 @@
+name: Fix Tienda FAQ gap
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-tienda-faq-gap.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Match Tienda FAQ whitespace to Aprende
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          old = "faqPad: m ? '20px 24px 0' : '72px 48px',"
+          new = "faqPad: m ? '60px 24px 0' : '72px 48px',"
+          if old not in s:
+              raise SystemExit('Expected Tienda faqPad value not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tienda.dc.html
+          git commit -m "Match Tienda mobile FAQ whitespace to 60px" || exit 0
+          git push
