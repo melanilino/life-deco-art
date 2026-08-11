@@ -434,12 +434,12 @@ class Component extends DCLogic {
     const products = sorted.map(p => {
       const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;
       const titleUpgrades = {
-        'Bandeja "Te Elijo Hoy"': 'Bandeja Personalizada "Te Elijo Hoy"',
-        'Cartuchera Personalizada': 'Cartuchera Personalizada con Nombre',
-        'Llavero con Foto': 'Llavero Personalizado con Foto',
-        'Letrero "Feliz Navidad"': 'Letrero Navideño de Madera Personalizado',
-        'Vinera Personalizada': 'Vinera de Madera Personalizada',
-        'Cartel de Propuesta': 'Cartel Personalizado para Propuesta de Matrimonio',
+        'Bandeja "Te Elijo Hoy"': 'Bandeja de Madera "Te Elijo Hoy"',
+        'Cartuchera Personalizada': 'Cartuchera de Lona con Nombre',
+        'Llavero con Foto': 'Llavero Acrílico con Fotografía',
+        'Letrero "Feliz Navidad"': 'Letrero de Madera "Feliz Navidad"',
+        'Vinera Personalizada': 'Vinera de Madera con Nombre',
+        'Cartel de Propuesta': 'Cartel para Propuesta de Matrimonio',
       };
       return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
     });
