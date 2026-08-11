@@ -1,0 +1,33 @@
+name: Fix Sobre Mi CTA match
+on:
+  push:
+    paths:
+      - .github/workflows/fix-sobremi-cta-match.yml
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact Inicio CTA geometry on Sobre Mi
+        shell: bash
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          p=Path('Sobre Mi.dc.html')
+          t=p.read_text(encoding='utf-8')
+          old="      ctaRegionHeight: m ? '488px' : '580px',\n      ctaTopPad: m ? '96px' : '144px',\n      ctaBoxHeight: m ? '312px' : '356px',\n"
+          new="      ctaRegionHeight: m ? '440px' : '508px',\n      ctaTopPad: m ? '48px' : '72px',\n      ctaBoxHeight: m ? '312px' : '356px',\n"
+          if old not in t:
+              raise SystemExit('Current Sobre Mi CTA geometry not found')
+          t=t.replace(old,new,1)
+          # Keep testimonials with zero bottom padding so no extra white band is added before CTA.
+          assert "testimonialSectionPad: m ? '48px 24px 0' : '72px 48px 0'" in t
+          p.write_text(t,encoding='utf-8')
+          PY
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add 'Sobre Mi.dc.html'
+          git commit -m 'Make Sobre Mi CTA geometry match Inicio exactly'
+          git push
