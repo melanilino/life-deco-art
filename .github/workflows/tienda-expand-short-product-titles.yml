@@ -1,0 +1,31 @@
+name: Expand Tienda short product titles
+on:
+  push:
+    paths:
+      - '.github/workflows/tienda-expand-short-product-titles.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expand short mobile product titles
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          old = """    const products = sorted.map(p => {\n      const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;\n      return { ...p, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };\n    });"""
+          new = """    const products = sorted.map(p => {\n      const message = `Hola! Me interesa pedir: ${p.name} (${p.price}).`;\n      const titleUpgrades = {\n        'Bandeja \"Te Elijo Hoy\"': 'Bandeja Personalizada \"Te Elijo Hoy\"',\n        'Cartuchera Personalizada': 'Cartuchera Personalizada con Nombre',\n        'Llavero con Foto': 'Llavero Personalizado con Foto',\n        'Letrero \"Feliz Navidad\"': 'Letrero Navideño de Madera Personalizado',\n        'Vinera Personalizada': 'Vinera de Madera Personalizada',\n        'Cartel de Propuesta': 'Cartel Personalizado para Propuesta de Matrimonio',\n      };\n      return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };\n    });"""
+          if old not in s:
+              raise SystemExit('products map block not found')
+          s = s.replace(old, new, 1)
+          s = s.replace('>{{ p.name }}</div>\n            <a href="{{ p.whatsappUrl }}"', '>{{ p.displayName }}</div>\n            <a href="{{ p.whatsappUrl }}"', 1)
+          p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Tienda.dc.html
+          git commit -m 'Expand short Tienda product titles for mobile consistency and SEO'
+          git push
