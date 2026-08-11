@@ -1,0 +1,131 @@
+name: Normalize section eyebrows v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-section-eyebrows-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Normalize true section eyebrows and update spotlight copy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = [
+              Path('Inicio.dc.html'),
+              Path('Sobre Mi.dc.html'),
+              Path('Tienda.dc.html'),
+              Path('Aprende.dc.html'),
+              Path('Contacto.dc.html'),
+          ]
+
+          css = '''\n<style id="lda-eyebrow-spacing-system">\n  .lda-section-eyebrow{\n    font-size:12px!important;\n    line-height:1.2!important;\n    letter-spacing:.2em!important;\n    text-transform:uppercase!important;\n    color:#8B795E!important;\n    font-weight:500!important;\n    margin-bottom:16px!important;\n  }\n  .lda-section-eyebrow + h1,.lda-section-eyebrow + h2,.lda-section-eyebrow + p{margin-top:0!important;}\n  .lda-eyebrow-que-hago{margin-bottom:0!important;}\n  .lda-eyebrow-que-hago + div > div:first-child{padding-top:16px!important;}\n  @media(max-width:859px){\n    .lda-section-eyebrow{\n      font-size:10px!important;\n      line-height:1.2!important;\n      letter-spacing:.18em!important;\n      margin-bottom:12px!important;\n    }\n    .lda-eyebrow-que-hago{margin-bottom:0!important;}\n    .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}\n  }\n</style>\n'''
+
+          div_re = re.compile(r'<div(?P<attrs>[^>]*)>(?P<text>[^<]+)</div>', re.I)
+
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+
+              # Remove old eyebrow system block so this pass is authoritative.
+              text = re.sub(r'\n?<style id="lda-eyebrow-spacing-system">.*?</style>\n?', '\n', text, flags=re.S)
+
+              def repl(m):
+                  attrs = m.group('attrs')
+                  label = m.group('text').strip()
+                  lower_attrs = attrs.lower().replace(' ', '')
+
+                  # Preserve the special Inicio hero kicker exactly.
+                  if label == 'Lettering · Diseño · Manualidades':
+                      return m.group(0)
+
+                  # First remove classes from card labels / badges that were accidentally tagged before.
+                  classes_match = re.search(r'\bclass="([^"]*)"', attrs)
+                  if classes_match and 'lda-section-eyebrow' in classes_match.group(1):
+                      if 'color:#ffffff' in lower_attrs or 'color:rgba(255,255,255' in lower_attrs:
+                          cleaned = ' '.join(c for c in classes_match.group(1).split() if c not in ('lda-section-eyebrow','lda-eyebrow-que-hago'))
+                          if cleaned:
+                              attrs = re.sub(r'\bclass="[^"]*"', f'class="{cleaned}"', attrs, count=1)
+                          else:
+                              attrs = re.sub(r'\s*\bclass="[^"]*"', '', attrs, count=1)
+                          return f'<div{attrs}>{m.group("text")}</div>'
+
+                  # True section eyebrows are the beige uppercase labels.
+                  is_upper = 'text-transform:uppercase' in lower_attrs
+                  is_beige = 'color:#8b795e' in lower_attrs
+                  if not (is_upper and is_beige):
+                      return m.group(0)
+
+                  classes = ['lda-section-eyebrow']
+                  if label.lower() == 'qué hago':
+                      classes.append('lda-eyebrow-que-hago')
+                  class_value = ' '.join(classes)
+
+                  if re.search(r'\bclass="', attrs):
+                      attrs = re.sub(r'\bclass="([^"]*)"', lambda mm: 'class="' + ' '.join(dict.fromkeys((mm.group(1)+' '+class_value).split())) + '"', attrs, count=1)
+                  else:
+                      attrs = f' class="{class_value}"' + attrs
+                  return f'<div{attrs}>{m.group("text")}</div>'
+
+              text = div_re.sub(repl, text)
+
+              marker = '</helmet>'
+              if marker not in text:
+                  raise SystemExit(f'No </helmet> marker in {path}')
+              text = text.replace(marker, css + marker, 1)
+
+              if path.name == 'Inicio.dc.html':
+                  text = text.replace(
+                      '¿Y también&nbsp;<span style="font-family: \'Homemade Apple\', cursive; font-size: 1.2em;">aprendes</span>&nbsp;a hacerlo?',
+                      '¿Y si también quieres&nbsp;<span style="font-family: \'Homemade Apple\', cursive; font-size: 1.2em;">aprender</span>&nbsp;a hacerlo?'
+                  )
+                  text = text.replace(
+                      '¿Y si también&nbsp;<span style="font-family: \'Homemade Apple\', cursive; font-size: 1.2em;">aprendes</span><br>a hacerlo?',
+                      '¿Y si también quieres&nbsp;<span style="font-family: \'Homemade Apple\', cursive; font-size: 1.2em;">aprender</span><br>a hacerlo?'
+                  )
+
+              path.write_text(text, encoding='utf-8')
+
+          # Guardrails.
+          inicio = Path('Inicio.dc.html').read_text(encoding='utf-8')
+          hero_match = re.search(r'>Lettering · Diseño · Manualidades</div>', inicio)
+          if not hero_match:
+              raise SystemExit('Inicio hero kicker missing')
+          hero_start = inicio.rfind('<div', 0, hero_match.start())
+          hero_tag = inicio[hero_start:hero_match.end()]
+          if 'lda-section-eyebrow' in hero_tag:
+              raise SystemExit('Hero kicker was modified')
+          if '¿Y si también quieres' not in inicio or '>aprender</span>' not in inicio:
+              raise SystemExit('Spotlight copy not updated')
+
+          for path in files:
+              t = path.read_text(encoding='utf-8')
+              if 'id="lda-eyebrow-spacing-system"' not in t:
+                  raise SystemExit(f'Spacing system missing in {path}')
+
+          # Ensure white service-card labels are not treated as section eyebrows.
+          if re.search(r'class="[^"]*lda-section-eyebrow[^"]*"[^>]*color:#FFFFFF', inicio, re.I):
+              raise SystemExit('White card label still tagged as section eyebrow')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Inicio.dc.html' 'Sobre Mi.dc.html' 'Tienda.dc.html' 'Aprende.dc.html' 'Contacto.dc.html'
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Standardize section eyebrow appearance across main pages"
+            git push
+          fi
