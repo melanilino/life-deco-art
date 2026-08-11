@@ -1,0 +1,33 @@
+:root {
+  /* Layout */
+  --lda-container-max: 1240px;
+  --lda-page-gutter: 48px;
+  --lda-page-gutter-mobile: 24px;
+
+  /* Core brand colors */
+  --lda-black: #000000;
+  --lda-white: #FFFFFF;
+  --lda-pink: #F65091;
+  --lda-blue: #0CC0DF;
+  --lda-beige: #F3EEE4;
+  --lda-brown: #8B795E;
+
+  /* Navigation */
+  --lda-nav-height: 80px;
+  --lda-nav-height-mobile: 64px;
+}
+
+@media (max-width: 859px) {
+  :root {
+    --lda-page-gutter: var(--lda-page-gutter-mobile);
+  }
+}
+
+/* Canonical centered content container for future page updates. */
+.lda-container {
+  width: 100%;
+  max-width: var(--lda-container-max);
+  margin-inline: auto;
+  padding-inline: var(--lda-page-gutter);
+  box-sizing: border-box;
+}
