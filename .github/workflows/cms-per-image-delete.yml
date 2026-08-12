@@ -1,0 +1,185 @@
+name: CMS per-image delete controls
+on:
+  push:
+    paths:
+      - '.github/workflows/cms-per-image-delete.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update CMS media deletion UI
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          cmsjs = Path('cms.js')
+          s = cmsjs.read_text()
+          start = s.index('function collectFirebaseUrls(')
+          end = s.index('installCmsMediaTools();') + len('installCmsMediaTools();')
+          replacement = '''export async function deleteMediaUrl(url) {
+  if (!url || !/firebasestorage\\.googleapis\\.com|storage\\.googleapis\\.com/.test(String(url))) return false;
+  try {
+    await deleteObject(ref(storage, url));
+    return true;
+  } catch (e) {
+    if (e && e.code === 'storage/object-not-found') return true;
+    throw e;
+  }
+}'''
+          s = s[:start] + replacement + s[end:]
+          cmsjs.write_text(s)
+
+          p = Path('CMS.dc.html')
+          s = p.read_text()
+
+          trash = '''<span onClick="{{ HANDLER }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;border-color:#E8B8B2;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span>'''
+
+          def add_after(snippet, extra, count=1):
+            global s
+            if s.count(snippet) < count:
+              raise SystemExit('Expected snippet not found enough times: '+snippet[:80])
+            s = s.replace(snippet, snippet + extra, count)
+
+          # Sobre mi profile + banner
+          sn = '''          </label>\n          <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n          <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','onSobremiHeroRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''          </label>''' + ex + '''\n          <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          sn = '''          </label>\n          <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n          <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','onSobremiFeaturedRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''          </label>''' + ex + '''\n          <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          # Inicio photos
+          sn = '''                    </label>\n                    <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>'''
+          ex = '''\n                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','ph.onRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''                    </label>''' + ex + '''\n                    <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>''', 1)
+
+          # Tienda banner
+          sn = '''            </label>\n            <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n            <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','onTiendaBannerRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''            </label>''' + ex + '''\n            <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          # Product image field (first f.isImage block)
+          sn = '''                    </label>\n                    <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n                    <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','f.onRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''                    </label>''' + ex + '''\n                    <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          # Aprende banner
+          sn = '''          </label>\n          <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n          <sc-if value="{{ aprendeBannerUrl }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','onAprendeBannerRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''          </label>''' + ex + '''\n          <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          # Aprende item image field (remaining matching block)
+          sn = '''                        </label>\n                        <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>'''
+          ex = '''\n                        <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}">''' + trash.replace('HANDLER','f.onRemove') + '''</sc-if>'''
+          s = s.replace(sn, '''                        </label>''' + ex + '''\n                        <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>''', 1)
+
+          # Logic: insert robust per-image removal helpers before handleImageUpload
+          marker = '''  handleImageUpload(listKey, id, key, file) {'''
+          helpers = '''  async removeStoredImage(url) {
+    if (!url) return;
+    if (!window.confirm('¿Eliminar esta imagen?')) return;
+    await this.state.cms.deleteMediaUrl(url);
+  }
+
+  async removeItemImage(listKey, id, key) {
+    const current = this.getListArray(listKey);
+    const item = current.find((it) => it.id === id);
+    const url = item && item[key];
+    if (!url || !window.confirm('¿Eliminar esta imagen?')) return;
+    const arr = current.map((it) => it.id === id ? { ...it, [key]: '' } : it);
+    try {
+      if (listKey === 'products') {
+        const next = { ...this.state.tiendaData, products: arr };
+        await this.state.cms.savePageContent('tienda', next);
+        await this.state.cms.deleteMediaUrl(url);
+        this.setState({ tiendaData: next, saved: true });
+      } else {
+        const next = { ...this.state.aprendeData, [listKey]: arr };
+        await this.state.cms.savePageContent('aprende', next);
+        await this.state.cms.deleteMediaUrl(url);
+        this.setState({ aprendeData: next, saved: true });
+      }
+    } catch (e) {
+      console.error('No se pudo eliminar la imagen.', e);
+      this.setState({ error: 'No se pudo eliminar la imagen. Revisa los permisos de Firebase.' });
+    }
+  }
+
+  async removeInicioPhoto(key) {
+    const url = this.state.content && this.state.content[key];
+    if (!url || !window.confirm('¿Eliminar esta imagen?')) return;
+    const next = { ...this.state.content, [key]: '' };
+    try {
+      await this.state.cms.savePageContent('inicio', next);
+      await this.state.cms.deleteMediaUrl(url);
+      this.setState({ content: next, saved: true });
+    } catch (e) { this.setState({ error: 'No se pudo eliminar la imagen.' }); }
+  }
+
+  async removeTiendaBanner() {
+    const url = this.state.tiendaData && this.state.tiendaData.bannerImageUrl;
+    if (!url || !window.confirm('¿Eliminar esta imagen?')) return;
+    const next = { ...this.state.tiendaData, bannerImageUrl: '' };
+    try {
+      await this.state.cms.savePageContent('tienda', next);
+      await this.state.cms.deleteMediaUrl(url);
+      this.setState({ tiendaData: next, saved: true });
+    } catch (e) { this.setState({ error: 'No se pudo eliminar la imagen.' }); }
+  }
+
+  async removeAprendeBanner() {
+    const tab = this.state.aprendeTab;
+    const url = this.state.aprendeData && this.state.aprendeData.banners && this.state.aprendeData.banners[tab];
+    if (!url || !window.confirm('¿Eliminar esta imagen?')) return;
+    const next = { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: '' } };
+    try {
+      await this.state.cms.savePageContent('aprende', next);
+      await this.state.cms.deleteMediaUrl(url);
+      this.setState({ aprendeData: next, saved: true });
+    } catch (e) { this.setState({ error: 'No se pudo eliminar la imagen.' }); }
+  }
+
+  async removeSobremiImage(key) {
+    const url = this.state.sobremiData && this.state.sobremiData[key];
+    if (!url || !window.confirm('¿Eliminar esta imagen?')) return;
+    const next = { ...this.state.sobremiData, [key]: '' };
+    try {
+      await this.state.cms.savePageContent('sobremi', next);
+      await this.state.cms.deleteMediaUrl(url);
+      this.setState({ sobremiData: next, saved: true });
+    } catch (e) { this.setState({ error: 'No se pudo eliminar la imagen.' }); }
+  }
+
+'''
+          if marker not in s: raise SystemExit('handleImageUpload marker missing')
+          s = s.replace(marker, helpers + marker, 1)
+
+          # Build fields image metadata
+          old = "return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), uploading: this.state.uploading === (listKey + item.id + d.key) };"
+          new = "return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };"
+          if old not in s: raise SystemExit('buildTextFields image return missing')
+          s = s.replace(old, new, 1)
+
+          # Render vals fixed handlers + inicio photos
+          s = s.replace("onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),", "onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),\n      onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),", 1)
+          s = s.replace("onSobremiHeroUpload: (e) => this.handleSobremiHeroUpload(e.target.files[0]),", "onSobremiHeroUpload: (e) => this.handleSobremiHeroUpload(e.target.files[0]),\n      onSobremiHeroRemove: () => this.removeSobremiImage('heroImageUrl'),", 1)
+          s = s.replace("onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),", "onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),\n      onTiendaBannerRemove: () => this.removeTiendaBanner(),", 1)
+          s = s.replace("onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),", "onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),\n      onAprendeBannerRemove: () => this.removeAprendeBanner(),", 1)
+          old = "url: (s.content && s.content[p.key]) || '',\n          uploading: s.uploading === ('inicioPhoto_' + p.key),\n          onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),"
+          new = "url: (s.content && s.content[p.key]) || '',\n          hasImage: !!(s.content && s.content[p.key]),\n          uploading: s.uploading === ('inicioPhoto_' + p.key),\n          onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),\n          onRemove: () => this.removeInicioPhoto(p.key),"
+          if old not in s: raise SystemExit('inicio photo vals missing')
+          s = s.replace(old, new, 1)
+
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cms.js CMS.dc.html
+          git commit -m "Replace global CMS media purge with per-image delete controls"
+          git push
