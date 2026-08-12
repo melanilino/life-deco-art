@@ -1,0 +1,28 @@
+name: Force CMS hotfix deploy
+on:
+  push:
+    paths:
+      - '.github/workflows/force-cms-hotfix-deploy.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Touch CMS document
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('CMS.dc.html')
+          s=p.read_text()
+          marker='<!-- cms-hotfix-deploy-20260811-2108 -->\n'
+          if marker not in s:
+              s=s.replace('<meta name="robots" content="noindex, nofollow">\n','<meta name="robots" content="noindex, nofollow">\n'+marker,1)
+              p.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add CMS.dc.html
+          git commit -m 'Deploy CMS syntax hotfix to production' || exit 0
+          git push
