@@ -187,113 +187,13 @@ export async function savePageContent(pageId, data) {
   await setDoc(dref, data, { merge: true });
 }
 
-function collectFirebaseUrls(value, out = new Set()) {
-  if (Array.isArray(value)) value.forEach((v) => collectFirebaseUrls(v, out));
-  else if (value && typeof value === 'object') Object.values(value).forEach((v) => collectFirebaseUrls(v, out));
-  else if (typeof value === 'string' && /firebasestorage\.googleapis\.com|storage\.googleapis\.com/.test(value)) out.add(value);
-  return out;
-}
-
-async function classifyMediaUrl(url) {
+export async function deleteMediaUrl(url) {
+  if (!url || !/firebasestorage\.googleapis\.com|storage\.googleapis\.com/.test(String(url))) return false;
   try {
-    const r = ref(storage, url);
-    const meta = await getMetadata(r);
-    const type = (meta.contentType || '').toLowerCase();
-    return { ref: r, isMedia: type.startsWith('image/') || type.startsWith('video/') };
-  } catch (_) {
-    return { ref: null, isMedia: false };
+    await deleteObject(ref(storage, url));
+    return true;
+  } catch (e) {
+    if (e && e.code === 'storage/object-not-found') return true;
+    throw e;
   }
 }
-
-function clearUrls(value, mediaSet) {
-  if (Array.isArray(value)) return value.map((v) => clearUrls(v, mediaSet));
-  if (value && typeof value === 'object') {
-    const copy = {};
-    Object.entries(value).forEach(([k, v]) => { copy[k] = clearUrls(v, mediaSet); });
-    return copy;
-  }
-  if (typeof value === 'string' && mediaSet.has(value)) return '';
-  return value;
-}
-
-// Borra únicamente imágenes/videos administrados que estén referenciados por el CMS.
-// PDFs y otros descargables se conservan.
-export async function purgeCurrentMedia(pageIds = ['inicio', 'tienda', 'aprende', 'sobremi']) {
-  const docs = [];
-  const allUrls = new Set();
-  for (const pageId of pageIds) {
-    const dref = doc(db, 'content', pageId);
-    const snap = await getDoc(dref);
-    const data = snap.exists() ? snap.data() : {};
-    docs.push({ pageId, dref, data });
-    collectFirebaseUrls(data, allUrls);
-  }
-
-  const mediaSet = new Set();
-  const refsToDelete = [];
-  for (const url of allUrls) {
-    const info = await classifyMediaUrl(url);
-    if (info.isMedia) {
-      mediaSet.add(url);
-      if (info.ref) refsToDelete.push(info.ref);
-    }
-  }
-
-  let deleted = 0;
-  for (const r of refsToDelete) {
-    try { await deleteObject(r); deleted++; } catch (e) {
-      if (e && e.code !== 'storage/object-not-found') throw e;
-    }
-  }
-
-  for (const entry of docs) {
-    const cleaned = clearUrls(entry.data, mediaSet);
-    await setDoc(entry.dref, cleaned, { merge: false });
-  }
-  return { deleted, clearedReferences: mediaSet.size };
-}
-
-function installCmsMediaTools() {
-  if (typeof window === 'undefined' || !/^\/cms\/?$/.test(window.location.pathname)) return;
-  const ID = 'lda-media-tools';
-  const mount = (user) => {
-    const old = document.getElementById(ID);
-    if (!user) { if (old) old.remove(); return; }
-    if (old) return;
-    const box = document.createElement('div');
-    box.id = ID;
-    box.style.cssText = 'position:fixed;right:20px;bottom:20px;z-index:2147483000;background:#111;color:#fff;border-radius:8px;padding:12px 14px;box-shadow:0 6px 24px rgba(0,0,0,.18);font-family:Montserrat,Arial,sans-serif;max-width:280px';
-    const note = document.createElement('div');
-    note.textContent = 'Nuevas imágenes: WebP alta calidad · máx. 1800 px. Video hero: optimización automática cuando es necesario.';
-    note.style.cssText = 'font-size:11px;line-height:1.45;color:rgba(255,255,255,.72);margin-bottom:9px';
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.textContent = 'Eliminar imágenes y video actuales';
-    btn.style.cssText = 'width:100%;border:1px solid rgba(246,80,145,.75);background:transparent;color:#fff;border-radius:5px;padding:9px 10px;font:500 12px Montserrat,Arial,sans-serif;cursor:pointer';
-    const status = document.createElement('div');
-    status.style.cssText = 'font-size:11px;line-height:1.4;color:rgba(255,255,255,.72);margin-top:8px;display:none';
-    btn.onclick = async () => {
-      if (!window.confirm('Esto eliminará de Firebase Storage las imágenes y videos actualmente referenciados por Inicio, Tienda, Aprende y Sobre Mí. Los PDFs se conservarán. ¿Continuar?')) return;
-      if (!window.confirm('Confirmación final: después tendrás que volver a subir las imágenes y el video desde el CMS. ¿Eliminar ahora?')) return;
-      btn.disabled = true;
-      btn.textContent = 'Eliminando medios…';
-      status.style.display = 'block';
-      status.textContent = 'Procesando…';
-      try {
-        const result = await purgeCurrentMedia();
-        status.textContent = `Listo: ${result.deleted} archivos eliminados y ${result.clearedReferences} referencias limpiadas.`;
-        btn.textContent = 'Medios actuales eliminados';
-      } catch (e) {
-        console.error('[LDA CMS] Error al eliminar medios:', e);
-        status.textContent = 'No se pudo completar la limpieza. Revisa permisos de Firebase Storage e inténtalo de nuevo.';
-        btn.disabled = false;
-        btn.textContent = 'Reintentar eliminación de medios';
-      }
-    };
-    box.append(note, btn, status);
-    document.body.appendChild(box);
-  };
-  onAuthStateChanged(auth, mount);
-}
-
-installCmsMediaTools();
