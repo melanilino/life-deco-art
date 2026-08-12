@@ -97,7 +97,7 @@ x-dc{display:none!important}
             Subir imagen
             <input type="file" accept="image/*" onChange="{{ onSobremiHeroUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14onSobremiHeroRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
       </div>
@@ -109,7 +109,7 @@ x-dc{display:none!important}
             Subir imagen
             <input type="file" accept="image/*" onChange="{{ onSobremiFeaturedUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14onSobremiFeaturedRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
       </div>
@@ -149,7 +149,7 @@ x-dc{display:none!important}
                       Subir
                       <input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;">
                     </label>
-                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14ph.onRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                   </div>
                 </div>
@@ -174,7 +174,7 @@ x-dc{display:none!important}
               Subir imagen
               <input type="file" accept="image/*" onChange="{{ onTiendaBannerUpload }}" style="display:none;">
             </label>
-            <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14onTiendaBannerRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+            <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
             <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
         </div>
@@ -253,7 +253,7 @@ x-dc{display:none!important}
                       Subir imagen
                       <input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;">
                     </label>
-                    <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14f.onRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+                    <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                   </div>
                 </sc-if>
@@ -283,7 +283,7 @@ x-dc{display:none!important}
             Subir imagen
             <input type="file" accept="image/*" onChange="{{ onAprendeBannerUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ aprendeBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onAprendeBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14onAprendeBannerRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ aprendeBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onAprendeBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
       </div>
@@ -310,7 +310,7 @@ x-dc{display:none!important}
                           Subir imagen
                           <input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;">
                         </label>
-                        <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14f.onRemove6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+                        <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                         <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                       </div>
                     </sc-if>
@@ -840,16 +840,20 @@ class Component extends DCLogic {
       isComingSoon: s.page === 'contacto' || s.page === 'privacidad' || s.page === 'terminos',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
-      onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),\n      onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),
+      onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),
+      onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),
       sobremiFeaturedUploading: s.uploading === 'sobremiFeatured',
       sobremiHeroUrl: (s.sobremiData && s.sobremiData.heroImageUrl) || '',
-      onSobremiHeroUpload: (e) => this.handleSobremiHeroUpload(e.target.files[0]),\n      onSobremiHeroRemove: () => this.removeSobremiImage('heroImageUrl'),
+      onSobremiHeroUpload: (e) => this.handleSobremiHeroUpload(e.target.files[0]),
+      onSobremiHeroRemove: () => this.removeSobremiImage('heroImageUrl'),
       sobremiHeroUploading: s.uploading === 'sobremiHero',
       tiendaBannerUrl: (s.tiendaData && s.tiendaData.bannerImageUrl) || '',
-      onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),\n      onTiendaBannerRemove: () => this.removeTiendaBanner(),
+      onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),
+      onTiendaBannerRemove: () => this.removeTiendaBanner(),
       tiendaBannerUploading: s.uploading === 'tiendaBanner',
       aprendeBannerUrl: (s.aprendeData && s.aprendeData.banners && s.aprendeData.banners[s.aprendeTab]) || '',
-      onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),\n      onAprendeBannerRemove: () => this.removeAprendeBanner(),
+      onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),
+      onAprendeBannerRemove: () => this.removeAprendeBanner(),
       aprendeBannerUploading: s.uploading === ('aprendeBanner' + s.aprendeTab),
       isInicioPage: s.page === 'inicio', fields,
       inicioPhotoGroups: this.INICIO_PHOTO_GROUPS.map((g) => ({
