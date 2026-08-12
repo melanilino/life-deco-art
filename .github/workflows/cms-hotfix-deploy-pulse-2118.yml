@@ -1,0 +1,41 @@
+name: CMS hotfix deploy pulse 2118
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.vercel-redeploy-cms-20260811-2118.txt'
+      - '.github/workflows/cms-hotfix-deploy-pulse-2118.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Touch CMS content safely
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('CMS.dc.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '<!-- cms-hotfix-production-pulse-20260811-2118 -->'
+          if marker not in s:
+              s = s.rstrip() + '\n' + marker + '\n'
+              p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit CMS pulse
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CMS.dc.html
+          if git diff --cached --quiet; then
+            echo "No CMS pulse needed"
+          else
+            git commit -m "Publish CMS syntax hotfix"
+            git push origin main
+          fi
