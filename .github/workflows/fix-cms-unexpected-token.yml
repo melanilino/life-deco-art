@@ -1,0 +1,31 @@
+name: Fix CMS unexpected token
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-cms-unexpected-token.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix malformed CMS condition
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('CMS.dc.html')
+          s = p.read_text()
+          old = "if(!url|z!window.confirm('¿Eliminar esta imagen?')) return;"
+          new = "if(!url||!window.confirm('¿Eliminar esta imagen?')) return;"
+          if old not in s:
+              raise SystemExit('Malformed condition not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit hotfix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CMS.dc.html
+          git commit -m "Fix CMS unexpected token syntax error"
+          git push
