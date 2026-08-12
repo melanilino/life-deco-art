@@ -1,0 +1,1 @@
+CMS per-image deletion controls ready for production.
