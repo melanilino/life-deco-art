@@ -549,7 +549,7 @@ class Component extends DCLogic {
 
   async removeItemImage(listKey,id,key) {
     const cur=this.getListArray(listKey), item=cur.find(x=>x.id===id), url=item&&item[key];
-    if(!url|z!window.confirm('¿Eliminar esta imagen?')) return;
+    if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
     const arr=cur.map(x=>x.id===id?{...x,[key]:''}:x);
     try{
       if(listKey==='products'){
