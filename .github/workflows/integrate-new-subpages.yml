@@ -1,0 +1,158 @@
+name: Integrate new subpages
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/integrate-new-subpages.yml'
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Connect subpages
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # TIENDA: product cards -> detail page, custom-order CTA -> form page.
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          s = s.replace('<div class="lda-product-title" style="font-size:15px;font-weight:400;color:#000000;">{{ p.displayName }}</div>', '<a href="{{ p.detailHref }}" class="lda-product-title" style="font-size:15px;font-weight:400;color:#000000;text-decoration:none;">{{ p.displayName }}</a>', 1)
+          s = s.replace("return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };", "return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, detailHref: `/tienda/producto?id=${encodeURIComponent(p.id)}`, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };")
+          s = s.replace('<a href="https://wa.me/18495390410" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:{{ ctaWaRadius }};font-size:{{ ctaWaSize }};font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">WhatsApp</a>', '<a href="/encargo-personalizado" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:{{ ctaWaRadius }};font-size:{{ ctaWaSize }};font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Crear encargo</a>', 1)
+          p.write_text(s)
+
+          # PRODUCT DETAIL: keep uploaded design, make its core content dynamic from CMS.
+          p = Path('Productos.dc.html')
+          s = p.read_text()
+          reps = {
+            '<a href="/tienda" style="text-decoration:none;color:#8B795E;">Personalizados</a>':'<a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ product.category }}</a>',
+            '<a href="/tienda" style="text-decoration:none;color:#8B795E;">Bandejas</a>':'<a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ product.subcategory }}</a>',
+            '<span style="color:#000000;">Bandeja "Te Elijo Hoy"</span>':'<span style="color:#000000;">{{ product.name }}</span>',
+            '        Bestseller':'        {{ product.tag }}',
+            '<h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">Bandeja "Te Elijo <span style="font-family:\'Homemade Apple\',cursive;font-weight:400;font-size:1.15em;">Hoy</span>"</h1>':'<h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ product.name }}</h1>',
+            '<div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">RD$2,220</div>':'<div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">{{ product.price }}</div>',
+            '<p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">Bandeja de madera lacada en negro, con lettering blanco pintado a mano. Una pieza pensada para acompañar una propuesta, un aniversario o cualquier momento que merezca decir las cosas bonito.</p>':'<p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">{{ product.desc }}</p>',
+            '            Elaboración: 5-7 días':'            Elaboración: {{ product.delivery }}',
+            '<div style="font-size:11px;color:#8B795E;font-weight:300;">Bandeja "Te Elijo Hoy"</div>':'<div style="font-size:11px;color:#8B795E;font-weight:300;">{{ product.name }}</div>',
+            '<div style="font-size:15px;color:#F65091;font-weight:600;">RD$2,220</div>':'<div style="font-size:15px;color:#F65091;font-weight:600;">{{ product.price }}</div>'
+          }
+          for a,b in reps.items(): s=s.replace(a,b,1)
+          start=s.index('class Component extends DCLogic {')
+          end=s.index('</script>', start)
+          cls=r'''class Component extends DCLogic {
+            state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, color:'Negro', size:'Mediana (25cm)', faqOpen:0, product:null, allProducts:[] };
+            DEFAULT_PRODUCTS = [
+              { id:'p1', name:'Bandeja "Te Elijo Hoy"', price:'RD$2,220', category:'Personalizados', subcategory:'Bandejas', desc:'Bandeja de madera lacada en negro, lettering blanco pintado a mano.', tag:'Bestseller', delivery:'5-7 días', imageUrl:'' },
+              { id:'p2', name:'Cuadro Personalizado 8x10', price:'RD$700', category:'Personalizados', subcategory:'Cuadros', desc:'Cuadro enmarcado en tela con frase inspiracional ilustrada a mano.', tag:'', delivery:'5-7 días', imageUrl:'' }
+            ];
+            COLORS=[{name:'Negro',hex:'#111111'},{name:'Blanco',hex:'#FFFFFF'}];
+            SIZES=['Pequeña (20cm)','Mediana (25cm)','Grande (30cm)'];
+            FAQS=[
+              {q:'¿Cómo sé si mi pieza quedará como la imagino?',a:'Antes de crear tu pieza te comparto un boceto digital para tu aprobación, con ajustes incluidos.'},
+              {q:'¿Cómo funcionan los envíos?',a:'Hacemos entregas a todo el país vía Uber Moto, Vimenpaq o BM Cargo, según tu ubicación.'},
+              {q:'¿Qué pasa si necesito mi pedido con urgencia?',a:'Escríbeme antes de ordenar y confirmamos disponibilidad.'}
+            ];
+            async componentDidMount(){
+              const check=()=>this.setState({isMobile:window.innerWidth<860}); check(); window.addEventListener('resize',check);
+              let products=this.DEFAULT_PRODUCTS;
+              try{ const cms=await import('./cms.js'); const data=await cms.getPageContent('tienda'); if(data.products&&data.products.length) products=data.products; }catch(e){}
+              const id=new URLSearchParams(window.location.search).get('id') || 'p1';
+              const product=products.find(x=>x.id===id)||products[0]; this.setState({product,allProducts:products});
+              if(product){ document.title=`${product.name} | Life Deco Art`; }
+            }
+            renderVals(){
+              const m=this.state.isMobile, product=this.state.product||this.DEFAULT_PRODUCTS[0];
+              const colors=this.COLORS.map(c=>({...c,ring:this.state.color===c.name?'0 0 0 2px #fff, 0 0 0 4px #F65091':(c.hex==='#FFFFFF'?'0 0 0 1px #E5DDD0':'none'),onClick:()=>this.setState({color:c.name})}));
+              const sizes=this.SIZES.map(x=>({label:x,border:this.state.size===x?'#F65091':'#E5DDD0',color:this.state.size===x?'#F65091':'#2B2420',weight:this.state.size===x?500:400,onClick:()=>this.setState({size:x})}));
+              const faqs=this.FAQS.map((f,i)=>({...f,open:this.state.faqOpen===i,arrow:this.state.faqOpen===i?'rotate(180deg)':'rotate(0deg)',onClick:()=>this.setState({faqOpen:this.state.faqOpen===i?null:i})}));
+              const related=(this.state.allProducts.length?this.state.allProducts:this.DEFAULT_PRODUCTS).filter(x=>x.id!==product.id).slice(0,4).map(x=>({...x,href:`/tienda/producto?id=${encodeURIComponent(x.id)}`}));
+              return { navGap:m?'64px':'88px', crumbPad:m?'16px 24px 0':'24px 48px 0', mainPad:m?'20px 24px 40px':'32px 48px 60px', mainCols:m?'1fr':'1fr 1fr', mainGap:m?'32px':'80px', h1Size:m?'26px':'38px', relatedPad:m?'20px 24px 50px':'40px 48px 90px', relatedCols:m?'repeat(2,1fr)':'repeat(4,1fr)', relatedGap:m?'24px 16px':'32px', h2Size:m?'22px':'30px', h2Gap:m?'24px':'36px', faqPad:m?'0 24px 60px':'0 48px 100px', isMobile:m, product, mainImage:product.imageUrl||'', thumbs:[1,2,3,4].map((_,i)=>({id:`pd-thumb-${i}`,src:product.imageUrl||'',placeholder:'detalle del producto'})), colors,sizes, includes:['Pieza elaborada a mano','Boceto digital previo','Personalización según disponibilidad'], excludes:['Envío incluido en el precio'], whatsappUrl:'https://wa.me/18495390410?text='+encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`), related, faqs };
+            }
+          }
+          '''
+          s=s[:start]+cls+s[end:]
+          p.write_text(s)
+
+          # APRENDE INDEX: all course/workshop names and freebie preview link to detail templates.
+          p=Path('Aprende.dc.html'); s=p.read_text()
+          s=s.replace('<div style="font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;">{{ c.name }}</div>','<a href="{{ c.detailHref }}" style="display:block;font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;text-decoration:none;">{{ c.name }}</a>',1)
+          s=s.replace('<div style="font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;">{{ w.name }}</div>','<a href="{{ w.detailHref }}" style="display:block;font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;text-decoration:none;">{{ w.name }}</a>',1)
+          s=s.replace('<a href="#" onClick="{{ item.onPreview }}" style="text-decoration: none; color: #8B795E; font-size: 12px; font-weight: 400">Vista previa</a>','<a href="{{ item.detailHref }}" style="text-decoration:none;color:#8B795E;font-size:12px;font-weight:400">Ver detalle</a>',1)
+          s=s.replace("const courses = (isCursos ? coursesSource : []).map(c => ({ ...c, whatsappUrl:","const courses = (isCursos ? coursesSource : []).map((c,i) => ({ ...c, detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl:",1)
+          s=s.replace("workshops: (live.talleres || this.WORKSHOPS).map(w => ({ placeholder:","workshops: (live.talleres || this.WORKSHOPS).map((w,i) => ({ detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder:",1)
+          s=s.replace("freebies: (live.gratis || this.FREEBIES).map(item => {","freebies: (live.gratis || this.FREEBIES).map((item,i) => {",1)
+          s=s.replace("downloadHref: hasFile ? item.fileUrl : '#',","detailHref:`/aprende/recurso?id=${encodeURIComponent(item.id || ('g'+(i+1)))}`,\n          downloadHref: hasFile ? item.fileUrl : '#',",1)
+          p.write_text(s)
+
+          # APRENDE DETAIL: type is selected by URL; live item overrides the uploaded sample text where available.
+          p=Path('Aprende Detalle.dc.html'); s=p.read_text()
+          s=s.replace("state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };","state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0, liveItem: null };",1)
+          old="""componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    window.addEventListener('resize', check);
+  }"""
+          new="""async componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 }); check(); window.addEventListener('resize', check);
+    try { const cms=await import('./cms.js'); const data=await cms.getPageContent('aprende'); const qs=new URLSearchParams(window.location.search); const type=window.location.pathname.includes('/taller')?'taller':'curso'; const id=qs.get('id'); const list=type==='taller'?(data.talleres||[]):(data.cursos||[]); const liveItem=list.find(x=>x.id===id)||null; if(liveItem)this.setState({liveItem}); } catch(e) {}
+  }"""
+          s=s.replace(old,new,1)
+          s=s.replace("const type = this.props.type === 'taller' ? 'taller' : 'curso';\n    const d = type === 'taller' ? this.TALLER : this.CURSO;","const type = window.location.pathname.includes('/taller') ? 'taller' : ((new URLSearchParams(window.location.search).get('type')==='taller')?'taller':'curso');\n    const base = type === 'taller' ? this.TALLER : this.CURSO;\n    const li=this.state.liveItem;\n    const d=li ? { ...base, title:li.name||base.title, tagline:li.desc||base.tagline, summary:li.desc||base.summary, price:li.price||base.price, heroImage:li.imageUrl||'', infoRows:type==='taller'?[{label:'Fecha / nivel',value:li.dateLevel||''},{label:'Ubicación',value:li.location||''},{label:'Precio',value:li.price||''}]:[{label:'Nivel / modalidad',value:li.level||''},{label:'Precio',value:li.price||''}] } : base;",1)
+          s=s.replace("heroImage: '', heroPlaceholder:","heroImage: d.heroImage || '', heroPlaceholder:",1)
+          p.write_text(s)
+
+          # RESOURCE DETAIL: load selected freebie from CMS and use its file/image/title/format.
+          p=Path('Recursos.dc.html'); s=p.read_text()
+          s=s.replace('src="" placeholder="portada / vista previa del recurso"','src="{{ resource.imageUrl }}" placeholder="portada / vista previa del recurso"',1)
+          s=s.replace('>Plantilla de Trazos Básicos</h1>','>{{ resource.title }}</h1>',1)
+          s=s.replace('>PDF</div>','>{{ resource.format }}</div>',1)
+          s=s.replace("state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };","state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null };",1)
+          old="""componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    window.addEventListener('resize', check);
+  }"""
+          new="""async componentDidMount() {
+    const check=()=>this.setState({isMobile:window.innerWidth<860}); check(); window.addEventListener('resize',check);
+    try{ const cms=await import('./cms.js'); const data=await cms.getPageContent('aprende'); const id=new URLSearchParams(window.location.search).get('id'); const list=data.gratis||[]; const resource=list.find(x=>x.id===id)||list[0]||null; if(resource)this.setState({resource}); }catch(e){}
+  }"""
+          s=s.replace(old,new,1)
+          s=s.replace("const m = this.state.isMobile;\n    return {","const m = this.state.isMobile; const resource=this.state.resource||{title:'Plantilla de Trazos Básicos',format:'PDF',imageUrl:'',fileUrl:'#'};\n    return {",1)
+          s=s.replace("downloadUrl: '#',","resource,\n      downloadUrl: resource.fileUrl || '#',",1)
+          p.write_text(s)
+
+          # SERVICES: choose service from URL query injected by Vercel rewrite.
+          p=Path('Servicios.dc.html'); s=p.read_text()
+          s=s.replace("const data = this.SERVICES[this.props.service] || this.SERVICES.rotulacion;","const qs=new URLSearchParams(window.location.search); const key=qs.get('service')||this.props.service||'rotulacion'; const data=this.SERVICES[key]||this.SERVICES.rotulacion;",1)
+          p.write_text(s)
+
+          # HOME: clickable service cards via full-card overlay links (desktop + mobile).
+          p=Path('Inicio.dc.html'); s=p.read_text()
+          for sid,href in [('serv-personalizados','/servicios/personalizados'),('serv-rotulacion','/servicios/rotulacion'),('serv-packaging','/servicios/packaging'),('serv-souvenirs','/servicios/souvenirs')]:
+            needle=f'<image-slot id="{sid}"'
+            pos=0
+            while True:
+              pos=s.find(needle,pos)
+              if pos<0: break
+              end=s.find('</image-slot>',pos)+len('</image-slot>')
+              overlay=f'<a href="{href}" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>'
+              if overlay not in s[end:end+len(overlay)+10]: s=s[:end]+overlay+s[end:]
+              pos=end+len(overlay)
+          p.write_text(s)
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Tienda.dc.html Productos.dc.html Aprende.dc.html "Aprende Detalle.dc.html" Recursos.dc.html Servicios.dc.html Inicio.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Connect new detail subpages across site"
+          git push origin main
