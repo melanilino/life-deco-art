@@ -1,0 +1,69 @@
+name: Fix product detail mobile v2
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-product-detail-mobile-v2.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Repair product detail mobile layout and live data binding
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('Productos.dc.html')
+          s = p.read_text(encoding='utf-8')
+
+          s = s.replace('/support.js?v=20260812-product-mobile1', '/support.js?v=20260812-product-mobile2')
+          s = s.replace('/image-slot.js?v=20260812-product-mobile1', '/image-slot.js?v=20260812-product-mobile2')
+
+          s = s.replace('''    <a href="/tienda" style="text-decoration:none;color:#8B795E;">Personalizados</a>\n    <span>/</span>\n    <a href="/tienda" style="text-decoration:none;color:#8B795E;">Bandejas</a>\n    <span>/</span>\n    <span style="color:#000000;">Bandeja "Te Elijo Hoy"</span>''', '''    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productCategory }}</a>\n    <span>/</span>\n    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productSubcategory }}</a>\n    <span>/</span>\n    <span style="color:#000000;">{{ productName }}</span>''')
+
+          s = s.replace('''      <div style="aspect-ratio:4/5;border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:14px;">''', '''      <div style="aspect-ratio:{{ mainAspect }};max-height:{{ mainMaxHeight }};border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:{{ mainImageGap }};">''')
+
+          s = s.replace('''      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">\n        <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">\n          <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;">\n            <image-slot id="{{ t.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>\n          </div>\n        </sc-for>\n      </div>''', '''      <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">\n        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">\n          <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">\n            <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;">\n              <image-slot id="{{ t.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>\n            </div>\n          </sc-for>\n        </div>\n      </sc-if>''')
+
+          s = s.replace('''      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:10px;">\n        Bestseller\n      </div>''', '''      <sc-if value="{{ productTag }}" hint-placeholder-val="{{ false }}">\n        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:10px;">{{ productTag }}</div>\n      </sc-if>''')
+
+          s = s.replace('''      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">Bandeja "Te Elijo <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.15em;">Hoy</span>"</h1>\n      <div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">RD$2,220</div>\n      <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">Bandeja de madera lacada en negro, con lettering blanco pintado a mano. Una pieza pensada para acompañar una propuesta, un aniversario o cualquier momento que merezca decir las cosas bonito.</p>''', '''      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ productName }}</h1>\n      <div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">{{ productPrice }}</div>\n      <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">{{ productDesc }}</p>''')
+
+          s = s.replace('''        <div style="font-size:11px;color:#8B795E;font-weight:300;">Bandeja "Te Elijo Hoy"</div>\n        <div style="font-size:15px;color:#F65091;font-weight:600;">RD$2,220</div>''', '''        <div style="font-size:11px;color:#8B795E;font-weight:300;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ productName }}</div>\n        <div style="font-size:15px;color:#F65091;font-weight:600;">{{ productPrice }}</div>''')
+
+          old_mount = '''  componentDidMount() {\n    const check = () => this.setState({ isMobile: window.innerWidth < 860 });\n    check();\n    window.addEventListener('resize', check);\n  }'''
+          new_mount = '''  async componentDidMount() {\n    const check = () => this.setState({ isMobile: window.innerWidth < 860 });\n    check();\n    this._resizeHandler = check;\n    window.addEventListener('resize', this._resizeHandler, { passive: true });\n    try {\n      const params = new URLSearchParams(window.location.search);\n      const id = params.get('id') || 'p1';\n      const cms = await import('/cms.js');\n      const data = await cms.getPageContent('tienda');\n      const products = (data && data.products) || [];\n      const product = products.find(x => String(x.id) === String(id)) || products[0] || null;\n      this.setState({ product, allProducts: products });\n    } catch (e) {\n      console.error('No se pudo cargar el producto.', e);\n    }\n  }\n  componentWillUnmount() {\n    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);\n  }'''
+          if old_mount not in s:
+              raise SystemExit('componentDidMount block not found')
+          s = s.replace(old_mount, new_mount, 1)
+
+          s = s.replace("isMobile: typeof window !== 'undefined' && window.innerWidth < 860,\n    color:", "isMobile: typeof window !== 'undefined' && window.innerWidth < 860, product: null, allProducts: [],\n    color:")
+
+          old_render = '''  renderVals() {\n    const m = this.state.isMobile;'''
+          new_render = '''  renderVals() {\n    const m = this.state.isMobile;\n    const fallback = { id:'p1', name:'Bandeja "Te Elijo Hoy"', price:'RD$2,220', category:'Personalizados', subcategory:'Bandejas', desc:'Bandeja de madera lacada en negro, con lettering blanco pintado a mano.', tag:'Bestseller', delivery:'5-7 días', imageUrl:'' };\n    const product = this.state.product || fallback;\n    const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : [];\n    const relatedLive = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id)).slice(0,4);'''
+          if old_render not in s:
+              raise SystemExit('renderVals start not found')
+          s = s.replace(old_render, new_render, 1)
+
+          s = s.replace("const thumbs = ['acercamiento del lettering', 'vista lateral', 'detalle del acabado', 'bandeja en uso'].map((p, i) => ({ id: `pd-thumb-${i}`, src: '', placeholder: p }));", "const thumbs = gallery.map((src, i) => ({ id: `pd-thumb-${i}`, src, placeholder: `vista ${i+1} de ${product.name}` }));")
+
+          s = s.replace("      navGap: m ? '64px' : '88px',", "      navGap: m ? '64px' : '88px',\n      mainAspect: m ? '1 / 1' : '4 / 5',\n      mainMaxHeight: m ? '360px' : 'none',\n      mainImageGap: m ? '10px' : '14px',")
+          s = s.replace("      crumbPad: m ? '14px 20px 0' : '24px 48px 0',", "      crumbPad: m ? '12px 20px 0' : '24px 48px 0',")
+          s = s.replace("      mainPad: m ? '18px 20px 32px' : '32px 48px 60px',", "      mainPad: m ? '14px 20px 28px' : '32px 48px 60px',")
+          s = s.replace("      mainGap: m ? '26px' : '80px',", "      mainGap: m ? '20px' : '80px',")
+          s = s.replace("      h1Size: m ? '26px' : '38px',", "      h1Size: m ? '24px' : '38px',")
+
+          s = s.replace("      mainImage: '', thumbs, colors, sizes,", "      productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',\n      mainImage: product.imageUrl || '', thumbs, hasThumbs: thumbs.length > 0, colors, sizes,")
+          s = s.replace("      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent('Hola! Me interesa la Bandeja \"Te Elijo Hoy\" (RD$2,220).'),\n      related: this.RELATED,", "      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),\n      related: relatedLive.length ? relatedLive : this.RELATED,")
+
+          p.write_text(s, encoding='utf-8')
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Productos.dc.html
+          git commit -m 'Fix product detail mobile layout and live product data'
+          git push
