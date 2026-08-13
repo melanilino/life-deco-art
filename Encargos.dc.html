@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<title>Encargo Personalizado | Life Deco Art</title>
+<meta name="description" content="Cuéntanos lo que imaginas: tipo de pieza, ocasión, fecha y detalles. Recibe una cotización por WhatsApp.">
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; max-width: 100%; overflow-x: clip; }
+  body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
+  @keyframes lda-page-fade { from { opacity: 0; } to { opacity: 1; } }
+  a { color: #F65091; }
+  a:hover { color: #000000; }
+  .lda-enc-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; }
+</style>
+</helmet>
+<dc-import name="NavBar" active-page="tienda" hint-size="100%,80px" style="position: absolute; left: 4px; top: 1px"></dc-import>
+<div style="height:{{ navGap }};"></div>
+
+<section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+
+  <div style="max-width:760px;margin:0 auto;padding:{{ heroPad }};text-align:center;">
+    <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:16px;">Encargo Personalizado</div>
+    <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0;">Cuéntame lo que <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.2em;">imaginas</span></h1>
+    <p style="font-size:15px;color:#8B795E;font-weight:300;max-width:480px;margin:16px auto 0;">Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.</p>
+  </div>
+
+  <div style="max-width:640px;margin:0 auto;padding:{{ formPad }};">
+    <div style="display:flex;flex-direction:column;gap:22px;">
+
+      <div>
+        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Tipo de pieza</label>
+        <select value="{{ tipo }}" onChange="{{ onTipo }}" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;background:#FFFFFF;outline:none;">
+          <sc-for list="{{ tipos }}" as="t" hint-placeholder-count="6">
+            <option value="{{ t }}">{{ t }}</option>
+          </sc-for>
+        </select>
+      </div>
+
+      <div style="display:grid;grid-template-columns:{{ twoCol }};gap:16px;">
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Ocasión o propósito</label>
+          <input class="lda-enc-input" type="text" value="{{ ocasion }}" onChange="{{ onOcasion }}" placeholder="Ej. cumpleaños, boda, regalo" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Fecha en que la necesitas</label>
+          <input class="lda-enc-input" type="date" value="{{ fecha }}" onChange="{{ onFecha }}" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:{{ twoCol }};gap:16px;">
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Cantidad</label>
+          <input class="lda-enc-input" type="number" min="1" value="{{ cantidad }}" onChange="{{ onCantidad }}" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Tamaño aproximado</label>
+          <input class="lda-enc-input" type="text" value="{{ tamano }}" onChange="{{ onTamano }}" placeholder="Ej. 25x30cm" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Nombre, frase o texto a incluir</label>
+        <textarea class="lda-enc-input" value="{{ texto }}" onChange="{{ onTexto }}" rows="2" placeholder="Escribe el texto exacto que quieres en la pieza" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;resize:vertical;"></textarea>
+      </div>
+
+      <div>
+        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Colores o estilo deseado</label>
+        <input class="lda-enc-input" type="text" value="{{ colores }}" onChange="{{ onColores }}" placeholder="Ej. tonos pastel, negro y dorado" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+      </div>
+
+      <div style="display:grid;grid-template-columns:{{ twoCol }};gap:16px;">
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Presupuesto estimado <span style="color:#8B795E;font-weight:300;">(opcional)</span></label>
+          <div style="position:relative;">
+            <div onClick="{{ onTogglePresupuesto }}" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:{{ presupuestoDisplayColor }};background:#FFFFFF;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <span>{{ presupuestoDisplay }}</span>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8B795E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ presupuestoArrow }};transition:transform .25s ease;flex-shrink:0;"><path d="M6 9l6 6 6-6"></path></svg>
+            </div>
+            <sc-if value="{{ presupuestoOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;background:#FFFFFF;border:1px solid #E5DDD0;border-radius:6px;box-shadow:0 8px 24px rgba(0,0,0,0.08);z-index:10;overflow:hidden;">
+                <sc-for list="{{ presupuestoOpciones }}" as="op" hint-placeholder-count="5">
+                  <div onClick="{{ op.onClick }}" style="padding:11px 14px;font-size:13px;color:{{ op.color }};font-weight:{{ op.weight }};background:{{ op.bg }};cursor:pointer;">{{ op.label }}</div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+          <sc-if value="{{ presupuestoEsOtro }}" hint-placeholder-val="{{ false }}">
+            <input class="lda-enc-input" type="text" value="{{ presupuestoOtro }}" onChange="{{ onPresupuestoOtro }}" placeholder="Escribe tu presupuesto" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+          </sc-if>
+        </div>
+        <div>
+          <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Ciudad de entrega</label>
+          <input class="lda-enc-input" type="text" value="{{ ciudad }}" onChange="{{ onCiudad }}" placeholder="Ej. Santo Domingo" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Referencias o inspiración <span style="color:#8B795E;font-weight:300;">(opcional)</span></label>
+        <div style="border:1.5px dashed #E5DDD0;border-radius:8px;padding:24px;text-align:center;color:#8B795E;font-size:13px;font-weight:300;">Comparte tus fotos de referencia directamente por WhatsApp al enviar la solicitud.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="max-width:640px;margin:0 auto;padding:{{ processPad }};">
+    <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:16px;">Así funciona después de enviar tu solicitud</div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="width:26px;height:26px;border-radius:999px;background:#F65091;color:#FFFFFF;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ s.n }}</div>
+          <div style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;padding-top:4px;">{{ s.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width:640px;margin:0 auto;padding:{{ previewPad }};">
+    <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:10px;">Así llegará tu mensaje</div>
+    <div style="background:#F3EEE4;border-radius:10px;padding:18px 20px;font-size:13px;color:#2B2420;font-weight:300;line-height:1.7;white-space:pre-wrap;">{{ preview }}</div>
+  </div>
+
+  <div style="max-width:640px;margin:0 auto;padding:{{ ctaPad }};text-align:center;">
+    <a href="{{ whatsappUrl }}" target="_blank" style="display:inline-block;text-decoration:none;background:#F65091;color:#FFFFFF;padding:16px 36px;border-radius:6px;font-size:15px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Enviar solicitud por WhatsApp</a>
+    <p style="font-size:12px;color:#8B795E;font-weight:300;margin-top:14px;">Se abrirá WhatsApp con tu información precargada, lista para enviar.</p>
+  </div>
+
+</section>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+
+class Component extends DCLogic {
+  state = {
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
+    tipo: 'Cuadro personalizado', ocasion: '', fecha: '', cantidad: 1, tamano: '',
+    texto: '', colores: '', presupuesto: '', presupuestoOtro: '', ciudad: '', presupuestoOpen: false,
+  };
+  componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    window.addEventListener('resize', check);
+  }
+  TIPOS = ['Cuadro personalizado', 'Bandeja', 'Caja sorpresa', 'Letrero', 'Llavero', 'Vinera', 'Otro'];
+  PRESUPUESTOS = ['Menos de RD$2,000', 'RD$2,000 – RD$5,000', 'RD$5,000 – RD$10,000', 'Más de RD$10,000', 'Otro'];
+  STEPS = [
+    { n: 1, text: 'Reviso tu solicitud y te respondo con una propuesta de precio y tiempo de entrega.' },
+    { n: 2, text: 'Te comparto un boceto digital de la pieza para tu aprobación.' },
+    { n: 3, text: 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.' },
+  ];
+  renderVals() {
+    const m = this.state.isMobile;
+    const s = this.state;
+    const onField = (key) => (e) => this.setState({ [key]: e.target.value });
+    const onTipo = onField('tipo'), onOcasion = onField('ocasion'), onFecha = onField('fecha'),
+      onCantidad = onField('cantidad'), onTamano = onField('tamano'), onTexto = onField('texto'),
+      onColores = onField('colores'), onPresupuesto = onField('presupuesto'), onCiudad = onField('ciudad'),
+      onPresupuestoOtro = onField('presupuestoOtro');
+    const presupuestoFinal = s.presupuesto === 'Otro' ? s.presupuestoOtro : s.presupuesto;
+    const presupuestoOpciones = this.PRESUPUESTOS.map(p => ({
+      label: p,
+      bg: s.presupuesto === p ? '#F3EEE4' : '#FFFFFF',
+      color: s.presupuesto === p ? '#F65091' : '#2B2420',
+      weight: s.presupuesto === p ? 500 : 400,
+      onClick: () => this.setState({ presupuesto: p, presupuestoOpen: false }),
+    }));
+    const onTogglePresupuesto = () => this.setState({ presupuestoOpen: !s.presupuestoOpen });
+    const parts = [
+      `Tipo de pieza: ${s.tipo}`,
+      s.ocasion && `Ocasión: ${s.ocasion}`,
+      s.fecha && `Fecha necesaria: ${s.fecha}`,
+      `Cantidad: ${s.cantidad}`,
+      s.tamano && `Tamaño: ${s.tamano}`,
+      s.texto && `Texto a incluir: ${s.texto}`,
+      s.colores && `Colores/estilo: ${s.colores}`,
+      presupuestoFinal && `Presupuesto: ${presupuestoFinal}`,
+      s.ciudad && `Ciudad: ${s.ciudad}`,
+    ].filter(Boolean);
+    const message = 'Hola! Quiero hacer un encargo personalizado.\n' + parts.join('\n');
+    return {
+      preview: message,
+      previewPad: m ? '10px 24px 0' : '10px 48px 0',
+      navGap: m ? '64px' : '88px',
+      heroPad: m ? '36px 24px 0' : '64px 48px 0',
+      h1Size: m ? '26px' : '42px',
+      formPad: m ? '32px 24px' : '48px 48px',
+      twoCol: m ? '1fr' : '1fr 1fr',
+      processPad: m ? '10px 24px 0' : '10px 48px 0',
+      ctaPad: m ? '40px 24px 60px' : '48px 48px 90px',
+      tipo: s.tipo, ocasion: s.ocasion, fecha: s.fecha, cantidad: s.cantidad, tamano: s.tamano,
+      texto: s.texto, colores: s.colores, presupuesto: s.presupuesto, presupuestoOtro: s.presupuestoOtro, ciudad: s.ciudad,
+      presupuestoOpciones, presupuestoEsOtro: s.presupuesto === 'Otro',
+      presupuestoOpen: s.presupuestoOpen, onTogglePresupuesto,
+      presupuestoDisplay: s.presupuesto || 'Selecciona un rango',
+      presupuestoDisplayColor: s.presupuesto ? '#2B2420' : '#8B795E',
+      presupuestoArrow: s.presupuestoOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      tipos: this.TIPOS, steps: this.STEPS,
+      onTipo, onOcasion, onFecha, onCantidad, onTamano, onTexto, onColores, onPresupuesto, onCiudad, onPresupuestoOtro,
+      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(message),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
