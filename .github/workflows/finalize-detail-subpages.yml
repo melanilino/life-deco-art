@@ -1,0 +1,119 @@
+name: Finalize detail subpages
+on:
+  push:
+    paths:
+      - '.github/workflows/finalize-detail-subpages.yml'
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch detail pages and routes
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+
+          detail_files = [
+              'Productos.dc.html',
+              'Aprende Detalle.dc.html',
+              'Recursos.dc.html',
+              'Servicios.dc.html',
+              'Encargos.dc.html',
+          ]
+          for name in detail_files:
+              p = Path(name)
+              s = p.read_text(encoding='utf-8')
+              s = s.replace('src="./support.js"', 'src="/support.js"')
+              s = s.replace('src="./image-slot.js"', 'src="/image-slot.js"')
+              s = s.replace('href="Tienda.dc.html"', 'href="/tienda"')
+              s = s.replace('href="Aprende.dc.html"', 'href="/aprende"')
+              p.write_text(s, encoding='utf-8')
+
+          # Make course/workshop selection depend on the public URL, not editor props.
+          p = Path('Aprende Detalle.dc.html')
+          s = p.read_text(encoding='utf-8')
+          old = "const type = this.props.type === 'taller' ? 'taller' : 'curso';"
+          new = "const type = window.location.pathname.includes('/talleres/') || window.location.pathname.endsWith('/taller') ? 'taller' : 'curso';"
+          if old in s:
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+
+          # Make service selection depend on the public URL.
+          p = Path('Servicios.dc.html')
+          s = p.read_text(encoding='utf-8')
+          old = "const data = this.SERVICES[this.props.service] || this.SERVICES.rotulacion;"
+          new = "const serviceSlug = window.location.pathname.split('/').filter(Boolean).pop();\n    const data = this.SERVICES[serviceSlug] || this.SERVICES.rotulacion;"
+          if old in s:
+              s = s.replace(old, new)
+          p.write_text(s, encoding='utf-8')
+
+          # Use the public course URL from the free-resource page.
+          p = Path('Recursos.dc.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('href="Aprende Detalle.dc.html"', 'href="/aprende/cursos/lettering-para-bodas"')
+          p.write_text(s, encoding='utf-8')
+
+          # Canonical public routes for the five detail templates.
+          p = Path('vercel.json')
+          cfg = json.loads(p.read_text(encoding='utf-8'))
+
+          raw_redirects = {
+              '/Productos.dc.html': '/tienda/bandeja-te-elijo-hoy',
+              '/Aprende Detalle.dc.html': '/aprende/cursos/lettering-para-bodas',
+              '/Recursos.dc.html': '/aprende/gratis/plantilla-trazos-basicos',
+              '/Servicios.dc.html': '/servicios/rotulacion',
+              '/Encargos.dc.html': '/encargo-personalizado',
+          }
+          redirects = [r for r in cfg.get('redirects', []) if r.get('source') not in raw_redirects]
+          redirects.extend({'source': src, 'destination': dst, 'permanent': True} for src, dst in raw_redirects.items())
+          cfg['redirects'] = redirects
+
+          detail_sources = {
+              '/tienda/producto',
+              '/tienda/bandeja-te-elijo-hoy',
+              '/aprende/curso',
+              '/aprende/taller',
+              '/aprende/cursos/lettering-para-bodas',
+              '/aprende/talleres/lettering-desde-cero',
+              '/aprende/recurso',
+              '/aprende/gratis/plantilla-trazos-basicos',
+              '/servicios/rotulacion',
+              '/servicios/personalizados',
+              '/servicios/packaging',
+              '/servicios/souvenirs',
+              '/encargo-personalizado',
+          }
+          rewrites = [r for r in cfg.get('rewrites', []) if r.get('source') not in detail_sources]
+          rewrites.extend([
+              {'source': '/tienda/bandeja-te-elijo-hoy', 'destination': '/Productos.dc.html'},
+              {'source': '/tienda/producto', 'destination': '/Productos.dc.html'},
+              {'source': '/aprende/cursos/lettering-para-bodas', 'destination': '/Aprende Detalle.dc.html'},
+              {'source': '/aprende/curso', 'destination': '/Aprende Detalle.dc.html'},
+              {'source': '/aprende/talleres/lettering-desde-cero', 'destination': '/Aprende Detalle.dc.html'},
+              {'source': '/aprende/taller', 'destination': '/Aprende Detalle.dc.html'},
+              {'source': '/aprende/gratis/plantilla-trazos-basicos', 'destination': '/Recursos.dc.html'},
+              {'source': '/aprende/recurso', 'destination': '/Recursos.dc.html'},
+              {'source': '/servicios/rotulacion', 'destination': '/Servicios.dc.html'},
+              {'source': '/servicios/personalizados', 'destination': '/Servicios.dc.html'},
+              {'source': '/servicios/packaging', 'destination': '/Servicios.dc.html'},
+              {'source': '/servicios/souvenirs', 'destination': '/Servicios.dc.html'},
+              {'source': '/encargo-personalizado', 'destination': '/Encargos.dc.html'},
+          ])
+          cfg['rewrites'] = rewrites
+          p.write_text(json.dumps(cfg, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+      - name: Commit integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 'Productos.dc.html' 'Aprende Detalle.dc.html' 'Recursos.dc.html' 'Servicios.dc.html' 'Encargos.dc.html' vercel.json
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Finalize five detail subpages for production"
+            git push
+          fi
