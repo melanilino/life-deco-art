@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://lifedecoart.com/aprende/cursos/lettering-para-bodas">
+<script src="./support.js"></script>
+<title>Lettering para Bodas | Life Deco Art</title>
+<meta name="description" content="Curso online de lettering para bodas: aprende a crear carteles de bienvenida, menús y señalética personalizada, paso a paso.">
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  html, body { margin: 0; max-width: 100%; overflow-x: clip; }
+  body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
+  @keyframes lda-page-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lda-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  a { color: #0CC0DF; }
+  a:hover { color: #000000; }
+</style>
+</helmet>
+<dc-import name="NavBar" active-page="aprende" hint-size="100%,80px" style="position: absolute; left: 4px; top: 1px"></dc-import>
+<div style="height:{{ navGap }};"></div>
+
+<section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:#8B795E;font-weight:300;">
+    <a href="/aprende" style="text-decoration:none;color:#8B795E;">Aprende</a>
+    <span>/</span>
+    <a href="/aprende" style="text-decoration:none;color:#8B795E;">{{ kindLabelPlural }}</a>
+    <span>/</span>
+    <span style="color:#000000;">{{ title }}</span>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};">
+    <div style="aspect-ratio:{{ heroRatio }};border-radius:14px;background:#F3EEE4;overflow:hidden;">
+      <image-slot id="ap-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ heroImage }}" placeholder="{{ heroPlaceholder }}"></image-slot>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ mainPad }};display:grid;grid-template-columns:{{ mainCols }};gap:{{ mainGap }};min-width:0;">
+
+    <div>
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:12px;">{{ kindLabel }}</div>
+      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ title }}</h1>
+      <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0 0 20px;">{{ tagline }}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;">
+        <sc-for list="{{ badges }}" as="b" hint-placeholder-count="4">
+          <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">{{ b }}</div>
+        </sc-for>
+      </div>
+
+      <div style="margin-bottom:32px;">
+        <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Qué aprenderás</div>
+        <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0;">{{ summary }}</p>
+      </div>
+
+      <div style="margin-bottom:32px;">
+        <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Para quién es</div>
+        <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0;">{{ forWho }}</p>
+      </div>
+
+      <div style="margin-bottom:32px;">
+        <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:16px;">{{ contentTitle }}</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <sc-for list="{{ modules }}" as="mo" hint-placeholder-count="4">
+            <div style="display:flex;gap:14px;align-items:flex-start;">
+              <div style="width:28px;height:28px;border-radius:999px;background:#0CC0DF;color:#FFFFFF;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ mo.n }}</div>
+              <div>
+                <div style="font-size:14px;color:#2B2420;font-weight:400;">{{ mo.title }}</div>
+                <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:2px;">{{ mo.desc }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:32px;">
+          <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Ubicación</div>
+          <div style="aspect-ratio:16/7;border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:10px;">
+            <image-slot id="ap-mapa" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mapImage }}" placeholder="mapa o instrucciones de llegada"></image-slot>
+          </div>
+          <p style="font-size:13px;color:#8B795E;font-weight:300;margin:0;">{{ locationDetail }}</p>
+        </div>
+      </sc-if>
+
+      <div style="margin-bottom:16px;">
+        <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Materiales</div>
+        <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0;">{{ materials }}</p>
+      </div>
+
+      <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:32px;">
+          <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Política de cancelación</div>
+          <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0;">{{ cancelPolicy }}</p>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isCurso }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-bottom:8px;">
+          <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:16px;">Testimonios</div>
+          <div style="display:grid;grid-template-columns:{{ testimonialCols }};gap:20px;">
+            <sc-for list="{{ testimonials }}" as="t" hint-placeholder-count="2">
+              <div style="background:#F3EEE4;border-radius:10px;padding:20px;">
+                <p style="font-size:13px;color:#2B2420;font-weight:300;line-height:1.6;margin:0 0 10px;">"{{ t.quote }}"</p>
+                <div style="font-size:12px;color:#8B795E;font-weight:500;">{{ t.author }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:16px;">Talleres anteriores</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+            <sc-for list="{{ pastGallery }}" as="g" hint-placeholder-count="3">
+              <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
+                <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="{{ g.placeholder }}"></image-slot>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div>
+      <div style="position:{{ stickyPosition }};top:{{ stickyTop }};background:#F3EEE4;border-radius:14px;padding:28px;">
+        <div style="font-size:24px;font-weight:500;color:#0CC0DF;margin-bottom:6px;">{{ price }}</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-bottom:20px;">{{ paymentNote }}</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+          <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:#8B795E;font-weight:300;">{{ r.label }}</span>
+              <span style="color:#2B2420;font-weight:500;text-align:right;">{{ r.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+          <div style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:{{ cuposColor }};margin-bottom:20px;">
+            <span style="width:8px;height:8px;border-radius:999px;background:{{ cuposColor }};"></span>
+            {{ cuposLabel }}
+          </div>
+        </sc-if>
+        <a href="{{ whatsappUrl }}" target="_blank" style="display:block;text-align:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 0;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">{{ ctaLabel }}</a>
+      </div>
+
+      <div style="margin-top:24px;">
+        <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:10px;">Siguiente paso</div>
+        <a href="/aprende" style="display:flex;align-items:center;gap:14px;text-decoration:none;background:#FFFFFF;border:1px solid #E5DDD0;border-radius:10px;padding:14px;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
+          <div style="width:56px;height:56px;border-radius:8px;background:#F3EEE4;flex-shrink:0;overflow:hidden;">
+            <image-slot id="ap-next" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="curso relacionado"></image-slot>
+          </div>
+          <div>
+            <div style="font-size:13px;color:#000;font-weight:400;">{{ nextTitle }}</div>
+            <div style="font-size:12px;color:#8B795E;font-weight:300;">{{ nextSubtitle }}</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  
+
+</section>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1400},&quot;type&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;taller&quot;,&quot;options&quot;:[&quot;curso&quot;,&quot;taller&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+
+class Component extends DCLogic {
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };
+  componentDidMount() {
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    window.addEventListener('resize', check);
+  }
+  CURSO = {
+    kindLabel: 'Curso', kindLabelPlural: 'Cursos',
+    title: 'Lettering para Bodas',
+    tagline: 'Aprende a crear rótulos, carteles de bienvenida y detalles caligráficos para tu boda o la de alguien especial.',
+    badges: ['Bodas', 'Carteles de bienvenida', 'Papelería', 'Detalles caligráficos'],
+    summary: 'Al terminar podrás diseñar y ejecutar piezas de lettering para bodas: carteles de bienvenida, menús, señalética y detalles personalizados, usando materiales accesibles.',
+    forWho: 'Para quien quiera crear la papelería y decoración de su propia boda, o iniciar un pequeño negocio de piezas personalizadas.',
+    contentTitle: 'Temario',
+    modules: [
+      { n: 1, title: 'Fundamentos del lettering', desc: 'Trazos básicos, herramientas y postura.' },
+      { n: 2, title: 'Alfabeto cursivo', desc: 'Construcción de letras y conexiones.' },
+      { n: 3, title: 'Composición para carteles', desc: 'Jerarquía visual y espaciado.' },
+      { n: 4, title: 'Cartel de bienvenida', desc: 'Proyecto guiado paso a paso.' },
+      { n: 5, title: 'Menús y señalética', desc: 'Piezas pequeñas y repetibles.' },
+      { n: 6, title: 'Acabados y materiales', desc: 'Cómo proteger y presentar tu trabajo.' },
+    ],
+    materials: 'Marcadores de punta pincel, papel liso 120g y lápiz. Lista completa de materiales al inscribirte.',
+    price: 'RD$3,500', paymentNote: 'Pago único o en dos cuotas.',
+    infoRows: [
+      { label: 'Modalidad', value: 'Online' },
+      { label: 'Duración', value: '4 semanas' },
+      { label: 'Nivel', value: 'Principiante' },
+      { label: 'Disponibilidad', value: 'Bajo demanda' },
+    ],
+    ctaLabel: 'Reservar plaza',
+    testimonials: [
+      { quote: 'Hice el cartel de bienvenida de mi propia boda con lo aprendido en el curso.', author: 'Camila R.' },
+      { quote: 'Explicaciones claras y muy fáciles de seguir, incluso sin experiencia previa.', author: 'Valentina M.' },
+    ],
+    nextTitle: 'Taller: Lettering desde Cero', nextSubtitle: 'El siguiente paso presencial',
+    faqs: [
+      { q: '¿Necesito experiencia previa?', a: 'No, el curso empieza desde los fundamentos del trazo.' },
+      { q: '¿El curso tiene fecha límite?', a: 'No, es bajo demanda: avanzas a tu ritmo con acceso ilimitado al contenido.' },
+      { q: '¿Incluye certificado?', a: 'Sí, recibes un certificado digital al completar los seis módulos.' },
+    ],
+  };
+  TALLER = {
+    kindLabel: 'Taller', kindLabelPlural: 'Talleres',
+    title: 'Lettering desde Cero',
+    tagline: 'Un taller presencial de un día para aprender los fundamentos del lettering, con materiales incluidos.',
+    badges: ['Trazos básicos', 'Construcción de letras', 'Composición final'],
+    summary: 'Practicarás trazos básicos, construcción de letras y una composición final, con acompañamiento directo durante toda la sesión.',
+    forWho: 'Para quien quiere probar el lettering por primera vez en un ambiente relajado y guiado.',
+    contentTitle: 'Qué haremos en la sesión',
+    modules: [
+      { n: 1, title: 'Bienvenida y materiales', desc: 'Presentación del grupo y herramientas.' },
+      { n: 2, title: 'Trazos básicos', desc: 'Práctica guiada de los trazos fundamentales.' },
+      { n: 3, title: 'Alfabeto simplificado', desc: 'Construcción de letras minúsculas.' },
+      { n: 4, title: 'Pieza final', desc: 'Composición corta para llevarte a casa.' },
+    ],
+    materials: 'Todos los materiales están incluidos: marcador de punta pincel, papel y guía impresa.',
+    price: 'RD$1,800', paymentNote: 'Cupo se confirma con el pago.',
+    infoRows: [
+      { label: 'Fecha', value: 'Sáb 12 sep' },
+      { label: 'Hora', value: '2:00pm – 5:00pm' },
+      { label: 'Ubicación', value: 'Estudio Life Deco Art' },
+      { label: 'Duración', value: '3 horas' },
+    ],
+    ctaLabel: 'Reservar plaza',
+    locationDetail: 'Estudio Life Deco Art, Santo Domingo. Estacionamiento disponible frente al edificio.',
+    mapImage: '',
+    cancelPolicy: 'Cancelaciones con más de 72 horas de anticipación reciben reembolso completo. Reprogramaciones sin costo hasta 24 horas antes.',
+    cuposLabel: 'Pocos cupos disponibles', cuposColor: '#E8A93B',
+    pastGallery: [1, 2, 3].map(i => ({ id: `ap-past-${i}`, placeholder: 'foto de taller anterior' })),
+    nextTitle: 'Curso: Lettering para Bodas', nextSubtitle: 'Para profundizar después del taller',
+    faqs: [
+      { q: '¿Qué debo llevar?', a: 'Solo tus ganas de practicar — todos los materiales están incluidos.' },
+      { q: '¿Qué pasa si se agotan los cupos?', a: 'Puedes anotarte en lista de espera; te avisamos si se libera un cupo o programamos una nueva fecha.' },
+      { q: '¿Puedo reprogramar mi cupo?', a: 'Sí, sin costo hasta 24 horas antes del taller.' },
+    ],
+  };
+  renderVals() {
+    const m = this.state.isMobile;
+    const type = this.props.type === 'taller' ? 'taller' : 'curso';
+    const d = type === 'taller' ? this.TALLER : this.CURSO;
+    const faqs = d.faqs.map((f, i) => ({
+      ...f,
+      open: this.state.faqOpen === i,
+      arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
+      onClick: () => this.setState({ faqOpen: this.state.faqOpen === i ? null : i }),
+    }));
+    return {
+      navGap: m ? '64px' : '88px',
+      crumbPad: m ? '16px 24px 0' : '24px 48px 0',
+      heroPad: m ? '16px 24px 0' : '24px 48px 0',
+      heroRatio: m ? '16/10' : '21/8',
+      heroImage: '', heroPlaceholder: type === 'taller' ? 'foto del taller en acción' : 'portada del curso',
+      mainPad: m ? '28px 24px 40px' : '48px 48px 60px',
+      mainCols: m ? '1fr' : '1.4fr 0.9fr',
+      mainGap: m ? '32px' : '64px',
+      h1Size: m ? '26px' : '38px',
+      stickyPosition: 'static', stickyTop: 'auto',
+      testimonialCols: m ? '1fr' : '1fr 1fr',
+      faqPad: m ? '30px 24px 60px' : '20px 48px 100px',
+      isTaller: type === 'taller', isCurso: type === 'curso',
+      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
+      ...d, faqs,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
