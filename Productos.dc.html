@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
-<script src="/support.js?v=20260812-product-mobile1"></script>
+<script src="/support.js?v=20260812-product-mobile2"></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -19,7 +19,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js?v=20260812-product-mobile1"></script>
+<script src="/image-slot.js?v=20260812-product-mobile2"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
@@ -37,35 +37,37 @@
   <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:{{ crumbGap }};flex-wrap:wrap;font-size:{{ crumbSize }};line-height:1.5;color:#8B795E;font-weight:300;min-width:0;">
     <a href="/tienda" style="text-decoration:none;color:#8B795E;">Tienda</a>
     <span>/</span>
-    <a href="/tienda" style="text-decoration:none;color:#8B795E;">Personalizados</a>
+    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productCategory }}</a>
     <span>/</span>
-    <a href="/tienda" style="text-decoration:none;color:#8B795E;">Bandejas</a>
+    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productSubcategory }}</a>
     <span>/</span>
-    <span style="color:#000000;">Bandeja "Te Elijo Hoy"</span>
+    <span style="color:#000000;">{{ productName }}</span>
   </div>
 
   <div style="max-width:1240px;margin:0 auto;padding:{{ mainPad }};display:grid;grid-template-columns:{{ mainCols }};gap:{{ mainGap }};min-width:0;">
 
     <div>
-      <div style="aspect-ratio:4/5;border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:14px;">
+      <div style="aspect-ratio:{{ mainAspect }};max-height:{{ mainMaxHeight }};border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:{{ mainImageGap }};">
         <image-slot id="pd-main" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal de la bandeja"></image-slot>
       </div>
-      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
-        <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
-          <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;">
-            <image-slot id="{{ t.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
-          </div>
-        </sc-for>
-      </div>
+      <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
+          <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
+            <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;">
+              <image-slot id="{{ t.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
     </div>
 
     <div>
-      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:10px;">
-        Bestseller
-      </div>
-      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">Bandeja "Te Elijo <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.15em;">Hoy</span>"</h1>
-      <div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">RD$2,220</div>
-      <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">Bandeja de madera lacada en negro, con lettering blanco pintado a mano. Una pieza pensada para acompañar una propuesta, un aniversario o cualquier momento que merezca decir las cosas bonito.</p>
+      <sc-if value="{{ productTag }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:10px;">{{ productTag }}</div>
+      </sc-if>
+      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ productName }}</h1>
+      <div style="font-size:22px;font-weight:500;color:#F65091;margin-bottom:18px;">{{ productPrice }}</div>
+      <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0 0 24px;">{{ productDesc }}</p>
 
       <div style="margin-bottom:24px;">
         <div style="font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:12px;">Personaliza tu pieza</div>
@@ -133,8 +135,8 @@
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;bottom:0;left:0;right:0;z-index:2147482500;background:#FFFFFF;box-shadow:0 -4px 16px rgba(0,0,0,0.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:10px;box-sizing:border-box;">
       <div>
-        <div style="font-size:11px;color:#8B795E;font-weight:300;">Bandeja "Te Elijo Hoy"</div>
-        <div style="font-size:15px;color:#F65091;font-weight:600;">RD$2,220</div>
+        <div style="font-size:11px;color:#8B795E;font-weight:300;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ productName }}</div>
+        <div style="font-size:15px;color:#F65091;font-weight:600;">{{ productPrice }}</div>
       </div>
       <a href="{{ whatsappUrl }}" target="_blank" style="text-decoration:none;background:#F65091;color:#FFFFFF;padding:11px 16px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex-shrink:0;">Pedir por WhatsApp</a>
     </div>
@@ -167,13 +169,28 @@
 
 class Component extends DCLogic {
   state = {
-    isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 860, product: null, allProducts: [],
     color: 'Negro', size: 'Mediana (25cm)', faqOpen: 0,
   };
-  componentDidMount() {
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
-    window.addEventListener('resize', check);
+    this._resizeHandler = check;
+    window.addEventListener('resize', this._resizeHandler, { passive: true });
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id') || 'p1';
+      const cms = await import('/cms.js');
+      const data = await cms.getPageContent('tienda');
+      const products = (data && data.products) || [];
+      const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
+      this.setState({ product, allProducts: products });
+    } catch (e) {
+      console.error('No se pudo cargar el producto.', e);
+    }
+  }
+  componentWillUnmount() {
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
   }
   COLORS = [
     { name: 'Negro', hex: '#111111' },
@@ -195,6 +212,10 @@ class Component extends DCLogic {
   ];
   renderVals() {
     const m = this.state.isMobile;
+    const fallback = { id:'p1', name:'Bandeja "Te Elijo Hoy"', price:'RD$2,220', category:'Personalizados', subcategory:'Bandejas', desc:'Bandeja de madera lacada en negro, con lettering blanco pintado a mano.', tag:'Bestseller', delivery:'5-7 días', imageUrl:'' };
+    const product = this.state.product || fallback;
+    const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : [];
+    const relatedLive = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id)).slice(0,4);
     const colors = this.COLORS.map(c => ({
       ...c,
       ring: this.state.color === c.name ? '0 0 0 2px #fff, 0 0 0 4px #F65091' : (c.hex === '#FFFFFF' ? '0 0 0 1px #E5DDD0' : 'none'),
@@ -213,15 +234,18 @@ class Component extends DCLogic {
       arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
       onClick: () => this.setState({ faqOpen: this.state.faqOpen === i ? null : i }),
     }));
-    const thumbs = ['acercamiento del lettering', 'vista lateral', 'detalle del acabado', 'bandeja en uso'].map((p, i) => ({ id: `pd-thumb-${i}`, src: '', placeholder: p }));
+    const thumbs = gallery.map((src, i) => ({ id: `pd-thumb-${i}`, src, placeholder: `vista ${i+1} de ${product.name}` }));
     return {
       navGap: m ? '64px' : '88px',
-      crumbPad: m ? '14px 20px 0' : '24px 48px 0',
+      mainAspect: m ? '1 / 1' : '4 / 5',
+      mainMaxHeight: m ? '360px' : 'none',
+      mainImageGap: m ? '10px' : '14px',
+      crumbPad: m ? '12px 20px 0' : '24px 48px 0',
       crumbGap: m ? '5px' : '8px',
       crumbSize: m ? '11px' : '13px',
-      mainPad: m ? '18px 20px 32px' : '32px 48px 60px',
+      mainPad: m ? '14px 20px 28px' : '32px 48px 60px',
       mainCols: m ? '1fr' : '1fr 1fr',
-      mainGap: m ? '26px' : '80px',
+      mainGap: m ? '20px' : '80px',
       thumbGap: m ? '8px' : '12px',
       infoCols: m ? '1fr' : '1fr 1fr',
       infoGap: m ? '18px' : '20px',
@@ -229,7 +253,7 @@ class Component extends DCLogic {
       actionWrap: m ? 'nowrap' : 'wrap',
       actionGap: m ? '10px' : '14px',
       actionWidth: m ? '100%' : 'auto',
-      h1Size: m ? '26px' : '38px',
+      h1Size: m ? '24px' : '38px',
       relatedPad: m ? '28px 20px 46px' : '40px 48px 90px',
       relatedCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
       relatedGap: m ? '22px 12px' : '32px',
@@ -237,11 +261,12 @@ class Component extends DCLogic {
       h2Gap: m ? '24px' : '36px',
       faqPad: m ? '0 24px 60px' : '0 48px 100px',
       isMobile: m,
-      mainImage: '', thumbs, colors, sizes,
+      productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',
+      mainImage: product.imageUrl || '', thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
       includes: ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
       excludes: ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
-      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent('Hola! Me interesa la Bandeja "Te Elijo Hoy" (RD$2,220).'),
-      related: this.RELATED,
+      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
+      related: relatedLive.length ? relatedLive : this.RELATED,
       faqs,
     };
   }
