@@ -1,0 +1,19 @@
+name: Apply product timing mobile
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-product-timing-mobile.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/move_product_timing.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Productos.dc.html
+          git commit -m "Move elaboration above shipping on product mobile"
+          git push
