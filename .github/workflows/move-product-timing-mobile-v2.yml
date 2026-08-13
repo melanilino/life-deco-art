@@ -1,0 +1,54 @@
+name: Move product timing on mobile v2
+on:
+  push:
+    paths:
+      - '.github/workflows/move-product-timing-mobile-v2.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move elaboration above shipping on mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Productos.dc.html')
+          s = p.read_text()
+
+          # Give the existing desktop timing row a visibility class without changing its desktop placement.
+          needle = '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">\n            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>\n            Elaboración: 5-7 días\n          </div>'
+          repl = '<div class="lda-desktop-timing" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">\n            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>\n            Elaboración: 5-7 días\n          </div>'
+          if needle not in s:
+              raise SystemExit('timing row not found')
+          s = s.replace(needle, repl, 1)
+
+          ship = '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">\n            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>\n            Envío a todo el país\n          </div>'
+          moved = '<div class="lda-mobile-timing" style="display:none;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;margin-bottom:14px;">\n            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>\n            Elaboración: 5-7 días\n          </div>\n          <div class="lda-shipping-row" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">\n            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>\n            Envío a todo el país\n          </div>'
+          if ship not in s:
+              raise SystemExit('shipping row not found')
+          s = s.replace(ship, moved, 1)
+
+          css_anchor = '  a:hover { color: #000000; }'
+          css = '''  a:hover { color: #000000; }
+  .lda-mobile-timing { display:none; }
+  @media(max-width:859px){
+    .lda-desktop-timing { display:none !important; }
+    .lda-mobile-timing { display:flex !important; }
+    .lda-shipping-row { margin-top:0 !important; }
+  }'''
+          if css_anchor not in s:
+              raise SystemExit('css anchor not found')
+          s = s.replace(css_anchor, css, 1)
+          s = s.replace('/support.js?v=20260812-product-mobile3','/support.js?v=20260812-product-mobile4')
+          s = s.replace('/image-slot.js?v=20260812-product-mobile3','/image-slot.js?v=20260812-product-mobile4')
+          p.write_text(s)
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Productos.dc.html
+          git commit -m "Move elaboration above shipping on mobile"
+          git push
