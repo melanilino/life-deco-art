@@ -55,6 +55,28 @@
         </sc-for>
       </div>
 
+      <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+        <div style="background:#F3EEE4;border-radius:14px;padding:28px;margin-bottom:32px;">
+          <div style="font-size:24px;font-weight:500;color:#0CC0DF;margin-bottom:6px;">{{ price }}</div>
+          <div style="font-size:13px;color:#8B795E;font-weight:300;margin-bottom:20px;">{{ paymentNote }}</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+            <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;font-size:13px;gap:18px;">
+                <span style="color:#8B795E;font-weight:300;">{{ r.label }}</span>
+                <span style="color:#2B2420;font-weight:500;text-align:right;">{{ r.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+            <div style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:{{ cuposColor }};margin-bottom:20px;">
+              <span style="width:8px;height:8px;border-radius:999px;background:{{ cuposColor }};"></span>
+              {{ cuposLabel }}
+            </div>
+          </sc-if>
+          <a href="{{ whatsappUrl }}" target="_blank" style="display:block;text-align:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 0;border-radius:6px;font-size:14px;font-weight:500;">{{ ctaLabel }}</a>
+        </div>
+      </sc-if>
+
       <div style="margin-bottom:32px;">
         <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Qué aprenderás</div>
         <p style="font-size:14px;color:#2B2420;font-weight:300;line-height:1.7;margin:0;">{{ summary }}</p>
@@ -131,25 +153,27 @@
     </div>
 
     <div>
-      <div style="position:{{ stickyPosition }};top:{{ stickyTop }};background:#F3EEE4;border-radius:14px;padding:28px;">
-        <div style="font-size:24px;font-weight:500;color:#0CC0DF;margin-bottom:6px;">{{ price }}</div>
-        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-bottom:20px;">{{ paymentNote }}</div>
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
-          <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="4">
-            <div style="display:flex;justify-content:space-between;font-size:13px;">
-              <span style="color:#8B795E;font-weight:300;">{{ r.label }}</span>
-              <span style="color:#2B2420;font-weight:500;text-align:right;">{{ r.value }}</span>
-            </div>
-          </sc-for>
-        </div>
-        <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
-          <div style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:{{ cuposColor }};margin-bottom:20px;">
-            <span style="width:8px;height:8px;border-radius:999px;background:{{ cuposColor }};"></span>
-            {{ cuposLabel }}
+      <sc-if value="{{ showDesktopBooking }}" hint-placeholder-val="{{ true }}">
+        <div style="position:{{ stickyPosition }};top:{{ stickyTop }};background:#F3EEE4;border-radius:14px;padding:28px;">
+          <div style="font-size:24px;font-weight:500;color:#0CC0DF;margin-bottom:6px;">{{ price }}</div>
+          <div style="font-size:13px;color:#8B795E;font-weight:300;margin-bottom:20px;">{{ paymentNote }}</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+            <sc-for list="{{ infoRows }}" as="r" hint-placeholder-count="4">
+              <div style="display:flex;justify-content:space-between;font-size:13px;">
+                <span style="color:#8B795E;font-weight:300;">{{ r.label }}</span>
+                <span style="color:#2B2420;font-weight:500;text-align:right;">{{ r.value }}</span>
+              </div>
+            </sc-for>
           </div>
-        </sc-if>
-        <a href="{{ whatsappUrl }}" target="_blank" style="display:block;text-align:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 0;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">{{ ctaLabel }}</a>
-      </div>
+          <sc-if value="{{ isTaller }}" hint-placeholder-val="{{ false }}">
+            <div style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:{{ cuposColor }};margin-bottom:20px;">
+              <span style="width:8px;height:8px;border-radius:999px;background:{{ cuposColor }};"></span>
+              {{ cuposLabel }}
+            </div>
+          </sc-if>
+          <a href="{{ whatsappUrl }}" target="_blank" style="display:block;text-align:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 0;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">{{ ctaLabel }}</a>
+        </div>
+      </sc-if>
 
       <div style="margin-top:24px;">
         <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:10px;">Siguiente paso</div>
@@ -278,6 +302,8 @@ class Component extends DCLogic {
       stickyPosition: 'static', stickyTop: 'auto',
       testimonialCols: m ? '1fr' : '1fr 1fr',
       faqPad: m ? '30px 24px 60px' : '20px 48px 100px',
+      isMobile: m,
+      showDesktopBooking: !m,
       isTaller: type === 'taller', isCurso: type === 'curso',
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
       ...d, faqs,
