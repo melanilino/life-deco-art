@@ -16,41 +16,29 @@ jobs:
           from pathlib import Path
           p = Path('Productos.dc.html')
           s = p.read_text()
-          old = '''          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-            Elaboración: 5-7 días
-          </div>'''
-          desktop = '''          <sc-if value="{{ showDesktopTiming }}" hint-placeholder-val="{{ true }}">
-            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-              Elaboración: 5-7 días
-            </div>
-          </sc-if>'''
-          if old not in s:
-              raise SystemExit('desktop timing block not found')
-          s = s.replace(old, desktop, 1)
-          shipping = '''          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-            Envío a todo el país
-          </div>'''
-          mobile = '''          <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-            <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;margin-bottom:14px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-              Elaboración: 5-7 días
-            </div>
-          </sc-if>
-          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:{{ shippingTop }};">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-            Envío a todo el país
-          </div>'''
-          if shipping not in s:
-              raise SystemExit('shipping block not found')
-          s = s.replace(shipping, mobile, 1)
-          marker = "      isMobile: m,"
-          repl = "      isMobile: m,\n      showDesktopTiming: !m,\n      shippingTop: m ? '0' : '26px',"
-          if marker not in s:
-              raise SystemExit('render marker not found')
-          s = s.replace(marker, repl, 1)
+
+          timing_text = 'Elaboración: 5-7 días'
+          idx = s.index(timing_text)
+          start = s.rfind('<div style=', 0, idx)
+          end = s.find('</div>', idx) + len('</div>')
+          timing = s[start:end]
+          desktop = timing.replace('<div style=', '<div class="lda-desktop-timing" style=', 1)
+          s = s[:start] + desktop + s[end:]
+
+          ship_text = 'Envío a todo el país'
+          ship_idx = s.index(ship_text)
+          ship_start = s.rfind('<div style=', 0, ship_idx)
+          mobile = timing.replace('<div style=', '<div class="lda-mobile-timing" style=', 1)
+          s = s[:ship_start] + mobile + '\n          ' + s[ship_start:]
+
+          css_anchor = '  a:hover { color: #000000; }'
+          css = """  a:hover { color: #000000; }
+  .lda-mobile-timing { display:none !important; }
+  @media(max-width:859px){
+    .lda-desktop-timing { display:none !important; }
+    .lda-mobile-timing { display:flex !important; margin-top:26px; margin-bottom:14px; }
+  }"""
+          s = s.replace(css_anchor, css, 1)
           s = s.replace('/support.js?v=20260812-product-mobile3','/support.js?v=20260812-product-mobile4')
           s = s.replace('/image-slot.js?v=20260812-product-mobile3','/image-slot.js?v=20260812-product-mobile4')
           p.write_text(s)
