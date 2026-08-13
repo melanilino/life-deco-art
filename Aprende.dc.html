@@ -19,7 +19,7 @@ x-dc{display:none!important}
 #dc-boot-fallback .dc-fb-buy{background:#F65091}.dc-fb-learn{border:1px solid #fff;padding:16px 60px!important}
 @media(max-width:859px){#dc-boot-fallback .dc-fb-nav{height:64px;padding:0 20px}#dc-boot-fallback .dc-fb-hero{height:400px;min-height:400px;padding:72px 26px 16px}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:18px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 14px}#dc-boot-fallback .dc-fb-sub{font-size:14px;margin:0 0 28px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
-<script src="./support.js?v=20260810p1" defer></script>
+<script src="/support.js?v=20260812-entryfix1" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Aprende</title>
@@ -83,7 +83,7 @@ body{margin:0;background:#fff}
 <a id="lda-whatsapp-fab-static" href="https://wa.me/18495390410" target="_blank" rel="noopener" title="Escríbenos por WhatsApp" aria-label="Escríbenos por WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.15L2 22l5.13-1.5a9.8 9.8 0 0 0 4.91 1.32h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.51 2 12.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 1.98.88 2.12.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.17.71-.83.9-1.11.19-.29.38-.24.63-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"></path></svg></a>
 <x-dc>
 <helmet>
-<script src="./image-slot.js?v=20260810p1" defer></script>
+<script src="/image-slot.js?v=20260812-entryfix1" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
 <style>
@@ -186,9 +186,9 @@ body{margin:0;background:#fff}
 
     <sc-for list="{{ courses }}" as="c" hint-placeholder-count="3">
       <div style="display:grid;grid-template-columns:{{ courseCols }};gap:0;background:#FFFFFF;border:1px solid #F0EBE0;border-radius:8px;overflow:hidden;min-width:0;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease;" style-hover="transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.08);">
-        <div style="aspect-ratio:4/3;background:#F3EEE4;overflow:hidden;">
+        <a href="{{ c.detailHref }}" aria-label="Ver detalle de {{ c.name }}" style="display:block;aspect-ratio:4/3;background:#F3EEE4;overflow:hidden;text-decoration:none;cursor:pointer;">
           <image-slot id="aprende-course-{{ $index }}" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="{{ c.placeholder }}"></image-slot>
-        </div>
+        </a>
         <div style="padding:{{ coursePad }};display:flex;flex-direction:column;">
           <span style="font-size:{{ courseLevelSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ c.level }}</span>
           <a href="{{ c.detailHref }}" style="display:block;font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;text-decoration:none;">{{ c.name }}</a>
@@ -205,10 +205,10 @@ body{margin:0;background:#fff}
       <div style="display:grid;grid-template-columns:{{ workshopCols }};gap:24px;min-width:0;">
         <sc-for list="{{ workshops }}" as="w" hint-placeholder-count="2">
           <div style="border:1px solid #F0EBE0;border-radius:8px;overflow:hidden;">
-            <div style="aspect-ratio:16/9;background:#F3EEE4;position:relative;overflow:hidden;">
+            <a href="{{ w.detailHref }}" aria-label="Ver detalle de {{ w.name }}" style="display:block;aspect-ratio:16/9;background:#F3EEE4;position:relative;overflow:hidden;text-decoration:none;cursor:pointer;">
               <image-slot id="aprende-workshop-{{ $index }}" shape="rect" fit="cover" style="width:100%;height:100%;" placeholder="{{ w.placeholder }}"></image-slot>
               <span style="position:absolute;top:14px;left:14px;background:{{ w.badgeBg }};color:#FFFFFF;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border-radius:3px;">{{ w.badge }}</span>
-            </div>
+            </a>
             <div style="padding:{{ workshopPad }};">
               <span style="font-size:{{ workshopDateSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ w.dateLevel }}</span>
               <a href="{{ w.detailHref }}" style="display:block;font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;text-decoration:none;">{{ w.name }}</a>
@@ -229,7 +229,7 @@ body{margin:0;background:#fff}
           <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:{{ freebiePad }};border-bottom:1px solid #F0EBE0;gap:20px;">
             <div>
               <span style="font-size:{{ freebieFormatSize }};font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#0CC0DF;">{{ item.format }}</span>
-              <div style="font-size:{{ freebieTitleSize }};color:#000;font-weight:400;margin-top:6px;">{{ item.title }}</div>
+              <a href="{{ item.detailHref }}" style="display:block;font-size:{{ freebieTitleSize }};color:#000;font-weight:400;margin-top:6px;text-decoration:none;">{{ item.title }}</a>
             </div>
             <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;margin-top:19px;">
               <a href="{{ item.detailHref }}" style="text-decoration:none;color:#8B795E;font-size:12px;font-weight:400">Ver detalle</a>
