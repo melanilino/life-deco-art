@@ -49,7 +49,12 @@
     { "source": "/Blog Post.dc.html", "destination": "/blog", "permanent": true },
     { "source": "/Politica de Privacidad.dc.html", "destination": "/politica-de-privacidad", "permanent": true },
     { "source": "/Terminos y Condiciones.dc.html", "destination": "/terminos-y-condiciones", "permanent": true },
-    { "source": "/CMS.dc.html", "destination": "/cms", "permanent": true }
+    { "source": "/CMS.dc.html", "destination": "/cms", "permanent": true },
+    { "source": "/Productos.dc.html", "destination": "/tienda/producto", "permanent": true },
+    { "source": "/Aprende Detalle.dc.html", "destination": "/aprende/curso", "permanent": true },
+    { "source": "/Recursos.dc.html", "destination": "/aprende/recurso", "permanent": true },
+    { "source": "/Servicios.dc.html", "destination": "/servicios/rotulacion", "permanent": true },
+    { "source": "/Encargos.dc.html", "destination": "/encargo-personalizado", "permanent": true }
   ],
   "rewrites": [
     { "source": "/", "destination": "/Inicio.dc.html" },
@@ -60,6 +65,15 @@
     { "source": "/blog", "destination": "/Blog Post.dc.html" },
     { "source": "/politica-de-privacidad", "destination": "/Politica de Privacidad.dc.html" },
     { "source": "/terminos-y-condiciones", "destination": "/Terminos y Condiciones.dc.html" },
-    { "source": "/cms", "destination": "/CMS.dc.html" }
+    { "source": "/cms", "destination": "/CMS.dc.html" },
+    { "source": "/tienda/producto", "destination": "/Productos.dc.html" },
+    { "source": "/aprende/curso", "destination": "/Aprende Detalle.dc.html" },
+    { "source": "/aprende/taller", "destination": "/Aprende Detalle.dc.html?type=taller" },
+    { "source": "/aprende/recurso", "destination": "/Recursos.dc.html" },
+    { "source": "/servicios/rotulacion", "destination": "/Servicios.dc.html?service=rotulacion" },
+    { "source": "/servicios/personalizados", "destination": "/Servicios.dc.html?service=personalizados" },
+    { "source": "/servicios/packaging", "destination": "/Servicios.dc.html?service=packaging" },
+    { "source": "/servicios/souvenirs", "destination": "/Servicios.dc.html?service=souvenirs" },
+    { "source": "/encargo-personalizado", "destination": "/Encargos.dc.html" }
   ]
 }
