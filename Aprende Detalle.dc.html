@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/aprende/cursos/lettering-para-bodas">
-<script src="/support.js?v=20260812-subpages2"></script>
+<script src="/support.js?v=20260812-subpages3"></script>
 <title>Lettering para Bodas | Life Deco Art</title>
 <meta name="description" content="Curso online de lettering para bodas: aprende a crear carteles de bienvenida, menús y señalética personalizada, paso a paso.">
 </head>
@@ -183,7 +183,7 @@ class Component extends DCLogic {
     check();
     window.addEventListener('resize', check);
     try {
-      const cms = await import('./cms.js');
+      const cms = await import('/cms.js');
       const data = await cms.getPageContent('aprende');
       const qs = new URLSearchParams(window.location.search);
       const type = window.location.pathname.includes('/taller') || qs.get('type') === 'taller' ? 'taller' : 'curso';
@@ -308,5 +308,6 @@ class Component extends DCLogic {
 }
 
 </script>
+<!-- lda-subpages-reapplied-20260812 -->
 </body>
 </html>
