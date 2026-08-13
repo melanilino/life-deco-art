@@ -1,0 +1,33 @@
+name: Fix nested DC imports
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-nested-dc-imports.yml'
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fix runtime component base path
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('support.js')
+          s = p.read_text()
+          old = 'var COMPONENT_DIR = ".";'
+          new = 'var COMPONENT_DIR = "/";'
+          if old not in s:
+              raise SystemExit('Expected COMPONENT_DIR pattern not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit fix
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add support.js
+          git commit -m 'Fix shared component loading on nested subpages'
+          git push
