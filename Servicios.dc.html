@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+<title>Rotulación | Life Deco Art</title>
+<meta name="description" content="Servicios de rotulación, personalizados, packaging y souvenirs hechos a mano. Cotiza tu proyecto por WhatsApp.">
+</head>
+<body>
+<x-dc>
+
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  html, body { margin: 0; max-width: 100%; overflow-x: clip; }
+  body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
+  @keyframes lda-page-fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lda-fade-in { from { opacity: 0; } to { opacity: 1; } }
+  a { color: #F65091; }
+  a:hover { color: #000000; }
+</style>
+</helmet>
+<dc-import name="NavBar" hint-size="100%,80px" style="position: absolute; left: 4px; top: 1px"></dc-import>
+<div style="height:{{ navGap }};"></div>
+
+<section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:#8B795E;font-weight:300;">
+    <span>Servicios</span>
+    <span>/</span>
+    <span style="color:#000000;">{{ data.name }}</span>
+  </div>
+
+  <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};display:grid;grid-template-columns:{{ heroCols }};gap:{{ heroGap }};align-items:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
+    <div>
+      <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:14px;">Servicio</div>
+      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 16px;">{{ data.name }}</h1>
+      <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0;">{{ data.desc }}</p>
+    </div>
+    <div style="aspect-ratio:4/3;border-radius:14px;background:#F3EEE4;overflow:hidden;">
+      <image-slot id="sv-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="foto principal del servicio"></image-slot>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ sectionPad }};">
+    <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:16px;">Tipos de trabajo incluidos</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <sc-for list="{{ data.types }}" as="t" hint-placeholder-count="4">
+        <div style="padding:10px 18px;border-radius:999px;background:#F3EEE4;font-size:13px;color:#2B2420;font-weight:400;">{{ t }}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ sectionPad }};">
+    <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:20px;">Galería de proyectos</div>
+    <div style="display:grid;grid-template-columns:{{ galleryCols }};gap:16px;">
+      <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
+        <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
+          <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="{{ g.placeholder }}"></image-slot>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="max-width:1240px;margin:0 auto;padding:{{ ctaTopPad }} {{ sidePad }} 90px;">
+    <div style="background:#F65091;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;">
+      <div style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;">¿Cotizamos tu <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;">proyecto</span>?</div>
+      <p style="font-size:15px;color:#FCE3ED;font-weight:300;margin-top:16px;">Cuéntame qué necesitas y te respondo con opciones y tiempos.</p>
+      <a href="{{ whatsappUrl }}" target="_blank" style="display:inline-block;margin-top:26px;text-decoration:none;background:#000000;color:#FFFFFF;padding:15px 30px;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Solicitar cotización</a>
+    </div>
+  </div>
+
+</section>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1600},&quot;service&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;rotulacion&quot;,&quot;options&quot;:[&quot;rotulacion&quot;,&quot;personalizados&quot;,&quot;packaging&quot;,&quot;souvenirs&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+
+class Component extends DCLogic {
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };
+  setupReveal() {
+    const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; };
+    const els = Array.from(document.querySelectorAll('[data-reveal]'));
+    els.forEach((el) => setTimeout(() => reveal(el), 50));
+  }
+  componentDidMount() {
+    this.setupReveal();
+    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    check();
+    window.addEventListener('resize', check);
+  }
+  SERVICES = {
+    rotulacion: {
+      name: 'Rotulación', desc: 'Rótulos y letreros pintados a mano para fachadas, vidrieras, vehículos y espacios comerciales.',
+      types: ['Fachadas', 'Vidrieras', 'Vehículos', 'Señalética interior'],
+      process: [
+        { n: '01', title: 'Cotización', desc: 'Cuéntame el espacio y la idea; te propongo opciones y precio.' },
+        { n: '02', title: 'Boceto', desc: 'Diseño digital para tu aprobación antes de pintar.' },
+        { n: '03', title: 'Ejecución', desc: 'Pintado a mano en sitio o en taller, según el proyecto.' },
+        { n: '04', title: 'Entrega', desc: 'Revisión final contigo y acabados de protección.' },
+      ],
+      forWho: 'Negocios, marcas y locales que buscan un rótulo con identidad, distinto a la vinilo estándar.',
+      priceFrom: 'Desde RD$4,500', timeframe: 'Entre 5 y 15 días según tamaño y complejidad.',
+      needs: ['Fotos o medidas del espacio', 'Referencias de estilo o colores', 'Fecha ideal de entrega'],
+    },
+    personalizados: {
+      name: 'Personalizados', desc: 'Piezas hechas a mano con nombres, frases y detalles a medida para regalar o conservar.',
+      types: ['Cuadros', 'Bandejas', 'Cajas', 'Llaveros'],
+      process: [
+        { n: '01', title: 'Idea', desc: 'Me cuentas para quién es y qué ocasión celebra.' },
+        { n: '02', title: 'Boceto', desc: 'Propuesta digital con tu frase y estilo elegido.' },
+        { n: '03', title: 'Elaboración', desc: 'Pintado y ensamblado a mano en el taller.' },
+        { n: '04', title: 'Entrega', desc: 'Empaque cuidado y envío o retiro.' },
+      ],
+      forWho: 'Personas buscando un regalo con significado, distinto a lo genérico.',
+      priceFrom: 'Desde RD$500', timeframe: 'Entre 5 y 10 días según la pieza.',
+      needs: ['Nombre o frase exacta', 'Colores o estilo deseado', 'Fecha en que la necesitas'],
+    },
+    packaging: {
+      name: 'Packaging', desc: 'Diseño y rotulado de empaques para marcas y pequeños negocios que buscan una presentación distinta.',
+      types: ['Cajas de producto', 'Etiquetas', 'Bolsas', 'Tarjetas de agradecimiento'],
+      process: [
+        { n: '01', title: 'Briefing', desc: 'Entiendo tu marca, producto y volumen necesario.' },
+        { n: '02', title: 'Diseño', desc: 'Propuesta visual acorde a tu identidad.' },
+        { n: '03', title: 'Producción', desc: 'Elaboración por lote según cantidad acordada.' },
+        { n: '04', title: 'Entrega', desc: 'Revisión de calidad y despacho.' },
+      ],
+      forWho: 'Marcas y emprendimientos que quieren un empaque con identidad propia.',
+      priceFrom: 'Desde RD$150 por unidad', timeframe: 'Entre 7 y 20 días según el volumen.',
+      needs: ['Logo o identidad de marca', 'Cantidad estimada', 'Dimensiones del producto'],
+    },
+    souvenirs: {
+      name: 'Souvenirs', desc: 'Detalles personalizados en cantidad para bodas, cumpleaños y eventos corporativos.',
+      types: ['Bodas', 'Cumpleaños', 'Baby showers', 'Eventos corporativos'],
+      process: [
+        { n: '01', title: 'Cotización', desc: 'Me compartes cantidad, ocasión y presupuesto aproximado.' },
+        { n: '02', title: 'Muestra', desc: 'Elaboro una pieza de muestra para tu aprobación.' },
+        { n: '03', title: 'Producción', desc: 'Elaboración del lote completo a mano.' },
+        { n: '04', title: 'Entrega', desc: 'Empaque grupal listo para el evento.' },
+      ],
+      forWho: 'Quien organiza un evento y busca detalles personalizados para sus invitados.',
+      priceFrom: 'Desde RD$180 por unidad', timeframe: 'Entre 10 y 20 días según cantidad.',
+      needs: ['Cantidad de invitados', 'Fecha del evento', 'Estilo o colores del evento'],
+    },
+  };
+  FAQS = [
+    { q: '¿Trabajan fuera de Santo Domingo?', a: 'Sí, coordinamos proyectos en otras ciudades; el tiempo y costo varían según la logística.' },
+    { q: '¿El precio incluye materiales?', a: 'Sí, el precio cotizado incluye pintura, sellador y materiales necesarios para el trabajo.' },
+    { q: '¿Puedo ver ejemplos antes de decidir?', a: 'Claro, puedo compartirte fotos de proyectos similares al tuyo antes de cotizar.' },
+  ];
+  renderVals() {
+    const m = this.state.isMobile;
+    const data = this.SERVICES[this.props.service] || this.SERVICES.rotulacion;
+    const gallery = [1, 2, 3, 4].map(i => ({ id: `sv-gallery-${i}`, placeholder: 'foto de proyecto real' }));
+    const faqs = this.FAQS.map((f, i) => ({
+      ...f,
+      open: this.state.faqOpen === i,
+      arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
+      onClick: () => this.setState({ faqOpen: this.state.faqOpen === i ? null : i }),
+    }));
+    return {
+      navGap: m ? '64px' : '88px',
+      crumbPad: m ? '16px 24px 0' : '24px 48px 0',
+      heroPad: m ? '20px 24px 0' : '32px 48px 0',
+      heroCols: m ? '1fr' : '1fr 1fr',
+      heroGap: m ? '24px' : '64px',
+      h1Size: m ? '26px' : '40px',
+      sectionPad: m ? '40px 24px 0' : '60px 48px 0',
+      galleryCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+      processCols: m ? '1fr 1fr' : 'repeat(4,1fr)',
+      processGap: m ? '24px 16px' : '32px',
+      infoCols: m ? '1fr' : 'repeat(3,1fr)',
+      infoGap: m ? '28px' : '48px',
+      faqPad: m ? '50px 24px 55px' : '80px 48px',
+      sidePad: m ? '24px' : '48px',
+      ctaTopPad: m ? '50px' : '80px',
+      ctaPad: m ? '48px 24px' : '80px 48px',
+      ctaRadius: m ? '16px' : '24px',
+      h2Size: m ? '22px' : '30px',
+      data, gallery, faqs,
+      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Quiero cotizar un servicio de ${data.name}.`),
+    };
+  }
+}
+
+</script>
+</body>
+</html>
