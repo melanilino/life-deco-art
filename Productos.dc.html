@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
-<script src="/support.js?v=20260812-product-mobile2"></script>
+<script src="/support.js?v=20260812-product-mobile3"></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -19,7 +19,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js?v=20260812-product-mobile2"></script>
+<script src="/image-slot.js?v=20260812-product-mobile3"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
@@ -132,22 +132,11 @@
 
   </div>
 
-  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;bottom:0;left:0;right:0;z-index:2147482500;background:#FFFFFF;box-shadow:0 -4px 16px rgba(0,0,0,0.08);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;gap:10px;box-sizing:border-box;">
-      <div>
-        <div style="font-size:11px;color:#8B795E;font-weight:300;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ productName }}</div>
-        <div style="font-size:15px;color:#F65091;font-weight:600;">{{ productPrice }}</div>
-      </div>
-      <a href="{{ whatsappUrl }}" target="_blank" style="text-decoration:none;background:#F65091;color:#FFFFFF;padding:11px 16px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;flex-shrink:0;">Pedir por WhatsApp</a>
-    </div>
-    <div style="height:64px;"></div>
-  </sc-if>
-
   <div style="max-width:1240px;margin:0 auto;padding:{{ relatedPad }};">
     <div style="font-size:{{ h2Size }};line-height:1.25;color:#000;font-weight:400;margin-bottom:{{ h2Gap }};">También te puede <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.2em;">gustar</span></div>
-    <div style="display:grid;grid-template-columns:{{ relatedCols }};gap:{{ relatedGap }};">
+    <div style="display:grid;grid-template-columns:{{ relatedCols }};gap:{{ relatedGap }};min-width:0;">
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
-        <div>
+        <div style="min-width:0;">
           <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;">
             <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
           </div>
@@ -254,8 +243,8 @@ class Component extends DCLogic {
       actionGap: m ? '10px' : '14px',
       actionWidth: m ? '100%' : 'auto',
       h1Size: m ? '24px' : '38px',
-      relatedPad: m ? '28px 20px 46px' : '40px 48px 90px',
-      relatedCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
+      relatedPad: m ? '12px 20px 46px' : '40px 48px 90px',
+      relatedCols: m ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))',
       relatedGap: m ? '22px 12px' : '32px',
       h2Size: m ? '22px' : '30px',
       h2Gap: m ? '24px' : '36px',
