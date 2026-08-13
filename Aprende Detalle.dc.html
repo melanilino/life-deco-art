@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/aprende/cursos/lettering-para-bodas">
-<script src="/support.js?v=20260812-subpages3"></script>
+<script src="/support.js?v=20260812-subpages4"></script>
 <title>Lettering para Bodas | Life Deco Art</title>
 <meta name="description" content="Curso online de lettering para bodas: aprende a crear carteles de bienvenida, menús y señalética personalizada, paso a paso.">
 </head>
@@ -177,21 +177,11 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1400},&quot;type&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;taller&quot;,&quot;options&quot;:[&quot;curso&quot;,&quot;taller&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0, liveItem: null };
-  async componentDidMount() {
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };
+  componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     window.addEventListener('resize', check);
-    try {
-      const cms = await import('/cms.js');
-      const data = await cms.getPageContent('aprende');
-      const qs = new URLSearchParams(window.location.search);
-      const type = window.location.pathname.includes('/taller') || qs.get('type') === 'taller' ? 'taller' : 'curso';
-      const id = qs.get('id');
-      const list = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
-      const liveItem = list.find(x => x.id === id) || null;
-      if (liveItem) this.setState({ liveItem });
-    } catch (e) {}
   }
   CURSO = {
     kindLabel: 'Curso', kindLabelPlural: 'Cursos',
@@ -268,19 +258,7 @@ class Component extends DCLogic {
     const m = this.state.isMobile;
     const qs = new URLSearchParams(window.location.search);
     const type = window.location.pathname.includes('/taller') || qs.get('type') === 'taller' ? 'taller' : 'curso';
-    const base = type === 'taller' ? this.TALLER : this.CURSO;
-    const li = this.state.liveItem;
-    const d = li ? {
-      ...base,
-      title: li.name || base.title,
-      tagline: li.desc || base.tagline,
-      summary: li.desc || base.summary,
-      price: li.price || base.price,
-      heroImage: li.imageUrl || '',
-      infoRows: type === 'taller'
-        ? [{ label: 'Fecha / nivel', value: li.dateLevel || '' }, { label: 'Ubicación', value: li.location || '' }, { label: 'Precio', value: li.price || '' }]
-        : [{ label: 'Nivel / modalidad', value: li.level || '' }, { label: 'Precio', value: li.price || '' }]
-    } : base;
+    const d = type === 'taller' ? this.TALLER : this.CURSO;
     const faqs = d.faqs.map((f, i) => ({
       ...f,
       open: this.state.faqOpen === i,
@@ -292,7 +270,7 @@ class Component extends DCLogic {
       crumbPad: m ? '16px 24px 0' : '24px 48px 0',
       heroPad: m ? '16px 24px 0' : '24px 48px 0',
       heroRatio: m ? '16/10' : '21/8',
-      heroImage: d.heroImage || '', heroPlaceholder: type === 'taller' ? 'foto del taller en acción' : 'portada del curso',
+      heroImage: '', heroPlaceholder: type === 'taller' ? 'foto del taller en acción' : 'portada del curso',
       mainPad: m ? '28px 24px 40px' : '48px 48px 60px',
       mainCols: m ? '1fr' : '1.4fr 0.9fr',
       mainGap: m ? '32px' : '64px',
@@ -308,6 +286,7 @@ class Component extends DCLogic {
 }
 
 </script>
-<!-- lda-subpages-reapplied-20260812 -->
 </body>
 </html>
+
+<!-- lda-user-upload-reapplied-20260812-v4 -->
