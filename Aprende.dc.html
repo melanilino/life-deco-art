@@ -191,7 +191,7 @@ body{margin:0;background:#fff}
         </div>
         <div style="padding:{{ coursePad }};display:flex;flex-direction:column;">
           <span style="font-size:{{ courseLevelSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ c.level }}</span>
-          <div style="font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;">{{ c.name }}</div>
+          <a href="{{ c.detailHref }}" style="display:block;font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;text-decoration:none;">{{ c.name }}</a>
           <p style="font-size:{{ courseDescSize }};color:#8B795E;font-weight:300;line-height:1.7;margin-top:10px;flex:1;">{{ c.desc }}</p>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
             <span style="font-size:14px;font-weight:500;color:#000000;">{{ c.price }}</span>
@@ -211,7 +211,7 @@ body{margin:0;background:#fff}
             </div>
             <div style="padding:{{ workshopPad }};">
               <span style="font-size:{{ workshopDateSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ w.dateLevel }}</span>
-              <div style="font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;">{{ w.name }}</div>
+              <a href="{{ w.detailHref }}" style="display:block;font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;text-decoration:none;">{{ w.name }}</a>
               <div style="font-size:{{ workshopLocSize }};color:#8B795E;margin-top:6px;">{{ w.location }}</div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;">
                 <span style="font-size:14px;font-weight:500;color:#000;">{{ w.price }}</span>
@@ -232,7 +232,7 @@ body{margin:0;background:#fff}
               <div style="font-size:{{ freebieTitleSize }};color:#000;font-weight:400;margin-top:6px;">{{ item.title }}</div>
             </div>
             <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;margin-top:19px;">
-              <a href="#" onClick="{{ item.onPreview }}" style="text-decoration: none; color: #8B795E; font-size: 12px; font-weight: 400">Vista previa</a>
+              <a href="{{ item.detailHref }}" style="text-decoration:none;color:#8B795E;font-size:12px;font-weight:400">Ver detalle</a>
               <a href="{{ item.downloadHref }}" onClick="{{ item.onDownload }}" target="{{ item.downloadTarget }}" rel="{{ item.downloadRel }}" style="text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:500;">Descargar</a>
             </div>
           </div>
@@ -682,7 +682,7 @@ class Component extends DCLogic {
     const isCursos = category === 'Cursos';
     const live = this.state.aprendeLive || {};
     const coursesSource = (live.cursos || this.ALL_COURSES).map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
-    const courses = (isCursos ? coursesSource : []).map(c => ({ ...c, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }));
+    const courses = (isCursos ? coursesSource : []).map((c,i) => ({ ...c, detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }));
     const isComunidad = category === 'Comunidad';
     const isBlog = category === 'Blog';
     const isGratis = category === 'Gratis';
@@ -811,14 +811,15 @@ class Component extends DCLogic {
         });
       })(),
       recEmpty: (live.esenciales || this.RECOMMENDED_PRODUCTS).filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
-      workshops: (live.talleres || this.WORKSHOPS).map(w => ({ placeholder: 'foto del taller', badgeBg: '#0CC0DF', ctaLabel: w.badge === 'Agotado' ? 'Lista de espera' : 'Reservar', ctaBg: w.badge === 'Agotado' ? '#F3EEE4' : '#0CC0DF', ctaColor: w.badge === 'Agotado' ? '#8B795E' : '#FFFFFF', ...w, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + w.dateLevel + ').')}` })),
+      workshops: (live.talleres || this.WORKSHOPS).map((w,i) => ({ detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: '#0CC0DF', ctaLabel: w.badge === 'Agotado' ? 'Lista de espera' : 'Reservar', ctaBg: w.badge === 'Agotado' ? '#F3EEE4' : '#0CC0DF', ctaColor: w.badge === 'Agotado' ? '#8B795E' : '#FFFFFF', ...w, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + w.dateLevel + ').')}` })),
       posts: (live.blog || this.BLOG_POSTS).map(post => ({ placeholder: 'foto del artículo', ...post })),
-      freebies: (live.gratis || this.FREEBIES).map(item => {
+      freebies: (live.gratis || this.FREEBIES).map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
         const hasImage = !!(item.imageUrl && String(item.imageUrl).trim());
         const viewItem = { ...item, hasImage, noImage: !hasImage };
         return {
           ...viewItem,
+          detailHref:`/aprende/recurso?id=${encodeURIComponent(item.id || ('g'+(i+1)))}`,
           downloadHref: hasFile ? item.fileUrl : '#',
           downloadTarget: hasFile ? '_blank' : '',
           downloadRel: hasFile ? 'noopener noreferrer' : '',

@@ -40,17 +40,17 @@
 
     <div>
       <div style="aspect-ratio:3/4;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-        <image-slot id="rc-portada" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="portada / vista previa del recurso"></image-slot>
+        <image-slot id="rc-portada" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ resource.imageUrl }}" placeholder="portada / vista previa del recurso"></image-slot>
       </div>
     </div>
 
     <div>
       <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:12px;">Recurso gratuito</div>
-      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">Plantilla de Trazos Básicos</h1>
+      <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ resource.title }}</h1>
       <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0 0 24px;">Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.</p>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;">
-        <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">PDF</div>
+        <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">{{ resource.format }}</div>
         <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">6 páginas</div>
         <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">Imprimible</div>
       </div>
@@ -114,14 +114,23 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
-  componentDidMount() {
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null };
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     window.addEventListener('resize', check);
+    try {
+      const cms = await import('./cms.js');
+      const data = await cms.getPageContent('aprende');
+      const id = new URLSearchParams(window.location.search).get('id');
+      const list = data.gratis || [];
+      const resource = list.find(x => x.id === id) || list[0] || null;
+      if (resource) this.setState({ resource });
+    } catch (e) {}
   }
   renderVals() {
     const m = this.state.isMobile;
+    const resource = this.state.resource || { title:'Plantilla de Trazos Básicos', format:'PDF', imageUrl:'', fileUrl:'#' };
     return {
       navGap: m ? '64px' : '88px',
       crumbPad: m ? '16px 24px 0' : '24px 48px 0',
@@ -134,7 +143,8 @@ class Component extends DCLogic {
       previewPages: [1, 2, 3].map(i => ({ id: `rc-preview-${i}`, placeholder: `página ${i} de la plantilla` })),
       nextPad: m ? '30px 24px 60px' : '40px 48px 90px',
       contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
-      downloadUrl: '#',
+      resource,
+      downloadUrl: resource.fileUrl || '#',
     };
   }
 }

@@ -177,11 +177,21 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1400},&quot;type&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;taller&quot;,&quot;options&quot;:[&quot;curso&quot;,&quot;taller&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };
-  componentDidMount() {
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0, liveItem: null };
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     window.addEventListener('resize', check);
+    try {
+      const cms = await import('./cms.js');
+      const data = await cms.getPageContent('aprende');
+      const qs = new URLSearchParams(window.location.search);
+      const type = window.location.pathname.includes('/taller') || qs.get('type') === 'taller' ? 'taller' : 'curso';
+      const id = qs.get('id');
+      const list = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
+      const liveItem = list.find(x => x.id === id) || null;
+      if (liveItem) this.setState({ liveItem });
+    } catch (e) {}
   }
   CURSO = {
     kindLabel: 'Curso', kindLabelPlural: 'Cursos',
@@ -269,7 +279,7 @@ class Component extends DCLogic {
       crumbPad: m ? '16px 24px 0' : '24px 48px 0',
       heroPad: m ? '16px 24px 0' : '24px 48px 0',
       heroRatio: m ? '16/10' : '21/8',
-      heroImage: '', heroPlaceholder: type === 'taller' ? 'foto del taller en acción' : 'portada del curso',
+      heroImage: d.heroImage || '', heroPlaceholder: type === 'taller' ? 'foto del taller en acción' : 'portada del curso',
       mainPad: m ? '28px 24px 40px' : '48px 48px 60px',
       mainCols: m ? '1fr' : '1.4fr 0.9fr',
       mainGap: m ? '32px' : '64px',
