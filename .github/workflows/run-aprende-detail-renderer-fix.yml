@@ -1,0 +1,21 @@
+name: Run Aprende detail renderer fix
+on:
+  push:
+    paths:
+      - '.github/workflows/run-aprende-detail-renderer-fix.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - run: python3 .github/scripts/fix_aprende_detail_live.py
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "Aprende Detalle.dc.html"
+          git commit -m "Use live CMS data on Aprende detail pages"
+          git push origin main
