@@ -34,7 +34,6 @@ x-dc{display:none!important}
   <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:{{ gridCols }};gap:40px;min-width:0;">
     <div>
       <div style="font-size:16px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:#FFFFFF;line-height:1;"><span style="color: rgb(247, 243, 247); font-size: 30px; letter-spacing: normal; text-transform: none; font-weight: 400; width: 230px; height: 88px">Letras <br><b style="color: rgb(246, 80, 145);">BONITAS&nbsp;<br></b>y con <br><b style="color: rgb(12, 192, 223); font-family: 'Homemade Apple', cursive; font-weight: 400; text-transform: lowercase; font-size: 35px">propósito</b>.&nbsp;</span></div>
-      
     </div>
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
     <div>
@@ -84,11 +83,96 @@ x-dc{display:none!important}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:360}}">class Component extends DCLogic {
   state = { subscribed: false, email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+
+  setupFullClickTargets() {
+    if (window.__ldaFullClickTargetsReady) return;
+    window.__ldaFullClickTargetsReady = true;
+
+    const isSecondaryHref = (href) => /^(mailto:|tel:|javascript:|#)/i.test(href || '') || /wa\.me|whatsapp\.com/i.test(href || '');
+    const isInteractiveTarget = (target, card) => {
+      if (!target || !target.closest) return false;
+      const interactive = target.closest('a,button,input,select,textarea,summary,label,[role="button"]');
+      return !!(interactive && card.contains(interactive));
+    };
+
+    const enhance = () => {
+      const anchors = Array.from(document.querySelectorAll('a[href]'));
+      anchors.forEach((anchor) => {
+        if (anchor.closest('nav,footer')) return;
+        const rawHref = anchor.getAttribute('href') || '';
+        if (!rawHref || isSecondaryHref(rawHref)) return;
+
+        let node = anchor.parentElement;
+        let best = null;
+        let depth = 0;
+        while (node && depth < 6) {
+          if (node.matches('body,html,main,section,#dc-root,.sc-host')) break;
+          const rect = node.getBoundingClientRect();
+          const primaryLinks = Array.from(node.querySelectorAll('a[href]'))
+            .map((a) => a.getAttribute('href') || '')
+            .filter((href) => href && !isSecondaryHref(href));
+          const distinct = Array.from(new Set(primaryLinks));
+          if (distinct.length > 1) break;
+
+          const hasMedia = !!node.querySelector('img,image-slot,picture,video');
+          const textLen = (node.textContent || '').trim().length;
+          const style = window.getComputedStyle(node);
+          const hasCardVisual = hasMedia || style.borderRadius !== '0px' || (style.backgroundColor && style.backgroundColor !== 'rgba(0, 0, 0, 0)' && style.backgroundColor !== 'transparent');
+          const reasonableSize = rect.width >= 110 && rect.height >= 56 && rect.width <= Math.max(900, window.innerWidth * .96) && rect.height <= 900;
+
+          if (distinct.length === 1 && distinct[0] === rawHref && textLen > 2 && hasCardVisual && reasonableSize) best = node;
+          node = node.parentElement;
+          depth += 1;
+        }
+
+        if (!best || best.dataset.ldaFullClick === '1') return;
+        best.dataset.ldaFullClick = '1';
+        best.dataset.ldaHref = rawHref;
+        best.style.cursor = 'pointer';
+        if (!best.hasAttribute('tabindex')) best.setAttribute('tabindex', '0');
+        if (!best.hasAttribute('role')) best.setAttribute('role', 'link');
+
+        best.addEventListener('click', (event) => {
+          if (event.defaultPrevented || isInteractiveTarget(event.target, best)) return;
+          const href = best.dataset.ldaHref;
+          if (!href) return;
+          if (/^https?:\/\//i.test(href)) window.location.href = href;
+          else window.location.assign(href);
+        });
+        best.addEventListener('keydown', (event) => {
+          if ((event.key !== 'Enter' && event.key !== ' ') || isInteractiveTarget(event.target, best)) return;
+          event.preventDefault();
+          const href = best.dataset.ldaHref;
+          if (!href) return;
+          if (/^https?:\/\//i.test(href)) window.location.href = href;
+          else window.location.assign(href);
+        });
+      });
+    };
+
+    let queued = false;
+    const queueEnhance = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        enhance();
+      });
+    };
+
+    queueEnhance();
+    setTimeout(queueEnhance, 250);
+    setTimeout(queueEnhance, 900);
+    this._clickTargetObserver = new MutationObserver(queueEnhance);
+    this._clickTargetObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
   componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     this._resizeHandler = check;
     window.addEventListener('resize', this._resizeHandler, { passive: true });
+    this.setupFullClickTargets();
   }
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
