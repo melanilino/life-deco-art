@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
-<script src="/support.js?v=20260812-product-mobile4"></script>
+<script src="/support.js?v=20260814-product-ready1"></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -19,7 +19,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js?v=20260812-product-mobile4"></script>
+<script src="/image-slot.js?v=20260814-product-ready1"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
@@ -28,6 +28,7 @@
   a { color: #F65091; }
   a:hover { color: #000000; }
   .lda-mobile-timing { display:none !important; }
+  .lda-product-ready { animation: lda-fade-in .18s ease; }
   @media(max-width:859px){
     .lda-desktop-timing { display:none !important; }
     .lda-mobile-timing { display:flex !important; margin-top:26px; margin-bottom:8px; }
@@ -39,6 +40,12 @@
 <div style="height:{{ navGap }};"></div>
 
 <section style="font-family:'Montserrat',sans-serif;background:#FFFFFF;">
+  <sc-if value="{{ productLoading }}" hint-placeholder-val="{{ true }}">
+    <div aria-hidden="true" style="min-height:70vh;background:#FFFFFF;"></div>
+  </sc-if>
+
+  <sc-if value="{{ productReady }}" hint-placeholder-val="{{ false }}">
+  <div class="lda-product-ready">
 
   <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:{{ crumbGap }};flex-wrap:wrap;font-size:{{ crumbSize }};line-height:1.5;color:#8B795E;font-weight:300;min-width:0;">
     <a href="/tienda" style="text-decoration:none;color:#8B795E;">Tienda</a>
@@ -54,7 +61,7 @@
 
     <div>
       <div style="aspect-ratio:{{ mainAspect }};max-height:{{ mainMaxHeight }};border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:{{ mainImageGap }};">
-        <image-slot id="pd-main" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal de la bandeja"></image-slot>
+        <image-slot id="pd-main" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal del producto"></image-slot>
       </div>
       <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">
         <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
@@ -157,8 +164,8 @@
     </div>
   </div>
 
-  
-
+  </div>
+  </sc-if>
 </section>
 
 <dc-import name="Footer" hint-size="100%,320px"></dc-import>
@@ -168,7 +175,7 @@
 
 class Component extends DCLogic {
   state = {
-    isMobile: typeof window !== 'undefined' && window.innerWidth < 860, product: null, allProducts: [],
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 860, product: null, allProducts: [], productReady: false,
     color: 'Negro', size: 'Mediana (25cm)', faqOpen: 0,
   };
   async componentDidMount() {
@@ -183,9 +190,10 @@ class Component extends DCLogic {
       const data = await cms.getPageContent('tienda');
       const products = (data && data.products) || [];
       const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
-      this.setState({ product, allProducts: products });
+      this.setState({ product, allProducts: products, productReady: true });
     } catch (e) {
       console.error('No se pudo cargar el producto.', e);
+      this.setState({ productReady: true });
     }
   }
   componentWillUnmount() {
@@ -259,6 +267,8 @@ class Component extends DCLogic {
       h2Size: m ? '22px' : '30px',
       h2Gap: m ? '24px' : '36px',
       faqPad: m ? '0 24px 60px' : '0 48px 100px',
+      productReady: this.state.productReady,
+      productLoading: !this.state.productReady,
       isMobile: m,
       productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',
       mainImage: product.imageUrl || '', thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
@@ -275,4 +285,4 @@ class Component extends DCLogic {
 </body>
 </html>
 
-<!-- lda-user-upload-reapplied-20260812-v4 -->
+<!-- lda-product-ready-20260814 -->
