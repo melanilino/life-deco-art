@@ -179,12 +179,25 @@ export async function uploadVideo(pathPrefix, file, options = {}) {
 export async function getPageContent(pageId) {
   const dref = doc(db, "content", pageId);
   const snap = await getDoc(dref);
-  return snap.exists() ? snap.data() : {};
+  const data = snap.exists() ? snap.data() : {};
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.setItem(`lda:page:${pageId}`, JSON.stringify(data));
+    }
+  } catch (_) {}
+  return data;
 }
 
 export async function savePageContent(pageId, data) {
   const dref = doc(db, "content", pageId);
   await setDoc(dref, data, { merge: true });
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      const key = `lda:page:${pageId}`;
+      const previous = JSON.parse(sessionStorage.getItem(key) || '{}');
+      sessionStorage.setItem(key, JSON.stringify({ ...previous, ...data }));
+    }
+  } catch (_) {}
 }
 
 export async function deleteMediaUrl(url) {
