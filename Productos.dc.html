@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
-<script src="/support.js?v=20260814-product-ready2"></script>
+<script src="/support.js?v=20260814-product-cache1"></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -19,7 +19,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js?v=20260814-product-ready2"></script>
+<script src="/image-slot.js?v=20260814-product-cache1"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; }
@@ -167,30 +167,60 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = {
-    isMobile: typeof window !== 'undefined' && window.innerWidth < 860, product: null, allProducts: [], productReady: true,
-    color: 'Negro', size: 'Mediana (25cm)', faqOpen: 0,
-  };
+  readCachedProducts() {
+    try {
+      const cached = JSON.parse(sessionStorage.getItem('lda:page:tienda') || '{}');
+      return Array.isArray(cached.products) ? cached.products : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  state = (() => {
+    const products = this.readCachedProducts();
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id') || 'p1';
+    const product = products.find(x => String(x.id) === String(id)) || null;
+    return {
+      isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
+      product,
+      allProducts: products,
+      productReady: true,
+      color: 'Negro',
+      size: 'Mediana (25cm)',
+      faqOpen: 0,
+    };
+  })();
+
   async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     this._resizeHandler = check;
     window.addEventListener('resize', this._resizeHandler, { passive: true });
+
     try {
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id') || 'p1';
+      const hadCachedProduct = !!this.state.product;
       const cms = await import('/cms.js');
       const data = await cms.getPageContent('tienda');
       const products = (data && data.products) || [];
-      const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
-      this.setState({ product, allProducts: products });
+
+      // Si llegamos desde Tienda, la ficha ya se dibujó con el catálogo exacto
+      // guardado en sesión. Evitamos un segundo render visible del producto.
+      if (!hadCachedProduct) {
+        const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
+        this.setState({ product, allProducts: products });
+      }
     } catch (e) {
       console.error('No se pudo cargar el producto.', e);
     }
   }
+
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
   }
+
   COLORS = [
     { name: 'Negro', hex: '#111111' },
     { name: 'Blanco', hex: '#FFFFFF' },
@@ -222,6 +252,7 @@ class Component extends DCLogic {
     { q: '¿Qué pasa si quiero algo que no está en el catálogo?', a: 'Acepto encargos especiales fuera de catálogo — instalaciones, piezas grandes, colaboraciones. Escríbeme tu idea y lo construimos juntos.' },
     { q: '¿Cuáles son las formas de pago disponibles?', a: 'Transferencia bancaria: 50% de anticipo para separar tu encargo y el resto al momento de la entrega.' },
   ];
+
   renderVals() {
     const m = this.state.isMobile;
     const params = new URLSearchParams(window.location.search);
@@ -291,4 +322,4 @@ class Component extends DCLogic {
 </body>
 </html>
 
-<!-- lda-product-ready-20260814-v2 -->
+<!-- lda-product-cache-20260814-v1 -->
