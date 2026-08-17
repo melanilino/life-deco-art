@@ -281,11 +281,12 @@ body{margin:0;background:#fff}
             <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FFFFFF; text-align: center">Suscríbete gratis</div>
             <input type="text" name="name" autocomplete="name" class="comunidad-input" value="{{ comunidadName }}" onChange="{{ onComunidadNameChange }}" placeholder="Tu nombre" style="margin-top:26px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
             <input type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
-            <div onClick="{{ onComunidadSubmit }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;">Quiero unirme a la comunidad</div>
+            <button type="button" onClick="{{ onComunidadSubmit }}" disabled="{{ comunidadSubscribing }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border:0;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">{{ comunidadSubmitLabel }}</button>
+            <sc-if value="{{ comunidadError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#FFFFFF;font-weight:500;margin:12px 0 0;">{{ comunidadError }}</p></sc-if>
             <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">Puedes darte de baja cuando quieras.</p>
           </sc-if>
           <sc-if value="{{ comunidadSubscribed }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">¡Gracias por suscribirte!</p>
+            <p style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">Solicitud enviada. Revisa tu correo para confirmar la suscripción.</p>
           </sc-if>
         </div>
       </div>
@@ -525,7 +526,7 @@ class Component extends DCLogic {
       setTimeout(() => { if (this.state.copiedSlug === slug) this.setState({ copiedSlug: null }); }, 1600);
     });
   }
-  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, recSearch: '', recSort: 'az', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'az', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
   TABS = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'];
   ALL_COURSES = [
     { name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
@@ -655,14 +656,21 @@ class Component extends DCLogic {
     const onComunidadNameChange = (e) => this.setState({ comunidadName: e.target.value });
     const onComunidadEmailChange = (e) => this.setState({ comunidadEmail: e.target.value });
     const onComunidadSubmit = () => {
-      if (!comunidadEmail) return;
-      const body = new URLSearchParams({ EMAIL: comunidadEmail, NOMBRE: comunidadName, email_address_check: '', locale: 'es' });
+      if (this.state.comunidadSubscribing) return;
+      const email = comunidadEmail.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        this.setState({ comunidadError: 'Escribe un correo válido.' });
+        return;
+      }
+      this.setState({ comunidadSubscribing: true, comunidadError: '' });
+      const body = new URLSearchParams({ EMAIL: email, NOMBRE: comunidadName.trim(), email_address_check: '', locale: 'es' });
       fetch('https://89ab9516.sibforms.com/serve/MUIFAMSaY1ivtOV72aaFecvV98Fj2n909HATZUJAJBq-8554DySSkKmJFacXUWh7sUgixF0l-vHog0NjyOrT4W_Oo9OwhPXPVBQnXvDN7rDCAc7lDywnn2m_klLzx5bIrW_GD27oktV8IyExFC1gFbDCT4RWOrPBw_3wRU3oQXNiOQOu4DlIHNYFrrJ8nOIIDL9UOWLaudIkazpI-w==', {
         method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString(),
       }).then(() => {
-        this.setState({ comunidadSubscribed: true });
+        this.setState({ comunidadSubscribed: true, comunidadSubscribing: false });
       }).catch((e) => {
         console.error('No se pudo completar la suscripción.', e);
+        this.setState({ comunidadSubscribing: false, comunidadError: 'No pudimos enviar la solicitud. Inténtalo nuevamente.' });
       });
     };
 
@@ -763,6 +771,9 @@ class Component extends DCLogic {
       comunidadEmail,
       comunidadSubscribed,
       comunidadNotSubscribed: !comunidadSubscribed,
+      comunidadSubscribing: this.state.comunidadSubscribing,
+      comunidadError: this.state.comunidadError,
+      comunidadSubmitLabel: this.state.comunidadSubscribing ? 'Enviando…' : 'Quiero unirme a la comunidad',
       onComunidadNameChange,
       onComunidadEmailChange,
       onComunidadSubmit,

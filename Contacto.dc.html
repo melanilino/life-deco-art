@@ -137,7 +137,7 @@ body{margin:0;background:#fff}
       <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:340px;text-align:center;">
           <div style="font-size:34px;color:#000000;font-weight:400;">¡<span style="font-family:'Homemade Apple', cursive;font-weight:400;font-size:44px;">Gracias</span>!</div>
-          <p style="font-size:14px;color:#8B795E;font-weight:300;line-height:1.8;margin-top:12px;">Recibimos tu mensaje. Te contestaremos muy pronto a {{ form.email }}.</p>
+          <p style="font-size:14px;color:#8B795E;font-weight:300;line-height:1.8;margin-top:12px;">Tu mensaje fue enviado para procesamiento. Te contestaremos muy pronto a {{ form.email }}.</p>
         </div>
       </sc-if>
       <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
@@ -166,7 +166,8 @@ body{margin:0;background:#fff}
             <label style="font-size:11px;font-weight:500;color:#000000;">Cuéntame tu idea</label>
             <textarea rows="5" value="{{ form.message }}" onChange="{{ onMessageChange }}" placeholder="Describe lo que tienes en mente..." style="padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; resize: vertical; font-family: 'Montserrat',sans-serif; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6" style-focus="border-color:#000000;"></textarea>
           </div>
-          <button onClick="{{ onSubmit }}" style="cursor: pointer; margin-top: 8px; background: #000000; color: #FFFFFF; padding: 13px 26px; border-radius: 4px; font-size: 13px; font-weight: 500; border: none; font-family: Montserrat; transition: transform .25s ease, background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">Enviar mensaje</button>
+          <button onClick="{{ onSubmit }}" disabled="{{ submitting }}" style="cursor: pointer; margin-top: 8px; background: #000000; color: #FFFFFF; padding: 13px 26px; border-radius: 4px; font-size: 13px; font-weight: 500; border: none; font-family: Montserrat; transition: transform .25s ease, background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">{{ submitLabel }}</button>
+          <sc-if value="{{ submitError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#B3261E;font-weight:400;line-height:1.5;margin:0;">{{ submitError }}</p></sc-if>
         </div>
       </sc-if>
     </div>
@@ -206,6 +207,8 @@ class Component extends DCLogic {
   }
   state = {
     submitted: false,
+    submitting: false,
+    submitError: '',
     isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
     form: { name: '', email: '', type: 'carteles', message: '' },
   };
@@ -230,12 +233,24 @@ class Component extends DCLogic {
       form,
       submitted: this.state.submitted,
       notSubmitted: !this.state.submitted,
+      submitting: this.state.submitting,
+      submitError: this.state.submitError,
+      submitLabel: this.state.submitting ? 'Enviando…' : 'Enviar mensaje',
       onNameChange: (e) => this.setState(s => ({ form: { ...s.form, name: e.target.value } })),
       onEmailChange: (e) => this.setState(s => ({ form: { ...s.form, email: e.target.value } })),
       onTypeChange: (e) => this.setState(s => ({ form: { ...s.form, type: e.target.value } })),
       onMessageChange: (e) => this.setState(s => ({ form: { ...s.form, message: e.target.value } })),
       onSubmit: async () => {
-        if (!form.name.trim() || !form.email.trim() || !form.message.trim()) return;
+        if (this.state.submitting) return;
+        if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+          this.setState({ submitError: 'Completa tu nombre, correo y mensaje.' });
+          return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+          this.setState({ submitError: 'Escribe un correo válido.' });
+          return;
+        }
+        this.setState({ submitting: true, submitError: '' });
         try {
           await fetch('https://script.google.com/macros/s/AKfycbzOw5oScxeBcbshUQ5FtxO9EnuxmWGTGA-jx_ls8CW726W2w92_fkvFugwIkLUbrgZ9/exec', {
             method: 'POST',
@@ -243,9 +258,10 @@ class Component extends DCLogic {
             headers: { 'Content-Type': 'text/plain' },
             body: JSON.stringify(form),
           });
-          this.setState({ submitted: true });
+          this.setState({ submitted: true, submitting: false });
         } catch (e) {
           console.error('No se pudo enviar el formulario de contacto.', e);
+          this.setState({ submitting: false, submitError: 'No pudimos enviar el mensaje. Inténtalo nuevamente.' });
         }
       },
     };

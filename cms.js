@@ -10,6 +10,77 @@ export const auth = getAuth(app);
 export const storage = getStorage(app);
 export { signInWithEmailAndPassword, onAuthStateChanged, signOut };
 
+const RICH_TEXT_ALLOWED_TAGS = new Set([
+  'P', 'BR', 'STRONG', 'B', 'EM', 'I', 'H2', 'H3',
+  'UL', 'OL', 'LI', 'A', 'BLOCKQUOTE'
+]);
+const RICH_TEXT_DROP_CONTENT_TAGS = new Set([
+  'SCRIPT', 'STYLE', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'MATH'
+]);
+
+function isSafeRichTextUrl(value) {
+  const url = String(value || '').trim();
+  if (!url) return false;
+  if (/^(https?:|mailto:|tel:)/i.test(url)) return true;
+  return /^(\/|#|\?|\.\.?\/)/.test(url);
+}
+
+export function sanitizeRichHtml(value) {
+  const source = String(value || '');
+  if (!source || typeof DOMParser === 'undefined') return '';
+
+  const doc = new DOMParser().parseFromString(`<div>${source}</div>`, 'text/html');
+  const root = doc.body.firstElementChild;
+  if (!root) return '';
+
+  const cleanNode = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      return doc.createTextNode(node.textContent || '');
+    }
+    if (node.nodeType !== Node.ELEMENT_NODE) return null;
+
+    const tag = node.tagName.toUpperCase();
+    if (RICH_TEXT_DROP_CONTENT_TAGS.has(tag)) return null;
+
+    const children = [...node.childNodes].map(cleanNode).filter(Boolean);
+    if (!RICH_TEXT_ALLOWED_TAGS.has(tag)) {
+      const fragment = doc.createDocumentFragment();
+      children.forEach((child) => fragment.appendChild(child));
+      return fragment;
+    }
+
+    const clean = doc.createElement(tag.toLowerCase());
+    if (tag === 'A') {
+      const href = node.getAttribute('href');
+      if (isSafeRichTextUrl(href)) clean.setAttribute('href', href.trim());
+      const title = node.getAttribute('title');
+      if (title) clean.setAttribute('title', title.slice(0, 300));
+      if (node.getAttribute('target') === '_blank') {
+        clean.setAttribute('target', '_blank');
+        clean.setAttribute('rel', 'noopener noreferrer');
+      }
+    }
+    children.forEach((child) => clean.appendChild(child));
+    return clean;
+  };
+
+  const output = doc.createElement('div');
+  [...root.childNodes].map(cleanNode).filter(Boolean).forEach((node) => output.appendChild(node));
+  return output.innerHTML;
+}
+
+function sanitizePageContent(pageId, data) {
+  if (!data || typeof data !== 'object') return {};
+  if (pageId !== 'aprende' || !Array.isArray(data.blog)) return data;
+  return {
+    ...data,
+    blog: data.blog.map((item) => ({
+      ...item,
+      content: sanitizeRichHtml(item && item.content),
+    })),
+  };
+}
+
 const IMAGE_MAX_EDGE = 1800;
 const IMAGE_QUALITY = 0.88;
 const IMAGE_HARD_LIMIT = 30 * 1024 * 1024;
@@ -179,7 +250,7 @@ export async function uploadVideo(pathPrefix, file, options = {}) {
 export async function getPageContent(pageId) {
   const dref = doc(db, "content", pageId);
   const snap = await getDoc(dref);
-  const data = snap.exists() ? snap.data() : {};
+  const data = sanitizePageContent(pageId, snap.exists() ? snap.data() : {});
   try {
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.setItem(`lda:page:${pageId}`, JSON.stringify(data));
@@ -190,12 +261,13 @@ export async function getPageContent(pageId) {
 
 export async function savePageContent(pageId, data) {
   const dref = doc(db, "content", pageId);
-  await setDoc(dref, data, { merge: true });
+  const safeData = sanitizePageContent(pageId, data);
+  await setDoc(dref, safeData, { merge: true });
   try {
     if (typeof sessionStorage !== 'undefined') {
       const key = `lda:page:${pageId}`;
       const previous = JSON.parse(sessionStorage.getItem(key) || '{}');
-      sessionStorage.setItem(key, JSON.stringify({ ...previous, ...data }));
+      sessionStorage.setItem(key, JSON.stringify({ ...previous, ...safeData }));
     }
   } catch (_) {}
 }

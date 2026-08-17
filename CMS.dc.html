@@ -721,7 +721,7 @@ class Component extends DCLogic {
         return {
           key: d.key, label: d.label, isRichtext: true,
           dangerousHtml: { __html: item[d.key] || '' },
-          onInput: (e) => this.updateItem(listKey, item.id, d.key, e.currentTarget.innerHTML),
+          onInput: (e) => this.updateItem(listKey, item.id, d.key, this.state.cms.sanitizeRichHtml(e.currentTarget.innerHTML)),
           onBold: (e) => { e.preventDefault(); document.execCommand('bold'); },
           onItalic: (e) => { e.preventDefault(); document.execCommand('italic'); },
           onH2: (e) => { e.preventDefault(); document.execCommand('formatBlock', false, 'h2'); },
@@ -730,7 +730,7 @@ class Component extends DCLogic {
           onLink: (e) => {
             e.preventDefault();
             const url = window.prompt('Pega el link (incluye https://)');
-            if (url) document.execCommand('createLink', false, url);
+            if (url && /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim())) document.execCommand('createLink', false, url.trim());
           },
           onUnlink: (e) => { e.preventDefault(); document.execCommand('unlink'); }
         };

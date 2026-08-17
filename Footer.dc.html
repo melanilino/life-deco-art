@@ -64,11 +64,12 @@ x-dc{display:none!important}
       <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
         <form onSubmit="{{ onSubmit }}" style="display:flex;gap:8px;">
           <input type="email" class="lda-footer-email" value="{{ email }}" onChange="{{ onEmailChange }}" required="required" placeholder="Tu email" style="flex:1;min-width:0;padding:10px 12px;border-radius:4px;border:1px solid #262626;background:#141414;color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;" style-focus="outline:none;border-color:#262626;box-shadow:none;">
-          <button type="submit" style="background: #FFFFFF; color: #000000; border: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: Montserrat; transition: background .25s ease,transform .25s ease;" style-hover="background:#e8e8e8;transform:translateY(-2px);">Unirme</button>
+          <button type="submit" disabled="{{ subscribing }}" style="background: #FFFFFF; color: #000000; border: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: Montserrat; transition: background .25s ease,transform .25s ease;" style-hover="background:#e8e8e8;transform:translateY(-2px);">{{ subscribeLabel }}</button>
         </form>
+        <sc-if value="{{ subscribeError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:11px;font-weight:400;color:#FF9A9A;line-height:1.5;margin:8px 0 0;">{{ subscribeError }}</p></sc-if>
       </sc-if>
       <sc-if value="{{ subscribed }}" hint-placeholder-val="{{ false }}">
-        <p style="font-size:13px;font-weight:300;color:#FFFFFF;line-height:1.6;margin:0;font-family:'Montserrat',sans-serif;">¡Gracias por suscribirte!</p>
+        <p style="font-size:13px;font-weight:300;color:#FFFFFF;line-height:1.6;margin:0;font-family:'Montserrat',sans-serif;">Solicitud enviada. Revisa tu correo para confirmar la suscripción.</p>
       </sc-if>
     </div>
   </div>
@@ -82,7 +83,7 @@ x-dc{display:none!important}
 </footer>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:360}}">class Component extends DCLogic {
-  state = { subscribed: false, email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { subscribed: false, subscribing: false, subscribeError: '', email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
 
   setupFullClickTargets() {
     if (window.__ldaFullClickTargetsReady) return;
@@ -184,12 +185,20 @@ x-dc{display:none!important}
       padding: this.state.isMobile ? '48px 24px 40px' : '64px 48px 56px',
       subscribed: this.state.subscribed,
       notSubscribed: !this.state.subscribed,
+      subscribing: this.state.subscribing,
+      subscribeError: this.state.subscribeError,
+      subscribeLabel: this.state.subscribing ? 'Enviando…' : 'Unirme',
       email: this.state.email,
       onEmailChange: (e) => this.setState({ email: e.target.value }),
       onSubmit: (e) => {
         e.preventDefault();
-        const email = this.state.email;
-        if (!email) return;
+        if (this.state.subscribing) return;
+        const email = this.state.email.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          this.setState({ subscribeError: 'Escribe un correo válido.' });
+          return;
+        }
+        this.setState({ subscribing: true, subscribeError: '' });
         const body = new URLSearchParams({ EMAIL: email, email_address_check: '', locale: 'es' });
         fetch('https://89ab9516.sibforms.com/serve/MUIFAMSaY1ivtOV72aaFecvV98Fj2n909HATZUJAJBq-8554DySSkKmJFacXUWh7sUgixF0l-vHog0NjyOrT4W_Oo9OwhPXPVBQnXvDN7rDCAc7lDywnn2m_klLzx5bIrW_GD27oktV8IyExFC1gFbDCT4RWOrPBw_3wRU3oQXNiOQOu4DlIHNYFrrJ8nOIIDL9UOWLaudIkazpI-w==', {
           method: 'POST',
@@ -197,9 +206,10 @@ x-dc{display:none!important}
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: body.toString(),
         }).then(() => {
-          this.setState({ subscribed: true });
+          this.setState({ subscribed: true, subscribing: false });
         }).catch((e) => {
           console.error('No se pudo completar la suscripción.', e);
+          this.setState({ subscribing: false, subscribeError: 'No pudimos enviar la solicitud. Inténtalo nuevamente.' });
         });
       },
     };
