@@ -391,41 +391,17 @@ body{margin:0;background:#fff}
       <a href="/tienda" style="text-decoration:none;font-size:13px;font-weight:500;color:#F65091;border-bottom:1px solid #F65091;padding-bottom:2px;">Ver la tienda</a>
     </div>
     <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};min-width:0;">
-      <a href="/tienda#producto-p1" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+      <sc-for list="{{ recentProducts }}" as="piece" hint-placeholder-count="4">
+      <a href="{{ piece.href }}" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
         <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
-          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Bestseller</span>
-          <image-slot id="inicio-pieza-1" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ pieza1Url }}" placeholder="foto: bandeja Te Elijo Hoy"></image-slot>
+          <sc-if value="{{ piece.hasTag }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">{{ piece.tag }}</span></sc-if>
+          <image-slot id="{{ piece.imageId }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ piece.imageUrl }}" placeholder="{{ piece.placeholder }}"></image-slot>
         </div>
-        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Bandeja "Te Elijo Hoy"</div>
-        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Madera lacada, lettering pintado a mano</div>
-        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$2,220</div>
+        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ piece.name }}</div>
+        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">{{ piece.desc }}</div>
+        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">{{ piece.price }}</div>
       </a>
-      <a href="/tienda#producto-p11" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
-        <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#EFE7D8;display:flex;align-items:center;justify-content:center;margin-bottom:18px;overflow:hidden;">
-          <image-slot id="inicio-pieza-2" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ pieza2Url }}" placeholder="foto: cartel de propuesta"></image-slot>
-        </div>
-        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Cartel de Propuesta</div>
-        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Lienzo con flores pintadas a mano</div>
-        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$1,600</div>
-      </a>
-      <a href="/tienda#producto-p9" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
-        <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#E4DCCB;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
-          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Bestseller</span>
-          <image-slot id="inicio-pieza-3" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ pieza3Url }}" placeholder="foto: caja recuerdo de nacimiento"></image-slot>
-        </div>
-        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Caja Recuerdo de Nacimiento</div>
-        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Resina en forma de corazón, para ecografías</div>
-        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">RD$1,870</div>
-      </a>
-      <a href="/tienda#producto-p3" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
-        <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#DED3BC;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
-          <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">Nuevo</span>
-          <image-slot id="inicio-pieza-4" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ pieza4Url }}" placeholder="foto: caja sorpresa personalizada"></image-slot>
-        </div>
-        <div style="font-size:15px;font-weight:400;color:#000000;min-height:1.2em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">Caja Sorpresa Personalizada</div>
-        <div style="font-size:13px;color:#8B795E;font-weight:300;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em;">Caja kraft con lazo de raso, diseñada a mano para anuncios especiales.</div>
-        <div style="font-size:14px;font-weight:500;color:#F65091;margin-top:8px;">Próximamente</div>
-      </a>
+      </sc-for>
     </div>
   </div>
 
@@ -478,7 +454,7 @@ body{margin:0;background:#fff}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;sectionGap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:96,&quot;min&quot;:40,&quot;max&quot;:200,&quot;step&quot;:8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Espaciado&quot;}}">
 class Component extends DCLogic {
-  state = { content: {}, tiendaProducts: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, cwOpen: null };
+  state = { content: {}, tiendaProducts: {}, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, cwOpen: null };
   checkMobile = () => this.setState({ isMobile: window.innerWidth < 860 });
   async loadContent() {
     try {
@@ -489,7 +465,7 @@ class Component extends DCLogic {
       const tiendaData = await cms.getPageContent('tienda');
       if (tiendaData && tiendaData.products) {
         const map = {};
-        tiendaData.products.forEach((p) => { if (p.imageUrl) map[p.id] = p.imageUrl; });
+        tiendaData.products.forEach((p) => { map[p.id] = p; });
         this.setState({ tiendaProducts: map });
       }
     } catch (e) {}
@@ -565,6 +541,18 @@ class Component extends DCLogic {
     const gap = this.props.sectionGap ?? 96;
     const c = this.state.content || {};
     const m = this.state.isMobile;
+    const fallbackProducts = {
+      p1: { id: 'p1', name: 'Bandeja "Te Elijo Hoy"', desc: 'Madera lacada, lettering pintado a mano', price: 'RD$2,220', tag: 'Bestseller', imageUrl: '' },
+      p11: { id: 'p11', name: 'Cartel de Propuesta', desc: 'Lienzo con flores pintadas a mano', price: 'RD$1,600', tag: '', imageUrl: '' },
+      p9: { id: 'p9', name: 'Caja Recuerdo de Nacimiento', desc: 'Resina en forma de corazón, para ecografías', price: 'RD$1,870', tag: 'Bestseller', imageUrl: '' },
+      p3: { id: 'p3', name: 'Caja Sorpresa Personalizada', desc: 'Caja kraft con lazo de raso, diseñada a mano para anuncios especiales.', price: 'Próximamente', tag: 'Nuevo', imageUrl: '' },
+    };
+    const defaultIds = ['p1', 'p11', 'p9', 'p3'];
+    const selectedIds = (c.recentProductIds && c.recentProductIds.length === 4) ? c.recentProductIds : defaultIds;
+    const recentProducts = selectedIds.map((id, index) => {
+      const product = this.state.tiendaProducts[id] || fallbackProducts[id] || fallbackProducts[defaultIds[index]];
+      return { ...product, href: '/tienda/producto?id=' + encodeURIComponent(product.id), imageId: 'inicio-pieza-' + (index + 1), placeholder: 'foto: ' + product.name, hasTag: !!product.tag };
+    });
     return {
       isDesktop: !m,
       isMobile: m,
@@ -632,10 +620,7 @@ class Component extends DCLogic {
         onToggle: () => this.setState({ cwOpen: this.state.cwOpen === i ? null : i }),
       })),
       cursoSpotlightUrl: c.cursoSpotlightUrl || '',
-      pieza1Url: (this.state.tiendaProducts && this.state.tiendaProducts.p1) || '',
-      pieza2Url: (this.state.tiendaProducts && this.state.tiendaProducts.p11) || '',
-      pieza3Url: (this.state.tiendaProducts && this.state.tiendaProducts.p9) || '',
-      pieza4Url: (this.state.tiendaProducts && this.state.tiendaProducts.p3) || '',
+      recentProducts,
     };
   }
 }

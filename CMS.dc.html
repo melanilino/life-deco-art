@@ -171,6 +171,7 @@ x-dc{display:none!important}
             Subir / reemplazar video
             <input type="file" accept="video/*" onChange="{{ onVideoUpload }}" style="display:none;">
           </label>
+          <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onVideoRemove }}" title="Eliminar video" aria-label="Eliminar video" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;margin-left:8px;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ videoUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:10px;">Subiendo…</span></sc-if>
         </div>
         <sc-for list="{{ inicioPhotoGroups }}" as="grp" hint-placeholder-count="4">
@@ -194,8 +195,24 @@ x-dc{display:none!important}
             </div>
           </div>
         </sc-for>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Piezas recientes</div>
+        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+          <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Selecciona y ordena los cuatro productos de Tienda que aparecerán en Inicio. El nombre, la foto, el precio, la etiqueta y el enlace se toman directamente de cada producto.</div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+            <sc-for list="{{ recentProductSelectors }}" as="selector" hint-placeholder-count="4">
+              <div style="border:1px solid #E4DCCB;border-radius:6px;padding:14px;">
+                <label style="display:block;font-size:12px;color:#8B795E;margin-bottom:7px;">Posición {{ selector.position }}</label>
+                <select value="{{ selector.value }}" onChange="{{ selector.onChange }}" style="width:100%;padding:10px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000000;font-family:Montserrat;font-size:13px;">
+                  <option value="">Seleccionar producto</option>
+                  <sc-for list="{{ selector.options }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.id }}" disabled="{{ opt.disabled }}">{{ opt.name }}</option></sc-for>
+                </select>
+                <sc-if value="{{ selector.warning }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#C0392B;margin-top:8px;">{{ selector.warning }}</div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
         <div style="display:flex;align-items:center;gap:16px;margin-top:12px;">
-          
+          <button onClick="{{ onSave }}" disabled="{{ saving }}" style="padding:12px 22px;border:0;border-radius:4px;background:#F65091;color:#FFFFFF;font-family:Montserrat;font-size:13px;font-weight:600;cursor:pointer;">{{ saveBtnText }}</button>
           <sc-if value="{{ showSaved }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#2E7D32;">Guardado ✓</span></sc-if>
         </div>
       </div>
@@ -403,7 +420,8 @@ class Component extends DCLogic {
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales',
     sobremiData: null, sobremiLoaded: false,
     uploading: null, expanded: {},
-    configData: null, configLoaded: false, configLoading: false
+    configData: null, configLoaded: false, configLoading: false,
+    inicioProductOptions: []
   };
 
   selectTile(scope, id) {
@@ -547,9 +565,12 @@ class Component extends DCLogic {
       };
       this.setState({ configData: { ...defaults, ...data }, configLoaded: true, configLoading: false });
     } else if (pageId === 'inicio') {
-      let data = {};
-      try { data = await this.state.cms.getPageContent('inicio'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
-      this.setState({ content: data });
+      let data = {}, tienda = {};
+      try {
+        [data, tienda] = await Promise.all([this.state.cms.getPageContent('inicio'), this.state.cms.getPageContent('tienda')]);
+      } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
+      const products = (tienda.products && tienda.products.length) ? tienda.products : this.DEFAULT_TIENDA.products;
+      this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products });
     } else if (pageId === 'tienda' && !this.state.tiendaLoaded) {
       this.setState({ tiendaLoading: true });
       let data = {};
@@ -649,6 +670,12 @@ class Component extends DCLogic {
     try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); this.setState({content:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
+  async removeHeroVideo(){
+    const url=this.state.content&&this.state.content.heroVideoUrl; if(!url||!window.confirm('¿Eliminar este video?')) return;
+    const next={...this.state.content,heroVideoUrl:''};
+    try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); this.setState({content:next,saved:true});}
+    catch(e){this.setState({error:'No se pudo eliminar el video.'});}
+  }
   async removeTiendaBanner(){
     const url=this.state.tiendaData&&this.state.tiendaData.bannerImageUrl; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
     const next={...this.state.tiendaData,bannerImageUrl:''};
@@ -721,7 +748,7 @@ class Component extends DCLogic {
   handleHeroVideoUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'heroVideo' });
-    this.state.cms.uploadImage('content-files/inicio', file).then((url) => {
+    this.state.cms.uploadVideo('content-files/inicio', file).then((url) => {
       this.updateField('heroVideoUrl', url);
       this.setState({ uploading: null });
     }).catch(() => { this.setState({ uploading: null }); });
@@ -734,7 +761,7 @@ class Component extends DCLogic {
       { key: 'servPackagingUrl', label: 'Packaging' },
       { key: 'servSouvenirsUrl', label: 'Souvenirs' },
     ] },
-    { label: 'Cómo funciona', fields: [
+    { label: 'Cómo trabajamos', fields: [
       { key: 'cwCuentameUrl', label: 'Cuéntame' },
       { key: 'cwBocetoUrl', label: 'Boceto' },
       { key: 'cwTrazoUrl', label: 'Trazo' },
@@ -750,6 +777,15 @@ class Component extends DCLogic {
       this.updateField(key, url);
       this.setState({ uploading: null });
     }).catch(() => { this.setState({ uploading: null }); });
+  }
+  updateRecentProduct(position, productId) {
+    const ids = [...((this.state.content && this.state.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'])];
+    if (productId && ids.some((id, index) => index !== position && id === productId)) {
+      this.setState({ error: 'Cada posición de Piezas recientes debe usar un producto diferente.' });
+      return;
+    }
+    ids[position] = productId;
+    this.setState({ content: { ...this.state.content, recentProductIds: ids }, saved: false, error: '' });
   }
 
   addCategory() {
@@ -970,7 +1006,19 @@ class Component extends DCLogic {
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),
+      onVideoRemove: () => this.removeHeroVideo(),
       videoUploading: s.uploading === 'heroVideo',
+      recentProductSelectors: [0, 1, 2, 3].map((position) => {
+        const ids = (s.content && s.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'];
+        const value = ids[position] || '';
+        const selected = s.inicioProductOptions.find((p) => p.id === value);
+        return {
+          position: position + 1, value,
+          options: s.inicioProductOptions.filter((p) => (p.status || 'Activo') !== 'Borrador').map((p) => ({ id: p.id, name: p.name || 'Producto sin nombre', disabled: ids.some((id, index) => index !== position && id === p.id) })),
+          warning: value && (!selected || (selected.status || 'Activo') === 'Borrador') ? 'Este producto ya no está disponible en Tienda. Selecciona otro.' : '',
+          onChange: (e) => this.updateRecentProduct(position, e.target.value)
+        };
+      }),
       isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
