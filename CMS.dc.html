@@ -126,28 +126,32 @@ x-dc{display:none!important}
     </sc-if>
 
     <sc-if value="{{ isSobremiPage }}" hint-placeholder-val="{{ false }}">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Foto de perfil</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía principal</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;gap:14px;">
-          <div style="width:160px;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiHeroUrl }}" placeholder="foto de perfil"></image-slot></div>
-          <label style="display:inline-flex;align-items:center;gap:6px;height:40px;box-sizing:border-box;padding:0 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
-            Subir imagen
+        <div style="max-width:280px;">
+          <div style="width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiHeroUrl }}" placeholder="foto de Melani en su estudio"></image-slot></div>
+          <div style="display:flex;align-items:center;gap:8px;padding-top:12px;">
+          <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
+            Subir / reemplazar
             <input type="file" accept="image/*" onChange="{{ onSobremiHeroUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
+          </div>
         </div>
       </div>
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía destacada</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
-        <div style="display:flex;align-items:center;gap:14px;">
-          <div style="width:220px;aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-destacada" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiFeaturedUrl }}" placeholder="foto destacada"></image-slot></div>
-          <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
-            Subir imagen
+        <div style="max-width:560px;">
+          <div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-destacada" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiFeaturedUrl }}" placeholder="pieza destacada en proceso de creación"></image-slot></div>
+          <div style="display:flex;align-items:center;gap:8px;padding-top:12px;">
+          <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
+            Subir / reemplazar
             <input type="file" accept="image/*" onChange="{{ onSobremiFeaturedUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
+          </div>
         </div>
       </div>
     </sc-if>
