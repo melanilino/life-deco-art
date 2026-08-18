@@ -90,8 +90,8 @@ x-dc{display:none!important}
     </sc-if>
 
     <sc-if value="{{ isConfigPage }}" hint-placeholder-val="{{ false }}">
-      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Identidad</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Identidad</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Favicon</label>
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
           <div style="width:84px;height:84px;overflow:hidden;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;"><image-slot id="cms-config-favicon" shape="rect" fit="contain" style="width:100%;height:100%;" src="{{ configFaviconUrl }}" placeholder="favicon"></image-slot></div>
@@ -101,21 +101,21 @@ x-dc{display:none!important}
         </div>
       </div>
 
-      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Datos de contacto</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Datos de contacto</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número de WhatsApp</label>
         <input type="text" value="{{ configWhatsappNumber }}" onChange="{{ onConfigWhatsappNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Correo electrónico</label>
         <input type="email" value="{{ configEmail }}" onChange="{{ onConfigEmail }}" placeholder="correo@ejemplo.com" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
       </div>
 
-      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Redes sociales</div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Redes sociales</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <sc-for list="{{ configSocialFields }}" as="social" hint-placeholder-count="4"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">{{ social.label }}</label><input type="url" value="{{ social.value }}" onChange="{{ social.onChange }}" placeholder="https://" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div></sc-for>
       </div>
 
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Botón flotante de WhatsApp</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Botón flotante de WhatsApp</div>
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número</label>
         <input type="text" value="{{ configFloatingNumber }}" onChange="{{ onConfigFloatingNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Mensaje inicial</label>
@@ -534,7 +534,18 @@ class Component extends DCLogic {
       this.setState({ configLoading: true });
       let data = {};
       try { data = await this.state.cms.getPageContent('global'); } catch (e) { this.setState({ error: 'No se pudo cargar la configuración.' }); }
-      this.setState({ configData: { whatsappFloatingVisible: true, ...data }, configLoaded: true, configLoading: false });
+      const defaults = {
+        whatsappNumber: '18495390410',
+        email: 'hola@lifedecoart.com',
+        instagramUrl: 'https://www.instagram.com/lifedecoart',
+        facebookUrl: 'https://web.facebook.com/lifedecoart/',
+        tiktokUrl: 'https://www.tiktok.com/@lifedecoart',
+        pinterestUrl: 'https://www.pinterest.com/lifedecoart/',
+        whatsappFloatingNumber: '18495390410',
+        whatsappInitialMessage: 'Hola! Quiero hacer un encargo personalizado.',
+        whatsappFloatingVisible: true
+      };
+      this.setState({ configData: { ...defaults, ...data }, configLoaded: true, configLoading: false });
     } else if (pageId === 'inicio') {
       let data = {};
       try { data = await this.state.cms.getPageContent('inicio'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
@@ -908,7 +919,7 @@ class Component extends DCLogic {
       onLogout: this.handleLogout,
       pages, currentPageLabel: currentPage ? currentPage.label : '', currentPageDesc: currentPage ? currentPage.desc : '',
       isConfigPage: s.page === 'config' && !!s.configData,
-      configFaviconUrl: (s.configData && s.configData.faviconUrl) || '',
+      configFaviconUrl: (s.configData && s.configData.faviconUrl) || '/favicon.svg',
       configHasFavicon: !!(s.configData && s.configData.faviconUrl),
       configFaviconUploading: s.uploading === 'configFavicon',
       onConfigFaviconUpload: (e) => this.uploadConfigFavicon(e.target.files[0]),
