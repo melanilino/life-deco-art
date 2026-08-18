@@ -59,6 +59,9 @@ x-dc{display:none!important}
   .legal-section-body { font-size:15px;line-height:1.8;color:#4A4238;font-weight:300; }
   .legal-section-body p { margin:0; }
   .legal-section-body ul, .legal-section-body ol { margin:0;padding-left:20px; }
+  .legal-document { font-size:15px;line-height:1.8;color:#4A4238;font-weight:300;display:flex;flex-direction:column;gap:14px; }
+  .legal-document h2 { font-size:18px;font-weight:500;color:#000000;margin:22px 0 0; }
+  .legal-document p, .legal-document ul, .legal-document ol { margin:0; }
   @media (max-width: 700px) {
     .legal-wrap { padding: 36px 26px 40px; }
     .legal-title { font-size: 26px; }
@@ -82,6 +85,8 @@ x-dc{display:none!important}
     <h1 data-cms-html="title" class="legal-title" style="font-weight:400;color:#000000;margin:0 0 12px;">Términos y <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 1px">condiciones</span></h1>
     <p data-cms-text="updatedAtLabel" class="legal-date" style="font-size:13px;color:#8B795E;font-weight:300;margin:0 0 48px;">Última actualización: {{ updatedAt }}</p>
 
+    <sc-if value="{{ useCmsBody }}" hint-placeholder-val="{{ false }}"><div class="legal-document" dangerouslySetInnerHTML="{{ bodyHtml }}"></div></sc-if>
+    <sc-if value="{{ useLegacyBody }}" hint-placeholder-val="{{ true }}">
     <p data-cms-text="intro" class="legal-intro" style="font-size:15px;line-height:1.85;color:#4A4238;font-weight:300;margin:0 0 48px;">{{ intro }}</p>
 
     <div data-cms-html="body" class="legal-sections" style="display:flex;flex-direction:column;gap:36px;">
@@ -125,6 +130,7 @@ x-dc{display:none!important}
       </div>
       </sc-if>
     </div>
+    </sc-if>
 
   </div>
 </section>
@@ -139,7 +145,7 @@ class Component extends DCLogic {
       const cms = await import('/cms.js');
       const content = (await cms.getPageContent('terminos')) || {};
       const sections = Array.isArray(content.sections) ? content.sections.map((section) => ({ ...section, content: cms.sanitizeRichHtml(section.content || '') })) : [];
-      this.setState({ content: { ...content, sections } });
+      this.setState({ content: { ...content, body: cms.sanitizeRichHtml(content.body || ''), sections } });
     } catch (_) {}
   }
   renderVals() {
@@ -148,6 +154,9 @@ class Component extends DCLogic {
     return {
       updatedAt: c.updatedAt || 'julio de 2026',
       intro: c.intro || 'Al realizar un pedido o contratar un servicio con Life Deco Art, aceptas los siguientes términos. Si tienes dudas sobre alguno de ellos, escríbenos antes de confirmar tu compra.',
+      bodyHtml: { __html: c.body || '' },
+      useCmsBody: !!c.body,
+      useLegacyBody: !c.body,
       sections: sections.map((section) => ({ title: section.title, dangerousHtml: { __html: section.content } })),
       useCmsSections: sections.length > 0,
       useStaticSections: sections.length === 0
