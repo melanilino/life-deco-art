@@ -120,80 +120,6 @@ x-dc{display:none!important}
       <div style="border: 1px solid #FFFFFF; border-radius: 6px; padding: 40px; color: #8B795E; font-size: 14px; background-color: #FFFFFF">Esta sección se habilita en una próxima etapa.</div>
     </sc-if>
 
-    <sc-if value="{{ isGenericPage }}" hint-placeholder-val="{{ false }}">
-      <sc-for list="{{ genericGroups }}" as="grp" hint-placeholder-count="4">
-        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
-          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">{{ grp.label }}</div>
-          <sc-for list="{{ grp.fields }}" as="f" hint-placeholder-count="5">
-            <div style="margin-bottom:16px;">
-              <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
-              <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
-              <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="{{ f.inputType }}" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
-              <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></sc-if>
-              <sc-if value="{{ f.isRichtext }}" hint-placeholder-val="{{ false }}">
-                <div style="border:1px solid #E4DCCB;border-radius:4px;overflow:hidden;background:#FFFFFF;">
-                  <div style="display:flex;gap:4px;padding:6px 8px;border-bottom:1px solid #E4DCCB;background:#F9F6EF;">
-                    <button onMouseDown="{{ f.onBold }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFF;border-radius:3px;font-weight:600;cursor:pointer;">B</button>
-                    <button onMouseDown="{{ f.onItalic }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFF;border-radius:3px;font-style:italic;cursor:pointer;">I</button>
-                    <button onMouseDown="{{ f.onH2 }}" style="width:32px;height:28px;border:1px solid #E4DCCB;background:#FFF;border-radius:3px;font-weight:600;cursor:pointer;">H2</button>
-                    <button onMouseDown="{{ f.onList }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFF;border-radius:3px;cursor:pointer;">•</button>
-                    <button onMouseDown="{{ f.onLink }}" style="width:32px;height:28px;border:1px solid #E4DCCB;background:#FFF;border-radius:3px;cursor:pointer;">🔗</button>
-                  </div>
-                  <div contentEditable="true" onInput="{{ f.onInput }}" dangerouslySetInnerHTML="{{ f.dangerousHtml }}" style="padding:12px;min-height:150px;font-family:Montserrat;font-size:13px;line-height:1.6;outline:none;"></div>
-                </div>
-              </sc-if>
-              <sc-if value="{{ f.isMedia }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                  <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ true }}"><div style="width:180px;aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-generic-{{ f.key }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="{{ f.label }}"></image-slot></div></sc-if>
-                  <sc-if value="{{ f.hasValue }}" hint-placeholder-val="{{ false }}"><a href="{{ f.value }}" target="_blank" rel="noopener" style="font-size:12px;color:#0CC0DF;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Ver archivo actual</a></sc-if>
-                  <label style="display:inline-flex;align-items:center;padding:9px 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;cursor:pointer;">Subir / reemplazar<input type="file" accept="{{ f.accept }}" onChange="{{ f.onUpload }}" style="display:none;"></label>
-                  <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-        </div>
-      </sc-for>
-    </sc-if>
-
-    <sc-if value="{{ isEntityPage }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <div style="font-size:13px;color:#8B795E;">Cada elemento se guarda y publica de forma independiente.</div>
-        <button type="button" onClick="{{ onAddEntity }}" style="border:0;background:#000;color:#FFF;padding:10px 16px;border-radius:5px;font-family:Montserrat;cursor:pointer;">+ Agregar</button>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;">
-        <sc-for list="{{ entityCards }}" as="item" hint-placeholder-count="6">
-          <button type="button" onClick="{{ item.onSelect }}" style="text-align:left;background:#FFF;border:1px solid {{ item.border }};border-radius:8px;padding:16px;font-family:Montserrat;cursor:pointer;min-height:98px;">
-            <div style="font-size:14px;color:#000;margin-bottom:8px;">{{ item.name }}</div>
-            <div style="display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#8B795E;"><span>{{ item.status }}</span><span>{{ item.orderLabel }}</span></div>
-          </button>
-        </sc-for>
-      </div>
-      <sc-if value="{{ selectedEntity }}" hint-placeholder-val="{{ false }}">
-        <div style="position:fixed;inset:0 0 0 250px;background:rgba(0,0,0,.28);z-index:60;padding:24px;display:flex;justify-content:center;align-items:center;" onClick="{{ closeEntity }}">
-          <div style="width:700px;max-width:100%;max-height:94vh;overflow:auto;background:#FFF;border-radius:10px;padding:26px;" onClick="{{ stopPropagation }}">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;"><strong style="font-size:16px;">{{ selectedEntity.name }}</strong><button type="button" onClick="{{ closeEntity }}" style="border:0;background:transparent;font-size:18px;cursor:pointer;">✕</button></div>
-            <sc-for list="{{ selectedEntity.fields }}" as="f" hint-placeholder-count="8">
-              <div style="margin-bottom:15px;">
-                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">{{ f.label }}</label>
-                <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;"></textarea></sc-if>
-                <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="{{ f.inputType }}" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;"></sc-if>
-                <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}"><select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;padding:10px;border:1px solid #E4DCCB;border-radius:4px;"><sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o }}">{{ o }}</option></sc-for></select></sc-if>
-                <sc-if value="{{ f.isRichtext }}" hint-placeholder-val="{{ false }}"><div contentEditable="true" onInput="{{ f.onInput }}" dangerouslySetInnerHTML="{{ f.dangerousHtml }}" style="min-height:160px;padding:12px;border:1px solid #E4DCCB;border-radius:4px;line-height:1.6;outline:none;"></div></sc-if>
-                <sc-if value="{{ f.isGallery }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:9px;"><sc-for list="{{ f.galleryItems }}" as="img" hint-placeholder-count="3"><div style="width:86px;aspect-ratio:1/1;border-radius:5px;overflow:hidden;background:#F3EEE4;"><img src="{{ img.url }}" alt="" style="width:100%;height:100%;object-fit:cover;"></div></sc-for></div>
-                  <label style="display:inline-flex;padding:9px 14px;border:1px solid #E4DCCB;border-radius:4px;font-size:12px;cursor:pointer;">Agregar imágenes<input type="file" accept="image/*" multiple onChange="{{ f.onGalleryUpload }}" style="display:none;"></label>
-                  <textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" aria-label="Enlaces de la galería" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;margin-top:9px;"></textarea>
-                </sc-if>
-                <sc-if value="{{ f.isMedia }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:12px;"><sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ true }}"><div style="width:160px;aspect-ratio:{{ f.aspect }};background:#F3EEE4;border-radius:5px;overflow:hidden;"><image-slot id="cms-entity-{{ f.key }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="{{ f.label }}"></image-slot></div></sc-if><label style="padding:9px 12px;border:1px solid #E4DCCB;border-radius:4px;font-size:12px;cursor:pointer;">Subir<input type="file" accept="{{ f.accept }}" onChange="{{ f.onUpload }}" style="display:none;"></label></div></sc-if>
-              </div>
-            </sc-for>
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;"><button type="button" onClick="{{ archiveEntity }}" style="border:0;background:transparent;color:#C0392B;cursor:pointer;">Archivar</button><button type="button" onClick="{{ saveSelectedEntity }}" style="border:0;background:#0CC0DF;color:#FFF;padding:11px 20px;border-radius:5px;cursor:pointer;">Guardar elemento</button></div>
-          </div>
-        </div>
-      </sc-if>
-    </sc-if>
-
     <sc-if value="{{ isPageLoading }}" hint-placeholder-val="{{ false }}">
       <div style="padding:40px;color:#8B795E;font-size:14px;">Cargando…</div>
     </sc-if>
@@ -440,9 +366,7 @@ class Component extends DCLogic {
     tiendaData: null, tiendaLoaded: false,
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales',
     sobremiData: null, sobremiLoaded: false,
-    uploading: null, expanded: {},
-    contentModel: null, genericPageData: {}, genericPageLoaded: null,
-    entityType: null, entityItems: [], selectedEntityId: null, entityLoading: false
+    uploading: null, expanded: {}
   };
 
   selectTile(scope, id) {
@@ -548,103 +472,26 @@ class Component extends DCLogic {
   };
 
   pageList = [
-    { id: 'global', label: 'Configuración general', desc: 'Identidad, menú, contacto, redes, pie de página y SEO general.' },
     { id: 'inicio', label: 'Inicio', desc: 'Contenido general de la página principal.' },
     { id: 'sobremi', label: 'Sobre Mí', desc: 'Historia, foto y presentación de la marca.' },
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
     { id: 'aprende', label: 'Aprende', desc: 'Cursos, talleres, gratis, blog, esenciales y comunidad.' },
     { id: 'contacto', label: 'Contacto', desc: 'Datos de contacto y redes sociales.' },
     { id: 'privacidad', label: 'Política de Privacidad', desc: 'Texto legal de privacidad del sitio.' },
-    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Texto legal de términos de uso.' },
-    { id: 'encargos', label: 'Encargo personalizado', desc: 'Textos y opciones del formulario de encargos.' },
-    { id: 'entity:categories', label: 'Categorías', desc: 'Categorías y subcategorías del catálogo.' },
-    { id: 'entity:products', label: 'Productos', desc: 'Cada producto y su ficha completa.' },
-    { id: 'entity:courses', label: 'Cursos', desc: 'Cada curso y su contenido completo.' },
-    { id: 'entity:workshops', label: 'Talleres', desc: 'Cada taller, fecha, lugar y contenido.' },
-    { id: 'entity:resources', label: 'PDF y recursos', desc: 'Cada archivo, portada y vista previa.' },
-    { id: 'entity:posts', label: 'Blog', desc: 'Cada artículo y su contenido completo.' },
-    { id: 'entity:essentials', label: 'Esenciales', desc: 'Productos recomendados y enlaces de afiliados.' },
-    { id: 'entity:communities', label: 'Comunidad', desc: 'Contenido y beneficios de comunidad.' },
-    { id: 'entity:services', label: 'Servicios', desc: 'Cada servicio y su ficha completa.' }
+    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Texto legal de términos de uso.' }
   ];
 
   async componentDidMount() {
-    const [cms, contentModel] = await Promise.all([import('./cms.js'), import('./content-model.js')]);
-    this.setState({ cms, contentModel });
+    const cms = await import('./cms.js');
+    this.setState({ cms });
     cms.onAuthStateChanged(cms.auth, async (user) => {
       this.setState({ user, authChecked: true });
-      if (user) {
-        await this.migrateLegacyContent();
-        this.loadPage(this.state.page);
-      }
+      if (user) this.loadPage(this.state.page);
     });
-  }
-
-  async migrateLegacyContent() {
-    const cms = this.state.cms;
-    if (!cms) return;
-    try {
-      const [legacyStore, legacyLearn] = await Promise.all([
-        cms.getPageContent('tienda').catch(() => ({})),
-        cms.getPageContent('aprende').catch(() => ({}))
-      ]);
-      const store = {
-        categories: legacyStore.categories?.length ? legacyStore.categories : this.DEFAULT_TIENDA.categories,
-        products: legacyStore.products?.length ? legacyStore.products : this.DEFAULT_TIENDA.products
-      };
-      const learn = {};
-      Object.keys(this.DEFAULT_APRENDE).forEach((key) => { learn[key] = legacyLearn[key]?.length ? legacyLearn[key] : this.DEFAULT_APRENDE[key]; });
-      const migrations = {
-        categories: store.categories.map((item, order) => ({ ...item, subcategories: (item.subcategories || []).map((sub) => typeof sub === 'string' ? sub : sub.name).filter(Boolean), status: item.status || 'Publicado', order })),
-        products: store.products.map((item, order) => ({ ...item, shortDescription: item.shortDescription || item.desc || '', status: item.status === 'Borrador' ? 'Borrador' : 'Publicado', order })),
-        courses: learn.cursos.map((item, order) => ({ ...item, description: item.description || item.desc || '', status: item.status || 'Publicado', order })),
-        workshops: learn.talleres.map((item, order) => ({ ...item, date: item.date || item.dateLevel || '', capacity: item.capacity || item.badge || '', description: item.description || item.desc || '', status: item.status || 'Publicado', order })),
-        resources: learn.gratis.map((item, order) => ({ ...item, status: item.status || 'Publicado', order })),
-        posts: learn.blog.map((item, order) => ({ ...item, status: item.status || 'Publicado', order })),
-        essentials: learn.esenciales.map((item, order) => ({ ...item, description: item.description || item.desc || '', status: item.status || 'Publicado', order })),
-        communities: learn.comunidad.map((item, order) => ({ ...item, description: item.description || item.desc || '', status: item.status || 'Publicado', order })),
-        services: this.defaultServices().map((item, order) => ({ ...item, status: 'Publicado', order }))
-      };
-      for (const [type, items] of Object.entries(migrations)) {
-        const current = await cms.getEntities(type, { includeDrafts: true });
-        if (!current.length && items.length) await cms.saveEntities(type, items);
-      }
-    } catch (error) {
-      console.error('La migración inicial del CMS no pudo completarse.', error);
-      this.setState({ error: 'El CMS abrió, pero no pudo preparar automáticamente todo el contenido anterior. No se reemplazó ningún dato.' });
-    }
-  }
-
-  defaultServices() {
-    return [
-      { id: 'rotulacion', slug: 'rotulacion', name: 'Rotulación', shortDescription: 'Rótulos y letreros pintados a mano para fachadas, vidrieras, vehículos y espacios comerciales.', features: ['Fachadas','Vidrieras','Vehículos','Señalética interior'], priceNote: 'Desde RD$4,500' },
-      { id: 'personalizados', slug: 'personalizados', name: 'Personalizados', shortDescription: 'Piezas hechas a mano con nombres, frases y detalles a medida para regalar o conservar.', features: ['Cuadros','Bandejas','Cajas','Llaveros'], priceNote: 'Desde RD$500' },
-      { id: 'packaging', slug: 'packaging', name: 'Packaging', shortDescription: 'Diseño y rotulado de empaques para marcas y pequeños negocios que buscan una presentación distinta.', features: ['Cajas de producto','Etiquetas','Bolsas','Tarjetas de agradecimiento'], priceNote: 'Desde RD$150 por unidad' },
-      { id: 'souvenirs', slug: 'souvenirs', name: 'Souvenirs', shortDescription: 'Detalles personalizados en cantidad para bodas, cumpleaños y eventos corporativos.', features: ['Bodas','Cumpleaños','Baby showers','Eventos corporativos'], priceNote: 'Desde RD$180 por unidad' }
-    ];
   }
 
   async loadPage(pageId) {
     this.setState({ page: pageId, saved: false, error: '' });
-    if (pageId.startsWith('entity:')) {
-      const entityType = pageId.slice(7);
-      this.setState({ entityType, entityLoading: true, selectedEntityId: null });
-      try {
-        const entityItems = await this.state.cms.getEntities(entityType, { includeDrafts: true });
-        this.setState({ entityItems, entityLoading: false });
-      } catch (e) {
-        this.setState({ entityItems: [], entityLoading: false, error: 'No se pudieron cargar los registros individuales. Revisa las reglas de Firebase.' });
-      }
-      return;
-    }
-    if (this.state.contentModel && this.state.contentModel.PAGE_SCHEMAS[pageId]) {
-      let data = {};
-      try { data = await this.state.cms.getPageContent(pageId); }
-      catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
-      const defaults = this.state.contentModel.pageDefaults(this.state.contentModel.PAGE_SCHEMAS[pageId]);
-      this.setState({ genericPageData: { ...defaults, ...data }, genericPageLoaded: pageId });
-      return;
-    }
     if (pageId === 'inicio') {
       let data = {};
       try { data = await this.state.cms.getPageContent('inicio'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
@@ -672,118 +519,6 @@ class Component extends DCLogic {
       try { data = await this.state.cms.getPageContent('sobremi'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       this.setState({ sobremiData: { featuredImageUrl: data.featuredImageUrl || '', heroImageUrl: data.heroImageUrl || '' }, sobremiLoaded: true });
     }
-  }
-
-  updateGenericField(key, value) {
-    this.setState({ genericPageData: { ...this.state.genericPageData, [key]: value }, saved: false });
-  }
-
-  async uploadGenericField(field, file) {
-    if (!file) return;
-    const marker = `generic:${field.key}`;
-    this.setState({ uploading: marker });
-    try {
-      const uploader = field.type === 'file' ? this.state.cms.uploadFile : field.type === 'video' ? this.state.cms.uploadVideo : this.state.cms.uploadImage;
-      const url = await uploader(`content-files/${this.state.page}`, file);
-      this.updateGenericField(field.key, url);
-    } finally { this.setState({ uploading: null }); }
-  }
-
-  normalizeEditorValue(field, value) {
-    if (['lines', 'relations', 'images'].includes(field.type)) return Array.isArray(value) ? value.join('\n') : (value || '');
-    if (['faqs', 'modules', 'testimonials'].includes(field.type)) {
-      if (!Array.isArray(value)) return value || '';
-      return value.map((item) => Object.values(item).filter((part) => part !== undefined && part !== null).join(' | ')).join('\n');
-    }
-    return value ?? '';
-  }
-
-  parseEditorValue(field, value) {
-    if (['lines', 'relations', 'images'].includes(field.type)) return String(value || '').split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-    if (field.type === 'faqs') return String(value || '').split(/\r?\n/).map((line) => { const [q, ...rest] = line.split('|'); return { q: (q || '').trim(), a: rest.join('|').trim() }; }).filter((item) => item.q || item.a);
-    if (field.type === 'modules') return String(value || '').split(/\r?\n/).map((line, index) => { const [title, ...rest] = line.split('|'); return { n: index + 1, title: (title || '').trim(), desc: rest.join('|').trim() }; }).filter((item) => item.title || item.desc);
-    if (field.type === 'testimonials') return String(value || '').split(/\r?\n/).map((line) => { const [quote, ...rest] = line.split('|'); return { quote: (quote || '').trim(), author: rest.join('|').trim() }; }).filter((item) => item.quote || item.author);
-    if (field.type === 'number') return Number(value || 0);
-    return value;
-  }
-
-  editorField(field, value, onChange, uploadScope) {
-    const type = field.type || 'text';
-    const isRichtext = type === 'richtext';
-    const isMedia = ['image', 'file', 'video'].includes(type);
-    const isSelect = type === 'select' || type === 'status';
-    const isGallery = type === 'images';
-    const isTextarea = ['textarea', 'lines', 'relations', 'faqs', 'modules', 'testimonials'].includes(type);
-    const options = type === 'status' ? ['Borrador', 'Publicado', 'Archivado'] : (field.options || []);
-    return {
-      ...field, value: this.normalizeEditorValue(field, value),
-      isRichtext, isMedia, isImage: type === 'image', isSelect, isTextarea, isGallery,
-      isText: !isRichtext && !isMedia && !isSelect && !isTextarea && !isGallery,
-      inputType: type === 'number' ? 'number' : type === 'date' ? 'date' : 'text',
-      options, aspect: field.aspect || '1/1', accept: type === 'image' ? 'image/*' : type === 'video' ? 'video/*' : '*/*',
-      hasValue: !!value, uploading: this.state.uploading === uploadScope,
-      galleryItems: (Array.isArray(value) ? value : []).map((url) => ({ url })),
-      onChange: (e) => onChange(this.parseEditorValue(field, e.target.value)),
-      dangerousHtml: { __html: isRichtext ? (value || '') : '' },
-      onInput: (e) => onChange(this.state.cms.sanitizeRichHtml(e.currentTarget.innerHTML)),
-      onBold: (e) => { e.preventDefault(); document.execCommand('bold'); },
-      onItalic: (e) => { e.preventDefault(); document.execCommand('italic'); },
-      onH2: (e) => { e.preventDefault(); document.execCommand('formatBlock', false, 'h2'); },
-      onList: (e) => { e.preventDefault(); document.execCommand('insertUnorderedList'); },
-      onLink: (e) => { e.preventDefault(); const url = window.prompt('Pega el enlace completo'); if (url) document.execCommand('createLink', false, url); },
-    };
-  }
-
-  addEntity() {
-    const type = this.state.entityType;
-    const id = `${type.slice(0, 3)}-${Date.now()}`;
-    const nameKey = type === 'resources' || type === 'posts' ? 'title' : 'name';
-    const item = { id, [nameKey]: 'Nuevo contenido', status: 'Borrador', order: this.state.entityItems.length };
-    this.setState({ entityItems: [...this.state.entityItems, item], selectedEntityId: id, saved: false });
-  }
-
-  updateSelectedEntity(key, value) {
-    const items = this.state.entityItems.map((item) => item.id === this.state.selectedEntityId ? { ...item, [key]: value } : item);
-    this.setState({ entityItems: items, saved: false });
-  }
-
-  async uploadEntityField(field, file) {
-    if (!file) return;
-    const marker = `entity:${this.state.selectedEntityId}:${field.key}`;
-    this.setState({ uploading: marker });
-    try {
-      const uploader = field.type === 'file' ? this.state.cms.uploadFile : this.state.cms.uploadImage;
-      const url = await uploader(`content-files/${this.state.entityType}/${this.state.selectedEntityId}`, file);
-      this.updateSelectedEntity(field.key, url);
-    } finally { this.setState({ uploading: null }); }
-  }
-
-  async uploadEntityGallery(field, files) {
-    const selected = this.state.entityItems.find((item) => item.id === this.state.selectedEntityId);
-    const existing = Array.isArray(selected?.[field.key]) ? selected[field.key] : [];
-    const incoming = Array.from(files || []);
-    if (!incoming.length) return;
-    const marker = `entity:${this.state.selectedEntityId}:${field.key}`;
-    this.setState({ uploading: marker });
-    try {
-      const urls = [];
-      for (const file of incoming) urls.push(await this.state.cms.uploadImage(`content-files/${this.state.entityType}/${this.state.selectedEntityId}/${field.key}`, file));
-      this.updateSelectedEntity(field.key, [...existing, ...urls]);
-    } finally { this.setState({ uploading: null }); }
-  }
-
-  async saveCurrentEntity() {
-    const item = this.state.entityItems.find((entry) => entry.id === this.state.selectedEntityId);
-    if (!item) return;
-    await this.state.cms.createContentSnapshot(`${this.state.entityType}:${item.id}`, item);
-    await this.state.cms.saveEntity(this.state.entityType, item.id, item);
-    this.setState({ saved: true });
-  }
-
-  async archiveCurrentEntity() {
-    if (!this.state.selectedEntityId || !window.confirm('¿Archivar este contenido? Dejará de mostrarse públicamente.')) return;
-    await this.state.cms.archiveEntity(this.state.entityType, this.state.selectedEntityId);
-    this.updateSelectedEntity('status', 'Archivado');
   }
 
   handleLogin = async () => {
@@ -966,16 +701,11 @@ class Component extends DCLogic {
   handleSave = async () => {
     this.setState({ saving: true, saved: false, error: '' });
     const s = this.state;
-    const pageSchema = s.contentModel && s.contentModel.PAGE_SCHEMAS[s.page];
     try {
-      if (s.contentModel && s.contentModel.PAGE_SCHEMAS[s.page]) {
-        await s.cms.createContentSnapshot(`pagina:${s.page}`, s.genericPageData);
-        await s.cms.savePageContent(s.page, s.genericPageData);
-      }
-      if (!pageSchema && s.page === 'inicio') await s.cms.savePageContent('inicio', s.content);
-      if (!pageSchema && s.page === 'tienda' && s.tiendaData) await s.cms.savePageContent('tienda', s.tiendaData);
-      if (!pageSchema && s.page === 'aprende' && s.aprendeData) await s.cms.savePageContent('aprende', s.aprendeData);
-      if (!pageSchema && s.page === 'sobremi' && s.sobremiData) await s.cms.savePageContent('sobremi', s.sobremiData);
+      if (s.page === 'inicio') await s.cms.savePageContent('inicio', s.content);
+      if (s.page === 'tienda') await s.cms.savePageContent('tienda', s.tiendaData);
+      if (s.page === 'aprende') await s.cms.savePageContent('aprende', s.aprendeData);
+      if (s.page === 'sobremi') await s.cms.savePageContent('sobremi', s.sobremiData);
       this.setState({ saved: true });
     } catch (e) {
       console.error('No se pudo guardar el contenido.', e);
@@ -1029,41 +759,6 @@ class Component extends DCLogic {
     const currentPage = this.pageList.find((p) => p.id === s.page);
 
     const fields = [];
-    const pageSchema = s.contentModel && s.contentModel.PAGE_SCHEMAS[s.page];
-    const genericGroups = pageSchema ? pageSchema.groups.map((group) => ({
-      label: group.label,
-      fields: group.fields.map((field) => this.editorField(
-        field,
-        s.genericPageData[field.key] !== undefined ? s.genericPageData[field.key] : field.default,
-        (value) => this.updateGenericField(field.key, value),
-        `generic:${field.key}`
-      )).map((field) => ({ ...field, onUpload: (e) => this.uploadGenericField(field, e.target.files[0]) }))
-    })) : [];
-
-    const entitySchema = s.contentModel && s.contentModel.ENTITY_SCHEMAS[s.entityType];
-    const entityCards = (s.entityItems || []).map((item) => ({
-      id: item.id,
-      name: item.name || item.title || 'Sin título',
-      status: item.status || 'Borrador',
-      orderLabel: `Orden ${Number(item.order || 0) + 1}`,
-      border: item.id === s.selectedEntityId ? '#F65091' : '#FFFFFF',
-      onSelect: () => this.setState({ selectedEntityId: item.id })
-    }));
-    const selectedRawEntity = (s.entityItems || []).find((item) => item.id === s.selectedEntityId);
-    const selectedEntity = selectedRawEntity && entitySchema ? {
-      ...selectedRawEntity,
-      name: selectedRawEntity.name || selectedRawEntity.title || 'Nuevo contenido',
-      fields: entitySchema.fields.map((field) => this.editorField(
-        field,
-        selectedRawEntity[field.key],
-        (value) => this.updateSelectedEntity(field.key, value),
-        `entity:${selectedRawEntity.id}:${field.key}`
-      )).map((field) => ({
-        ...field,
-        onUpload: (e) => this.uploadEntityField(field, e.target.files[0]),
-        onGalleryUpload: (e) => this.uploadEntityGallery(field, e.target.files)
-      }))
-    } : null;
 
     let tiendaCategories = [], tiendaProducts = [], categoryNames = [];
     if (s.page === 'tienda' && s.tiendaData) {
@@ -1143,13 +838,8 @@ class Component extends DCLogic {
       loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
       onLogout: this.handleLogout,
       pages, currentPageLabel: currentPage ? currentPage.label : '', currentPageDesc: currentPage ? currentPage.desc : '',
-      isComingSoon: false,
-      isGenericPage: !!pageSchema,
-      genericGroups,
-      isEntityPage: s.page.startsWith('entity:'), entityCards, selectedEntity,
-      onAddEntity: () => this.addEntity(), closeEntity: () => this.setState({ selectedEntityId: null }),
-      saveSelectedEntity: () => this.saveCurrentEntity(), archiveEntity: () => this.archiveCurrentEntity(),
-      isSobremiPage: false,
+      isComingSoon: s.page === 'contacto' || s.page === 'privacidad' || s.page === 'terminos',
+      isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
       onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),
       onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),
@@ -1166,7 +856,7 @@ class Component extends DCLogic {
       onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),
       onAprendeBannerRemove: () => this.removeAprendeBanner(),
       aprendeBannerUploading: s.uploading === ('aprendeBanner' + s.aprendeTab),
-      isInicioPage: false, fields,
+      isInicioPage: s.page === 'inicio', fields,
       inicioPhotoGroups: this.INICIO_PHOTO_GROUPS.map((g) => ({
         label: g.label,
         photos: g.fields.map((p) => ({
@@ -1183,11 +873,11 @@ class Component extends DCLogic {
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),
       videoUploading: s.uploading === 'heroVideo',
       isPageLoading: (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading),
-      isTiendaPage: false, tiendaCategories, tiendaProducts, selectedProduct,
+      isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Activo', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '' }),
-      isAprendePage: false, aprendeTabs, aprendeItems,
+      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems,
       onAddAprendeItem: () => {
         const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', desc: '', href: '#', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
@@ -1195,7 +885,7 @@ class Component extends DCLogic {
       onSave: this.handleSave, saving: s.saving,
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
-      hasSaveAction: !!pageSchema
+      hasSaveAction: s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi'
     };
   }
 }

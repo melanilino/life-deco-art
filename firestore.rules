@@ -7,16 +7,5 @@ service cloud.firestore {
       allow read: if true;
       allow write: if request.auth != null;
     }
-
-    // Registros individuales administrados desde el CMS.
-    match /cmsEntities/{entityType}/items/{itemId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-
-    // Historial de recuperación: nunca es público.
-    match /cmsHistory/{snapshotId} {
-      allow read, write: if request.auth != null;
-    }
   }
 }
