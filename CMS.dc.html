@@ -175,32 +175,15 @@ x-dc{display:none!important}
     </sc-if>
 
     <sc-if value="{{ isLegalPage }}" hint-placeholder-val="{{ false }}">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Información general</div>
-      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Última actualización</label>
-        <input type="text" value="{{ legalUpdatedAt }}" onChange="{{ onLegalUpdatedAt }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
-      </div>
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Contenido legal</div>
-      <div style="background:#FFFFFF;border-radius:8px;padding:20px;margin-bottom:24px;">
-        <div style="border:1px solid #E4DCCB;border-radius:4px;overflow:hidden;">
-          <div style="display:flex;gap:4px;padding:6px 8px;border-bottom:1px solid #E4DCCB;background:#F9F6EF;">
-            <button onMouseDown="{{ onLegalBold }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;font-weight:600;cursor:pointer;">B</button>
-            <button onMouseDown="{{ onLegalItalic }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;font-style:italic;cursor:pointer;">I</button>
-            <button onMouseDown="{{ onLegalHeading }}" style="width:32px;height:28px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;font-size:11px;font-weight:600;cursor:pointer;">H2</button>
-            <button onMouseDown="{{ onLegalList }}" style="width:28px;height:28px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;font-weight:600;cursor:pointer;">•</button>
-            <button onMouseDown="{{ onLegalOrderedList }}" style="width:30px;height:28px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;font-size:11px;font-weight:600;cursor:pointer;">1.</button>
-            <button onMouseDown="{{ onLegalLink }}" style="height:28px;padding:0 8px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;color:#F65091;cursor:pointer;">Link</button>
-            <button onMouseDown="{{ onLegalUnlink }}" style="height:28px;padding:0 8px;border:1px solid #E4DCCB;background:#FFFFFF;border-radius:3px;color:#8B795E;cursor:pointer;">Quitar link</button>
-          </div>
-          <div contentEditable="true" onInput="{{ onLegalBodyInput }}" dangerouslySetInnerHTML="{{ legalBodyHtml }}" style="padding:14px;min-height:420px;font-family:Montserrat;font-size:13px;line-height:1.75;outline:none;"></div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Información de la página</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;max-width:680px;">
+        <div style="display:grid;grid-template-columns:180px 1fr;gap:12px 18px;font-size:13px;line-height:1.6;">
+          <div style="color:#8B795E;">Estado</div><div style="color:#2E7D32;font-weight:500;">Publicada</div>
+          <div style="color:#8B795E;">Última actualización</div><div style="color:#000000;">{{ legalUpdatedAt }}</div>
+          <div style="color:#8B795E;">Correo de contacto</div><div style="color:#000000;">hola@lifedecoart.com</div>
         </div>
-      </div>
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Vista previa del contenido</div>
-      <div style="background:#FFFFFF;border-radius:8px;padding:28px;max-width:760px;">
-        <div style="font-size:22px;font-weight:500;color:#000000;margin-bottom:8px;">{{ legalPreviewTitle }}</div>
-        <div style="font-size:12px;color:#8B795E;margin-bottom:22px;">Última actualización: {{ legalUpdatedAt }}</div>
-        <div dangerouslySetInnerHTML="{{ legalBodyHtml }}" style="font-size:13px;color:#4A4238;line-height:1.7;"></div>
-        <a href="{{ legalUrl }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:6px;color:#F65091;font-size:13px;text-decoration:none;border-bottom:1px solid #F65091;padding-bottom:2px;">Abrir página pública</a>
+        <div style="border-top:1px solid #E4DCCB;margin-top:20px;padding-top:18px;font-size:13px;color:#5C5142;line-height:1.7;">El contenido legal se modifica directamente en la web para evitar cambios accidentales desde el CMS.</div>
+        <a href="{{ legalUrl }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;color:#F65091;font-size:13px;text-decoration:none;border-bottom:1px solid #F65091;padding-bottom:2px;">Abrir {{ legalLinkLabel }}</a>
       </div>
     </sc-if>
 
@@ -484,7 +467,6 @@ class Component extends DCLogic {
     uploading: null, expanded: {},
     configData: null, configLoaded: false, configLoading: false,
     contactData: null, contactLoaded: false, contactLoading: false,
-    legalData: null, legalLoadedPage: null, legalLoading: false,
     inicioProductOptions: []
   };
 
@@ -502,36 +484,6 @@ class Component extends DCLogic {
     { key: 'closingText', label: 'Texto de cierre', type: 'textarea', default: 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.' },
     { key: 'whatsappLink', label: 'Link de WhatsApp', type: 'text', default: 'https://wa.me/18495390410' }
   ];
-
-  DEFAULT_LEGAL = {
-    privacidad: {
-      updatedAt: 'julio de 2026',
-      intro: 'Tu privacidad es importante para nosotros. Esta política explica qué información recopilamos, cómo la usamos y qué derechos tienes sobre ella.',
-      sections: [
-        { id: 'privacy-info', title: 'Qué información recopilamos', content: `<ul><li>Datos de contacto que nos proporcionas voluntariamente: nombre, correo electrónico, número de teléfono.</li><li>Detalles de personalización de tu pedido (nombres, fechas, frases) necesarios para elaborar tu pieza.</li><li>Información que compartes al escribirnos por WhatsApp, correo o formularios del sitio.</li></ul>` },
-        { id: 'privacy-use', title: 'Cómo usamos tu información', content: `<ul><li>Para procesar y entregar tus pedidos o servicios contratados.</li><li>Para responder tus consultas y coordinar detalles de talleres o cursos.</li><li>Para enviarte novedades solo si te suscribes voluntariamente a nuestra comunidad o newsletter.</li></ul>` },
-        { id: 'privacy-share', title: 'Con quién compartimos tu información', content: `<p>No vendemos ni compartimos tus datos personales con terceros para fines publicitarios. Solo compartimos la información estrictamente necesaria con servicios de envío para completar la entrega de tu pedido.</p>` },
-        { id: 'privacy-protect', title: 'Cómo protegemos tu información', content: `<p>Tomamos medidas razonables para proteger tus datos frente a accesos no autorizados. Sin embargo, ningún medio de transmisión por internet es 100% seguro.</p>` },
-        { id: 'privacy-rights', title: 'Tus derechos', content: `<p>Puedes solicitar en cualquier momento acceder, corregir o eliminar tus datos personales que tengamos almacenados, escribiéndonos directamente.</p>` },
-        { id: 'privacy-changes', title: 'Cambios a esta política', content: `<p>Podemos actualizar esta política ocasionalmente. La fecha de la última actualización se indica al final de esta página.</p>` },
-        { id: 'privacy-contact', title: 'Contacto', content: `<p>Para cualquier consulta sobre esta política, escríbenos a <a href="/contacto">hola@lifedecoart.com</a>.</p>` }
-      ]
-    },
-    terminos: {
-      updatedAt: 'julio de 2026',
-      intro: 'Al realizar un pedido o contratar un servicio con Life Deco Art, aceptas los siguientes términos. Si tienes dudas sobre alguno de ellos, escríbenos antes de confirmar tu compra.',
-      sections: [
-        { id: 'terms-orders', title: 'Pedidos y personalización', content: `<p>Los productos personalizados se elaboran según la información que nos proporciones (nombres, fechas, frases, colores). Es tu responsabilidad verificar que estos datos sean correctos antes de aprobar el diseño final; una vez aprobado, se inicia la producción.</p>` },
-        { id: 'terms-delivery', title: 'Tiempos de entrega', content: `<p>Los tiempos indicados en cada producto son estimados y pueden variar según la temporada, la complejidad de la pieza o pedidos en volumen. Te avisaremos si un pedido requiere más tiempo del previsto.</p>` },
-        { id: 'terms-payments', title: 'Pagos', content: `<p>Para iniciar la producción de un encargo personalizado se solicita un anticipo. El saldo restante se abona antes o al momento de la entrega, según lo acordado.</p>` },
-        { id: 'terms-returns', title: 'Cambios y devoluciones', content: `<p>Por tratarse de piezas hechas a mano y, en muchos casos, personalizadas, no se aceptan devoluciones una vez iniciada o finalizada la producción, salvo defecto de fabricación. Si tu pieza llega dañada, contáctanos dentro de las primeras 48 horas con fotos del producto y el empaque.</p>` },
-        { id: 'terms-property', title: 'Propiedad de los diseños', content: `<p>Los diseños, ilustraciones y piezas de lettering creadas por Life Deco Art son propiedad intelectual del estudio. No está permitida su reproducción o reventa sin autorización previa.</p>` },
-        { id: 'terms-courses', title: 'Cursos y talleres', content: `<p>El acceso a cursos digitales y la participación en talleres presenciales o virtuales es personal e intransferible, salvo que se indique lo contrario para talleres grupales o corporativos.</p>` },
-        { id: 'terms-changes', title: 'Cambios en estos términos', content: `<p>Estos términos pueden actualizarse ocasionalmente. Te recomendamos revisarlos periódicamente. El uso continuo de nuestros servicios implica la aceptación de la versión vigente.</p>` },
-        { id: 'terms-contact', title: 'Contacto', content: `<p>Para cualquier consulta sobre estos términos, escríbenos a <a href="/contacto">hola@lifedecoart.com</a>.</p>` }
-      ]
-    }
-  };
 
   DEFAULT_TIENDA = {
     categories: [
@@ -627,8 +579,8 @@ class Component extends DCLogic {
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
     { id: 'aprende', label: 'Aprende', desc: 'Cursos, talleres, gratis, blog, esenciales y comunidad.' },
     { id: 'contacto', label: 'Contacto', desc: 'Tipos de proyecto disponibles en el formulario.' },
-    { id: 'privacidad', label: 'Política de Privacidad', desc: 'Fecha, introducción y secciones de la política.' },
-    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Fecha, introducción y secciones de los términos.' }
+    { id: 'privacidad', label: 'Política de Privacidad', desc: 'Estado e información de la página legal.' },
+    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Estado e información de la página legal.' }
   ];
 
   async componentDidMount() {
@@ -694,21 +646,6 @@ class Component extends DCLogic {
       data = data || {};
       const defaults = ['Cartel / decoración', 'Papelería de boda', 'Regalo personalizado', 'Taller o clase', 'Otro'];
       this.setState({ contactData: { ...data, projectTypes: (data.projectTypes && data.projectTypes.length) ? data.projectTypes : defaults }, contactLoaded: true, contactLoading: false });
-    } else if (pageId === 'privacidad' || pageId === 'terminos') {
-      this.setState({ legalLoading: true, legalData: null });
-      let data = {};
-      try { data = (await this.state.cms.getPageContent(pageId)) || {}; } catch (e) { this.setState({ error: 'No se pudo cargar el contenido legal.' }); }
-      const defaults = this.DEFAULT_LEGAL[pageId];
-      const sourceSections = (data.sections && data.sections.length) ? data.sections : defaults.sections;
-      const body = data.body ? this.state.cms.sanitizeRichHtml(data.body) : this.composeLegalBody(data.intro || defaults.intro, sourceSections);
-      this.setState({
-        legalData: {
-          updatedAt: data.updatedAt || defaults.updatedAt,
-          body
-        },
-        legalLoadedPage: pageId,
-        legalLoading: false
-      });
     }
   }
 
@@ -748,28 +685,6 @@ class Component extends DCLogic {
     const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || []), 'Nuevo tipo de proyecto'];
     this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false });
   }
-  updateLegalField(key, value) {
-    this.setState({ legalData: { ...this.state.legalData, [key]: value }, saved: false });
-  }
-  escapeLegalText(value) {
-    return String(value || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-  composeLegalBody(intro, sections) {
-    const introHtml = `<p>${this.escapeLegalText(intro)}</p>`;
-    const sectionHtml = (sections || []).map((section) => `<h2>${this.escapeLegalText(section.title)}</h2>${this.state.cms.sanitizeRichHtml(section.content || '')}`).join('');
-    return this.state.cms.sanitizeRichHtml(introHtml + sectionHtml);
-  }
-  applyEditorCommand(command) {
-    document.execCommand(command, false, null);
-  }
-  applyEditorLink() {
-    const url = window.prompt('Pega el enlace completo o una ruta interna.');
-    if (url && /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim())) document.execCommand('createLink', false, url.trim());
-  }
-  applyEditorHeading() {
-    document.execCommand('formatBlock', false, 'h2');
-  }
-
   async uploadConfigFavicon(file) {
     if (!file) return;
     this.setState({ uploading: 'configFavicon' });
@@ -988,14 +903,6 @@ class Component extends DCLogic {
         await s.cms.savePageContent('contacto', { ...s.contactData, projectTypes });
         this.setState({ contactData: { ...s.contactData, projectTypes } });
       }
-      if (s.page === 'privacidad' || s.page === 'terminos') {
-        const legal = s.legalData || {};
-        const body = s.cms.sanitizeRichHtml(legal.body || '');
-        if (!(legal.updatedAt || '').trim() || !body.replace(/<[^>]*>/g, '').trim()) throw new Error('El contenido legal está incompleto.');
-        const next = { updatedAt: legal.updatedAt.trim(), body };
-        await s.cms.savePageContent(s.page, next);
-        this.setState({ legalData: next });
-      }
       this.setState({ saved: true });
     } catch (e) {
       console.error('No se pudo guardar el contenido.', e);
@@ -1157,20 +1064,10 @@ class Component extends DCLogic {
         onRemove: () => this.removeContactType(index)
       })),
       onAddContactType: () => this.addContactType(),
-      isLegalPage: (s.page === 'privacidad' || s.page === 'terminos') && !!s.legalData,
-      legalUpdatedAt: (s.legalData && s.legalData.updatedAt) || '',
-      onLegalUpdatedAt: (e) => this.updateLegalField('updatedAt', e.target.value),
-      legalBodyHtml: { __html: (s.legalData && s.legalData.body) || '' },
-      onLegalBodyInput: (e) => this.updateLegalField('body', s.cms.sanitizeRichHtml(e.currentTarget.innerHTML)),
-      onLegalBold: (e) => { e.preventDefault(); this.applyEditorCommand('bold'); },
-      onLegalItalic: (e) => { e.preventDefault(); this.applyEditorCommand('italic'); },
-      onLegalHeading: (e) => { e.preventDefault(); this.applyEditorHeading(); },
-      onLegalList: (e) => { e.preventDefault(); this.applyEditorCommand('insertUnorderedList'); },
-      onLegalOrderedList: (e) => { e.preventDefault(); this.applyEditorCommand('insertOrderedList'); },
-      onLegalLink: (e) => { e.preventDefault(); this.applyEditorLink(); },
-      onLegalUnlink: (e) => { e.preventDefault(); this.applyEditorCommand('unlink'); },
-      legalPreviewTitle: s.page === 'privacidad' ? 'Política de privacidad' : 'Términos y condiciones',
+      isLegalPage: s.page === 'privacidad' || s.page === 'terminos',
+      legalUpdatedAt: 'Julio de 2026',
       legalUrl: s.page === 'privacidad' ? '/politica-de-privacidad' : '/terminos-y-condiciones',
+      legalLinkLabel: s.page === 'privacidad' ? 'Política de privacidad' : 'Términos y condiciones',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
       onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),
@@ -1227,7 +1124,7 @@ class Component extends DCLogic {
           onChange: (e) => this.updateRecentProduct(position, e.target.value)
         };
       }),
-      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading) || ((s.page === 'privacidad' || s.page === 'terminos') && s.legalLoading),
+      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
@@ -1240,7 +1137,7 @@ class Component extends DCLogic {
       onSave: this.handleSave, saving: s.saving,
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
-      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto' || ((s.page === 'privacidad' || s.page === 'terminos') && !!s.legalData)
+      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto'
     };
   }
 }

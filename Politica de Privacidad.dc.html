@@ -56,12 +56,6 @@ x-dc{display:none!important}
   .legal-wrap { padding: 64px 48px 120px; }
   .legal-title { font-size: 36px; }
   .legal-title span { font-size: 50px; }
-  .legal-section-body { font-size:15px;line-height:1.8;color:#4A4238;font-weight:300; }
-  .legal-section-body p { margin:0; }
-  .legal-section-body ul, .legal-section-body ol { margin:0;padding-left:20px; }
-  .legal-document { font-size:15px;line-height:1.8;color:#4A4238;font-weight:300;display:flex;flex-direction:column;gap:14px; }
-  .legal-document h2 { font-size:18px;font-weight:500;color:#000000;margin:22px 0 0; }
-  .legal-document p, .legal-document ul, .legal-document ol { margin:0; }
   @media (max-width: 700px) {
     .legal-wrap { padding: 36px 26px 40px; }
     .legal-title { font-size: 26px; }
@@ -83,19 +77,11 @@ x-dc{display:none!important}
 
     <div class="legal-kicker" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Legal</div>
     <h1 data-cms-html="title" class="legal-title" style="font-weight:400;color:#000000;margin:0 0 12px;">Política de <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">privacidad</span></h1>
-    <p data-cms-text="updatedAtLabel" class="legal-date" style="font-size:13px;color:#8B795E;font-weight:300;margin:0 0 48px;">Última actualización: {{ updatedAt }}</p>
+    <p data-cms-text="updatedAtLabel" class="legal-date" style="font-size:13px;color:#8B795E;font-weight:300;margin:0 0 48px;">Última actualización: julio de 2026</p>
 
-    <sc-if value="{{ useCmsBody }}" hint-placeholder-val="{{ false }}"><div class="legal-document" dangerouslySetInnerHTML="{{ bodyHtml }}"></div></sc-if>
-    <sc-if value="{{ useLegacyBody }}" hint-placeholder-val="{{ true }}">
-    <p data-cms-text="intro" class="legal-intro" style="font-size:15px;line-height:1.85;color:#4A4238;font-weight:300;margin:0 0 48px;">{{ intro }}</p>
+    <p data-cms-text="intro" class="legal-intro" style="font-size:15px;line-height:1.85;color:#4A4238;font-weight:300;margin:0 0 48px;">Tu privacidad es importante para nosotros. Esta política explica qué información recopilamos, cómo la usamos y qué derechos tienes sobre ella.</p>
 
     <div data-cms-html="body" class="legal-sections" style="display:flex;flex-direction:column;gap:36px;">
-      <sc-if value="{{ useCmsSections }}" hint-placeholder-val="{{ false }}">
-        <sc-for list="{{ sections }}" as="section" hint-placeholder-count="7">
-          <div class="legal-section"><h2 style="font-size:18px;font-weight:500;color:#000000;margin:0 0 10px;">{{ section.title }}</h2><div class="legal-section-body" dangerouslySetInnerHTML="{{ section.dangerousHtml }}"></div></div>
-        </sc-for>
-      </sc-if>
-      <sc-if value="{{ useStaticSections }}" hint-placeholder-val="{{ true }}">
       <div class="legal-section">
         <h2 style="font-size:18px;font-weight:500;color:#000000;margin:0 0 10px;">Qué información recopilamos</h2>
         <ul style="font-size:15px;line-height:1.8;color:#4A4238;font-weight:300;margin:0;padding-left:20px;">
@@ -132,41 +118,12 @@ x-dc{display:none!important}
         <h2 style="font-size:18px;font-weight:500;color:#000000;margin:0 0 10px;">Contacto</h2>
         <p style="font-size:15px;line-height:1.8;color:#4A4238;font-weight:300;margin:0;">Para cualquier consulta sobre esta política, escríbenos a <a href="/contacto" style="text-decoration:underline;">hola@lifedecoart.com</a>.</p>
       </div>
-      </sc-if>
     </div>
-    </sc-if>
 
   </div>
 </section>
 
 <dc-import name="Footer" hint-size="100%,320px"></dc-import>
 </x-dc>
-<script type="text/x-dc" data-dc-script>
-class Component extends DCLogic {
-  state = { content: null };
-  async componentDidMount() {
-    try {
-      const cms = await import('/cms.js');
-      const content = (await cms.getPageContent('privacidad')) || {};
-      const sections = Array.isArray(content.sections) ? content.sections.map((section) => ({ ...section, content: cms.sanitizeRichHtml(section.content || '') })) : [];
-      this.setState({ content: { ...content, body: cms.sanitizeRichHtml(content.body || ''), sections } });
-    } catch (_) {}
-  }
-  renderVals() {
-    const c = this.state.content || {};
-    const sections = Array.isArray(c.sections) ? c.sections.filter((section) => section && section.title && section.content) : [];
-    return {
-      updatedAt: c.updatedAt || 'julio de 2026',
-      intro: c.intro || 'Tu privacidad es importante para nosotros. Esta política explica qué información recopilamos, cómo la usamos y qué derechos tienes sobre ella.',
-      bodyHtml: { __html: c.body || '' },
-      useCmsBody: !!c.body,
-      useLegacyBody: !c.body,
-      sections: sections.map((section) => ({ title: section.title, dangerousHtml: { __html: section.content } })),
-      useCmsSections: sections.length > 0,
-      useStaticSections: sections.length === 0
-    };
-  }
-}
-</script>
 </body>
 </html>
