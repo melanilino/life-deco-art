@@ -130,7 +130,7 @@ x-dc{display:none!important}
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="width:160px;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiHeroUrl }}" placeholder="foto de perfil"></image-slot></div>
-          <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
+          <label style="display:inline-flex;align-items:center;gap:6px;height:40px;box-sizing:border-box;padding:0 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
             Subir imagen
             <input type="file" accept="image/*" onChange="{{ onSobremiHeroUpload }}" style="display:none;">
           </label>
@@ -171,23 +171,23 @@ x-dc{display:none!important}
             Subir / reemplazar video
             <input type="file" accept="video/*" onChange="{{ onVideoUpload }}" style="display:none;">
           </label>
-          <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onVideoRemove }}" title="Eliminar video" aria-label="Eliminar video" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;margin-left:8px;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+          <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onVideoRemove }}" title="Eliminar video" aria-label="Eliminar video" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;margin-left:8px;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ videoUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:10px;">Subiendo…</span></sc-if>
         </div>
-        <sc-for list="{{ inicioPhotoGroups }}" as="grp" hint-placeholder-count="4">
+        <sc-for list="{{ inicioPhotoGroups }}" as="grp" hint-placeholder-count="3">
           <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">{{ grp.label }}</div>
           <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+            <div style="display:grid;grid-template-columns:{{ grp.columns }};gap:14px;">
               <sc-for list="{{ grp.photos }}" as="ph" hint-placeholder-count="3">
                 <div>
-                  <div style="width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot></div>
+                  <div style="width:100%;aspect-ratio:{{ grp.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot></div>
                   <div style="padding-top:10px;">
                     <div style="font-size:12px;color:#5C5142;margin-bottom:8px;">{{ ph.label }}</div>
-                    <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;">
+                    <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
                       Subir
                       <input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;">
                     </label>
-                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                   </div>
                 </div>
@@ -211,9 +211,19 @@ x-dc{display:none!important}
             </sc-for>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:16px;margin-top:12px;">
-          <button onClick="{{ onSave }}" disabled="{{ saving }}" style="padding:12px 22px;border:0;border-radius:4px;background:#F65091;color:#FFFFFF;font-family:Montserrat;font-size:13px;font-weight:600;cursor:pointer;">{{ saveBtnText }}</button>
-          <sc-if value="{{ showSaved }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#2E7D32;">Guardado ✓</span></sc-if>
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">{{ inicioWorkshopGroup.label }}</div>
+        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+          <sc-for list="{{ inicioWorkshopGroup.photos }}" as="ph" hint-placeholder-count="1">
+            <div style="max-width:560px;">
+              <div style="width:100%;aspect-ratio:{{ inicioWorkshopGroup.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot></div>
+              <div style="padding-top:10px;">
+                <div style="font-size:12px;color:#5C5142;margin-bottom:8px;">{{ ph.label }}</div>
+                <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">Subir<input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;"></label>
+                <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+                <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
+              </div>
+            </div>
+          </sc-for>
         </div>
       </div>
     </sc-if>
@@ -754,22 +764,22 @@ class Component extends DCLogic {
     }).catch(() => { this.setState({ uploading: null }); });
   }
   INICIO_PHOTO_GROUPS = [
-    { label: 'Conóceme', fields: [{ key: 'melaniPhotoUrl', label: 'Melani en su estudio' }] },
-    { label: 'Servicios', fields: [
+    { label: 'Conóceme', aspect: '4/5', columns: 'minmax(0,280px)', fields: [{ key: 'melaniPhotoUrl', label: 'Melani en su estudio' }] },
+    { label: 'Servicios', aspect: '4/5', columns: 'repeat(3,minmax(0,1fr))', fields: [
       { key: 'servPersonalizadosUrl', label: 'Personalizados' },
       { key: 'servRotulacionUrl', label: 'Rotulación' },
       { key: 'servPackagingUrl', label: 'Packaging' },
       { key: 'servSouvenirsUrl', label: 'Souvenirs' },
     ] },
-    { label: 'Cómo trabajamos', fields: [
+    { label: 'Cómo trabajamos', aspect: '16/9', columns: 'repeat(2,minmax(0,1fr))', fields: [
       { key: 'cwCuentameUrl', label: 'Cuéntame' },
       { key: 'cwBocetoUrl', label: 'Boceto' },
       { key: 'cwTrazoUrl', label: 'Trazo' },
       { key: 'cwFinalUrl', label: 'Entrega final' },
     ] },
-    { label: 'Taller destacado', fields: [{ key: 'cursoSpotlightUrl', label: 'Taller destacado' }] },
   ];
-  INICIO_PHOTO_FIELDS = [].concat(...this.INICIO_PHOTO_GROUPS.map(g => g.fields));
+  INICIO_WORKSHOP_GROUP = { label: 'Taller destacado', aspect: '4/3', fields: [{ key: 'cursoSpotlightUrl', label: 'Taller destacado' }] };
+  INICIO_PHOTO_FIELDS = [].concat(...this.INICIO_PHOTO_GROUPS.map(g => g.fields), this.INICIO_WORKSHOP_GROUP.fields);
   handleInicioPhotoUpload(key, file) {
     if (!file) return;
     this.setState({ uploading: 'inicioPhoto_' + key });
@@ -993,7 +1003,7 @@ class Component extends DCLogic {
       aprendeBannerUploading: s.uploading === ('aprendeBanner' + s.aprendeTab),
       isInicioPage: s.page === 'inicio', fields,
       inicioPhotoGroups: this.INICIO_PHOTO_GROUPS.map((g) => ({
-        label: g.label,
+        label: g.label, aspect: g.aspect, columns: g.columns,
         photos: g.fields.map((p) => ({
           key: p.key, label: p.label,
           url: (s.content && s.content[p.key]) || '',
@@ -1003,6 +1013,17 @@ class Component extends DCLogic {
           onRemove: () => this.removeInicioPhoto(p.key),
         })),
       })),
+      inicioWorkshopGroup: {
+        label: this.INICIO_WORKSHOP_GROUP.label, aspect: this.INICIO_WORKSHOP_GROUP.aspect,
+        photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({
+          key: p.key, label: p.label,
+          url: (s.content && s.content[p.key]) || '',
+          hasImage: !!(s.content && s.content[p.key]),
+          uploading: s.uploading === ('inicioPhoto_' + p.key),
+          onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),
+          onRemove: () => this.removeInicioPhoto(p.key),
+        }))
+      },
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),
