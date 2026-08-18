@@ -205,7 +205,9 @@ class Component extends DCLogic {
     setTimeout(sweep, 1200);
     try {
       const cms = await import('/cms.js');
-      this.setState({ content: await cms.getPageContent('contacto') });
+      const content = (await cms.getPageContent('contacto')) || {};
+      const projectTypes = Array.isArray(content.projectTypes) && content.projectTypes.length ? content.projectTypes : ['Cartel / decoración', 'Papelería de boda', 'Regalo personalizado', 'Taller o clase', 'Otro'];
+      this.setState({ content, form: { ...this.state.form, type: projectTypes[0] } });
     } catch (_) {}
   }
   state = {

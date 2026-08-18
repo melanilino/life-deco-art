@@ -156,6 +156,42 @@ x-dc{display:none!important}
       </div>
     </sc-if>
 
+    <sc-if value="{{ isContactoPage }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Tipos de proyecto</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+        <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Estas opciones aparecen en el selector del formulario de contacto, en el mismo orden mostrado aquí.</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ contactProjectTypes }}" as="type" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <input type="text" value="{{ type.value }}" onChange="{{ type.onChange }}" style="flex:1;box-sizing:border-box;padding:11px 12px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
+              <span onClick="{{ type.onMoveUp }}" title="Mover arriba" aria-label="Mover arriba" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;">↑</span>
+              <span onClick="{{ type.onMoveDown }}" title="Mover abajo" aria-label="Mover abajo" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;">↓</span>
+              <span onClick="{{ type.onRemove }}" title="Eliminar opción" aria-label="Eliminar opción" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span>
+            </div>
+          </sc-for>
+        </div>
+        <span onClick="{{ onAddContactType }}" style="display:inline-block;font-size:13px;color:#F65091;cursor:pointer;margin-top:16px;">+ Agregar tipo de proyecto</span>
+      </div>
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Formulario</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
+        <div style="font-size:13px;color:#5C5142;line-height:1.7;">El formulario está conectado con Google Apps Script. Esta sección solo administra sus tipos de proyecto y no cambia la integración.</div>
+        <a href="/contacto" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;color:#F65091;font-size:13px;text-decoration:none;border-bottom:1px solid #F65091;padding-bottom:2px;">Abrir página de Contacto</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLegalPage }}" hint-placeholder-val="{{ false }}">
+      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Información de la página</div>
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;max-width:680px;">
+        <div style="display:grid;grid-template-columns:180px 1fr;gap:12px 18px;font-size:13px;line-height:1.6;">
+          <div style="color:#8B795E;">Estado</div><div style="color:#2E7D32;font-weight:500;">Publicada</div>
+          <div style="color:#8B795E;">Última actualización</div><div style="color:#000000;">{{ legalUpdatedAt }}</div>
+          <div style="color:#8B795E;">Correo de contacto</div><div style="color:#000000;">hola@lifedecoart.com</div>
+        </div>
+        <div style="border-top:1px solid #E4DCCB;margin-top:20px;padding-top:18px;font-size:13px;color:#5C5142;line-height:1.7;">El contenido legal se modifica directamente en la web para evitar cambios accidentales desde el CMS.</div>
+        <a href="{{ legalUrl }}" target="_blank" rel="noopener" style="display:inline-block;margin-top:14px;color:#F65091;font-size:13px;text-decoration:none;border-bottom:1px solid #F65091;padding-bottom:2px;">Abrir {{ legalLinkLabel }}</a>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isComingSoon }}" hint-placeholder-val="{{ false }}">
       <div style="border: 1px solid #FFFFFF; border-radius: 6px; padding: 40px; color: #8B795E; font-size: 14px; background-color: #FFFFFF">Esta sección se habilita en una próxima etapa.</div>
     </sc-if>
@@ -435,6 +471,7 @@ class Component extends DCLogic {
     sobremiData: null, sobremiLoaded: false,
     uploading: null, expanded: {},
     configData: null, configLoaded: false, configLoading: false,
+    contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: []
   };
 
@@ -546,9 +583,9 @@ class Component extends DCLogic {
     { id: 'sobremi', label: 'Sobre Mí', desc: 'Historia, foto y presentación de la marca.' },
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
     { id: 'aprende', label: 'Aprende', desc: 'Cursos, talleres, gratis, blog, esenciales y comunidad.' },
-    { id: 'contacto', label: 'Contacto', desc: 'Datos de contacto y redes sociales.' },
-    { id: 'privacidad', label: 'Política de Privacidad', desc: 'Texto legal de privacidad del sitio.' },
-    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Texto legal de términos de uso.' }
+    { id: 'contacto', label: 'Contacto', desc: 'Tipos de proyecto disponibles en el formulario.' },
+    { id: 'privacidad', label: 'Política de Privacidad', desc: 'Estado e información de la página legal.' },
+    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Estado e información de la página legal.' }
   ];
 
   async componentDidMount() {
@@ -607,6 +644,13 @@ class Component extends DCLogic {
       let data = {};
       try { data = await this.state.cms.getPageContent('sobremi'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       this.setState({ sobremiData: { featuredImageUrl: data.featuredImageUrl || '', heroImageUrl: data.heroImageUrl || '' }, sobremiLoaded: true });
+    } else if (pageId === 'contacto' && !this.state.contactLoaded) {
+      this.setState({ contactLoading: true });
+      let data = {};
+      try { data = await this.state.cms.getPageContent('contacto'); } catch (e) { this.setState({ error: 'No se pudo cargar la configuración de Contacto.' }); }
+      data = data || {};
+      const defaults = ['Cartel / decoración', 'Papelería de boda', 'Regalo personalizado', 'Taller o clase', 'Otro'];
+      this.setState({ contactData: { ...data, projectTypes: (data.projectTypes && data.projectTypes.length) ? data.projectTypes : defaults }, contactLoaded: true, contactLoading: false });
     }
   }
 
@@ -622,6 +666,29 @@ class Component extends DCLogic {
 
   updateConfigField(key, value) {
     this.setState({ configData: { ...(this.state.configData || {}), [key]: value }, saved: false });
+  }
+  updateContactType(index, value) {
+    const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
+    projectTypes[index] = value;
+    this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false });
+  }
+  moveContactType(index, direction) {
+    const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
+    const target = index + direction;
+    if (target < 0 || target >= projectTypes.length) return;
+    [projectTypes[index], projectTypes[target]] = [projectTypes[target], projectTypes[index]];
+    this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false });
+  }
+  removeContactType(index) {
+    const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
+    if (projectTypes.length <= 1) { this.setState({ error: 'El formulario debe conservar al menos un tipo de proyecto.' }); return; }
+    if (!window.confirm('¿Eliminar este tipo de proyecto?')) return;
+    projectTypes.splice(index, 1);
+    this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false, error: '' });
+  }
+  addContactType() {
+    const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || []), 'Nuevo tipo de proyecto'];
+    this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false });
   }
 
   async uploadConfigFavicon(file) {
@@ -836,6 +903,12 @@ class Component extends DCLogic {
       if (s.page === 'tienda') await s.cms.savePageContent('tienda', s.tiendaData);
       if (s.page === 'aprende') await s.cms.savePageContent('aprende', s.aprendeData);
       if (s.page === 'sobremi') await s.cms.savePageContent('sobremi', s.sobremiData);
+      if (s.page === 'contacto') {
+        const projectTypes = ((s.contactData && s.contactData.projectTypes) || []).map((value) => value.trim()).filter(Boolean);
+        if (!projectTypes.length) throw new Error('Contacto necesita al menos un tipo de proyecto.');
+        await s.cms.savePageContent('contacto', { ...s.contactData, projectTypes });
+        this.setState({ contactData: { ...s.contactData, projectTypes } });
+      }
       this.setState({ saved: true });
     } catch (e) {
       console.error('No se pudo guardar el contenido.', e);
@@ -987,7 +1060,20 @@ class Component extends DCLogic {
       onConfigFloatingNumber: (e) => this.updateConfigField('whatsappFloatingNumber', e.target.value),
       onConfigFloatingMessage: (e) => this.updateConfigField('whatsappInitialMessage', e.target.value),
       onConfigFloatingVisibility: (e) => this.updateConfigField('whatsappFloatingVisible', e.target.value === 'true'),
-      isComingSoon: s.page === 'contacto' || s.page === 'privacidad' || s.page === 'terminos',
+      isComingSoon: false,
+      isContactoPage: s.page === 'contacto' && !!s.contactData,
+      contactProjectTypes: ((s.contactData && s.contactData.projectTypes) || []).map((value, index) => ({
+        value,
+        onChange: (e) => this.updateContactType(index, e.target.value),
+        onMoveUp: () => this.moveContactType(index, -1),
+        onMoveDown: () => this.moveContactType(index, 1),
+        onRemove: () => this.removeContactType(index)
+      })),
+      onAddContactType: () => this.addContactType(),
+      isLegalPage: s.page === 'privacidad' || s.page === 'terminos',
+      legalUpdatedAt: 'Julio de 2026',
+      legalUrl: s.page === 'privacidad' ? '/politica-de-privacidad' : '/terminos-y-condiciones',
+      legalLinkLabel: s.page === 'privacidad' ? 'Política de privacidad' : 'Términos y condiciones',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
       onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),
@@ -1044,7 +1130,7 @@ class Component extends DCLogic {
           onChange: (e) => this.updateRecentProduct(position, e.target.value)
         };
       }),
-      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading),
+      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
@@ -1057,7 +1143,7 @@ class Component extends DCLogic {
       onSave: this.handleSave, saving: s.saving,
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
-      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi'
+      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto'
     };
   }
 }
