@@ -213,8 +213,12 @@ class Component extends DCLogic {
       const type = window.location.pathname.includes('/taller') || qs.get('type') === 'taller' ? 'taller' : 'curso';
       const id = qs.get('id');
       const cms = await import('/cms.js');
-      const data = await cms.getPageContent('aprende');
-      const items = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
+      const entityType = type === 'taller' ? 'workshops' : 'courses';
+      const [data, entities] = await Promise.all([
+        cms.getPageContent('aprende'),
+        cms.getEntities(entityType).catch(() => []),
+      ]);
+      const items = entities.length ? entities : (type === 'taller' ? (data.talleres || []) : (data.cursos || []));
       const item = items.find((entry, index) => String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)) === String(id));
       if (item) this.setState({ liveItem: item });
     } catch (error) {
@@ -301,16 +305,32 @@ class Component extends DCLogic {
     const d = live ? {
       ...fallback,
       title: live.name || fallback.title,
-      tagline: live.desc || fallback.tagline,
-      summary: live.desc || fallback.summary,
+      tagline: live.shortDescription || live.desc || live.description || fallback.tagline,
+      summary: live.shortDescription || live.desc || live.description || fallback.summary,
       price: live.price || fallback.price,
       cuposLabel: live.badge || fallback.cuposLabel,
+      modules: Array.isArray(live.modules) && live.modules.length ? live.modules : fallback.modules,
+      materials: live.materials || fallback.materials,
+      forWho: live.audience || fallback.forWho,
+      paymentNote: live.paymentNote || fallback.paymentNote,
+      faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
+      testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
+      gallery: live.gallery || live.pastGallery || [],
+      mapImage: live.mapImageUrl || fallback.mapImage,
+      locationDetail: live.locationDetail || fallback.locationDetail,
+      cancelPolicy: live.cancellationPolicy || fallback.cancelPolicy,
       infoRows: type === 'taller'
         ? [
-            { label: 'Fecha / nivel', value: live.dateLevel || '' },
+            { label: 'Fecha', value: live.date || live.dateLevel || '' },
+            { label: 'Hora', value: live.time || '' },
+            { label: 'Nivel', value: live.level || '' },
             { label: 'Ubicación', value: live.location || '' },
           ].filter(row => row.value)
-        : [{ label: 'Nivel / modalidad', value: live.level || '' }].filter(row => row.value),
+        : [
+            { label: 'Nivel / modalidad', value: live.level || '' },
+            { label: 'Duración', value: live.duration || '' },
+            { label: 'Disponibilidad', value: live.availability || '' },
+          ].filter(row => row.value),
       heroImage: live.imageUrl || '',
     } : fallback;
     const faqs = d.faqs.map((f, i) => ({

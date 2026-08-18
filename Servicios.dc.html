@@ -42,7 +42,7 @@
       <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0;">{{ data.desc }}</p>
     </div>
     <div style="aspect-ratio:4/3;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-      <image-slot id="sv-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="foto principal del servicio"></image-slot>
+      <image-slot id="sv-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ data.imageUrl }}" placeholder="foto principal del servicio"></image-slot>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
     <div style="display:grid;grid-template-columns:{{ galleryCols }};gap:16px;">
       <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
         <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-          <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="{{ g.placeholder }}"></image-slot>
+          <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ g.src }}" placeholder="{{ g.placeholder }}"></image-slot>
         </div>
       </sc-for>
     </div>
@@ -82,17 +82,24 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1600},&quot;service&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;rotulacion&quot;,&quot;options&quot;:[&quot;rotulacion&quot;,&quot;personalizados&quot;,&quot;packaging&quot;,&quot;souvenirs&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0 };
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0, liveService: null };
   setupReveal() {
     const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; };
     const els = Array.from(document.querySelectorAll('[data-reveal]'));
     els.forEach((el) => setTimeout(() => reveal(el), 50));
   }
-  componentDidMount() {
+  async componentDidMount() {
     this.setupReveal();
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     window.addEventListener('resize', check);
+    try {
+      const slug = window.location.pathname.split('/').filter(Boolean).pop();
+      const cms = await import('/cms.js');
+      const services = await cms.getEntities('services');
+      const service = services.find((item) => item.slug === slug || item.id === slug);
+      if (service) this.setState({ liveService: service });
+    } catch (error) { console.error('No se pudo cargar el servicio.', error); }
   }
   SERVICES = {
     rotulacion: {
@@ -156,9 +163,21 @@ class Component extends DCLogic {
   renderVals() {
     const m = this.state.isMobile;
     const serviceSlug = window.location.pathname.split('/').filter(Boolean).pop();
-    const data = this.SERVICES[serviceSlug] || this.SERVICES.rotulacion;
-    const gallery = [1, 2, 3, 4].map(i => ({ id: `sv-gallery-${i}`, placeholder: 'foto de proyecto real' }));
-    const faqs = this.FAQS.map((f, i) => ({
+    const fallback = this.SERVICES[serviceSlug] || this.SERVICES.rotulacion;
+    const live = this.state.liveService;
+    const data = live ? {
+      ...fallback,
+      ...live,
+      desc: live.shortDescription || live.description || fallback.desc,
+      types: Array.isArray(live.features) && live.features.length ? live.features : fallback.types,
+      process: Array.isArray(live.process) && live.process.length ? live.process : fallback.process,
+      forWho: live.audience || fallback.forWho,
+      priceFrom: live.priceNote || fallback.priceFrom,
+    } : fallback;
+    const gallerySource = live && Array.isArray(live.gallery) ? live.gallery : [];
+    const gallery = (gallerySource.length ? gallerySource : [1, 2, 3, 4]).map((item, i) => ({ id: `sv-gallery-${i + 1}`, src: typeof item === 'string' ? item : '', placeholder: 'foto de proyecto real' }));
+    const faqSource = live && Array.isArray(live.faqs) && live.faqs.length ? live.faqs : this.FAQS;
+    const faqs = faqSource.map((f, i) => ({
       ...f,
       open: this.state.faqOpen === i,
       arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -184,7 +203,7 @@ class Component extends DCLogic {
       ctaRadius: m ? '16px' : '24px',
       h2Size: m ? '22px' : '30px',
       data, gallery, faqs,
-      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Quiero cotizar un servicio de ${data.name}.`),
+      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(data.whatsappMessage || `Hola! Quiero cotizar un servicio de ${data.name}.`),
     };
   }
 }

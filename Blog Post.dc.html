@@ -183,8 +183,14 @@ class Component extends DCLogic {
   async componentDidMount() {
     try {
       const cms = await import('./cms.js');
-      const data = await cms.getPageContent('aprende');
-      const posts = (data.blog && data.blog.length) ? data.blog : this.DEFAULT_POSTS;
+      const [data, entities] = await Promise.all([
+        cms.getPageContent('aprende'),
+        cms.getEntities('posts').catch(() => []),
+      ]);
+      const posts = entities.length ? entities.map((post) => ({
+        ...post,
+        meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · '),
+      })) : ((data.blog && data.blog.length) ? data.blog : this.DEFAULT_POSTS);
       this.setState({ allPosts: posts, loading: false });
     } catch (e) {
       this.setState({ allPosts: this.DEFAULT_POSTS, loading: false });

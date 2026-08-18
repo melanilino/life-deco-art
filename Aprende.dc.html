@@ -510,14 +510,23 @@ class Component extends DCLogic {
   async loadLive() {
     try {
       const cms = await import('./cms.js');
-      const data = await cms.getPageContent('aprende');
+      const [data, cursos, talleres, gratis, blog, esenciales, comunidad] = await Promise.all([
+        cms.getPageContent('aprende'),
+        cms.getEntities('courses').catch(() => []),
+        cms.getEntities('workshops').catch(() => []),
+        cms.getEntities('resources').catch(() => []),
+        cms.getEntities('posts').catch(() => []),
+        cms.getEntities('essentials').catch(() => []),
+        cms.getEntities('communities').catch(() => []),
+      ]);
       this.setState({
         aprendeLive: {
-          cursos: (data.cursos && data.cursos.length) ? data.cursos : null,
-          talleres: (data.talleres && data.talleres.length) ? data.talleres : null,
-          gratis: (data.gratis && data.gratis.length) ? data.gratis : null,
-          blog: (data.blog && data.blog.length) ? data.blog : null,
-          esenciales: (data.esenciales && data.esenciales.length) ? data.esenciales : null,
+          cursos: cursos.length ? cursos.map((item) => ({ ...item, desc: item.shortDescription || item.description || item.desc || '', level: item.level || item.modality || '' })) : ((data.cursos && data.cursos.length) ? data.cursos : null),
+          talleres: talleres.length ? talleres.map((item) => ({ ...item, dateLevel: [item.date, item.level].filter(Boolean).join(' · '), location: item.location || '', badge: item.capacity || '' })) : ((data.talleres && data.talleres.length) ? data.talleres : null),
+          gratis: gratis.length ? gratis : ((data.gratis && data.gratis.length) ? data.gratis : null),
+          blog: blog.length ? blog.map((item) => ({ ...item, meta: [item.publishedAt, item.readingTime].filter(Boolean).join(' · ') })) : ((data.blog && data.blog.length) ? data.blog : null),
+          esenciales: esenciales.length ? esenciales.map((item) => ({ ...item, desc: item.description || item.desc || '' })) : ((data.esenciales && data.esenciales.length) ? data.esenciales : null),
+          comunidad: comunidad.length ? comunidad : ((data.comunidad && data.comunidad.length) ? data.comunidad : null),
           banners: data.banners || {},
         },
       });

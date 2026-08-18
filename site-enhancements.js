@@ -3,6 +3,8 @@
 (() => {
   const STYLE_ID = "lda-accessibility-css";
   const MAIN_ID = "contenido-principal";
+  let cmsPageContent = null;
+  let cmsGlobalContent = null;
 
   function ensureFavicon() {
     if (document.querySelector('link[rel="icon"]')) return;
@@ -181,6 +183,67 @@
     }
   }
 
+  function currentCmsPageId() {
+    const path = window.location.pathname;
+    if (path === '/') return 'inicio';
+    if (path === '/sobre-mi') return 'sobremi';
+    if (path === '/tienda') return 'tienda';
+    if (path === '/aprende') return 'aprende';
+    if (path === '/contacto') return 'contacto';
+    if (path === '/encargo-personalizado') return 'encargos';
+    if (path === '/politica-de-privacidad') return 'privacidad';
+    if (path === '/terminos-y-condiciones') return 'terminos';
+    return null;
+  }
+
+  function applyCmsDomContent() {
+    const page = cmsPageContent || {};
+    document.querySelectorAll('[data-cms-text]').forEach((element) => {
+      const value = page[element.dataset.cmsText];
+      if (value !== undefined && value !== null && String(value).trim() && element.textContent !== String(value)) element.textContent = value;
+    });
+    document.querySelectorAll('[data-cms-html]').forEach((element) => {
+      const value = page[element.dataset.cmsHtml];
+      if (value !== undefined && value !== null && String(value).trim() && element.innerHTML !== String(value)) element.innerHTML = value;
+    });
+    document.querySelectorAll('[data-cms-href]').forEach((element) => {
+      const value = page[element.dataset.cmsHref];
+      if (value) element.setAttribute('href', value);
+    });
+    const global = cmsGlobalContent || {};
+    if (global.faviconUrl) {
+      const favicon = document.querySelector('link[rel="icon"]');
+      if (favicon) favicon.href = global.faviconUrl;
+    }
+    if (page.seoTitle) document.title = page.seoTitle;
+    const description = page.seoDescription;
+    if (description) {
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.content = description;
+      const og = document.querySelector('meta[property="og:description"]');
+      if (og) og.content = description;
+    }
+    if (page.searchVisibility === 'No indexar') {
+      let robots = document.querySelector('meta[name="robots"]');
+      if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots); }
+      robots.content = 'noindex, nofollow';
+    }
+  }
+
+  async function loadCmsDomContent() {
+    const pageId = currentCmsPageId();
+    try {
+      const cms = await import('/cms.js');
+      const [page, global] = await Promise.all([
+        pageId ? cms.getPageContent(pageId) : Promise.resolve({}),
+        cms.getPageContent('global'),
+      ]);
+      cmsPageContent = page || {};
+      cmsGlobalContent = global || {};
+      applyCmsDomContent();
+    } catch (_) {}
+  }
+
   function init() {
     ensureFavicon();
     addAccessibilityStyles();
@@ -188,9 +251,11 @@
     addPageUrlMetadata();
     enhanceContent();
     updateDynamicMetadata();
+    loadCmsDomContent();
     const observer = new MutationObserver(() => {
       enhanceContent();
       updateDynamicMetadata();
+      applyCmsDomContent();
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }

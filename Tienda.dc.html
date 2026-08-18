@@ -319,10 +319,22 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._resizeHandler, { passive: true });
     try {
       const cms = await import('./cms.js');
-      const data = await cms.getPageContent('tienda');
+      const [data, entityCategories, entityProducts] = await Promise.all([
+        cms.getPageContent('tienda'),
+        cms.getEntities('categories').catch(() => []),
+        cms.getEntities('products').catch(() => []),
+      ]);
+      const normalizedCategories = entityCategories.map((cat) => ({
+        ...cat,
+        subcategories: (cat.subcategories || []).map((sub, index) => typeof sub === 'string' ? { id: `${cat.id}-sub-${index}`, name: sub } : sub),
+      }));
+      const normalizedProducts = entityProducts.map((product) => ({
+        ...product,
+        desc: product.shortDescription || product.desc || product.description || '',
+      }));
       const merged = {
-        categories: (data.categories && data.categories.length) ? data.categories : this.DEFAULT_CATEGORIES,
-        products: (data.products && data.products.length) ? data.products.filter(p => !p.status || p.status === 'Activo') : this.DEFAULT_PRODUCTS,
+        categories: normalizedCategories.length ? normalizedCategories : ((data.categories && data.categories.length) ? data.categories : this.DEFAULT_CATEGORIES),
+        products: normalizedProducts.length ? normalizedProducts : ((data.products && data.products.length) ? data.products.filter(p => !p.status || p.status === 'Activo') : this.DEFAULT_PRODUCTS),
         bannerImageUrl: data.bannerImageUrl || '',
       };
       this.setState({ tiendaData: merged, loading: false });

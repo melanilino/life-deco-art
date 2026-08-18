@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import { firebaseConfig } from "./firebase-config.js";
@@ -270,6 +270,60 @@ export async function savePageContent(pageId, data) {
       sessionStorage.setItem(key, JSON.stringify({ ...previous, ...safeData }));
     }
   } catch (_) {}
+}
+
+const ENTITY_TYPES = new Set([
+  'categories', 'products', 'courses', 'workshops', 'resources',
+  'posts', 'essentials', 'communities', 'services'
+]);
+
+function assertEntityType(type) {
+  if (!ENTITY_TYPES.has(type)) throw new Error(`Tipo de contenido no permitido: ${type}`);
+}
+
+export async function getEntities(type, options = {}) {
+  assertEntityType(type);
+  const snapshot = await getDocs(collection(db, 'cmsEntities', type, 'items'));
+  const items = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }));
+  const visible = options.includeDrafts ? items : items.filter((item) => !item.status || item.status === 'Publicado' || item.status === 'Activo');
+  return visible.sort((a, b) => Number(a.order || 0) - Number(b.order || 0));
+}
+
+export async function saveEntity(type, id, data) {
+  assertEntityType(type);
+  if (!id) throw new Error('El contenido necesita un identificador estable.');
+  const target = doc(db, 'cmsEntities', type, 'items', String(id));
+  await setDoc(target, { ...data, id: String(id), updatedAt: serverTimestamp() }, { merge: true });
+}
+
+export async function saveEntities(type, items) {
+  assertEntityType(type);
+  const batch = writeBatch(db);
+  (items || []).forEach((item, index) => {
+    if (!item || !item.id) return;
+    const target = doc(db, 'cmsEntities', type, 'items', String(item.id));
+    batch.set(target, { ...item, order: Number.isFinite(Number(item.order)) ? Number(item.order) : index, updatedAt: serverTimestamp() }, { merge: true });
+  });
+  await batch.commit();
+}
+
+export async function archiveEntity(type, id) {
+  return saveEntity(type, id, { status: 'Archivado' });
+}
+
+export async function deleteEntity(type, id) {
+  assertEntityType(type);
+  await deleteDoc(doc(db, 'cmsEntities', type, 'items', String(id)));
+}
+
+export async function createContentSnapshot(label, payload) {
+  const id = `${Date.now()}-${String(label || 'cambio').replace(/[^a-z0-9_-]+/gi, '-').toLowerCase()}`;
+  await setDoc(doc(db, 'cmsHistory', id), {
+    label: label || 'Cambio de contenido',
+    payload,
+    createdAt: serverTimestamp()
+  });
+  return id;
 }
 
 export async function deleteMediaUrl(url) {

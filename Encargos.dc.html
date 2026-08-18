@@ -33,7 +33,7 @@
   <div style="max-width:760px;margin:0 auto;padding:{{ heroPad }};text-align:center;">
     <div style="font-size:11px;letter-spacing:0.2em;text-transform:uppercase;color:#F65091;font-weight:500;margin-bottom:16px;">Encargo Personalizado</div>
     <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0;">Cuéntame lo que <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.2em;">imaginas</span></h1>
-    <p style="font-size:15px;color:#8B795E;font-weight:300;max-width:480px;margin:16px auto 0;">Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.</p>
+    <p style="font-size:15px;color:#8B795E;font-weight:300;max-width:480px;margin:16px auto 0;">{{ introText }}</p>
   </div>
 
   <div style="max-width:640px;margin:0 auto;padding:{{ formPad }};">
@@ -147,12 +147,13 @@ class Component extends DCLogic {
   state = {
     isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
     tipo: 'Cuadro personalizado', ocasion: '', fecha: '', cantidad: 1, tamano: '',
-    texto: '', colores: '', presupuesto: '', presupuestoOtro: '', ciudad: '', presupuestoOpen: false,
+    texto: '', colores: '', presupuesto: '', presupuestoOtro: '', ciudad: '', presupuestoOpen: false, content: {},
   };
-  componentDidMount() {
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     window.addEventListener('resize', check);
+    try { const cms = await import('/cms.js'); this.setState({ content: await cms.getPageContent('encargos') }); } catch (_) {}
   }
   TIPOS = ['Cuadro personalizado', 'Bandeja', 'Caja sorpresa', 'Letrero', 'Llavero', 'Vinera', 'Otro'];
   PRESUPUESTOS = ['Menos de RD$2,000', 'RD$2,000 – RD$5,000', 'RD$5,000 – RD$10,000', 'Más de RD$10,000', 'Otro'];
@@ -164,13 +165,16 @@ class Component extends DCLogic {
   renderVals() {
     const m = this.state.isMobile;
     const s = this.state;
+    const content = s.content || {};
+    const tipos = Array.isArray(content.pieceTypes) && content.pieceTypes.length ? content.pieceTypes : this.TIPOS;
+    const presupuestos = Array.isArray(content.budgetOptions) && content.budgetOptions.length ? content.budgetOptions : this.PRESUPUESTOS;
     const onField = (key) => (e) => this.setState({ [key]: e.target.value });
     const onTipo = onField('tipo'), onOcasion = onField('ocasion'), onFecha = onField('fecha'),
       onCantidad = onField('cantidad'), onTamano = onField('tamano'), onTexto = onField('texto'),
       onColores = onField('colores'), onPresupuesto = onField('presupuesto'), onCiudad = onField('ciudad'),
       onPresupuestoOtro = onField('presupuestoOtro');
     const presupuestoFinal = s.presupuesto === 'Otro' ? s.presupuestoOtro : s.presupuesto;
-    const presupuestoOpciones = this.PRESUPUESTOS.map(p => ({
+    const presupuestoOpciones = presupuestos.map(p => ({
       label: p,
       bg: s.presupuesto === p ? '#F3EEE4' : '#FFFFFF',
       color: s.presupuesto === p ? '#F65091' : '#2B2420',
@@ -189,7 +193,7 @@ class Component extends DCLogic {
       presupuestoFinal && `Presupuesto: ${presupuestoFinal}`,
       s.ciudad && `Ciudad: ${s.ciudad}`,
     ].filter(Boolean);
-    const message = 'Hola! Quiero hacer un encargo personalizado.\n' + parts.join('\n');
+    const message = (content.whatsappMessage || 'Hola! Quiero hacer un encargo personalizado.') + '\n' + parts.join('\n');
     return {
       preview: message,
       previewPad: m ? '10px 24px 0' : '10px 48px 0',
@@ -207,7 +211,8 @@ class Component extends DCLogic {
       presupuestoDisplay: s.presupuesto || 'Selecciona un rango',
       presupuestoDisplayColor: s.presupuesto ? '#2B2420' : '#8B795E',
       presupuestoArrow: s.presupuestoOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-      tipos: this.TIPOS, steps: this.STEPS,
+      introText: content.introText || 'Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.',
+      tipos, steps: this.STEPS,
       onTipo, onOcasion, onFecha, onCantidad, onTamano, onTexto, onColores, onPresupuesto, onCiudad, onPresupuestoOtro,
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(message),
     };

@@ -124,8 +124,11 @@ class Component extends DCLogic {
     try {
       const id = new URLSearchParams(window.location.search).get('id');
       const cms = await import('/cms.js');
-      const data = await cms.getPageContent('aprende');
-      const resources = data.gratis || [];
+      const [data, entities] = await Promise.all([
+        cms.getPageContent('aprende'),
+        cms.getEntities('resources').catch(() => []),
+      ]);
+      const resources = entities.length ? entities : (data.gratis || []);
       const resource = resources.find((entry, index) => String(entry.id || `g${index + 1}`) === String(id));
       if (resource) this.setState({ resource });
     } catch (error) {
@@ -149,7 +152,7 @@ class Component extends DCLogic {
       previewCols: m ? 'repeat(3,1fr)' : 'repeat(3,1fr)',
       previewPages: [1, 2, 3].map(i => ({ id: `rc-preview-${i}`, placeholder: `página ${i} de la plantilla` })),
       nextPad: m ? '30px 24px 60px' : '40px 48px 90px',
-      contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
+      contains: Array.isArray(resource.contains) && resource.contains.length ? resource.contains : ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
       downloadUrl: resource.fileUrl || '#',
     };
   }

@@ -39,28 +39,28 @@ x-dc{display:none!important}
     <div>
       <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Navegación</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <a href="/" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Inicio</a>
-        <a href="/sobre-mi" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Sobre Mí</a>
-        <a href="/tienda" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Tienda</a>
-        <a href="/aprende" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Aprende</a>
-        <a href="/contacto" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">Contacto</a>
+        <a href="/" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">{{ navInicio }}</a>
+        <a href="/sobre-mi" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">{{ navSobreMi }}</a>
+        <a href="/tienda" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">{{ navTienda }}</a>
+        <a href="/aprende" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">{{ navAprende }}</a>
+        <a href="/contacto" style="color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:300;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;width:fit-content;" style-hover="background-size:100% 1px;">{{ navContacto }}</a>
       </div>
     </div>
     </sc-if>
     <div>
       <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Sígueme</div>
       <div style="display:flex;gap:12px;margin-bottom:20px;">
-        <a href="https://web.facebook.com/lifedecoart/" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">FB</a>
-        <a href="https://www.instagram.com/lifedecoart" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">IG</a>
-        <a href="https://www.tiktok.com/@lifedecoart" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">TT</a>
-        <a href="https://www.pinterest.com/lifedecoart/" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">PIN</a>
+        <a href="{{ facebookUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">FB</a>
+        <a href="{{ instagramUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">IG</a>
+        <a href="{{ tiktokUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">TT</a>
+        <a href="{{ pinterestUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">PIN</a>
       </div>
-      <a href="/contacto" style="font-size:13px;font-weight:300;color:#FFFFFF;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">hola@lifedecoart.com</a>
-      <a href="https://wa.me/18495390410" target="_blank" style="font-size:13px;font-weight:300;color:#FFFFFF;margin-top:8px;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">+1 849-539-0410</a>
+      <a href="/contacto" style="font-size:13px;font-weight:300;color:#FFFFFF;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">{{ contactEmail }}</a>
+      <a href="{{ whatsappUrl }}" target="_blank" style="font-size:13px;font-weight:300;color:#FFFFFF;margin-top:8px;text-decoration:none;display:block;width:fit-content;padding-bottom:2px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">{{ phoneDisplay }}</a>
     </div>
     <div>
       <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Comunidad</div>
-      <p style="font-size: 13px; font-weight: 300; color: #FFFFFF; line-height: 1.6; margin: 0 0 14px">Ideas y novedades directo a tu correo.</p>
+      <p style="font-size: 13px; font-weight: 300; color: #FFFFFF; line-height: 1.6; margin: 0 0 14px">{{ newsletterText }}</p>
       <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
         <form onSubmit="{{ onSubmit }}" style="display:flex;gap:8px;">
           <input type="email" class="lda-footer-email" value="{{ email }}" onChange="{{ onEmailChange }}" required="required" placeholder="Tu email" style="flex:1;min-width:0;padding:10px 12px;border-radius:4px;border:1px solid #262626;background:#141414;color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;" style-focus="outline:none;border-color:#262626;box-shadow:none;">
@@ -83,7 +83,7 @@ x-dc{display:none!important}
 </footer>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:360}}">class Component extends DCLogic {
-  state = { subscribed: false, subscribing: false, subscribeError: '', email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { subscribed: false, subscribing: false, subscribeError: '', email: '', isMobile: typeof window !== 'undefined' && window.innerWidth < 860, globalContent: {} };
 
   setupFullClickTargets() {
     if (window.__ldaFullClickTargetsReady) return;
@@ -168,17 +168,22 @@ x-dc{display:none!important}
     this._clickTargetObserver.observe(document.body, { childList: true, subtree: true });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     this._resizeHandler = check;
     window.addEventListener('resize', this._resizeHandler, { passive: true });
     this.setupFullClickTargets();
+    try {
+      const cms = await import('/cms.js');
+      this.setState({ globalContent: await cms.getPageContent('global') });
+    } catch (_) {}
   }
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
   }
   renderVals() {
+    const global = this.state.globalContent || {};
     return {
       gridCols: this.state.isMobile ? '1fr' : 'repeat(4,1fr)',
       isDesktop: !this.state.isMobile,
@@ -187,7 +192,17 @@ x-dc{display:none!important}
       notSubscribed: !this.state.subscribed,
       subscribing: this.state.subscribing,
       subscribeError: this.state.subscribeError,
-      subscribeLabel: this.state.subscribing ? 'Enviando…' : 'Unirme',
+      subscribeLabel: this.state.subscribing ? 'Enviando…' : (global.footerNewsletterButton || 'Unirme'),
+      navInicio: global.navInicio || 'Inicio', navSobreMi: global.navSobreMi || 'Sobre Mí',
+      navTienda: global.navTienda || 'Tienda', navAprende: global.navAprende || 'Aprende', navContacto: global.navContacto || 'Contacto',
+      facebookUrl: global.facebookUrl || 'https://web.facebook.com/lifedecoart/',
+      instagramUrl: global.instagramUrl || 'https://www.instagram.com/lifedecoart',
+      tiktokUrl: global.tiktokUrl || 'https://www.tiktok.com/@lifedecoart',
+      pinterestUrl: global.pinterestUrl || 'https://www.pinterest.com/lifedecoart/',
+      contactEmail: global.email || 'hola@lifedecoart.com',
+      phoneDisplay: global.phoneDisplay || '+1 849-539-0410',
+      whatsappUrl: `https://wa.me/${global.whatsappNumber || '18495390410'}`,
+      newsletterText: global.footerNewsletterText || 'Ideas y novedades directo a tu correo.',
       email: this.state.email,
       onEmailChange: (e) => this.setState({ email: e.target.value }),
       onSubmit: (e) => {

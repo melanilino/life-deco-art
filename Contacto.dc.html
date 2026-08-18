@@ -132,8 +132,8 @@ body{margin:0;background:#fff}
 
     <div>
       <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Contacto</div>
-      <h1 style="font-size: {{ h1Size }}; line-height: 1.15; color: #000000; font-weight: 300; margin: 0">Grandes historias inician con un <span style="font-family: 'Homemade Apple', cursive; font-weight: 400; font-size: 1.22em">hola</span>.</h1>
-      <p style="font-size: 14px; color: #8B795E; font-weight: 300; line-height: 1.8; margin-top: 20px; max-width: 380px">Cuéntame qué tienes en mente y te responderé en menos de 48 horas.</p>
+      <h1 style="font-size: {{ h1Size }}; line-height: 1.15; color: #000000; font-weight: 300; margin: 0">{{ heroTitle }}</h1>
+      <p style="font-size: 14px; color: #8B795E; font-weight: 300; line-height: 1.8; margin-top: 20px; max-width: 380px">{{ introText }}</p>
     </div>
 
     <div style="background: #FFFFFF; border: {{ formBorder }}; border-radius: 8px; padding: {{ formPad }}; border-color: #F0EEE6">
@@ -147,26 +147,22 @@ body{margin:0;background:#fff}
         <div style="display:flex;flex-direction:column;gap:{{ formGap }};">
           <div style="display:grid;grid-template-columns:{{ nameEmailCols }};gap:16px;min-width:0;">
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <label style="font-size:11px;font-weight:500;color:#000000;">Nombre</label>
+              <label style="font-size:11px;font-weight:500;color:#000000;">{{ nameLabel }}</label>
               <input type="text" name="name" autocomplete="name" value="{{ form.name }}" onChange="{{ onNameChange }}" placeholder="Tu nombre" style="padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6" style-focus="border-color:#000000;">
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <label style="font-size:11px;font-weight:500;color:#000000;">Email</label>
+              <label style="font-size:11px;font-weight:500;color:#000000;">{{ emailLabel }}</label>
               <input type="email" name="email" autocomplete="email" value="{{ form.email }}" onChange="{{ onEmailChange }}" placeholder="tu@email.com" style="padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6EB" style-focus="border-color:#000000;">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <label style="font-size:11px;font-weight:500;color:#000000;">Tipo de proyecto</label>
+            <label style="font-size:11px;font-weight:500;color:#000000;">{{ projectLabel }}</label>
             <select value="{{ form.type }}" onChange="{{ onTypeChange }}" style="color:#000000; padding: 11px 36px 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; background: #FFFFFF url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%228%22%20viewBox%3D%220%200%2014%208%22%3E%3Cpath%20d%3D%22M1%201L7%207L13%201%22%20stroke%3D%22%23000000%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E') no-repeat right 14px center; font-weight: 300; transition: border-color .25s ease; appearance: none; -webkit-appearance: none; border-color: #F0EEE6" style-focus="border-color:#000000;">
-              <option value="carteles">Cartel / decoración</option>
-              <option value="boda">Papelería de boda</option>
-              <option value="regalo">Regalo personalizado</option>
-              <option value="taller">Taller o clase</option>
-              <option value="otro">Otro</option>
+              <sc-for list="{{ projectTypes }}" as="type" hint-placeholder-count="5"><option value="{{ type.value }}">{{ type.label }}</option></sc-for>
             </select>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
-            <label style="font-size:11px;font-weight:500;color:#000000;">Cuéntame tu idea</label>
+            <label style="font-size:11px;font-weight:500;color:#000000;">{{ messageLabel }}</label>
             <textarea rows="5" value="{{ form.message }}" onChange="{{ onMessageChange }}" placeholder="Describe lo que tienes en mente..." style="padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; resize: vertical; font-family: 'Montserrat',sans-serif; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6" style-focus="border-color:#000000;"></textarea>
           </div>
           <button onClick="{{ onSubmit }}" disabled="{{ submitting }}" style="cursor: pointer; margin-top: 8px; background: #000000; color: #FFFFFF; padding: 13px 26px; border-radius: 4px; font-size: 13px; font-weight: 500; border: none; font-family: Montserrat; transition: transform .25s ease, background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">{{ submitLabel }}</button>
@@ -183,7 +179,7 @@ body{margin:0;background:#fff}
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  componentDidMount() {
+  async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
     this._resizeHandler = check;
@@ -207,13 +203,17 @@ class Component extends DCLogic {
     requestAnimationFrame(sweep);
     setTimeout(sweep, 400);
     setTimeout(sweep, 1200);
+    try {
+      const cms = await import('/cms.js');
+      this.setState({ content: await cms.getPageContent('contacto') });
+    } catch (_) {}
   }
   state = {
     submitted: false,
     submitting: false,
     submitError: '',
     isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
-    form: { name: '', email: '', type: 'carteles', message: '' },
+    form: { name: '', email: '', type: 'Cartel / decoración', message: '' }, content: {},
   };
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
@@ -221,6 +221,8 @@ class Component extends DCLogic {
   renderVals() {
     const form = this.state.form;
     const m = this.state.isMobile;
+    const content = this.state.content || {};
+    const projectTypeLabels = Array.isArray(content.projectTypes) && content.projectTypes.length ? content.projectTypes : ['Cartel / decoración', 'Papelería de boda', 'Regalo personalizado', 'Taller o clase', 'Otro'];
     return {
       navGap: m ? '64px' : '88px',
       eyebrowGap: m ? '12px' : '16px',
@@ -238,7 +240,12 @@ class Component extends DCLogic {
       notSubmitted: !this.state.submitted,
       submitting: this.state.submitting,
       submitError: this.state.submitError,
-      submitLabel: this.state.submitting ? 'Enviando…' : 'Enviar mensaje',
+      heroTitle: content.heroTitle || 'Grandes historias inician con un hola.',
+      introText: content.introText || 'Cuéntame qué tienes en mente y te responderé en menos de 48 horas.',
+      nameLabel: content.nameLabel || 'Nombre', emailLabel: content.emailLabel || 'Email',
+      projectLabel: content.projectLabel || 'Tipo de proyecto', messageLabel: content.messageLabel || 'Cuéntame tu idea',
+      projectTypes: projectTypeLabels.map((label) => ({ label, value: label })),
+      submitLabel: this.state.submitting ? 'Enviando…' : (content.submitLabel || 'Enviar mensaje'),
       onNameChange: (e) => this.setState(s => ({ form: { ...s.form, name: e.target.value } })),
       onEmailChange: (e) => this.setState(s => ({ form: { ...s.form, email: e.target.value } })),
       onTypeChange: (e) => this.setState(s => ({ form: { ...s.form, type: e.target.value } })),
@@ -264,7 +271,7 @@ class Component extends DCLogic {
           this.setState({ submitted: true, submitting: false });
         } catch (e) {
           console.error('No se pudo enviar el formulario de contacto.', e);
-          this.setState({ submitting: false, submitError: 'No pudimos enviar el mensaje. Inténtalo nuevamente.' });
+          this.setState({ submitting: false, submitError: content.errorMessage || 'No pudimos enviar el mensaje. Inténtalo nuevamente.' });
         }
       },
     };

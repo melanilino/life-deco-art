@@ -205,8 +205,15 @@ class Component extends DCLogic {
       const id = params.get('id') || 'p1';
       const hadCachedProduct = !!this.state.product;
       const cms = await import('/cms.js');
-      const data = await cms.getPageContent('tienda');
-      const products = ((data && data.products) || []).filter(p => !p.status || p.status === 'Activo');
+      const [data, entities] = await Promise.all([
+        cms.getPageContent('tienda'),
+        cms.getEntities('products').catch(() => []),
+      ]);
+      const source = entities.length ? entities : ((data && data.products) || []);
+      const products = source.filter(p => !p.status || p.status === 'Activo' || p.status === 'Publicado').map((product) => ({
+        ...product,
+        desc: product.shortDescription || product.desc || product.description || '',
+      }));
 
       // Si llegamos desde Tienda, la ficha ya se dibujó con el catálogo exacto
       // guardado en sesión. Evitamos un segundo render visible del producto.
@@ -310,8 +317,8 @@ class Component extends DCLogic {
       isMobile: m,
       productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',
       mainImage: product.imageUrl || '', thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
-      includes: ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
-      excludes: ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
+      includes: Array.isArray(product.includes) && product.includes.length ? product.includes : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
+      excludes: Array.isArray(product.excludes) && product.excludes.length ? product.excludes : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
       related: relatedLive.length ? relatedLive : this.RELATED,
       faqs,
