@@ -7,6 +7,8 @@
 - Mantener el sitio adaptable a computadoras, tabletas y móviles.
 - Verificar los cambios y corregir errores antes de dar una tarea por terminada.
 - No inventar textos, precios, políticas, productos ni información comercial.
+- No eliminar, ocultar ni sustituir elementos o placeholders por parecer incompletos; cada elemento puede estar preparado para contenido o funciones futuras y cualquier cambio de ese tipo requiere autorización de la propietaria.
+- Priorizar que la web y sus recorridos funcionen correctamente, preservando la intención, la estructura visual y la función prevista de cada elemento.
 - Conservar las decisiones aprobadas y documentar los cambios relevantes.
 - Considerar que la propietaria no es programadora y evitar instrucciones innecesariamente técnicas.
 - No instalar dependencias ni elegir todavía una tecnología para la web.

@@ -55,6 +55,7 @@ x-dc{display:none!important}
   .bp-title { font-size: 38px; }
   .bp-title span { font-size: 44px; }
   .bp-wrap { padding: 56px 24px 100px; }
+  .bp-nav-spacer { height: 88px; }
   .bp-kicker { font-size: 12px; }
   .bp-meta { font-size: 13px; }
   @media (max-width: 600px) {
@@ -62,6 +63,7 @@ x-dc{display:none!important}
     .bp-title { font-size: 26px; }
     .bp-title span { font-size: 26px; }
     .bp-wrap { padding: 28px 26px 40px !important; }
+    .bp-nav-spacer { height: 64px; }
     .bp-kicker, .section-kicker { font-size: 10px !important; margin-bottom: 12px !important; }
     .bp-meta { font-size: 12px !important; }
     .post-body h2 { font-size: 17px !important; margin: 24px 0 10px !important; }
@@ -69,6 +71,9 @@ x-dc{display:none!important}
   }
 </style>
 </helmet>
+
+<dc-import name="NavBar" active-page="aprende" hint-size="100%,80px"></dc-import>
+<div class="bp-nav-spacer"></div>
 
 <sc-if value="{{ isLoading }}" hint-placeholder-val="{{ false }}">
   <div style="max-width:720px;margin:0 auto;padding:100px 24px;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Cargando…</div>
@@ -136,6 +141,8 @@ x-dc{display:none!important}
   </div>
 </div>
 </sc-if>
+
+<dc-import name="Footer" hint-size="100%,320px"></dc-import>
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
