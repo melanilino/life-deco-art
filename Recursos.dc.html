@@ -76,12 +76,10 @@
         <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:0;">Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.</p>
       </div>
 
-      <sc-if value="{{ hasDownload }}" hint-placeholder-val="{{ false }}">
-        <a href="{{ downloadUrl }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 30px;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"></path></svg>
-          Descargar gratis
-        </a>
-      </sc-if>
+      <a href="{{ downloadUrl }}" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 30px;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"></path></svg>
+        Descargar gratis
+      </a>
     </div>
 
   </div>
@@ -138,8 +136,7 @@ class Component extends DCLogic {
       previewPages: [1, 2, 3].map(i => ({ id: `rc-preview-${i}`, placeholder: `página ${i} de la plantilla` })),
       nextPad: m ? '30px 24px 60px' : '40px 48px 90px',
       contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
-      hasDownload: false,
-      downloadUrl: '',
+      downloadUrl: '#',
     };
   }
 }
