@@ -353,6 +353,7 @@
     '.ctl:popover-open{position:fixed;inset:auto;transform:translateX(-100%)}' +
     ':host([data-filled][data-editable]:hover) .ctl,:host([data-reframe]) .ctl' +
     '  {opacity:1;pointer-events:auto}' +
+    ':host([frame-editor]) .ctl{display:none!important}' +
     '.ctl button{appearance:none;border:0;border-radius:6px;padding:5px 10px;cursor:pointer;' +
     '  background:rgba(0,0,0,.65);color:#fff;font:11px/1 system-ui,-apple-system,sans-serif;' +
     '  backdrop-filter:blur(6px)}' +
@@ -1074,7 +1075,8 @@
       this._ring.style.display = mask ? 'none' : '';
 
       // Controls and reframe entry gate on this so share links stay read-only.
-      const editable = !!(window.omelette && window.omelette.writeFile) || this.hasAttribute('frame-editor');
+      const hostControlsHidden = !!(document.body && document.body.hasAttribute('data-image-slot-controls'));
+      const editable = this.hasAttribute('frame-editor') || (!!(window.omelette && window.omelette.writeFile) && !hostControlsHidden);
       this.toggleAttribute('data-editable', editable);
       this._sub.style.display = editable ? '' : 'none';
 

@@ -24,11 +24,11 @@ x-dc{display:none!important}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
 </head>
-<body>
+<body data-image-slot-controls="hidden">
 <div id="dc-boot-fallback" aria-hidden="true"><div class="dc-fb-nav"><span class="dc-fb-brand">Life Deco Art</span></div></div>
 <x-dc>
 <helmet>
-<script src="./image-slot.js?v=20260818a2" defer></script>
+<script src="./image-slot.js?v=20260818a3" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
 <style>
@@ -575,14 +575,14 @@ class Component extends DCLogic {
   };
 
   pageList = [
-    { id: 'config', label: 'Configuración', desc: 'Favicon, contacto, redes sociales y botón flotante de WhatsApp.' },
     { id: 'inicio', label: 'Inicio', desc: 'Contenido general de la página principal.' },
     { id: 'sobremi', label: 'Sobre Mí', desc: 'Historia, foto y presentación de la marca.' },
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
     { id: 'aprende', label: 'Aprende', desc: 'Cursos, talleres, gratis, blog, esenciales y comunidad.' },
     { id: 'contacto', label: 'Contacto', desc: 'Tipos de proyecto disponibles en el formulario.' },
     { id: 'privacidad', label: 'Política de Privacidad', desc: 'Estado e información de la página legal.' },
-    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Estado e información de la página legal.' }
+    { id: 'terminos', label: 'Términos y Condiciones', desc: 'Estado e información de la página legal.' },
+    { id: 'config', label: 'Configuración', desc: 'Favicon, contacto, redes sociales y botón flotante de WhatsApp.' }
   ];
 
   async componentDidMount() {
