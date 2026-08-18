@@ -215,6 +215,12 @@
       const favicon = document.querySelector('link[rel="icon"]');
       if (favicon) favicon.href = global.faviconUrl;
     }
+    document.querySelectorAll('#lda-whatsapp-fab, #lda-whatsapp-fab-static').forEach((floatingButton) => {
+      const number = String(global.whatsappFloatingNumber || global.whatsappNumber || '18495390410').replace(/\D/g, '');
+      const message = String(global.whatsappInitialMessage || '').trim();
+      floatingButton.href = `https://wa.me/${number}${message ? `?text=${encodeURIComponent(message)}` : ''}`;
+      floatingButton.style.display = global.whatsappFloatingVisible === false ? 'none' : 'flex';
+    });
     if (page.seoTitle) document.title = page.seoTitle;
     const description = page.seoDescription;
     if (description) {

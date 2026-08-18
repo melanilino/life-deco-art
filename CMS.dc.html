@@ -89,6 +89,42 @@ x-dc{display:none!important}
       <div style="background:#FDECEC;color:#C0392B;border-radius:6px;padding:14px 18px;font-size:13px;margin-bottom:8px;">{{ error }}</div>
     </sc-if>
 
+    <sc-if value="{{ isConfigPage }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Identidad</div>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Favicon</label>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <div style="width:84px;height:84px;overflow:hidden;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;"><image-slot id="cms-config-favicon" shape="rect" fit="contain" style="width:100%;height:100%;" src="{{ configFaviconUrl }}" placeholder="favicon"></image-slot></div>
+          <label style="display:inline-flex;align-items:center;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;cursor:pointer;">Subir / reemplazar<input type="file" accept="image/png,image/svg+xml,image/x-icon,image/vnd.microsoft.icon,image/webp" onChange="{{ onConfigFaviconUpload }}" style="display:none;"></label>
+          <sc-if value="{{ configHasFavicon }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ onConfigFaviconRemove }}" style="display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border:1px solid #E4DCCB;background:#FFFFFF;color:#C0392B;border-radius:4px;font-family:Montserrat;font-size:12px;cursor:pointer;">Eliminar</button></sc-if>
+          <sc-if value="{{ configFaviconUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
+        </div>
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Datos de contacto</div>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número de WhatsApp</label>
+        <input type="text" value="{{ configWhatsappNumber }}" onChange="{{ onConfigWhatsappNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Correo electrónico</label>
+        <input type="email" value="{{ configEmail }}" onChange="{{ onConfigEmail }}" placeholder="correo@ejemplo.com" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Redes sociales</div>
+        <sc-for list="{{ configSocialFields }}" as="social" hint-placeholder-count="4"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">{{ social.label }}</label><input type="url" value="{{ social.value }}" onChange="{{ social.onChange }}" placeholder="https://" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div></sc-for>
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:18px;">Botón flotante de WhatsApp</div>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número</label>
+        <input type="text" value="{{ configFloatingNumber }}" onChange="{{ onConfigFloatingNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Mensaje inicial</label>
+        <textarea value="{{ configFloatingMessage }}" onChange="{{ onConfigFloatingMessage }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;margin-bottom:16px;"></textarea>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Visibilidad</label>
+        <select value="{{ configFloatingVisibility }}" onChange="{{ onConfigFloatingVisibility }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"><option value="true">Mostrar</option><option value="false">Ocultar</option></select>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isSobremiPage }}" hint-placeholder-val="{{ false }}">
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:16px;">
         <label style="display:block;font-size:12px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;"><span style="letter-spacing: 0.6px;">Foto de perfil<br></span></label>
@@ -366,7 +402,8 @@ class Component extends DCLogic {
     tiendaData: null, tiendaLoaded: false,
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales',
     sobremiData: null, sobremiLoaded: false,
-    uploading: null, expanded: {}
+    uploading: null, expanded: {},
+    configData: null, configLoaded: false, configLoading: false
   };
 
   selectTile(scope, id) {
@@ -472,6 +509,7 @@ class Component extends DCLogic {
   };
 
   pageList = [
+    { id: 'config', label: 'Configuración', desc: 'Favicon, contacto, redes sociales y botón flotante de WhatsApp.' },
     { id: 'inicio', label: 'Inicio', desc: 'Contenido general de la página principal.' },
     { id: 'sobremi', label: 'Sobre Mí', desc: 'Historia, foto y presentación de la marca.' },
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
@@ -492,7 +530,12 @@ class Component extends DCLogic {
 
   async loadPage(pageId) {
     this.setState({ page: pageId, saved: false, error: '' });
-    if (pageId === 'inicio') {
+    if (pageId === 'config') {
+      this.setState({ configLoading: true });
+      let data = {};
+      try { data = await this.state.cms.getPageContent('global'); } catch (e) { this.setState({ error: 'No se pudo cargar la configuración.' }); }
+      this.setState({ configData: { whatsappFloatingVisible: true, ...data }, configLoaded: true, configLoading: false });
+    } else if (pageId === 'inicio') {
       let data = {};
       try { data = await this.state.cms.getPageContent('inicio'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       this.setState({ content: data });
@@ -530,6 +573,31 @@ class Component extends DCLogic {
     }
   };
   handleLogout = () => { this.state.cms.signOut(this.state.cms.auth); };
+
+  updateConfigField(key, value) {
+    this.setState({ configData: { ...(this.state.configData || {}), [key]: value }, saved: false });
+  }
+
+  async uploadConfigFavicon(file) {
+    if (!file) return;
+    this.setState({ uploading: 'configFavicon' });
+    try {
+      const url = await this.state.cms.uploadFile('content-files/global', file);
+      this.updateConfigField('faviconUrl', url);
+    } catch (e) { this.setState({ error: 'No se pudo subir el favicon.' }); }
+    finally { this.setState({ uploading: null }); }
+  }
+
+  async removeConfigFavicon() {
+    const url = this.state.configData && this.state.configData.faviconUrl;
+    if (!url || !window.confirm('¿Eliminar el favicon personalizado? Se volverá a usar el favicon predeterminado.')) return;
+    const next = { ...this.state.configData, faviconUrl: '' };
+    try {
+      await this.state.cms.savePageContent('global', next);
+      await this.state.cms.deleteMediaUrl(url);
+      this.setState({ configData: next, saved: true });
+    } catch (e) { this.setState({ error: 'No se pudo eliminar el favicon.' }); }
+  }
 
   updateField = (key, value) => { this.setState({ content: { ...this.state.content, [key]: value }, saved: false }); };
 
@@ -703,6 +771,7 @@ class Component extends DCLogic {
     const s = this.state;
     try {
       if (s.page === 'inicio') await s.cms.savePageContent('inicio', s.content);
+      if (s.page === 'config') await s.cms.savePageContent('global', s.configData || {});
       if (s.page === 'tienda') await s.cms.savePageContent('tienda', s.tiendaData);
       if (s.page === 'aprende') await s.cms.savePageContent('aprende', s.aprendeData);
       if (s.page === 'sobremi') await s.cms.savePageContent('sobremi', s.sobremiData);
@@ -838,6 +907,25 @@ class Component extends DCLogic {
       loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
       onLogout: this.handleLogout,
       pages, currentPageLabel: currentPage ? currentPage.label : '', currentPageDesc: currentPage ? currentPage.desc : '',
+      isConfigPage: s.page === 'config' && !!s.configData,
+      configFaviconUrl: (s.configData && s.configData.faviconUrl) || '',
+      configHasFavicon: !!(s.configData && s.configData.faviconUrl),
+      configFaviconUploading: s.uploading === 'configFavicon',
+      onConfigFaviconUpload: (e) => this.uploadConfigFavicon(e.target.files[0]),
+      onConfigFaviconRemove: () => this.removeConfigFavicon(),
+      configWhatsappNumber: (s.configData && s.configData.whatsappNumber) || '',
+      configEmail: (s.configData && s.configData.email) || '',
+      onConfigWhatsappNumber: (e) => this.updateConfigField('whatsappNumber', e.target.value),
+      onConfigEmail: (e) => this.updateConfigField('email', e.target.value),
+      configSocialFields: [
+        ['instagramUrl','Instagram'],['facebookUrl','Facebook'],['tiktokUrl','TikTok'],['pinterestUrl','Pinterest']
+      ].map(([key,label]) => ({ label, value: (s.configData && s.configData[key]) || '', onChange: (e) => this.updateConfigField(key, e.target.value) })),
+      configFloatingNumber: (s.configData && s.configData.whatsappFloatingNumber) || '',
+      configFloatingMessage: (s.configData && s.configData.whatsappInitialMessage) || '',
+      configFloatingVisibility: String(!s.configData || s.configData.whatsappFloatingVisible !== false),
+      onConfigFloatingNumber: (e) => this.updateConfigField('whatsappFloatingNumber', e.target.value),
+      onConfigFloatingMessage: (e) => this.updateConfigField('whatsappInitialMessage', e.target.value),
+      onConfigFloatingVisibility: (e) => this.updateConfigField('whatsappFloatingVisible', e.target.value === 'true'),
       isComingSoon: s.page === 'contacto' || s.page === 'privacidad' || s.page === 'terminos',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
@@ -872,7 +960,7 @@ class Component extends DCLogic {
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),
       videoUploading: s.uploading === 'heroVideo',
-      isPageLoading: (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading),
+      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
@@ -885,7 +973,7 @@ class Component extends DCLogic {
       onSave: this.handleSave, saving: s.saving,
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
-      hasSaveAction: s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi'
+      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi'
     };
   }
 }
