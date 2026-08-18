@@ -212,25 +212,17 @@ x-dc{display:none!important}
           <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
             <div style="display:grid;grid-template-columns:{{ grp.columns }};gap:14px;">
               <sc-for list="{{ grp.photos }}" as="ph" hint-placeholder-count="3">
-                <div>
-                  <div style="width:100%;aspect-ratio:{{ grp.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" view-scale="{{ ph.viewScale }}" view-x="{{ ph.viewX }}" view-y="{{ ph.viewY }}" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot></div>
+                <div style="grid-column:{{ ph.gridColumn }};max-width:{{ ph.maxWidth }};">
+                  <div style="position:relative;width:100%;aspect-ratio:{{ grp.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" view-scale="{{ ph.viewScale }}" view-x="{{ ph.viewX }}" view-y="{{ ph.viewY }}" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot><sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"></path><path d="M18 22V8a2 2 0 0 0-2-2H2"></path></svg></span></sc-if></div>
                   <div style="padding-top:10px;">
                     <div style="font-size:12px;color:#5C5142;margin-bottom:8px;">{{ ph.label }}</div>
                     <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
                       Subir
                       <input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;">
                     </label>
-                    <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onAdjust }}" style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;font-size:12px;cursor:pointer;vertical-align:middle;">Ajustar imagen</span></sc-if>
                     <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
-                    <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}">
-                      <div style="margin-top:14px;padding:14px;background:#F9F6EF;border-radius:6px;display:grid;gap:12px;">
-                        <label style="font-size:11px;color:#5C5142;">Acercar / alejar · {{ ph.zoomLabel }}<input type="range" min="100" max="300" step="1" value="{{ ph.zoom }}" onInput="{{ ph.onZoom }}" style="display:block;width:100%;margin-top:6px;"></label>
-                        <label style="font-size:11px;color:#5C5142;">Mover horizontalmente<input type="range" min="-50" max="50" step="1" value="{{ ph.x }}" onInput="{{ ph.onX }}" style="display:block;width:100%;margin-top:6px;"></label>
-                        <label style="font-size:11px;color:#5C5142;">Mover verticalmente<input type="range" min="-50" max="50" step="1" value="{{ ph.y }}" onInput="{{ ph.onY }}" style="display:block;width:100%;margin-top:6px;"></label>
-                        <span onClick="{{ ph.onReset }}" style="width:fit-content;font-size:11px;color:#F65091;cursor:pointer;">Restablecer ajuste</span>
-                      </div>
-                    </sc-if>
+                    <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -256,22 +248,14 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">{{ inicioWorkshopGroup.label }}</div>
         <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
           <sc-for list="{{ inicioWorkshopGroup.photos }}" as="ph" hint-placeholder-count="1">
-            <div style="max-width:560px;">
-              <div style="width:100%;aspect-ratio:{{ inicioWorkshopGroup.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" view-scale="{{ ph.viewScale }}" view-x="{{ ph.viewX }}" view-y="{{ ph.viewY }}" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot></div>
+            <div style="max-width:{{ ph.maxWidth }};">
+              <div style="position:relative;width:100%;aspect-ratio:{{ inicioWorkshopGroup.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" view-scale="{{ ph.viewScale }}" view-x="{{ ph.viewX }}" view-y="{{ ph.viewY }}" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot><sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v14a2 2 0 0 0 2 2h14"></path><path d="M18 22V8a2 2 0 0 0-2-2H2"></path></svg></span></sc-if></div>
               <div style="padding-top:10px;">
                 <div style="font-size:12px;color:#5C5142;margin-bottom:8px;">{{ ph.label }}</div>
                 <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">Subir<input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;"></label>
-                <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onAdjust }}" style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 12px;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;font-size:12px;cursor:pointer;vertical-align:middle;">Ajustar imagen</span></sc-if>
                 <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                 <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
-                <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}">
-                  <div style="margin-top:14px;padding:14px;background:#F9F6EF;border-radius:6px;display:grid;gap:12px;">
-                    <label style="font-size:11px;color:#5C5142;">Acercar / alejar · {{ ph.zoomLabel }}<input type="range" min="100" max="300" step="1" value="{{ ph.zoom }}" onInput="{{ ph.onZoom }}" style="display:block;width:100%;margin-top:6px;"></label>
-                    <label style="font-size:11px;color:#5C5142;">Mover horizontalmente<input type="range" min="-50" max="50" step="1" value="{{ ph.x }}" onInput="{{ ph.onX }}" style="display:block;width:100%;margin-top:6px;"></label>
-                    <label style="font-size:11px;color:#5C5142;">Mover verticalmente<input type="range" min="-50" max="50" step="1" value="{{ ph.y }}" onInput="{{ ph.onY }}" style="display:block;width:100%;margin-top:6px;"></label>
-                    <span onClick="{{ ph.onReset }}" style="width:fit-content;font-size:11px;color:#F65091;cursor:pointer;">Restablecer ajuste</span>
-                  </div>
-                </sc-if>
+                <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
               </div>
             </div>
           </sc-for>
@@ -893,17 +877,25 @@ class Component extends DCLogic {
       this.setState({ content: { ...this.state.content, [key]: url, imageAdjustments: adjustments }, uploading: null, saved: false });
     }).catch(() => { this.setState({ uploading: null }); });
   }
-  updateInicioImageAdjustment(key, property, value) {
-    const current = ((this.state.content && this.state.content.imageAdjustments) || {})[key] || { zoom: 100, x: 0, y: 0 };
-    const limits = property === 'zoom' ? [100, 300] : [-50, 50];
-    const numeric = Math.max(limits[0], Math.min(limits[1], Number(value)));
-    const imageAdjustments = { ...((this.state.content && this.state.content.imageAdjustments) || {}), [key]: { ...current, [property]: numeric } };
-    this.setState({ content: { ...this.state.content, imageAdjustments }, saved: false });
-  }
-  resetInicioImageAdjustment(key) {
-    const imageAdjustments = { ...((this.state.content && this.state.content.imageAdjustments) || {}) };
-    delete imageAdjustments[key];
-    this.setState({ content: { ...this.state.content, imageAdjustments }, saved: false });
+  openInicioFrameEditor(key) {
+    this.setState({ adjustingInicioPhoto: key });
+    setTimeout(() => {
+      const slot = document.getElementById('cms-inicio-' + key);
+      if (!slot || typeof slot.startFrameEditor !== 'function') return;
+      slot.addEventListener('image-slot:view-change', (event) => {
+        const detail = event.detail || {};
+        const imageAdjustments = {
+          ...((this.state.content && this.state.content.imageAdjustments) || {}),
+          [key]: {
+            zoom: Math.round(Math.max(1, Math.min(3, Number(detail.s || 1))) * 100),
+            x: Math.round(Math.max(-50, Math.min(50, Number(detail.x || 0)))),
+            y: Math.round(Math.max(-50, Math.min(50, Number(detail.y || 0))))
+          }
+        };
+        this.setState({ content: { ...this.state.content, imageAdjustments }, adjustingInicioPhoto: null, saved: false });
+      }, { once: true });
+      slot.startFrameEditor();
+    }, 0);
   }
   updateRecentProduct(position, productId) {
     const ids = [...((this.state.content && this.state.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'])];
@@ -1008,15 +1000,12 @@ class Component extends DCLogic {
         hasImage: !!(s.content && s.content[p.key]),
         uploading: s.uploading === ('inicioPhoto_' + p.key),
         viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y,
-        zoom: adjustment.zoom, zoomLabel: adjustment.zoom + '%', x: adjustment.x, y: adjustment.y,
         isAdjusting: s.adjustingInicioPhoto === p.key,
+        gridColumn: s.adjustingInicioPhoto === p.key ? '1 / -1' : 'auto',
+        maxWidth: s.adjustingInicioPhoto === p.key ? '760px' : '100%',
         onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),
         onRemove: () => this.removeInicioPhoto(p.key),
-        onAdjust: () => this.setState({ adjustingInicioPhoto: s.adjustingInicioPhoto === p.key ? null : p.key }),
-        onZoom: (e) => this.updateInicioImageAdjustment(p.key, 'zoom', e.target.value),
-        onX: (e) => this.updateInicioImageAdjustment(p.key, 'x', e.target.value),
-        onY: (e) => this.updateInicioImageAdjustment(p.key, 'y', e.target.value),
-        onReset: () => this.resetInicioImageAdjustment(p.key)
+        onAdjust: () => this.openInicioFrameEditor(p.key)
       };
     };
     const pages = this.pageList.map((p) => ({
@@ -1161,7 +1150,7 @@ class Component extends DCLogic {
       })),
       inicioWorkshopGroup: {
         label: this.INICIO_WORKSHOP_GROUP.label, aspect: this.INICIO_WORKSHOP_GROUP.aspect,
-        photos: this.INICIO_WORKSHOP_GROUP.fields.map(buildInicioPhoto)
+        photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({ ...buildInicioPhoto(p), maxWidth: s.adjustingInicioPhoto === p.key ? '760px' : '560px' }))
       },
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',

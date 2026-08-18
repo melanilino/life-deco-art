@@ -427,7 +427,7 @@
 
   class ImageSlot extends HTMLElement {
     static get observedAttributes() {
-      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href', 'view-scale', 'view-x', 'view-y'];
+      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href', 'view-scale', 'view-x', 'view-y', 'frame-editor'];
     }
 
     /** Duplicate-slide hook (called by deck-stage, see its
@@ -757,7 +757,9 @@
       // change) so the overlay can't detach from the frame.
       try { this._spill.showPopover(); } catch {}
       // After the spill, so the controls stack above it in the top layer.
-      try { this._ctl.showPopover(); } catch {}
+      if (!this.hasAttribute('frame-editor')) {
+        try { this._ctl.showPopover(); } catch {}
+      }
       this._reposition = () => { if (this.hasAttribute('data-reframe')) this._applyView(); };
       window.addEventListener('scroll', this._reposition, true);
       window.addEventListener('resize', this._reposition);
@@ -806,6 +808,7 @@
       try { this._ctl.hidePopover(); } catch {}
       this._ctl.style.left = ''; this._ctl.style.top = '';
       if (commit) this._commitView();
+      this.removeAttribute('frame-editor');
       this._signalReframe(false);
     }
 
@@ -826,6 +829,8 @@
 
     // Public: host's "Import from computer" calls this to run local browse.
     openFilePicker() { this._exitReframe(true); this._input.click(); }
+    startFrameEditor() { if (this._reframes()) { this.setAttribute('frame-editor', ''); this._enterReframe(); } }
+    finishFrameEditor() { this._exitReframe(true); }
 
     attributeChangedCallback() { if (this.shadowRoot) this._render(); }
 
@@ -1036,6 +1041,12 @@
 
     _commitView() {
       const v = { s: this._view.s, x: this._view.x, y: this._view.y };
+      if (this.hasAttribute('frame-editor')) {
+        this.dispatchEvent(new CustomEvent('image-slot:view-change', {
+          bubbles: true, composed: true, detail: v
+        }));
+        return;
+      }
       if (this._userUrl) v.u = this._userUrl;
       // Framing-only (no u) persists too so an author-src slot remembers its
       // crop; clearing the sidecar still falls through to src=.
@@ -1063,7 +1074,7 @@
       this._ring.style.display = mask ? 'none' : '';
 
       // Controls and reframe entry gate on this so share links stay read-only.
-      const editable = !!(window.omelette && window.omelette.writeFile);
+      const editable = !!(window.omelette && window.omelette.writeFile) || this.hasAttribute('frame-editor');
       this.toggleAttribute('data-editable', editable);
       this._sub.style.display = editable ? '' : 'none';
 
