@@ -21,7 +21,7 @@
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
   <div id="lda-mobile-navigation" style="position:fixed;top:64px;left:0;right:0;bottom:0;z-index:49;background:#FFFFFF;display:flex;flex-direction:column;padding:24px;overflow-y:auto;">
     <sc-for list="{{ links }}" as="link" hint-placeholder-count="5">
-      <a href="{{ link.href }}" style="font-family:'Montserrat',sans-serif;text-decoration:none;padding:18px 4px;border-bottom:1px solid #F0EAE0;font-size:20px;font-weight:300;color:{{ link.color }};">{{ link.label }}</a>
+      <a href="{{ link.href }}" style="font-family:'Montserrat',sans-serif;text-decoration:none;padding:18px 4px;border-bottom:1px solid #F0EAE0;font-size:20px;font-weight:300;color:{{ link.color }};-webkit-tap-highlight-color:transparent;transition:opacity .12s ease;" style-active="opacity:.55;">{{ link.label }}</a>
     </sc-for>
   </div>
 </sc-if>
