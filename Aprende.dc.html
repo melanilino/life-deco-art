@@ -304,7 +304,7 @@ body{margin:0;background:#fff}
       <div style="display:flex;gap:{{ recBarGap }};align-items:center;margin-bottom:24px;flex-wrap:nowrap;">
         <input value="{{ recSearch }}" onInput="{{ onRecSearch }}" type="text" placeholder="Buscar producto..." style="flex:1;min-width:0;padding:12px 16px;border:1px solid #E4DDCC;border-radius:6px;font-size:14px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;">
         <div style="position:relative;display:inline-block;flex-shrink:0;">
-          <select value="{{ recSort }}" onChange="{{ onRecSort }}" style="appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:12px 40px 12px 14px;border:1px solid #E4DDCC;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;cursor:pointer;min-width:{{ recSortMinW }};">
+          <select value="{{ recSort }}" onChange="{{ onRecSort }}" aria-label="Ordenar productos" style="appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:12px 40px 12px 14px;border:1px solid #E4DDCC;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;cursor:pointer;min-width:{{ recSortMinW }};">
             <option value="az">Orden: A-Z</option>
             <option value="za">Orden: Z-A</option>
           </select>
