@@ -39,7 +39,7 @@ x-dc{display:none!important}
 <meta name="twitter:title" content="Life Deco Art | Blog">
 <meta name="twitter:description" content="Blog de lettering — Life Deco Art">
 
-<script src="./image-slot.js?v=20260810p1" defer></script>
+<script src="./image-slot.js?v=20260818a4" defer></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; font-family: 'Montserrat', sans-serif; animation: lda-page-fade .3s ease; }
@@ -93,7 +93,7 @@ x-dc{display:none!important}
   <h1 class="bp-title" style="line-height:1.25;color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span style="font-family:'Homemade Apple',cursive;font-weight:400;">{{ post.titleAccent }}</span></h1>
   <div class="bp-meta" style="color:#8B795E;margin-bottom:32px;">{{ post.meta }}</div>
   <div style="width:100%;aspect-ratio:16/9;background:#F3EEE4;border-radius:8px;margin-bottom:40px;overflow:hidden;">
-    <image-slot id="blog-post-cover" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ post.imageUrl }}" placeholder="foto de portada del artículo"></image-slot>
+    <image-slot id="blog-post-cover" shape="rect" fit="cover" view-scale="{{ post.imageView.scale }}" view-x="{{ post.imageView.x }}" view-y="{{ post.imageView.y }}" style="width:100%;height:100%;" src="{{ post.imageUrl }}" placeholder="foto de portada del artículo"></image-slot>
   </div>
   <div class="post-body" dangerouslySetInnerHTML="{{ post.bodyHtml }}"></div>
 
@@ -109,7 +109,7 @@ x-dc{display:none!important}
 
   <a href="/sobre-mi" style="display:flex;align-items:center;gap:14px;margin-top:32px;padding:20px;background:#F9F6EF;border-radius:8px;text-decoration:none;">
     <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#F3EEE4;">
-      <image-slot id="blog-post-author" shape="circle" fit="cover" style="width:100%;height:100%;" src="{{ post.authorPhoto }}" placeholder="foto"></image-slot>
+      <image-slot id="blog-post-author" shape="circle" fit="cover" view-scale="{{ post.authorView.scale }}" view-x="{{ post.authorView.x }}" view-y="{{ post.authorView.y }}" style="width:100%;height:100%;" src="{{ post.authorPhoto }}" placeholder="foto"></image-slot>
     </div>
     <div>
       <div style="font-size:14px;font-weight:500;color:#000;">{{ post.authorName }}</div>
@@ -124,7 +124,7 @@ x-dc{display:none!important}
       <sc-for list="{{ related }}" as="r" hint-placeholder-count="2">
       <a href="{{ r.href }}" style="text-decoration:none;display:block;">
         <div style="width:100%;aspect-ratio:16/10;background:#F3EEE4;border-radius:8px;margin-bottom:12px;overflow:hidden;">
-          <image-slot id="related-post-{{ r.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ r.imageUrl }}" placeholder="foto"></image-slot>
+          <image-slot id="related-post-{{ r.id }}" shape="rect" fit="cover" view-scale="{{ r.imageView.scale }}" view-x="{{ r.imageView.x }}" view-y="{{ r.imageView.y }}" style="width:100%;height:100%;" src="{{ r.imageUrl }}" placeholder="foto"></image-slot>
         </div>
         <div style="font-size:12px;color:#0CC0DF;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ r.category }}</div>
         <div style="font-size:15px;color:#000;font-weight:400;line-height:1.4;">{{ r.title }}</div>
@@ -187,8 +187,10 @@ class Component extends DCLogic {
         cms.getPageContent('aprende'),
         cms.getEntities('posts').catch(() => []),
       ]);
-      const posts = entities.length ? entities.map((post) => ({
+      const legacyPosts = data.blog || [];
+      const posts = entities.length ? entities.map((post, index) => ({
         ...post,
+        imageAdjustments: post.imageAdjustments || ((legacyPosts.find((old, oldIndex) => String(old.id || oldIndex) === String(post.id || index)) || {}).imageAdjustments) || {},
         meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · '),
       })) : ((data.blog && data.blog.length) ? data.blog : this.DEFAULT_POSTS);
       this.setState({ allPosts: posts, loading: false });
@@ -231,6 +233,10 @@ class Component extends DCLogic {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') || (posts[0] && posts[0].id);
     const found = posts.find(p => p.id === id) || null;
+    const imageView = (item, field = 'imageUrl') => {
+      const value = item && item.imageAdjustments && item.imageAdjustments[field];
+      return { scale: Number(value && (value.scale || value.zoom / 100)) || 1, x: Number(value && value.x) || 0, y: Number(value && value.y) || 0 };
+    };
 
     if (loading) return { isLoading: true, notFound: false, post: null, hasRelated: false };
     if (!found) return { isLoading: false, notFound: true, post: null, hasRelated: false };
@@ -243,11 +249,13 @@ class Component extends DCLogic {
       authorName: found.authorName || 'Nombre Apellido',
       authorRole: found.authorRole || 'Fundadora, Life Deco Art',
       bodyHtml: { __html: found.content || '' },
+      imageView: imageView(found),
+      authorView: imageView(found, 'authorPhoto'),
     };
     this.setDocumentMeta(post);
 
     const related = posts.filter(p => p.id !== found.id).slice(0, 2).map(r => ({
-      ...r, noImage: !r.imageUrl, href: `/blog?id=${r.id}`,
+      ...r, imageView: imageView(r), noImage: !r.imageUrl, href: `/blog?id=${r.id}`,
     }));
 
     const url = encodeURIComponent(window.location.href);

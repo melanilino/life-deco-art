@@ -16,7 +16,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js"></script>
+<script src="/image-slot.js?v=20260818a4"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; animation: lda-page-fade .3s ease; }
@@ -42,7 +42,7 @@
 
     <div>
       <div style="aspect-ratio:3/4;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-        <image-slot id="rc-portada" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ imageUrl }}" placeholder="portada / vista previa del recurso"></image-slot>
+        <image-slot id="rc-portada" shape="rect" fit="cover" view-scale="{{ imageView.scale }}" view-x="{{ imageView.x }}" view-y="{{ imageView.y }}" style="width:100%;height:100%;" src="{{ imageUrl }}" placeholder="portada / vista previa del recurso"></image-slot>
       </div>
     </div>
 
@@ -128,7 +128,11 @@ class Component extends DCLogic {
         cms.getPageContent('aprende'),
         cms.getEntities('resources').catch(() => []),
       ]);
-      const resources = entities.length ? entities : (data.gratis || []);
+      const legacyResources = data.gratis || [];
+      const resources = entities.length ? entities.map((entry, index) => {
+        const legacy = legacyResources.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
+        return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
+      }) : legacyResources;
       const resource = resources.find((entry, index) => String(entry.id || `g${index + 1}`) === String(id));
       if (resource) this.setState({ resource });
     } catch (error) {
@@ -138,6 +142,7 @@ class Component extends DCLogic {
   renderVals() {
     const m = this.state.isMobile;
     const resource = this.state.resource || {};
+    const adjustment = resource.imageAdjustments && resource.imageAdjustments.imageUrl;
     return {
       navGap: m ? '64px' : '88px',
       crumbPad: m ? '16px 24px 0' : '24px 48px 0',
@@ -148,6 +153,7 @@ class Component extends DCLogic {
       title: resource.title || 'Plantilla de Trazos Básicos',
       format: resource.format || 'PDF',
       imageUrl: resource.imageUrl || '',
+      imageView: { scale: Number(adjustment && (adjustment.scale || adjustment.zoom / 100)) || 1, x: Number(adjustment && adjustment.x) || 0, y: Number(adjustment && adjustment.y) || 0 },
       previewSectionPad: m ? '10px 24px 0' : '10px 48px 0',
       previewCols: m ? 'repeat(3,1fr)' : 'repeat(3,1fr)',
       previewPages: [1, 2, 3].map(i => ({ id: `rc-preview-${i}`, placeholder: `página ${i} de la plantilla` })),

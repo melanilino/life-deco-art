@@ -128,8 +128,8 @@ x-dc{display:none!important}
     <sc-if value="{{ isSobremiPage }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía principal</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <div style="max-width:280px;">
-          <div style="width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiHeroUrl }}" placeholder="foto de Melani en su estudio"></image-slot></div>
+        <div style="max-width:{{ sobremiHeroMaxWidth }};">
+          <div style="position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-hero" shape="rect" fit="cover" view-scale="{{ sobremiHeroView.scale }}" view-x="{{ sobremiHeroView.x }}" view-y="{{ sobremiHeroView.y }}" style="width:100%;height:100%;" src="{{ sobremiHeroUrl }}" placeholder="foto de Melani en su estudio"></image-slot><sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
           <div style="display:flex;align-items:center;gap:8px;padding-top:12px;">
           <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
             Subir / reemplazar
@@ -138,12 +138,13 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiHeroUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiHeroRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
+          <sc-if value="{{ sobremiHeroAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
         </div>
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía destacada</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
-        <div style="max-width:560px;">
-          <div style="width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-destacada" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ sobremiFeaturedUrl }}" placeholder="pieza destacada en proceso de creación"></image-slot></div>
+        <div style="max-width:{{ sobremiFeaturedMaxWidth }};">
+          <div style="position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-sobremi-destacada" shape="rect" fit="cover" view-scale="{{ sobremiFeaturedView.scale }}" view-x="{{ sobremiFeaturedView.x }}" view-y="{{ sobremiFeaturedView.y }}" style="width:100%;height:100%;" src="{{ sobremiFeaturedUrl }}" placeholder="pieza destacada en proceso de creación"></image-slot><sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
           <div style="display:flex;align-items:center;gap:8px;padding-top:12px;">
           <label style="display:inline-flex;align-items:center;gap:6px;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;vertical-align:middle;">
             Subir / reemplazar
@@ -152,6 +153,7 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiFeaturedUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onSobremiFeaturedRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
+          <sc-if value="{{ sobremiFeaturedAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
         </div>
       </div>
     </sc-if>
@@ -267,8 +269,8 @@ x-dc{display:none!important}
       <div>
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
         <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-          <div style="display:flex;align-items:center;gap:14px;">
-            <div style="width:220px;aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-tienda-banner" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ tiendaBannerUrl }}" placeholder="foto de portada"></image-slot></div>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+            <div style="position:relative;width:{{ tiendaBannerMaxWidth }};aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-tienda-banner" shape="rect" fit="cover" view-scale="{{ tiendaBannerView.scale }}" view-x="{{ tiendaBannerView.x }}" view-y="{{ tiendaBannerView.y }}" style="width:100%;height:100%;" src="{{ tiendaBannerUrl }}" placeholder="foto de portada"></image-slot><sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
             <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
               Subir imagen
               <input type="file" accept="image/*" onChange="{{ onTiendaBannerUpload }}" style="display:none;">
@@ -276,6 +278,7 @@ x-dc{display:none!important}
             <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
             <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
+          <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
         </div>
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Categorías</div>
         <div style="margin-bottom:12px;">
@@ -313,7 +316,7 @@ x-dc{display:none!important}
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
           <sc-for list="{{ tiendaProducts }}" as="item" hint-placeholder-count="6">
             <div style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:8px;overflow:hidden;">
-              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto (doble clic para ajustar)"></image-slot></div>
+              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto"></image-slot></div>
               <div style="padding:12px 14px;">
                 <div style="font-size:13px;color:#000;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.name }}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -346,8 +349,8 @@ x-dc{display:none!important}
                   </select>
                 </sc-if>
                 <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;align-items:center;gap:12px;">
-                    <div style="width:180px;aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;"><image-slot id="cms-field-{{ f.label }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="foto (doble clic para ajustar)"></image-slot></div>
+                  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                    <div style="position:relative;width:{{ f.maxWidth }};aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;"><image-slot id="{{ f.slotId }}" shape="rect" fit="cover" view-scale="{{ f.viewScale }}" view-x="{{ f.viewX }}" view-y="{{ f.viewY }}" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="foto"></image-slot><sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
                     <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;white-space:nowrap;">
                       Subir imagen
                       <input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;">
@@ -355,6 +358,7 @@ x-dc{display:none!important}
                     <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                   </div>
+                  <sc-if value="{{ f.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                 </sc-if>
               </div>
             </sc-for>
@@ -376,8 +380,8 @@ x-dc{display:none!important}
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <div style="display:flex;align-items:center;gap:14px;">
-          <div style="width:220px;aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-aprende-banner-{{ aprendeTab }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ aprendeBannerUrl }}" placeholder="foto de portada"></image-slot></div>
+        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <div style="position:relative;width:{{ aprendeBannerMaxWidth }};aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-aprende-banner-{{ aprendeTab }}" shape="rect" fit="cover" view-scale="{{ aprendeBannerView.scale }}" view-x="{{ aprendeBannerView.x }}" view-y="{{ aprendeBannerView.y }}" style="width:100%;height:100%;" src="{{ aprendeBannerUrl }}" placeholder="foto de portada"></image-slot><sc-if value="{{ aprendeBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onAprendeBannerAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
           <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
             Subir imagen
             <input type="file" accept="image/*" onChange="{{ onAprendeBannerUpload }}" style="display:none;">
@@ -385,6 +389,7 @@ x-dc{display:none!important}
           <sc-if value="{{ aprendeBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onAprendeBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
           <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
+        <sc-if value="{{ aprendeBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
       </div>
       <div style="margin-bottom:24px;">
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
@@ -403,8 +408,8 @@ x-dc{display:none!important}
                     <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                     <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
                     <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
-                      <div style="display:flex;align-items:center;gap:12px;">
-                        <div style="width:180px;aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;"><image-slot id="cms-field-{{ f.label }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="foto (doble clic para ajustar)"></image-slot></div>
+                      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                        <div style="position:relative;width:{{ f.maxWidth }};aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;"><image-slot id="{{ f.slotId }}" shape="rect" fit="cover" view-scale="{{ f.viewScale }}" view-x="{{ f.viewX }}" view-y="{{ f.viewY }}" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="foto"></image-slot><sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
                         <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;white-space:nowrap;">
                           Subir imagen
                           <input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;">
@@ -412,6 +417,7 @@ x-dc{display:none!important}
                         <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                         <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                       </div>
+                      <sc-if value="{{ f.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                     </sc-if>
                     <sc-if value="{{ f.isFile }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:12px;">
@@ -469,7 +475,7 @@ class Component extends DCLogic {
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
-    adjustingInicioPhoto: null
+    adjustingImage: null
   };
 
   selectTile(scope, id) {
@@ -646,7 +652,8 @@ class Component extends DCLogic {
       const merged = {
         categories: (data.categories && data.categories.length) ? data.categories : this.DEFAULT_TIENDA.categories,
         products: (data.products && data.products.length) ? data.products : this.DEFAULT_TIENDA.products,
-        bannerImageUrl: data.bannerImageUrl || ''
+        bannerImageUrl: data.bannerImageUrl || '',
+        bannerImageAdjustment: data.bannerImageAdjustment || null
       };
       this.setState({ tiendaData: merged, tiendaLoaded: true, tiendaLoading: false });
     } else if (pageId === 'aprende' && !this.state.aprendeLoaded) {
@@ -656,11 +663,12 @@ class Component extends DCLogic {
       const merged = {};
       Object.keys(this.DEFAULT_APRENDE).forEach((k) => { merged[k] = (data[k] && data[k].length) ? data[k] : this.DEFAULT_APRENDE[k]; });
       merged.banners = data.banners || {};
+      merged.bannerImageAdjustments = data.bannerImageAdjustments || {};
       this.setState({ aprendeData: merged, aprendeLoaded: true, aprendeLoading: false });
     } else if (pageId === 'sobremi' && !this.state.sobremiLoaded) {
       let data = {};
       try { data = await this.state.cms.getPageContent('sobremi'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
-      this.setState({ sobremiData: { featuredImageUrl: data.featuredImageUrl || '', heroImageUrl: data.heroImageUrl || '' }, sobremiLoaded: true });
+      this.setState({ sobremiData: { featuredImageUrl: data.featuredImageUrl || '', heroImageUrl: data.heroImageUrl || '', imageAdjustments: data.imageAdjustments || {} }, sobremiLoaded: true });
     } else if (pageId === 'contacto' && !this.state.contactLoaded) {
       this.setState({ contactLoading: true });
       let data = {};
@@ -748,7 +756,7 @@ class Component extends DCLogic {
   async removeItemImage(listKey,id,key) {
     const cur=this.getListArray(listKey), item=cur.find(x=>x.id===id), url=item&&item[key];
     if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
-    const arr=cur.map(x=>x.id===id?{...x,[key]:''}:x);
+    const arr=cur.map(x=>{if(x.id!==id)return x;const imageAdjustments={...(x.imageAdjustments||{})};delete imageAdjustments[key];return{...x,[key]:'',imageAdjustments};});
     try{
       if(listKey==='products'){
         const next={...this.state.tiendaData,products:arr};
@@ -776,20 +784,22 @@ class Component extends DCLogic {
   }
   async removeTiendaBanner(){
     const url=this.state.tiendaData&&this.state.tiendaData.bannerImageUrl; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
-    const next={...this.state.tiendaData,bannerImageUrl:''};
+    const next={...this.state.tiendaData,bannerImageUrl:'',bannerImageAdjustment:null};
     try{await this.state.cms.savePageContent('tienda',next); await this.state.cms.deleteMediaUrl(url); this.setState({tiendaData:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeAprendeBanner(){
     const tab=this.state.aprendeTab,url=this.state.aprendeData&&this.state.aprendeData.banners&&this.state.aprendeData.banners[tab];
     if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
-    const next={...this.state.aprendeData,banners:{...(this.state.aprendeData.banners||{}),[tab]:''}};
+    const bannerImageAdjustments={...((this.state.aprendeData&&this.state.aprendeData.bannerImageAdjustments)||{})};delete bannerImageAdjustments[tab];
+    const next={...this.state.aprendeData,banners:{...(this.state.aprendeData.banners||{}),[tab]:''},bannerImageAdjustments};
     try{await this.state.cms.savePageContent('aprende',next); await this.state.cms.deleteMediaUrl(url); this.setState({aprendeData:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeSobremiImage(key){
     const url=this.state.sobremiData&&this.state.sobremiData[key]; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
-    const next={...this.state.sobremiData,[key]:''};
+    const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments[key];
+    const next={...this.state.sobremiData,[key]:'',imageAdjustments};
     try{await this.state.cms.savePageContent('sobremi',next); await this.state.cms.deleteMediaUrl(url); this.setState({sobremiData:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
@@ -799,7 +809,8 @@ class Component extends DCLogic {
     const uploadingKey = listKey + id + key;
     this.setState({ uploading: uploadingKey });
     this.state.cms.uploadImage('content-images/' + listKey, file).then((url) => {
-      this.updateItem(listKey, id, key, url);
+      const arr = this.getListArray(listKey).map((item) => { if (item.id !== id) return item; const imageAdjustments = { ...(item.imageAdjustments || {}) }; delete imageAdjustments[key]; return { ...item, [key]: url, imageAdjustments }; });
+      this.setListArray(listKey, arr);
       this.setState({ uploading: null });
     }).catch(() => { this.setState({ uploading: null }); });
   }
@@ -818,7 +829,7 @@ class Component extends DCLogic {
     if (!file) return;
     this.setState({ uploading: 'tiendaBanner' });
     this.state.cms.uploadImage('content-files/tienda', file).then((url) => {
-      this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageUrl: url }, uploading: null, saved: false });
+      this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageUrl: url, bannerImageAdjustment: null }, uploading: null, saved: false });
     }).catch(() => this.setState({ uploading: null }));
   }
   handleAprendeBannerUpload(file) {
@@ -826,21 +837,24 @@ class Component extends DCLogic {
     const tab = this.state.aprendeTab;
     this.setState({ uploading: 'aprendeBanner' + tab });
     this.state.cms.uploadImage('content-files/aprende', file).then((url) => {
-      this.setState({ aprendeData: { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: url } }, uploading: null, saved: false });
+      const bannerImageAdjustments={...((this.state.aprendeData&&this.state.aprendeData.bannerImageAdjustments)||{})};delete bannerImageAdjustments[tab];
+      this.setState({ aprendeData: { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: url }, bannerImageAdjustments }, uploading: null, saved: false });
     }).catch(() => this.setState({ uploading: null }));
   }
   handleSobremiFeaturedUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'sobremiFeatured' });
     this.state.cms.uploadImage('content-files/sobremi', file).then((url) => {
-      this.setState({ sobremiData: { ...this.state.sobremiData, featuredImageUrl: url }, uploading: null, saved: false });
+      const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments.featuredImageUrl;
+      this.setState({ sobremiData: { ...this.state.sobremiData, featuredImageUrl: url, imageAdjustments }, uploading: null, saved: false });
     }).catch(() => this.setState({ uploading: null }));
   }
   handleSobremiHeroUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'sobremiHero' });
     this.state.cms.uploadImage('content-files/sobremi', file).then((url) => {
-      this.setState({ sobremiData: { ...this.state.sobremiData, heroImageUrl: url }, uploading: null, saved: false });
+      const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments.heroImageUrl;
+      this.setState({ sobremiData: { ...this.state.sobremiData, heroImageUrl: url, imageAdjustments }, uploading: null, saved: false });
     }).catch(() => this.setState({ uploading: null }));
   }
   handleHeroVideoUpload(file) {
@@ -877,25 +891,54 @@ class Component extends DCLogic {
       this.setState({ content: { ...this.state.content, [key]: url, imageAdjustments: adjustments }, uploading: null, saved: false });
     }).catch(() => { this.setState({ uploading: null }); });
   }
-  openInicioFrameEditor(key) {
-    this.setState({ adjustingInicioPhoto: key });
+  normalizeImageAdjustment(value) {
+    const detail = value || {};
+    return {
+      zoom: Math.round(Math.max(1, Math.min(3, Number(detail.s || detail.zoom / 100 || 1))) * 100),
+      x: Math.round(Math.max(-50, Math.min(50, Number(detail.x || 0)))),
+      y: Math.round(Math.max(-50, Math.min(50, Number(detail.y || 0))))
+    };
+  }
+  openFrameEditor(editorId, slotId, onCommit) {
+    this.setState({ adjustingImage: editorId });
     setTimeout(() => {
-      const slot = document.getElementById('cms-inicio-' + key);
+      const slot = document.getElementById(slotId);
       if (!slot || typeof slot.startFrameEditor !== 'function') return;
       slot.addEventListener('image-slot:view-change', (event) => {
-        const detail = event.detail || {};
-        const imageAdjustments = {
-          ...((this.state.content && this.state.content.imageAdjustments) || {}),
-          [key]: {
-            zoom: Math.round(Math.max(1, Math.min(3, Number(detail.s || 1))) * 100),
-            x: Math.round(Math.max(-50, Math.min(50, Number(detail.x || 0)))),
-            y: Math.round(Math.max(-50, Math.min(50, Number(detail.y || 0))))
-          }
-        };
-        this.setState({ content: { ...this.state.content, imageAdjustments }, adjustingInicioPhoto: null, saved: false });
+        onCommit(this.normalizeImageAdjustment(event.detail));
+        this.setState({ adjustingImage: null, saved: false });
       }, { once: true });
       slot.startFrameEditor();
     }, 0);
+  }
+  openInicioFrameEditor(key) {
+    this.openFrameEditor('inicio:' + key, 'cms-inicio-' + key, (adjustment) => {
+      const imageAdjustments = { ...((this.state.content && this.state.content.imageAdjustments) || {}), [key]: adjustment };
+      this.setState({ content: { ...this.state.content, imageAdjustments } });
+    });
+  }
+  openSobremiFrameEditor(key, slotId) {
+    this.openFrameEditor('sobremi:' + key, slotId, (adjustment) => {
+      const imageAdjustments = { ...((this.state.sobremiData && this.state.sobremiData.imageAdjustments) || {}), [key]: adjustment };
+      this.setState({ sobremiData: { ...this.state.sobremiData, imageAdjustments } });
+    });
+  }
+  openTiendaBannerFrameEditor() {
+    this.openFrameEditor('tienda:banner', 'cms-tienda-banner', (adjustment) => this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageAdjustment: adjustment } }));
+  }
+  openAprendeBannerFrameEditor() {
+    const tab = this.state.aprendeTab;
+    this.openFrameEditor('aprende:banner:' + tab, 'cms-aprende-banner-' + tab, (adjustment) => {
+      const bannerImageAdjustments = { ...((this.state.aprendeData && this.state.aprendeData.bannerImageAdjustments) || {}), [tab]: adjustment };
+      this.setState({ aprendeData: { ...this.state.aprendeData, bannerImageAdjustments } });
+    });
+  }
+  openItemFrameEditor(listKey, itemId, fieldKey, slotId) {
+    const editorId = listKey + ':' + itemId + ':' + fieldKey;
+    this.openFrameEditor(editorId, slotId, (adjustment) => {
+      const items = this.getListArray(listKey).map((item) => item.id !== itemId ? item : { ...item, imageAdjustments: { ...(item.imageAdjustments || {}), [fieldKey]: adjustment } });
+      this.setListArray(listKey, items);
+    });
   }
   updateRecentProduct(position, productId) {
     const ids = [...((this.state.content && this.state.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'])];
@@ -977,7 +1020,10 @@ class Component extends DCLogic {
         };
       }
       if (d.type === 'image') {
-        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
+        const slotId = 'cms-field-' + listKey + '-' + item.id + '-' + d.key;
+        const editorId = listKey + ':' + item.id + ':' + d.key;
+        const adjustment = (item.imageAdjustments && item.imageAdjustments[d.key]) || { zoom: 100, x: 0, y: 0 };
+        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: this.state.adjustingImage === editorId, maxWidth: this.state.adjustingImage === editorId ? '760px' : '180px', onAdjust: () => this.openItemFrameEditor(listKey, item.id, d.key, slotId), onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
       }
       if (d.type === 'file') {
         const url = item[d.key] || '';
@@ -992,6 +1038,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
+    const imageView = (value) => { const a = this.normalizeImageAdjustment(value); return { scale: a.zoom / 100, x: a.x, y: a.y }; };
     const buildInicioPhoto = (p) => {
       const adjustment = ((s.content && s.content.imageAdjustments) || {})[p.key] || { zoom: 100, x: 0, y: 0 };
       return {
@@ -1000,9 +1047,9 @@ class Component extends DCLogic {
         hasImage: !!(s.content && s.content[p.key]),
         uploading: s.uploading === ('inicioPhoto_' + p.key),
         viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y,
-        isAdjusting: s.adjustingInicioPhoto === p.key,
-        gridColumn: s.adjustingInicioPhoto === p.key ? '1 / -1' : 'auto',
-        maxWidth: s.adjustingInicioPhoto === p.key ? '760px' : '100%',
+        isAdjusting: s.adjustingImage === ('inicio:' + p.key),
+        gridColumn: s.adjustingImage === ('inicio:' + p.key) ? '1 / -1' : 'auto',
+        maxWidth: s.adjustingImage === ('inicio:' + p.key) ? '760px' : '100%',
         onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),
         onRemove: () => this.removeInicioPhoto(p.key),
         onAdjust: () => this.openInicioFrameEditor(p.key)
@@ -1128,18 +1175,34 @@ class Component extends DCLogic {
       legalUpdatedAt: s.legalUpdatedDates[s.page] || 'Julio de 2026',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
+      sobremiFeaturedView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.featuredImageUrl),
+      sobremiFeaturedAdjusting: s.adjustingImage === 'sobremi:featuredImageUrl',
+      sobremiFeaturedMaxWidth: s.adjustingImage === 'sobremi:featuredImageUrl' ? '760px' : '560px',
+      onSobremiFeaturedAdjust: () => this.openSobremiFrameEditor('featuredImageUrl', 'cms-sobremi-destacada'),
       onSobremiFeaturedUpload: (e) => this.handleSobremiFeaturedUpload(e.target.files[0]),
       onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),
       sobremiFeaturedUploading: s.uploading === 'sobremiFeatured',
       sobremiHeroUrl: (s.sobremiData && s.sobremiData.heroImageUrl) || '',
+      sobremiHeroView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.heroImageUrl),
+      sobremiHeroAdjusting: s.adjustingImage === 'sobremi:heroImageUrl',
+      sobremiHeroMaxWidth: s.adjustingImage === 'sobremi:heroImageUrl' ? '600px' : '280px',
+      onSobremiHeroAdjust: () => this.openSobremiFrameEditor('heroImageUrl', 'cms-sobremi-hero'),
       onSobremiHeroUpload: (e) => this.handleSobremiHeroUpload(e.target.files[0]),
       onSobremiHeroRemove: () => this.removeSobremiImage('heroImageUrl'),
       sobremiHeroUploading: s.uploading === 'sobremiHero',
       tiendaBannerUrl: (s.tiendaData && s.tiendaData.bannerImageUrl) || '',
+      tiendaBannerView: imageView(s.tiendaData && s.tiendaData.bannerImageAdjustment),
+      tiendaBannerAdjusting: s.adjustingImage === 'tienda:banner',
+      tiendaBannerMaxWidth: s.adjustingImage === 'tienda:banner' ? '760px' : '220px',
+      onTiendaBannerAdjust: () => this.openTiendaBannerFrameEditor(),
       onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),
       onTiendaBannerRemove: () => this.removeTiendaBanner(),
       tiendaBannerUploading: s.uploading === 'tiendaBanner',
       aprendeBannerUrl: (s.aprendeData && s.aprendeData.banners && s.aprendeData.banners[s.aprendeTab]) || '',
+      aprendeBannerView: imageView(s.aprendeData && s.aprendeData.bannerImageAdjustments && s.aprendeData.bannerImageAdjustments[s.aprendeTab]),
+      aprendeBannerAdjusting: s.adjustingImage === ('aprende:banner:' + s.aprendeTab),
+      aprendeBannerMaxWidth: s.adjustingImage === ('aprende:banner:' + s.aprendeTab) ? '760px' : '220px',
+      onAprendeBannerAdjust: () => this.openAprendeBannerFrameEditor(),
       onAprendeBannerUpload: (e) => this.handleAprendeBannerUpload(e.target.files[0]),
       onAprendeBannerRemove: () => this.removeAprendeBanner(),
       aprendeBannerUploading: s.uploading === ('aprendeBanner' + s.aprendeTab),
@@ -1150,7 +1213,7 @@ class Component extends DCLogic {
       })),
       inicioWorkshopGroup: {
         label: this.INICIO_WORKSHOP_GROUP.label, aspect: this.INICIO_WORKSHOP_GROUP.aspect,
-        photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({ ...buildInicioPhoto(p), maxWidth: s.adjustingInicioPhoto === p.key ? '760px' : '560px' }))
+        photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({ ...buildInicioPhoto(p), maxWidth: s.adjustingImage === ('inicio:' + p.key) ? '760px' : '560px' }))
       },
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',

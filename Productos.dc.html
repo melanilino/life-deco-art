@@ -21,7 +21,7 @@
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
-<script src="/image-slot.js?v=20260814-product-cache1"></script>
+<script src="/image-slot.js?v=20260818a4"></script>
 <style>
   html, body { margin: 0; max-width: 100%; overflow-x: clip; }
   body { background: #FFFFFF; }
@@ -56,7 +56,7 @@
 
     <div>
       <div style="aspect-ratio:{{ mainAspect }};max-height:{{ mainMaxHeight }};border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:{{ mainImageGap }};">
-        <image-slot id="pd-main" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal del producto"></image-slot>
+        <image-slot id="pd-main" shape="rect" fit="cover" view-scale="{{ mainImageView.scale }}" view-x="{{ mainImageView.x }}" view-y="{{ mainImageView.y }}" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal del producto"></image-slot>
       </div>
       <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">
         <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
@@ -150,7 +150,7 @@
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <div style="min-width:0;">
           <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;">
-            <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
+            <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
           </div>
           <div style="font-size:14px;font-weight:400;color:#000000;">{{ p.name }}</div>
           <div style="font-size:13px;font-weight:500;color:#F65091;margin-top:4px;">{{ p.price }}</div>
@@ -209,7 +209,9 @@ class Component extends DCLogic {
         cms.getPageContent('tienda'),
         cms.getEntities('products').catch(() => []),
       ]);
-      const source = entities.length ? entities : ((data && data.products) || []);
+      const pageProducts = (data && data.products) || [];
+      const pageProductMap = Object.fromEntries(pageProducts.map((item) => [item.id, item]));
+      const source = entities.length ? entities.map((item) => ({ ...item, imageAdjustments: item.imageAdjustments || (pageProductMap[item.id] && pageProductMap[item.id].imageAdjustments) || {} })) : pageProducts;
       const products = source.filter(p => !p.status || p.status === 'Activo' || p.status === 'Publicado').map((product) => ({
         ...product,
         desc: product.shortDescription || product.desc || product.description || '',
@@ -268,7 +270,8 @@ class Component extends DCLogic {
     const fallback = this.FALLBACK_PRODUCTS[requestedId] || this.FALLBACK_PRODUCTS.p1;
     const product = this.state.product || fallback;
     const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : [];
-    const relatedLive = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id)).slice(0,4);
+    const imageView = (item) => { const a = (item && item.imageAdjustments && item.imageAdjustments.imageUrl) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
+    const relatedLive = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id)).slice(0,4).map((item) => ({ ...item, imageView: imageView(item) }));
     const colors = this.COLORS.map(c => ({
       ...c,
       ring: this.state.color === c.name ? '0 0 0 2px #fff, 0 0 0 4px #F65091' : (c.hex === '#FFFFFF' ? '0 0 0 1px #E5DDD0' : 'none'),
@@ -316,11 +319,11 @@ class Component extends DCLogic {
       productReady: true,
       isMobile: m,
       productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',
-      mainImage: product.imageUrl || '', thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
+      mainImage: product.imageUrl || '', mainImageView: imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
       includes: Array.isArray(product.includes) && product.includes.length ? product.includes : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
       excludes: Array.isArray(product.excludes) && product.excludes.length ? product.excludes : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
-      related: relatedLive.length ? relatedLive : this.RELATED,
+      related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, imageView: imageView(item) })),
       faqs,
     };
   }

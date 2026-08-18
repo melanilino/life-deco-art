@@ -86,7 +86,7 @@ body{margin:0;background:#fff}
 <a id="lda-whatsapp-fab-static" href="https://wa.me/18495390410" target="_blank" rel="noopener" title="Escríbenos por WhatsApp" aria-label="Escríbenos por WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.87.5 3.62 1.44 5.15L2 22l5.13-1.5a9.8 9.8 0 0 0 4.91 1.32h.01c5.46 0 9.9-4.45 9.9-9.91C21.96 6.45 17.51 2 12.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.93 1.38-.5.08-1.12.11-1.8-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.8-4.17-4.94-4.36-.14-.19-1.18-1.57-1.18-3s.75-2.13 1.02-2.42c.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.41-.07.64.49.24.58.81 1.98.88 2.12.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.05.17-.17.71-.83.9-1.11.19-.29.38-.24.63-.15.26.1 1.65.78 1.93.92.29.15.48.22.55.34.07.13.07.72-.17 1.4z"></path></svg></a>
 <x-dc>
 <helmet>
-<script src="/image-slot.js?v=20260812-entryfix1" defer></script>
+<script src="/image-slot.js?v=20260818a4" defer></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
@@ -197,7 +197,7 @@ body{margin:0;background:#fff}
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
         <div id="producto-{{ p.id }}" style="min-width:0;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease;" style-hover="transform:translateY(-6px);">
           <a href="{{ p.detailHref }}" aria-label="Ver detalle de {{ p.displayName }}" style="display:block;aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:18px;position:relative;overflow:hidden;text-decoration:none;cursor:pointer;">
-            <image-slot id="tienda-{{ p.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
+            <image-slot id="tienda-{{ p.id }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
             <sc-if value="{{ p.tag }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;">{{ p.tag }}</span>
             </sc-if>
@@ -228,7 +228,7 @@ body{margin:0;background:#fff}
   </sc-if>
 
   <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin:{{ bannerMargin }};">
-    <image-slot id="tienda-banner-espacio" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ bannerImageUrl }}" placeholder="foto: pieza terminada en un espacio real (mesa, pared, evento)"></image-slot>
+    <image-slot id="tienda-banner-espacio" shape="rect" fit="cover" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerImageUrl }}" placeholder="foto: pieza terminada en un espacio real (mesa, pared, evento)"></image-slot>
   </div>
 
   <div style="max-width:820px;margin:0 auto;padding:{{ faqPad }};">
@@ -328,14 +328,18 @@ class Component extends DCLogic {
         ...cat,
         subcategories: (cat.subcategories || []).map((sub, index) => typeof sub === 'string' ? { id: `${cat.id}-sub-${index}`, name: sub } : sub),
       }));
+      const pageProducts = (data.products && data.products.length) ? data.products : [];
+      const pageProductMap = Object.fromEntries(pageProducts.map((product) => [product.id, product]));
       const normalizedProducts = entityProducts.map((product) => ({
         ...product,
+        imageAdjustments: product.imageAdjustments || (pageProductMap[product.id] && pageProductMap[product.id].imageAdjustments) || {},
         desc: product.shortDescription || product.desc || product.description || '',
       }));
       const merged = {
         categories: normalizedCategories.length ? normalizedCategories : ((data.categories && data.categories.length) ? data.categories : this.DEFAULT_CATEGORIES),
         products: normalizedProducts.length ? normalizedProducts : ((data.products && data.products.length) ? data.products.filter(p => !p.status || p.status === 'Activo') : this.DEFAULT_PRODUCTS),
         bannerImageUrl: data.bannerImageUrl || '',
+        bannerImageAdjustment: data.bannerImageAdjustment || null,
       };
       this.setState({ tiendaData: merged, loading: false });
     } catch (e) {
@@ -382,6 +386,7 @@ class Component extends DCLogic {
     const { category, subcategory, expanded, sortBy, sortOpen, faqOpen, tiendaData, loading } = this.state;
     const data = tiendaData || { categories: this.DEFAULT_CATEGORIES, products: this.DEFAULT_PRODUCTS };
     const bannerImageUrl = data.bannerImageUrl || '';
+    const view = (value) => { const a = value || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
 
     const faqs = this.FAQS.map((f, i) => ({
       ...f,
@@ -460,7 +465,7 @@ class Component extends DCLogic {
         'Vinera Personalizada': 'Vinera de Madera con Nombre',
         'Cartel de Propuesta': 'Cartel para Propuesta de Matrimonio',
       };
-      return { ...p, displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, detailHref: `/tienda/producto?id=${encodeURIComponent(p.id)}`, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
+      return { ...p, imageView: view(p.imageAdjustments && p.imageAdjustments.imageUrl), displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, detailHref: `/tienda/producto?id=${encodeURIComponent(p.id)}`, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
     });
 
     const openCustomOrder = (e) => {
@@ -516,6 +521,7 @@ class Component extends DCLogic {
       products,
       noProducts: products.length === 0,
       bannerImageUrl,
+      bannerView: view(data.bannerImageAdjustment),
       openCustomOrder,
     };
   }
