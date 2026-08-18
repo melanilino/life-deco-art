@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
 <meta property="og:url" content="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
 <script src="/support.js?v=20260814-product-cache1"></script>
-<script src="/site-enhancements.js?v=20260817a2" defer></script>
+<script src="/site-enhancements.js?v=20260817a3" defer></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -172,7 +172,7 @@ class Component extends DCLogic {
   readCachedProducts() {
     try {
       const cached = JSON.parse(sessionStorage.getItem('lda:page:tienda') || '{}');
-      return Array.isArray(cached.products) ? cached.products : [];
+      return Array.isArray(cached.products) ? cached.products.filter(p => !p.status || p.status === 'Activo') : [];
     } catch (_) {
       return [];
     }
@@ -206,14 +206,13 @@ class Component extends DCLogic {
       const hadCachedProduct = !!this.state.product;
       const cms = await import('/cms.js');
       const data = await cms.getPageContent('tienda');
-      const products = (data && data.products) || [];
+      const products = ((data && data.products) || []).filter(p => !p.status || p.status === 'Activo');
 
       // Si llegamos desde Tienda, la ficha ya se dibujó con el catálogo exacto
       // guardado en sesión. Evitamos un segundo render visible del producto.
-      if (!hadCachedProduct) {
-        const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
-        this.setState({ product, allProducts: products });
-      }
+      const product = products.find(x => String(x.id) === String(id)) || products[0] || null;
+      if (!hadCachedProduct) this.setState({ product, allProducts: products });
+      else this.setState({ allProducts: products });
     } catch (e) {
       console.error('No se pudo cargar el producto.', e);
     }

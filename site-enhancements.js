@@ -4,6 +4,15 @@
   const STYLE_ID = "lda-accessibility-css";
   const MAIN_ID = "contenido-principal";
 
+  function ensureFavicon() {
+    if (document.querySelector('link[rel="icon"]')) return;
+    const icon = document.createElement("link");
+    icon.rel = "icon";
+    icon.type = "image/svg+xml";
+    icon.href = "/favicon.svg";
+    document.head.appendChild(icon);
+  }
+
   function addAccessibilityStyles() {
     if (document.getElementById(STYLE_ID)) return;
     const style = document.createElement("style");
@@ -51,7 +60,8 @@
   }
 
   function enhanceContent() {
-    const main = document.querySelector("main, [role=\"main\"], #dc-root > .sc-host > section");
+    const main = document.querySelector("main, [role=\"main\"], #dc-root > .sc-host > section, section")
+      || document.querySelector("h1")?.parentElement;
     if (main && !main.id) {
       main.id = MAIN_ID;
       main.tabIndex = -1;
@@ -109,6 +119,20 @@
       const placeholder = control.getAttribute("placeholder");
       if (placeholder) control.setAttribute("aria-label", placeholder);
     });
+
+    document.querySelectorAll('[onclick]:not(a):not(button):not(input):not(select):not(textarea)').forEach((control) => {
+      if (control.getAttribute("role") === "dialog" || control.closest('[role="dialog"]') === control) return;
+      if (!control.hasAttribute("role")) control.setAttribute("role", "button");
+      if (!control.hasAttribute("tabindex")) control.tabIndex = 0;
+      if (!control.dataset.ldaKeyboard) {
+        control.dataset.ldaKeyboard = "true";
+        control.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          control.click();
+        });
+      }
+    });
   }
 
   function addPageUrlMetadata() {
@@ -126,12 +150,48 @@
     document.head.appendChild(meta);
   }
 
+  function updateDynamicMetadata() {
+    const dynamicPage = /^\/(tienda\/(producto|[^/]+)|aprende\/(curso|taller|recurso|cursos\/[^/]+|talleres\/[^/]+|gratis\/[^/]+))$/.test(window.location.pathname);
+    if (!dynamicPage) return;
+    const heading = document.querySelector("h1");
+    const title = heading?.textContent?.trim();
+    if (!title || title.includes("{{")) return;
+    const url = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+    const description = Array.from(document.querySelectorAll("p"))
+      .map((item) => item.textContent.trim())
+      .find((text) => text && !text.includes("{{"));
+    document.title = `${title} | Life Deco Art`;
+    const setMeta = (selector, attribute, value) => {
+      let element = document.querySelector(selector);
+      if (!element) {
+        element = document.createElement("meta");
+        const match = selector.match(/meta\[(name|property)="([^"]+)"\]/);
+        if (match) element.setAttribute(match[1], match[2]);
+        document.head.appendChild(element);
+      }
+      element.setAttribute(attribute, value);
+    };
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.href = url;
+    setMeta('meta[property="og:url"]', "content", url);
+    setMeta('meta[property="og:title"]', "content", document.title);
+    if (description) {
+      setMeta('meta[name="description"]', "content", description);
+      setMeta('meta[property="og:description"]', "content", description);
+    }
+  }
+
   function init() {
+    ensureFavicon();
     addAccessibilityStyles();
     addSkipLink();
     addPageUrlMetadata();
     enhanceContent();
-    const observer = new MutationObserver(enhanceContent);
+    updateDynamicMetadata();
+    const observer = new MutationObserver(() => {
+      enhanceContent();
+      updateDynamicMetadata();
+    });
     observer.observe(document.body, { childList: true, subtree: true });
   }
 

@@ -21,7 +21,7 @@ x-dc{display:none!important}
 @media(max-width:859px){#dc-boot-fallback .dc-fb-nav{height:64px;padding:0 20px}#dc-boot-fallback .dc-fb-hero{height:400px;min-height:400px;padding:72px 26px 16px}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:18px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 14px}#dc-boot-fallback .dc-fb-sub{font-size:14px;margin:0 0 28px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
 <script src="/support.js?v=20260812-entryfix1" defer></script>
-<script src="/site-enhancements.js?v=20260817a2" defer></script>
+<script src="/site-enhancements.js?v=20260817a3" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Aprende</title>
@@ -488,6 +488,24 @@ class Component extends DCLogic {
     check();
     this._resizeHandler = check;
     window.addEventListener('resize', this._resizeHandler, { passive: true });
+    this._popstateHandler = () => {
+      const params = new URLSearchParams(window.location.search);
+      const tab = this.TABS.find(t => t.toLowerCase() === (params.get('tab') || '').toLowerCase()) || 'Esenciales';
+      this.setState({ category: tab, faqOpen: null });
+    };
+    window.addEventListener('popstate', this._popstateHandler);
+  }
+  componentWillUnmount() {
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+    if (this._popstateHandler) window.removeEventListener('popstate', this._popstateHandler);
+  }
+  selectCategory(category) {
+    const url = new URL(window.location.href);
+    if (category === 'Esenciales') url.searchParams.delete('tab');
+    else url.searchParams.set('tab', category);
+    url.hash = '';
+    window.history.pushState({}, '', `${url.pathname}${url.search}`);
+    this.setState({ category, faqOpen: null });
   }
   async loadLive() {
     try {
@@ -684,7 +702,7 @@ class Component extends DCLogic {
         active,
         color: active ? '#0CC0DF' : '#2B2420',
         weight: active ? 600 : 400,
-        onClick: () => this.setState({ category: t, faqOpen: null }),
+        onClick: () => this.selectCategory(t),
       };
     });
     const tabsRow1 = tabs.slice(0, 4);
