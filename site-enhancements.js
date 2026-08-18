@@ -95,6 +95,20 @@
       rel.add("noopener");
       link.setAttribute("rel", [...rel].join(" "));
     });
+
+    document.querySelectorAll("label:not([for])").forEach((label, index) => {
+      const control = label.parentElement?.querySelector("input, select, textarea");
+      if (!control) return;
+      if (!control.id) control.id = `lda-field-${index + 1}`;
+      label.htmlFor = control.id;
+    });
+
+    document.querySelectorAll("input, select, textarea").forEach((control) => {
+      if (control.getAttribute("aria-label") || control.getAttribute("aria-labelledby")) return;
+      if (control.id && [...document.querySelectorAll("label[for]")].some((label) => label.htmlFor === control.id)) return;
+      const placeholder = control.getAttribute("placeholder");
+      if (placeholder) control.setAttribute("aria-label", placeholder);
+    });
   }
 
   function addPageUrlMetadata() {

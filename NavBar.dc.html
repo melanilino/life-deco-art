@@ -11,15 +11,15 @@
     </div>
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ toggleMenu }}" style="display:flex;flex-direction:column;gap:5px;padding:10px;cursor:pointer;">
+    <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="lda-mobile-navigation" style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;">
       <span style="width:22px;height:2px;background:#000000;"></span>
       <span style="width:22px;height:2px;background:#000000;"></span>
       <span style="width:15px;height:2px;background:#000000;"></span>
-    </div>
+    </button>
   </sc-if>
 </nav>
 <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;top:64px;left:0;right:0;bottom:0;z-index:49;background:#FFFFFF;display:flex;flex-direction:column;padding:24px;overflow-y:auto;">
+  <div id="lda-mobile-navigation" style="position:fixed;top:64px;left:0;right:0;bottom:0;z-index:49;background:#FFFFFF;display:flex;flex-direction:column;padding:24px;overflow-y:auto;">
     <sc-for list="{{ links }}" as="link" hint-placeholder-count="5">
       <a href="{{ link.href }}" style="font-family:'Montserrat',sans-serif;text-decoration:none;padding:18px 4px;border-bottom:1px solid #F0EAE0;font-size:20px;font-weight:300;color:{{ link.color }};">{{ link.label }}</a>
     </sc-for>
@@ -30,10 +30,14 @@
 class Component extends DCLogic {
   state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, menuOpen: false };
   componentDidMount() {
-    const check = () => this.setState({ isMobile: window.innerWidth < 860 });
+    const check = () => this.setState({ isMobile: window.innerWidth < 860, menuOpen: window.innerWidth < 860 && this.state.menuOpen });
     check();
     this._resizeHandler = check;
     window.addEventListener('resize', this._resizeHandler, { passive: true });
+    this._keyHandler = (event) => {
+      if (event.key === 'Escape' && this.state.menuOpen) this.setState({ menuOpen: false });
+    };
+    document.addEventListener('keydown', this._keyHandler);
 
     // Prepare the five navbar destinations invisibly. On browsers that support
     // Speculation Rules this prerenders the full document, so clicking the nav
@@ -76,7 +80,10 @@ class Component extends DCLogic {
       document.body.appendChild(a);
     }
   }
-  componentWillUnmount() { if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler); }
+  componentWillUnmount() {
+    if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+    if (this._keyHandler) document.removeEventListener('keydown', this._keyHandler);
+  }
   renderVals() {
     const active = this.props.activePage || 'inicio';
     const accentColor = '#8B795E';
@@ -89,7 +96,7 @@ class Component extends DCLogic {
     ];
     const sectionColors = { tienda:'#F65091', aprende:'#0CC0DF' };
     const links = items.map(it => ({ href:it.href,label:it.label,color:it.id===active?(sectionColors[it.id]||accentColor):'#000000',bgSize:it.id===active?'100%':'0%' }));
-    return { accentColor,links,isMobile:this.state.isMobile,isDesktop:!this.state.isMobile,navPadding:this.state.isMobile?'18px 20px':'26px 48px',menuOpen:this.state.isMobile&&this.state.menuOpen,toggleMenu:()=>this.setState({ menuOpen:!this.state.menuOpen }) };
+    return { accentColor,links,isMobile:this.state.isMobile,isDesktop:!this.state.isMobile,navPadding:this.state.isMobile?'10px 20px':'26px 48px',menuOpen:this.state.isMobile&&this.state.menuOpen,menuLabel:this.state.menuOpen?'Cerrar menú':'Abrir menú',toggleMenu:()=>this.setState({ menuOpen:!this.state.menuOpen }) };
   }
 }
 </script>
