@@ -522,6 +522,26 @@ x-dc{display:none!important}
         </sc-for>
       </div>
       <span onClick="{{ onAddAprendeItem }}" style="display:inline-block;font-size:13px;color:#F65091;cursor:pointer;margin-bottom:24px;">+ Agregar</span>
+      <sc-if value="{{ showAprendeEssentialsFaqs }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:16px 0 10px;">Preguntas frecuentes</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
+          <sc-for list="{{ aprendeFaqs }}" as="faq" hint-placeholder-count="3">
+            <div style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
+              <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;cursor:pointer;">
+                <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" onClick="{{ stopPropagation }}" onFocus="{{ faq.onOpen }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
+                <span aria-label="Plegar o desplegar respuesta" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span>
+              </div>
+              <sc-if value="{{ faq.isOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 18px 18px;border-top:1px solid #F3EEE4;">
+                  <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;margin-top:14px;"></textarea>
+                  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;"><span onClick="{{ faq.onMoveUp }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <span onClick="{{ onAddAprendeFaq }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;padding:8px 0;margin-bottom:24px;">+ Agregar pregunta</span>
+      </sc-if>
     </sc-if>
 
   </div>
@@ -778,6 +798,12 @@ class Component extends DCLogic {
       Object.keys(this.DEFAULT_APRENDE).forEach((k) => { merged[k] = (data[k] && data[k].length) ? data[k] : this.DEFAULT_APRENDE[k]; });
       merged.banners = data.banners || {};
       merged.bannerImageAdjustments = data.bannerImageAdjustments || {};
+      merged.faqs = data.faqs || {};
+      if (!Array.isArray(merged.faqs.esenciales)) merged.faqs.esenciales = [
+        { id: 'esfaq1', q: '¿Estos productos los vendes tú?', a: 'No, son productos de terceros que uso o recomiendo — la compra se hace directo en la tienda correspondiente.' },
+        { id: 'esfaq2', q: '¿Ganas algo si compro a través de estos enlaces?', a: 'Sí, en algunos casos recibo una pequeña comisión, sin costo extra para ti.' },
+        { id: 'esfaq3', q: '¿Con qué frecuencia agregan nuevas recomendaciones?', a: 'Cada vez que encuentro algo que realmente uso y me gustaría compartir.' }
+      ];
       this.setState({ aprendeData: merged, aprendeLoaded: true, aprendeLoading: false });
     } else if (pageId === 'sobremi' && !this.state.sobremiLoaded) {
       let data = {};
@@ -867,6 +893,32 @@ class Component extends DCLogic {
     if (!await this.askConfirmation('¿Confirmas que deseas eliminar este contenido?', 'Eliminar contenido')) return;
     this.removeItem(listKey, id);
     this.selectTile(listKey, null);
+  }
+  getAprendeFaqs(tab = this.state.aprendeTab) {
+    return (((this.state.aprendeData && this.state.aprendeData.faqs) || {})[tab] || []);
+  }
+  setAprendeFaqs(tab, faqs) {
+    this.setState({ aprendeData: { ...this.state.aprendeData, faqs: { ...(this.state.aprendeData.faqs || {}), [tab]: faqs } }, saved: false });
+  }
+  addAprendeFaq() {
+    const tab = this.state.aprendeTab, faq = { id: 'afaq' + Date.now(), q: 'Nueva pregunta', a: '' };
+    this.setAprendeFaqs(tab, [...this.getAprendeFaqs(tab), faq]);
+    this.setState({ expanded: { ...this.state.expanded, aprendeFaq: faq.id } });
+  }
+  updateAprendeFaq(id, key, value) {
+    const tab = this.state.aprendeTab;
+    this.setAprendeFaqs(tab, this.getAprendeFaqs(tab).map((faq) => faq.id === id ? { ...faq, [key]: value } : faq));
+  }
+  moveAprendeFaq(id, direction) {
+    const tab = this.state.aprendeTab, faqs = [...this.getAprendeFaqs(tab)], index = faqs.findIndex((faq) => faq.id === id), target = index + direction;
+    if (index < 0 || target < 0 || target >= faqs.length) return;
+    [faqs[index], faqs[target]] = [faqs[target], faqs[index]];
+    this.setAprendeFaqs(tab, faqs);
+  }
+  async removeAprendeFaq(id) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar esta pregunta?', 'Eliminar pregunta')) return;
+    const tab = this.state.aprendeTab;
+    this.setAprendeFaqs(tab, this.getAprendeFaqs(tab).filter((faq) => faq.id !== id));
   }
   addItem(listKey, defaults) {
     const id = 'i' + Date.now() + Math.random().toString(36).slice(2, 6);
@@ -1352,7 +1404,7 @@ class Component extends DCLogic {
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
-    let aprendeTabs = [], aprendeItems = [];
+    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [];
     if (s.page === 'aprende' && s.aprendeData) {
       aprendeTabs = Object.keys(this.APRENDE_TAB_LABELS).map((k) => ({
         label: this.APRENDE_TAB_LABELS[k], onClick: () => this.setState({ aprendeTab: k }),
@@ -1379,6 +1431,16 @@ class Component extends DCLogic {
           selectBorder: isSelected ? '#F65091' : '#E4DCCB', selectBg: isSelected ? '#FDF3F7' : 'transparent'
         };
       });
+      aprendeFaqs = this.getAprendeFaqs(s.aprendeTab).map((faq) => ({
+        ...faq,
+        isOpen: s.expanded.aprendeFaq === faq.id,
+        arrow: s.expanded.aprendeFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)',
+        onToggle: () => this.setState({ expanded: { ...this.state.expanded, aprendeFaq: this.state.expanded.aprendeFaq === faq.id ? null : faq.id } }),
+        onOpen: () => this.setState({ expanded: { ...this.state.expanded, aprendeFaq: faq.id } }),
+        onQuestionChange: (e) => this.updateAprendeFaq(faq.id, 'q', e.target.value),
+        onAnswerChange: (e) => this.updateAprendeFaq(faq.id, 'a', e.target.value),
+        onMoveUp: () => this.moveAprendeFaq(faq.id, -1), onMoveDown: () => this.moveAprendeFaq(faq.id, 1), onRemove: () => this.removeAprendeFaq(faq.id)
+      }));
     }
     const selectedAprendeItem = aprendeItems.find((it) => it.isSelected) || null;
     const aprendeGridBlurStyle = selectedAprendeItem ? 'filter:blur(1.5px);opacity:.5;' : '';
@@ -1492,7 +1554,8 @@ class Component extends DCLogic {
       onAddCategory: () => this.addCategory(),
       onAddTiendaFaq: () => this.addTiendaFaq(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
-      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems,
+      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs,
+      showAprendeEssentialsFaqs: s.aprendeTab === 'esenciales', onAddAprendeFaq: () => this.addAprendeFaq(),
       onAddAprendeItem: () => {
         const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
