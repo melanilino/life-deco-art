@@ -61,8 +61,8 @@
       <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">
         <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
-            <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;">
-              <image-slot id="{{ t.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
+            <div onClick="{{ t.onClick }}" style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;box-shadow:{{ t.ring }};">
+              <image-slot id="{{ t.id }}" shape="rect" fit="cover" view-scale="{{ t.view.scale }}" view-x="{{ t.view.x }}" view-y="{{ t.view.y }}" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
             </div>
           </sc-for>
         </div>
@@ -84,21 +84,25 @@
             <div style="font-size:13px;color:#2B2420;font-weight:400;margin-bottom:8px;">Frase o texto</div>
             <div style="border:1px solid #E5DDD0;border-radius:6px;padding:10px 14px;font-size:13px;color:#8B795E;">"Te elijo hoy y siempre" — o la frase que prefieras</div>
           </div>
-          <div>
+          <div style="display:{{ colorDisplay }};">
             <div style="font-size:13px;color:#2B2420;font-weight:400;margin-bottom:8px;">Color de base</div>
+            <sc-if value="{{ hasColors }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex;gap:10px;">
               <sc-for list="{{ colors }}" as="c" hint-placeholder-count="3">
                 <div onClick="{{ c.onClick }}" title="{{ c.name }}" style="width:28px;height:28px;border-radius:999px;background:{{ c.hex }};cursor:pointer;box-shadow:{{ c.ring }};"></div>
               </sc-for>
             </div>
+            </sc-if>
           </div>
-          <div>
+          <div style="display:{{ sizeDisplay }};">
             <div style="font-size:13px;color:#2B2420;font-weight:400;margin-bottom:8px;">Tamaño</div>
+            <sc-if value="{{ hasSizes }}" hint-placeholder-val="{{ true }}">
             <div style="display:flex;gap:8px;flex-wrap:wrap;">
               <sc-for list="{{ sizes }}" as="s" hint-placeholder-count="3">
                 <div onClick="{{ s.onClick }}" style="padding:8px 16px;border-radius:6px;border:1px solid {{ s.border }};font-size:13px;color:{{ s.color }};font-weight:{{ s.weight }};cursor:pointer;">{{ s.label }}</div>
               </sc-for>
             </div>
+            </sc-if>
           </div>
         </div>
       </div>
@@ -113,7 +117,7 @@
           </div>
           <div class="lda-desktop-timing" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-            Elaboración: 5-7 días
+            Elaboración: {{ productDelivery }}
           </div>
         </div>
         <div>
@@ -125,7 +129,7 @@
           </div>
           <div class="lda-mobile-timing" style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
-            Elaboración: 5-7 días
+            Elaboración: {{ productDelivery }}
           </div>
           <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
@@ -149,10 +153,10 @@
     <div style="display:grid;grid-template-columns:{{ relatedCols }};gap:{{ relatedGap }};min-width:0;">
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <div style="min-width:0;">
-          <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;">
+          <a href="{{ p.detailHref }}" style="display:block;aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;text-decoration:none;">
             <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
-          </div>
-          <div style="font-size:14px;font-weight:400;color:#000000;">{{ p.name }}</div>
+          </a>
+          <a href="{{ p.detailHref }}" style="display:block;font-size:14px;font-weight:400;color:#000000;text-decoration:none;">{{ p.name }}</a>
           <div style="font-size:13px;font-weight:500;color:#F65091;margin-top:4px;">{{ p.price }}</div>
         </div>
       </sc-for>
@@ -191,6 +195,7 @@ class Component extends DCLogic {
       color: 'Negro',
       size: 'Mediana (25cm)',
       faqOpen: 0,
+      gallerySelection: null,
     };
   })();
 
@@ -211,7 +216,7 @@ class Component extends DCLogic {
       ]);
       const pageProducts = (data && data.products) || [];
       const pageProductMap = Object.fromEntries(pageProducts.map((item) => [item.id, item]));
-      const source = entities.length ? entities.map((item) => ({ ...item, imageAdjustments: item.imageAdjustments || (pageProductMap[item.id] && pageProductMap[item.id].imageAdjustments) || {} })) : pageProducts;
+      const source = pageProducts.length ? pageProducts : entities;
       const products = source.filter(p => !p.status || p.status === 'Activo' || p.status === 'Publicado').map((product) => ({
         ...product,
         desc: product.shortDescription || product.desc || product.description || '',
@@ -269,15 +274,18 @@ class Component extends DCLogic {
     const requestedId = params.get('id') || 'p1';
     const fallback = this.FALLBACK_PRODUCTS[requestedId] || this.FALLBACK_PRODUCTS.p1;
     const product = this.state.product || fallback;
-    const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean) : [];
+    const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean).map((entry, index) => typeof entry === 'string' ? { id: `gallery-${index}`, url: entry, adjustment: null } : { ...entry, id: entry.id || `gallery-${index}` }) : [];
     const imageView = (item) => { const a = (item && item.imageAdjustments && item.imageAdjustments.imageUrl) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
-    const relatedLive = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id)).slice(0,4).map((item) => ({ ...item, imageView: imageView(item) }));
-    const colors = this.COLORS.map(c => ({
+    const relatedPool = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id));
+    const relatedLive = [...relatedPool.filter(x => x.subcategory && x.subcategory === product.subcategory), ...relatedPool.filter(x => x.subcategory !== product.subcategory && x.category === product.category), ...relatedPool.filter(x => x.category !== product.category)].slice(0,4).map((item) => ({ ...item, detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) }));
+    const colorsSource = Array.isArray(product.colors) ? product.colors : this.COLORS;
+    const colors = colorsSource.map(c => ({
       ...c,
       ring: this.state.color === c.name ? '0 0 0 2px #fff, 0 0 0 4px #F65091' : (c.hex === '#FFFFFF' ? '0 0 0 1px #E5DDD0' : 'none'),
       onClick: () => this.setState({ color: c.name }),
     }));
-    const sizes = this.SIZES.map(s => ({
+    const sizesSource = Array.isArray(product.sizes) ? product.sizes.filter(Boolean) : this.SIZES;
+    const sizes = sizesSource.map(s => ({
       label: s,
       border: this.state.size === s ? '#F65091' : '#E5DDD0',
       color: this.state.size === s ? '#F65091' : '#2B2420',
@@ -290,7 +298,9 @@ class Component extends DCLogic {
       arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
       onClick: () => this.setState({ faqOpen: this.state.faqOpen === i ? null : i }),
     }));
-    const thumbs = gallery.map((src, i) => ({ id: `pd-thumb-${i}`, src, placeholder: `vista ${i+1} de ${product.name}` }));
+    const selectedGallery = gallery.find((entry) => entry.id === this.state.gallerySelection) || null;
+    const galleryView = (entry) => { const a = (entry && entry.adjustment) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
+    const thumbs = gallery.map((entry, i) => ({ id: `pd-thumb-${entry.id || i}`, src: entry.url || '', view: galleryView(entry), ring: selectedGallery && selectedGallery.id === entry.id ? '0 0 0 2px #F65091' : 'none', onClick: () => this.setState({ gallerySelection: selectedGallery && selectedGallery.id === entry.id ? null : entry.id }), placeholder: `vista ${i+1} de ${product.name}` }));
     return {
       navGap: m ? '64px' : '88px',
       mainAspect: m ? '1 / 1' : '4 / 5',
@@ -318,12 +328,12 @@ class Component extends DCLogic {
       faqPad: m ? '0 24px 60px' : '0 48px 100px',
       productReady: true,
       isMobile: m,
-      productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '',
-      mainImage: product.imageUrl || '', mainImageView: imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes,
-      includes: Array.isArray(product.includes) && product.includes.length ? product.includes : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
-      excludes: Array.isArray(product.excludes) && product.excludes.length ? product.excludes : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
+      productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '', productDelivery: product.delivery || '',
+      mainImage: selectedGallery ? selectedGallery.url : (product.imageUrl || ''), mainImageView: selectedGallery ? galleryView(selectedGallery) : imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes, hasColors: colors.length > 0, hasSizes: sizes.length > 0, colorDisplay: colors.length ? 'block' : 'none', sizeDisplay: sizes.length ? 'block' : 'none',
+      includes: Array.isArray(product.includes) ? product.includes.filter(Boolean) : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
+      excludes: Array.isArray(product.excludes) ? product.excludes.filter(Boolean) : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
-      related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, imageView: imageView(item) })),
+      related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) })),
       faqs,
     };
   }

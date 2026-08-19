@@ -324,23 +324,28 @@ class Component extends DCLogic {
         cms.getEntities('categories').catch(() => []),
         cms.getEntities('products').catch(() => []),
       ]);
-      const normalizedCategories = entityCategories.map((cat) => ({
+      const entityCategoryData = entityCategories.map((cat) => ({
         ...cat,
         subcategories: (cat.subcategories || []).map((sub, index) => typeof sub === 'string' ? { id: `${cat.id}-sub-${index}`, name: sub } : sub),
       }));
+      const normalizedCategories = (data.categories && data.categories.length) ? data.categories : entityCategoryData;
       const pageProducts = (data.products && data.products.length) ? data.products : [];
       const pageProductMap = Object.fromEntries(pageProducts.map((product) => [product.id, product]));
-      const normalizedProducts = entityProducts.map((product) => ({
+      const entityProductData = entityProducts.map((product) => ({
         ...product,
-        imageAdjustments: product.imageAdjustments || (pageProductMap[product.id] && pageProductMap[product.id].imageAdjustments) || {},
-        desc: product.shortDescription || product.desc || product.description || '',
+        ...(pageProductMap[product.id] || {}),
+        imageAdjustments: (pageProductMap[product.id] && pageProductMap[product.id].imageAdjustments) || product.imageAdjustments || {},
+        desc: (pageProductMap[product.id] && pageProductMap[product.id].desc) || product.shortDescription || product.desc || product.description || '',
       }));
+      const normalizedProducts = pageProducts.length ? pageProducts : entityProductData;
       const merged = {
-        categories: normalizedCategories.length ? normalizedCategories : ((data.categories && data.categories.length) ? data.categories : this.DEFAULT_CATEGORIES),
-        products: normalizedProducts.length ? normalizedProducts : ((data.products && data.products.length) ? data.products.filter(p => !p.status || p.status === 'Activo') : this.DEFAULT_PRODUCTS),
+        categories: normalizedCategories.length ? normalizedCategories : this.DEFAULT_CATEGORIES,
+        products: normalizedProducts.length ? normalizedProducts : this.DEFAULT_PRODUCTS,
         bannerImageUrl: data.bannerImageUrl || '',
         bannerImageAdjustment: data.bannerImageAdjustment || null,
+        faqs: Array.isArray(data.faqs) ? data.faqs : this.FAQS,
       };
+      this.updateFaqSchema(merged.faqs);
       this.setState({ tiendaData: merged, loading: false });
     } catch (e) {
       this.setState({ tiendaData: { categories: this.DEFAULT_CATEGORIES, products: this.DEFAULT_PRODUCTS }, loading: false });
@@ -354,6 +359,13 @@ class Component extends DCLogic {
     { q: '¿Qué pasa si quiero algo que no está en el catálogo?', a: 'Acepto encargos especiales fuera de catálogo — instalaciones, piezas grandes, colaboraciones. Escríbeme tu idea y lo construimos juntos.' },
     { q: '¿Cuáles son las formas de pago disponibles?', a: 'Transferencia bancaria: 50% de anticipo para separar tu encargo y el resto al momento de la entrega.' },
   ];
+  updateFaqSchema(faqs) {
+    try {
+      const scripts = Array.from(document.querySelectorAll('script[type="application/ld+json"]'));
+      const target = scripts.find((script) => { try { return JSON.parse(script.textContent || '{}')['@type'] === 'FAQPage'; } catch (_) { return false; } });
+      if (target) target.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: (faqs || []).map((faq) => ({ '@type': 'Question', name: faq.q, acceptedAnswer: { '@type': 'Answer', text: faq.a } })) });
+    } catch (_) {}
+  }
   SORT_OPTIONS = [
     { value: 'entrega', label: 'Entrega más rápida' },
     { value: 'precio_asc', label: 'Precio, menor a mayor' },
@@ -388,7 +400,7 @@ class Component extends DCLogic {
     const bannerImageUrl = data.bannerImageUrl || '';
     const view = (value) => { const a = value || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
 
-    const faqs = this.FAQS.map((f, i) => ({
+    const faqs = (data.faqs || this.FAQS).map((f, i) => ({
       ...f,
       open: faqOpen === i,
       arrow: faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',

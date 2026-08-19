@@ -269,19 +269,6 @@ x-dc{display:none!important}
 
     <sc-if value="{{ isTiendaPage }}" hint-placeholder-val="{{ false }}">
       <div>
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
-        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-            <div style="position:relative;width:{{ tiendaBannerMaxWidth }};aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-tienda-banner" shape="rect" fit="cover" view-scale="{{ tiendaBannerView.scale }}" view-x="{{ tiendaBannerView.x }}" view-y="{{ tiendaBannerView.y }}" style="width:100%;height:100%;" src="{{ tiendaBannerUrl }}" placeholder="foto de portada"></image-slot><sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
-            <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
-              Subir
-              <input type="file" accept="image/*" onChange="{{ onTiendaBannerUpload }}" style="display:none;">
-            </label>
-            <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
-            <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
-          </div>
-          <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-        </div>
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Categorías</div>
         <div style="margin-bottom:12px;">
           <sc-for list="{{ tiendaCategories }}" as="cat" hint-placeholder-count="3">
@@ -299,12 +286,13 @@ x-dc{display:none!important}
                     <sc-for list="{{ cat.subcategories }}" as="sub" hint-placeholder-count="3">
                       <div style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:999px;padding:5px 6px 5px 10px;">
                         <input type="text" value="{{ sub.name }}" onChange="{{ sub.onRename }}" style="border:none;background:transparent;font-size:12px;width:100px;font-family:Montserrat;">
-                        <span onClick="{{ sub.onRemove }}" style="cursor:pointer;color:#8B795E;font-size:13px;">×</span>
+                        <span onClick="{{ sub.onMoveUp }}" title="Mover antes" style="cursor:pointer;color:#8B795E;font-size:11px;">↑</span><span onClick="{{ sub.onMoveDown }}" title="Mover después" style="cursor:pointer;color:#8B795E;font-size:11px;">↓</span><span onClick="{{ sub.onRemove }}" title="Eliminar" style="cursor:pointer;color:#C0392B;font-size:13px;">×</span>
                       </div>
                     </sc-for>
                     <span onClick="{{ cat.onAddSub }}" style="font-size:12px;color:#F65091;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
                   </div>
                   <div style="text-align:right;">
+                    <span onClick="{{ cat.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;margin-right:12px;">Subir</span><span onClick="{{ cat.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;margin-right:12px;">Bajar</span>
                     <span onClick="{{ cat.onRemove }}" style="font-size: 12px; color: #C0392B; cursor: pointer">Eliminar categoría</span>
                   </div>
                 </div>
@@ -344,6 +332,7 @@ x-dc{display:none!important}
               <div style="margin-bottom:14px;">
                 <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
                 <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
+                <sc-if value="{{ f.isLines }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if>
                 <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
                 <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
                   <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B795E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
@@ -364,12 +353,59 @@ x-dc{display:none!important}
                 </sc-if>
               </div>
             </sc-for>
+            <div style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Colores disponibles</div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
+              <sc-for list="{{ selectedProduct.colors }}" as="color" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="color" value="{{ color.hex }}" onChange="{{ color.onHexChange }}" title="Elegir color" style="width:40px;height:38px;padding:3px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;cursor:pointer;">
+                  <input type="text" value="{{ color.name }}" onChange="{{ color.onNameChange }}" placeholder="Nombre del color" style="flex:1;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
+                  <span onClick="{{ color.onRemove }}" title="Eliminar color" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;">×</span>
+                </div>
+              </sc-for>
+            </div>
+            <span onClick="{{ selectedProduct.onAddColor }}" style="display:inline-block;font-size:12px;color:#F65091;cursor:pointer;margin-bottom:20px;">+ Agregar color</span>
+
+            <div style="margin:4px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Galería de imágenes</div>
+            <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
+              <sc-for list="{{ selectedProduct.gallery }}" as="photo" hint-placeholder-count="2">
+                <div style="width:{{ photo.maxWidth }};">
+                  <div style="position:relative;width:100%;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="imagen de galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onClick="{{ photo.onMoveUp }}" title="Mover antes" style="font-size:12px;color:#8B795E;cursor:pointer;">←</span><span style="font-size:11px;color:#8B795E;">{{ photo.position }}</span><span onClick="{{ photo.onMoveDown }}" title="Mover después" style="font-size:12px;color:#8B795E;cursor:pointer;">→</span><span onClick="{{ photo.onRemove }}" title="Eliminar imagen" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div>
+                  <sc-if value="{{ photo.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:6px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;margin-bottom:20px;">Subir<input type="file" accept="image/*" onChange="{{ selectedProduct.onGalleryUpload }}" style="display:none;"></label>
+            <sc-if value="{{ selectedProduct.galleryUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
             <div style="text-align:right;">
               <span onClick="{{ selectedProduct.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar producto</span>
             </div>
             </div>
           </div>
         </sc-if>
+
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Banner</div>
+        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <div style="position:relative;width:{{ tiendaBannerMaxWidth }};aspect-ratio:21/9;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-tienda-banner" shape="rect" fit="cover" view-scale="{{ tiendaBannerView.scale }}" view-x="{{ tiendaBannerView.x }}" view-y="{{ tiendaBannerView.y }}" style="width:100%;height:100%;" src="{{ tiendaBannerUrl }}" placeholder="foto de portada"></image-slot><sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
+            <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;">Subir<input type="file" accept="image/*" onChange="{{ onTiendaBannerUpload }}" style="display:none;"></label>
+            <sc-if value="{{ tiendaBannerUrl }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onTiendaBannerRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+            <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
+          </div>
+          <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:9px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+        </div>
+
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
+          <sc-for list="{{ tiendaFaqs }}" as="faq" hint-placeholder-count="5">
+            <div style="background:#FFFFFF;border-radius:8px;padding:18px;">
+              <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" placeholder="Pregunta" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:8px;">
+              <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
+              <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;"><span onClick="{{ faq.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+            </div>
+          </sc-for>
+        </div>
+        <span onClick="{{ onAddTiendaFaq }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;margin-bottom:24px;">+ Agregar pregunta</span>
 
       </div>
     </sc-if>
@@ -542,6 +578,13 @@ class Component extends DCLogic {
       { id: 'p9', name: 'Caja Recuerdo de Nacimiento', price: 'RD$1,870', category: 'Ocasión', subcategory: 'Bebés y Revelación', desc: 'Caja en resina con forma de corazón para ecografías y recuerdos del nacimiento.', tag: 'Bestseller', delivery: '7-10 días', imageUrl: '' },
       { id: 'p10', name: 'Cuadro de Hitos "One Month"', price: 'RD$500', category: 'Ocasión', subcategory: 'Bebés y Revelación', desc: 'Cuadro ilustrado a mano para conmemorar cada mes de vida del bebé.', tag: '', delivery: '5-7 días', imageUrl: '' },
       { id: 'p11', name: 'Cartel de Propuesta', price: 'RD$1,600', category: 'Ocasión', subcategory: 'Bodas', desc: 'Cartel en lienzo con flores pintadas a mano para inmortalizar el "sí quiero".', tag: '', delivery: '7-10 días', imageUrl: '' }
+    ],
+    faqs: [
+      { id: 'faq1', q: '¿Cómo sé si mi pieza quedará como la imagino?', a: 'Antes de crear tu pieza te comparto un boceto digital para tu aprobación, con ajustes incluidos. Solo empiezo a producir una vez que lo apruebas.' },
+      { id: 'faq2', q: '¿Cómo funcionan los envíos?', a: 'Hacemos entregas a todo el país vía Uber Moto, Vimenpaq o BM Cargo, según tu ubicación.' },
+      { id: 'faq3', q: '¿Qué pasa si necesito mi pedido con urgencia?', a: 'Escríbeme antes de ordenar — si el tiempo lo permite, puedo priorizar tu pedido con un cargo adicional por urgencia.' },
+      { id: 'faq4', q: '¿Qué pasa si quiero algo que no está en el catálogo?', a: 'Acepto encargos especiales fuera de catálogo — instalaciones, piezas grandes, colaboraciones. Escríbeme tu idea y lo construimos juntos.' },
+      { id: 'faq5', q: '¿Cuáles son las formas de pago disponibles?', a: 'Transferencia bancaria: 50% de anticipo para separar tu encargo y el resto al momento de la entrega.' }
     ]
   };
 
@@ -682,9 +725,17 @@ class Component extends DCLogic {
       try { data = await this.state.cms.getPageContent('tienda'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       const merged = {
         categories: (data.categories && data.categories.length) ? data.categories : this.DEFAULT_TIENDA.categories,
-        products: (data.products && data.products.length) ? data.products : this.DEFAULT_TIENDA.products,
+        products: ((data.products && data.products.length) ? data.products : this.DEFAULT_TIENDA.products).map((product) => ({
+          ...product,
+          colors: Array.isArray(product.colors) ? product.colors : [{ id: 'black', name: 'Negro', hex: '#111111' }, { id: 'white', name: 'Blanco', hex: '#FFFFFF' }],
+          sizes: Array.isArray(product.sizes) ? product.sizes : ['Pequeña (20cm)', 'Mediana (25cm)', 'Grande (30cm)'],
+          includes: Array.isArray(product.includes) ? product.includes : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
+          excludes: Array.isArray(product.excludes) ? product.excludes : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
+          gallery: Array.isArray(product.gallery) ? product.gallery : []
+        })),
         bannerImageUrl: data.bannerImageUrl || '',
-        bannerImageAdjustment: data.bannerImageAdjustment || null
+        bannerImageAdjustment: data.bannerImageAdjustment || null,
+        faqs: (Array.isArray(data.faqs) ? data.faqs : this.DEFAULT_TIENDA.faqs).map((faq, index) => ({ ...faq, id: faq.id || ('faq' + index) }))
       };
       this.setState({ tiendaData: merged, tiendaLoaded: true, tiendaLoading: false });
     } else if (pageId === 'aprende' && !this.state.aprendeLoaded) {
@@ -770,7 +821,7 @@ class Component extends DCLogic {
   updateField = (key, value) => { this.setState({ content: { ...this.state.content, [key]: value }, saved: false }); };
 
   updateItem(listKey, id, key, value) {
-    const arr = this.getListArray(listKey).map((it) => (it.id === id ? { ...it, [key]: value } : it));
+    const arr = this.getListArray(listKey).map((it) => (it.id === id ? { ...it, [key]: value, ...(listKey === 'products' && key === 'category' ? { subcategory: '' } : {}) } : it));
     this.setListArray(listKey, arr);
   }
   removeItem(listKey, id) { this.setListArray(listKey, this.getListArray(listKey).filter((it) => it.id !== id)); }
@@ -985,11 +1036,26 @@ class Component extends DCLogic {
     const cat = { id: 'c' + Date.now(), name: 'Nueva categoría', subcategories: [] };
     this.setState({ tiendaData: { ...this.state.tiendaData, categories: [...this.state.tiendaData.categories, cat] }, saved: false });
   }
-  renameCategory(catId, name) {
-    const categories = this.state.tiendaData.categories.map((c) => (c.id === catId ? { ...c, name } : c));
+  moveCategory(catId, direction) {
+    const categories = [...this.state.tiendaData.categories];
+    const index = categories.findIndex((c) => c.id === catId), target = index + direction;
+    if (index < 0 || target < 0 || target >= categories.length) return;
+    [categories[index], categories[target]] = [categories[target], categories[index]];
     this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
   }
-  removeCategory(catId) {
+  renameCategory(catId, name) {
+    const previous = this.state.tiendaData.categories.find((c) => c.id === catId);
+    const categories = this.state.tiendaData.categories.map((c) => (c.id === catId ? { ...c, name } : c));
+    const products = this.state.tiendaData.products.map((p) => previous && p.category === previous.name ? { ...p, category: name } : p);
+    this.setState({ tiendaData: { ...this.state.tiendaData, categories, products }, saved: false });
+  }
+  async removeCategory(catId) {
+    const category = this.state.tiendaData.categories.find((c) => c.id === catId);
+    if (category && this.state.tiendaData.products.some((p) => p.category === category.name)) {
+      this.setState({ error: 'Esta categoría tiene productos asociados. Muévelos antes de eliminarla.' });
+      return;
+    }
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar esta categoría?', 'Eliminar categoría')) return;
     const categories = this.state.tiendaData.categories.filter((c) => c.id !== catId);
     this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
   }
@@ -998,12 +1064,105 @@ class Component extends DCLogic {
     this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
   }
   renameSubcategory(catId, subId, name) {
+    const category = this.state.tiendaData.categories.find((c) => c.id === catId);
+    const previous = category && category.subcategories.find((s) => s.id === subId);
     const categories = this.state.tiendaData.categories.map((c) => (c.id !== catId ? c : { ...c, subcategories: c.subcategories.map((s) => (s.id === subId ? { ...s, name } : s)) }));
+    const products = this.state.tiendaData.products.map((p) => category && previous && p.category === category.name && p.subcategory === previous.name ? { ...p, subcategory: name } : p);
+    this.setState({ tiendaData: { ...this.state.tiendaData, categories, products }, saved: false });
+  }
+  moveSubcategory(catId, subId, direction) {
+    const categories = this.state.tiendaData.categories.map((category) => {
+      if (category.id !== catId) return category;
+      const subcategories = [...category.subcategories];
+      const index = subcategories.findIndex((s) => s.id === subId), target = index + direction;
+      if (index < 0 || target < 0 || target >= subcategories.length) return category;
+      [subcategories[index], subcategories[target]] = [subcategories[target], subcategories[index]];
+      return { ...category, subcategories };
+    });
     this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
   }
-  removeSubcategory(catId, subId) {
+  async removeSubcategory(catId, subId) {
+    const category = this.state.tiendaData.categories.find((c) => c.id === catId);
+    const subcategory = category && category.subcategories.find((s) => s.id === subId);
+    if (category && subcategory && this.state.tiendaData.products.some((p) => p.category === category.name && p.subcategory === subcategory.name)) {
+      this.setState({ error: 'Esta subcategoría tiene productos asociados. Muévelos antes de eliminarla.' });
+      return;
+    }
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar esta subcategoría?', 'Eliminar subcategoría')) return;
     const categories = this.state.tiendaData.categories.map((c) => (c.id !== catId ? c : { ...c, subcategories: c.subcategories.filter((s) => s.id !== subId) }));
     this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
+  }
+  updateProductCollection(productId, key, value) { this.updateItem('products', productId, key, value); }
+  addProductColor(productId) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId);
+    this.updateProductCollection(productId, 'colors', [...((product && product.colors) || []), { id: 'color' + Date.now(), name: 'Nuevo color', hex: '#F3EEE4' }]);
+  }
+  updateProductColor(productId, colorId, key, value) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId);
+    this.updateProductCollection(productId, 'colors', ((product && product.colors) || []).map((c, index) => (c.id || ('color' + index)) === colorId ? { ...c, id: colorId, [key]: value } : c));
+  }
+  removeProductColor(productId, colorId) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId);
+    this.updateProductCollection(productId, 'colors', ((product && product.colors) || []).filter((c, index) => (c.id || ('color' + index)) !== colorId));
+  }
+  addTiendaFaq() {
+    const faqs = [...((this.state.tiendaData && this.state.tiendaData.faqs) || []), { id: 'faq' + Date.now(), q: 'Nueva pregunta', a: '' }];
+    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, saved: false });
+  }
+  updateTiendaFaq(id, key, value) {
+    const faqs = this.state.tiendaData.faqs.map((f) => f.id === id ? { ...f, [key]: value } : f);
+    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, saved: false });
+  }
+  moveTiendaFaq(id, direction) {
+    const faqs = [...this.state.tiendaData.faqs], index = faqs.findIndex((f) => f.id === id), target = index + direction;
+    if (index < 0 || target < 0 || target >= faqs.length) return;
+    [faqs[index], faqs[target]] = [faqs[target], faqs[index]];
+    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, saved: false });
+  }
+  async removeTiendaFaq(id) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar esta pregunta?', 'Eliminar pregunta')) return;
+    const faqs = this.state.tiendaData.faqs.filter((f) => f.id !== id);
+    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, saved: false });
+  }
+  async removeProduct(productId) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar este producto?', 'Eliminar producto')) return;
+    this.removeItem('products', productId);
+    this.selectTile('products', null);
+  }
+  normalizeGallery(product) {
+    return ((product && product.gallery) || []).filter(Boolean).map((entry, index) => typeof entry === 'string' ? { id: 'gallery' + index, url: entry, adjustment: null } : { ...entry, id: entry.id || ('gallery' + index) });
+  }
+  uploadProductGallery(productId, file) {
+    if (!file) return;
+    this.setState({ uploading: 'gallery:' + productId });
+    this.state.cms.uploadImage('content-images/products', file).then((url) => {
+      const product = this.state.tiendaData.products.find((p) => p.id === productId);
+      const gallery = [...this.normalizeGallery(product), { id: 'gallery' + Date.now(), url, adjustment: null }];
+      this.updateProductCollection(productId, 'gallery', gallery);
+      this.setState({ uploading: null });
+    }).catch(() => this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }));
+  }
+  moveProductGallery(productId, galleryId, direction) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId), gallery = this.normalizeGallery(product);
+    const index = gallery.findIndex((g) => g.id === galleryId), target = index + direction;
+    if (index < 0 || target < 0 || target >= gallery.length) return;
+    [gallery[index], gallery[target]] = [gallery[target], gallery[index]];
+    this.updateProductCollection(productId, 'gallery', gallery);
+  }
+  async removeProductGallery(productId, galleryId) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId), gallery = this.normalizeGallery(product), entry = gallery.find((g) => g.id === galleryId);
+    if (!entry || !await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen de la galería?', 'Eliminar imagen')) return;
+    const products = this.state.tiendaData.products.map((p) => p.id === productId ? { ...p, gallery: gallery.filter((g) => g.id !== galleryId) } : p);
+    const next = { ...this.state.tiendaData, products };
+    try { await this.state.cms.savePageContent('tienda', next); await this.state.cms.deleteMediaUrl(entry.url); this.setState({ tiendaData: next, saved: true }); }
+    catch (_) { this.setState({ error: 'No se pudo eliminar la imagen.' }); }
+  }
+  openProductGalleryFrameEditor(productId, galleryId, slotId) {
+    this.openFrameEditor('gallery:' + productId + ':' + galleryId, slotId, (adjustment) => {
+      const product = this.state.tiendaData.products.find((p) => p.id === productId);
+      const gallery = this.normalizeGallery(product).map((g) => g.id === galleryId ? { ...g, adjustment } : g);
+      this.updateProductCollection(productId, 'gallery', gallery);
+    });
   }
 
   handleSave = async () => {
@@ -1032,6 +1191,9 @@ class Component extends DCLogic {
 
   buildTextFields(item, defs, listKey) {
     return defs.map((d) => {
+      if (d.type === 'lines') {
+        return { key: d.key, label: d.label, isLines: true, value: Array.isArray(item[d.key]) ? item[d.key].join('\n') : '', placeholder: d.placeholder || '', onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value.split('\n')) };
+      }
       if (d.type === 'richtext') {
         return {
           key: d.key, label: d.label, isRichtext: true,
@@ -1095,19 +1257,20 @@ class Component extends DCLogic {
 
     const fields = [];
 
-    let tiendaCategories = [], tiendaProducts = [], categoryNames = [];
+    let tiendaCategories = [], tiendaProducts = [], tiendaFaqs = [], categoryNames = [];
     if (s.page === 'tienda' && s.tiendaData) {
       categoryNames = s.tiendaData.categories.map((c) => c.name);
       tiendaCategories = s.tiendaData.categories.map((cat) => ({
         id: cat.id, name: cat.name, onRename: (e) => this.renameCategory(cat.id, e.target.value),
         onRemove: () => this.removeCategory(cat.id), onAddSub: () => this.addSubcategory(cat.id),
+        onMoveUp: () => this.moveCategory(cat.id, -1), onMoveDown: () => this.moveCategory(cat.id, 1),
         isOpen: s.expanded.category === cat.id, onToggle: () => this.selectTile('category', cat.id),
         nameFieldBorder: s.expanded.category === cat.id ? '1px solid #E4DCCB' : '1px solid transparent',
         toggleIcon: s.expanded.category === cat.id ? '▴' : '▾',
         toggleColor: '#8B795E',
         toggleTransform: s.expanded.category === cat.id ? 'rotate(180deg)' : 'rotate(0deg)',
         subCount: cat.subcategories.length,
-        subcategories: cat.subcategories.map((sub) => ({ name: sub.name, onRename: (e) => this.renameSubcategory(cat.id, sub.id, e.target.value), onRemove: () => this.removeSubcategory(cat.id, sub.id) }))
+        subcategories: cat.subcategories.map((sub) => ({ name: sub.name, onRename: (e) => this.renameSubcategory(cat.id, sub.id, e.target.value), onRemove: () => this.removeSubcategory(cat.id, sub.id), onMoveUp: () => this.moveSubcategory(cat.id, sub.id, -1), onMoveDown: () => this.moveSubcategory(cat.id, sub.id, 1) }))
       }));
       tiendaProducts = s.tiendaData.products.map((p) => {
         const cat = s.tiendaData.categories.find((c) => c.name === p.category);
@@ -1118,18 +1281,26 @@ class Component extends DCLogic {
           { key: 'category', label: 'Categoría', type: 'select', options: categoryNames },
           { key: 'subcategory', label: 'Subcategoría', type: 'select', options: subOptions },
           { key: 'tag', label: 'Etiqueta (opcional)', type: 'text' }, { key: 'delivery', label: 'Tiempo de entrega', type: 'text' },
-          { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '4/5' }
+          { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'imageUrl', label: 'Imagen principal', type: 'image', aspect: '4/5' },
+          { key: 'sizes', label: 'Tamaños disponibles (uno por línea)', type: 'lines', placeholder: 'Pequeña (20 cm)' },
+          { key: 'includes', label: 'Qué incluye (uno por línea)', type: 'lines', placeholder: 'Boceto digital previo' },
+          { key: 'excludes', label: 'Qué no incluye (uno por línea)', type: 'lines', placeholder: 'Envío incluido en el precio' }
         ];
         const isSelected = s.expanded.products === p.id;
         const status = p.status || 'Activo';
         return {
-          id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products'), onRemove: () => this.removeItem('products', p.id),
+          id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products'), onRemove: () => this.removeProduct(p.id),
           name: p.name || 'Sin nombre', price: p.price || '', imageUrl: p.imageUrl || '', noImage: !p.imageUrl,
           status, statusBg: status === 'Activo' ? '#E8F3E9' : status === 'Borrador' ? '#F3EEE4' : '#FDECEC',
           statusColor: status === 'Activo' ? '#2E7D32' : status === 'Borrador' ? '#8B795E' : '#C0392B',
-          isSelected, onSelect: () => this.selectTile('products', p.id)
+          isSelected, onSelect: () => this.selectTile('products', p.id),
+          colors: ((p.colors || []).map((color, index) => ({ id: color.id || ('color' + index), name: color.name || '', hex: color.hex || '#F3EEE4', onNameChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, color.id || ('color' + index)) }))),
+          onAddColor: () => this.addProductColor(p.id),
+          gallery: this.normalizeGallery(p).map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment); const slotId = 'cms-product-gallery-' + p.id + '-' + entry.id; return { ...entry, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onMoveUp: () => this.moveProductGallery(p.id, entry.id, -1), onMoveDown: () => this.moveProductGallery(p.id, entry.id, 1), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
+          onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id)
         };
       });
+      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
@@ -1263,10 +1434,11 @@ class Component extends DCLogic {
         };
       }),
       isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading),
-      isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, selectedProduct,
+      isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, tiendaFaqs, selectedProduct,
       onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
-      onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Activo', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '' }),
+      onAddTiendaFaq: () => this.addTiendaFaq(),
+      onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems,
       onAddAprendeItem: () => {
         const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', desc: '', href: '#', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
