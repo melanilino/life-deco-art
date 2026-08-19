@@ -460,6 +460,20 @@ x-dc{display:none!important}
   </div>
 </div>
 </sc-if>
+
+<sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onConfirmCancel }}" role="presentation" style="position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(43,36,32,.58);backdrop-filter:blur(2px);">
+    <div onClick="{{ onConfirmStop }}" role="dialog" aria-modal="true" aria-labelledby="cms-confirm-title" style="width:min(100%,420px);box-sizing:border-box;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:12px;padding:28px;box-shadow:0 20px 55px rgba(43,36,32,.24);font-family:Montserrat;">
+      <div style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;margin-bottom:18px;border-radius:999px;background:#FDECEC;color:#C0392B;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></div>
+      <div id="cms-confirm-title" style="font-size:20px;font-weight:500;color:#2B2420;margin-bottom:10px;">{{ confirmTitle }}</div>
+      <div style="font-size:13px;line-height:1.65;color:#8B795E;margin-bottom:26px;">{{ confirmMessage }}</div>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button onClick="{{ onConfirmCancel }}" style="height:40px;padding:0 18px;border:1px solid #E4DCCB;border-radius:5px;background:#FFFFFF;color:#5C5142;font-family:Montserrat;font-size:13px;cursor:pointer;">Cancelar</button>
+        <button onClick="{{ onConfirmAccept }}" style="height:40px;padding:0 20px;border:1px solid #F65091;border-radius:5px;background:#F65091;color:#FFFFFF;font-family:Montserrat;font-size:13px;font-weight:500;cursor:pointer;">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
@@ -475,8 +489,23 @@ class Component extends DCLogic {
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
-    adjustingImage: null
+    adjustingImage: null,
+    confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
   };
+
+  askConfirmation(message, title = 'Eliminar') {
+    if (this._confirmResolver) this._confirmResolver(false);
+    return new Promise((resolve) => {
+      this._confirmResolver = resolve;
+      this.setState({ confirmOpen: true, confirmTitle: title, confirmMessage: message });
+    });
+  }
+  closeConfirmation(accepted) {
+    const resolve = this._confirmResolver;
+    this._confirmResolver = null;
+    this.setState({ confirmOpen: false });
+    if (resolve) resolve(accepted);
+  }
 
   selectTile(scope, id) {
     const cur = this.state.expanded[scope];
@@ -704,10 +733,10 @@ class Component extends DCLogic {
     [projectTypes[index], projectTypes[target]] = [projectTypes[target], projectTypes[index]];
     this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false });
   }
-  removeContactType(index) {
+  async removeContactType(index) {
     const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
     if (projectTypes.length <= 1) { this.setState({ error: 'El formulario debe conservar al menos un tipo de proyecto.' }); return; }
-    if (!window.confirm('¿Eliminar este tipo de proyecto?')) return;
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar este tipo de proyecto?', 'Eliminar tipo de proyecto')) return;
     projectTypes.splice(index, 1);
     this.setState({ contactData: { ...this.state.contactData, projectTypes }, saved: false, error: '' });
   }
@@ -727,7 +756,7 @@ class Component extends DCLogic {
 
   async removeConfigFavicon() {
     const url = this.state.configData && this.state.configData.faviconUrl;
-    if (!url || !window.confirm('¿Eliminar el favicon personalizado? Se volverá a usar el favicon predeterminado.')) return;
+    if (!url || !await this.askConfirmation('¿Confirmas que deseas eliminar el favicon personalizado? Se volverá a usar el favicon predeterminado.', 'Eliminar favicon')) return;
     const next = { ...this.state.configData, faviconUrl: '' };
     try {
       await this.state.cms.savePageContent('global', next);
@@ -755,7 +784,7 @@ class Component extends DCLogic {
 
   async removeItemImage(listKey,id,key) {
     const cur=this.getListArray(listKey), item=cur.find(x=>x.id===id), url=item&&item[key];
-    if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
+    if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
     const arr=cur.map(x=>{if(x.id!==id)return x;const imageAdjustments={...(x.imageAdjustments||{})};delete imageAdjustments[key];return{...x,[key]:'',imageAdjustments};});
     try{
       if(listKey==='products'){
@@ -770,34 +799,34 @@ class Component extends DCLogic {
     }catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeInicioPhoto(key){
-    const url=this.state.content&&this.state.content[key]; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
+    const url=this.state.content&&this.state.content[key]; if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
     const adjustments={...((this.state.content&&this.state.content.imageAdjustments)||{})}; delete adjustments[key];
     const next={...this.state.content,[key]:'',imageAdjustments:adjustments};
     try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); this.setState({content:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeHeroVideo(){
-    const url=this.state.content&&this.state.content.heroVideoUrl; if(!url||!window.confirm('¿Eliminar este video?')) return;
+    const url=this.state.content&&this.state.content.heroVideoUrl; if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar este video?', 'Eliminar video')) return;
     const next={...this.state.content,heroVideoUrl:''};
     try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); this.setState({content:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar el video.'});}
   }
   async removeTiendaBanner(){
-    const url=this.state.tiendaData&&this.state.tiendaData.bannerImageUrl; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
+    const url=this.state.tiendaData&&this.state.tiendaData.bannerImageUrl; if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
     const next={...this.state.tiendaData,bannerImageUrl:'',bannerImageAdjustment:null};
     try{await this.state.cms.savePageContent('tienda',next); await this.state.cms.deleteMediaUrl(url); this.setState({tiendaData:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeAprendeBanner(){
     const tab=this.state.aprendeTab,url=this.state.aprendeData&&this.state.aprendeData.banners&&this.state.aprendeData.banners[tab];
-    if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
+    if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
     const bannerImageAdjustments={...((this.state.aprendeData&&this.state.aprendeData.bannerImageAdjustments)||{})};delete bannerImageAdjustments[tab];
     const next={...this.state.aprendeData,banners:{...(this.state.aprendeData.banners||{}),[tab]:''},bannerImageAdjustments};
     try{await this.state.cms.savePageContent('aprende',next); await this.state.cms.deleteMediaUrl(url); this.setState({aprendeData:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
   async removeSobremiImage(key){
-    const url=this.state.sobremiData&&this.state.sobremiData[key]; if(!url||!window.confirm('¿Eliminar esta imagen?')) return;
+    const url=this.state.sobremiData&&this.state.sobremiData[key]; if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
     const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments[key];
     const next={...this.state.sobremiData,[key]:'',imageAdjustments};
     try{await this.state.cms.savePageContent('sobremi',next); await this.state.cms.deleteMediaUrl(url); this.setState({sobremiData:next,saved:true});}
@@ -1242,6 +1271,12 @@ class Component extends DCLogic {
         this.addItem(s.aprendeTab, defaults);
       },
       onSave: this.handleSave, saving: s.saving,
+      confirmOpen: s.confirmOpen,
+      confirmTitle: s.confirmTitle,
+      confirmMessage: s.confirmMessage,
+      onConfirmAccept: () => this.closeConfirmation(true),
+      onConfirmCancel: () => this.closeConfirmation(false),
+      onConfirmStop: (e) => e.stopPropagation(),
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
       hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto'
