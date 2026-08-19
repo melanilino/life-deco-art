@@ -381,6 +381,13 @@ x-dc{display:none!important}
                   <sc-if value="{{ photo.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:6px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                 </div>
               </sc-for>
+              <sc-for list="{{ selectedProduct.galleryPlaceholders }}" as="slot" hint-placeholder-count="2">
+                <label style="width:150px;aspect-ratio:4/5;box-sizing:border-box;border:1px dashed #CFC4B2;border-radius:6px;background:#FBF9F5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#8B795E;cursor:pointer;text-align:center;">
+                  <span style="font-size:22px;font-weight:300;line-height:1;">+</span>
+                  <span style="font-size:11px;line-height:1.4;">Miniatura {{ slot.position }}</span>
+                  <input type="file" accept="image/*" onChange="{{ slot.onUpload }}" style="display:none;">
+                </label>
+              </sc-for>
             </div>
             <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;margin-bottom:20px;">Subir<input type="file" accept="image/*" onChange="{{ selectedProduct.onGalleryUpload }}" style="display:none;"></label>
             <sc-if value="{{ selectedProduct.galleryUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
@@ -1307,6 +1314,7 @@ class Component extends DCLogic {
         ];
         const isSelected = s.expanded.products === p.id;
         const status = p.status || 'Activo';
+        const gallery = this.normalizeGallery(p);
         return {
           id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products').map((field, index) => ({ ...field, display: defs[index].tab === s.productTab ? 'block' : 'none' })), onRemove: () => this.removeProduct(p.id),
           name: p.name || 'Sin nombre', price: p.price || '', imageUrl: p.imageUrl || '', noImage: !p.imageUrl,
@@ -1315,7 +1323,8 @@ class Component extends DCLogic {
           isSelected, onSelect: () => this.openProductEditor(p.id),
           colors: ((p.colors || []).map((color, index) => ({ id: color.id || ('color' + index), name: color.name || '', hex: color.hex || '#F3EEE4', onNameChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, color.id || ('color' + index)) }))),
           onAddColor: () => this.addProductColor(p.id),
-          gallery: this.normalizeGallery(p).map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment); const slotId = 'cms-product-gallery-' + p.id + '-' + entry.id; return { ...entry, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onMoveUp: () => this.moveProductGallery(p.id, entry.id, -1), onMoveDown: () => this.moveProductGallery(p.id, entry.id, 1), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
+          gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment); const slotId = 'cms-product-gallery-' + p.id + '-' + entry.id; return { ...entry, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onMoveUp: () => this.moveProductGallery(p.id, entry.id, -1), onMoveDown: () => this.moveProductGallery(p.id, entry.id, 1), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
+          galleryPlaceholders: Array.from({ length: Math.max(0, 4 - gallery.length) }, (_, index) => ({ position: gallery.length + index + 1, onUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]) })),
           onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
           colorsDisplay: s.productTab === 'options' ? 'block' : 'none', galleryDisplay: s.productTab === 'images' ? 'block' : 'none',
           tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', border: s.productTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ productTab: tab.id }) }))
