@@ -322,14 +322,18 @@ x-dc{display:none!important}
           <div onClick="{{ onAddProduct }}" style="background:#FFFFFF;border:1px dashed #E4DCCB;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#8B795E;font-size:24px;cursor:pointer;min-height:198px;">+</div>
         </div>
         <sc-if value="{{ selectedProduct }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ onDeselectProduct }}" style="position:fixed;top:0;bottom:0;left:250px;right:0;background:rgba(0,0,0,.25);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;">
-            <div onClick="{{ stopPropagation }}" style="background:#FFFFFF;border-radius:8px;padding:24px;width:640px;max-width:100%;max-height:94vh;overflow-y:auto;overflow-x:hidden;box-shadow:0 6px 14px rgba(0,0,0,.15);">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-direction: row-reverse">
-                
-                <span onClick="{{ onDeselectProduct }}" style="font-size:16px;color:#8B795E;cursor:pointer;">✕</span>
+          <div style="position:fixed;inset:0;background:#F7F2E8;z-index:50;overflow-y:auto;padding:32px 24px 70px;box-sizing:border-box;">
+            <div style="width:100%;max-width:980px;margin:0 auto;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px;">
+                <div><span onClick="{{ onDeselectProduct }}" style="display:inline-block;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:14px;">← Volver a productos</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">{{ selectedProduct.name }}</div><div style="font-size:12px;color:#8B795E;margin-top:5px;">{{ selectedProduct.status }}</div></div>
+                <span onClick="{{ onDeselectProduct }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span>
               </div>
+              <div style="display:flex;gap:20px;overflow-x:auto;border-bottom:1px solid #E4DCCB;margin-bottom:24px;">
+                <sc-for list="{{ selectedProduct.tabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="white-space:nowrap;padding:0 2px 10px;font-size:13px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for>
+              </div>
+              <div style="background:#FFFFFF;border-radius:10px;padding:28px;">
               <sc-for list="{{ selectedProduct.fields }}" as="f" hint-placeholder-count="4">
-              <div style="margin-bottom:14px;">
+              <div style="display:{{ f.display }};margin-bottom:14px;">
                 <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
                 <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                 <sc-if value="{{ f.isLines }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if>
@@ -353,6 +357,7 @@ x-dc{display:none!important}
                 </sc-if>
               </div>
             </sc-for>
+            <div style="display:{{ selectedProduct.colorsDisplay }};">
             <div style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Colores disponibles</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.colors }}" as="color" hint-placeholder-count="2">
@@ -364,7 +369,9 @@ x-dc{display:none!important}
               </sc-for>
             </div>
             <span onClick="{{ selectedProduct.onAddColor }}" style="display:inline-block;font-size:12px;color:#F65091;cursor:pointer;margin-bottom:20px;">+ Agregar color</span>
+            </div>
 
+            <div style="display:{{ selectedProduct.galleryDisplay }};">
             <div style="margin:4px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Galería de imágenes</div>
             <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.gallery }}" as="photo" hint-placeholder-count="2">
@@ -377,8 +384,10 @@ x-dc{display:none!important}
             </div>
             <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;margin-bottom:20px;">Subir<input type="file" accept="image/*" onChange="{{ selectedProduct.onGalleryUpload }}" style="display:none;"></label>
             <sc-if value="{{ selectedProduct.galleryUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
+            </div>
             <div style="text-align:right;">
               <span onClick="{{ selectedProduct.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar producto</span>
+            </div>
             </div>
             </div>
           </div>
@@ -398,10 +407,15 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
           <sc-for list="{{ tiendaFaqs }}" as="faq" hint-placeholder-count="5">
-            <div style="background:#FFFFFF;border-radius:8px;padding:18px;">
-              <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" placeholder="Pregunta" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:8px;">
-              <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
-              <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;"><span onClick="{{ faq.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+            <div style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
+              <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;cursor:pointer;"><span style="font-size:13px;color:#2B2420;line-height:1.5;">{{ faq.q }}</span><span style="display:inline-flex;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span></div>
+              <sc-if value="{{ faq.isOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="padding:0 18px 18px;border-top:1px solid #F3EEE4;">
+                  <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" placeholder="Pregunta" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin:14px 0 8px;">
+                  <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
+                  <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;"><span onClick="{{ faq.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+                </div>
+              </sc-if>
             </div>
           </sc-for>
         </div>
@@ -527,7 +541,7 @@ class Component extends DCLogic {
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
-    adjustingImage: null,
+    adjustingImage: null, productTab: 'info',
     confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
   };
 
@@ -549,6 +563,8 @@ class Component extends DCLogic {
     const cur = this.state.expanded[scope];
     this.setState({ expanded: { ...this.state.expanded, [scope]: id === null ? null : (cur === id ? null : id) } });
   }
+  openProductEditor(id) { this.setState({ expanded: { ...this.state.expanded, products: id }, productTab: 'info' }); }
+  closeProductEditor() { this.setState({ expanded: { ...this.state.expanded, products: null }, productTab: 'info' }); }
 
   INICIO_SCHEMA = [
     { key: 'heroTitlePre', label: 'Título hero (antes de la palabra cursiva)', type: 'text', default: 'La evolución de una' },
@@ -1106,8 +1122,9 @@ class Component extends DCLogic {
     this.updateProductCollection(productId, 'colors', ((product && product.colors) || []).filter((c, index) => (c.id || ('color' + index)) !== colorId));
   }
   addTiendaFaq() {
-    const faqs = [...((this.state.tiendaData && this.state.tiendaData.faqs) || []), { id: 'faq' + Date.now(), q: 'Nueva pregunta', a: '' }];
-    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, saved: false });
+    const faq = { id: 'faq' + Date.now(), q: 'Nueva pregunta', a: '' };
+    const faqs = [...((this.state.tiendaData && this.state.tiendaData.faqs) || []), faq];
+    this.setState({ tiendaData: { ...this.state.tiendaData, faqs }, expanded: { ...this.state.expanded, tiendaFaq: faq.id }, saved: false });
   }
   updateTiendaFaq(id, key, value) {
     const faqs = this.state.tiendaData.faqs.map((f) => f.id === id ? { ...f, [key]: value } : f);
@@ -1276,31 +1293,33 @@ class Component extends DCLogic {
         const cat = s.tiendaData.categories.find((c) => c.name === p.category);
         const subOptions = cat ? cat.subcategories.map((sc) => sc.name) : [];
         const defs = [
-          { key: 'name', label: 'Nombre', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' },
-          { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
-          { key: 'category', label: 'Categoría', type: 'select', options: categoryNames },
-          { key: 'subcategory', label: 'Subcategoría', type: 'select', options: subOptions },
-          { key: 'tag', label: 'Etiqueta (opcional)', type: 'text' }, { key: 'delivery', label: 'Tiempo de entrega', type: 'text' },
-          { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'imageUrl', label: 'Imagen principal', type: 'image', aspect: '4/5' },
-          { key: 'sizes', label: 'Tamaños disponibles (uno por línea)', type: 'lines', placeholder: 'Pequeña (20 cm)' },
-          { key: 'includes', label: 'Qué incluye (uno por línea)', type: 'lines', placeholder: 'Boceto digital previo' },
-          { key: 'excludes', label: 'Qué no incluye (uno por línea)', type: 'lines', placeholder: 'Envío incluido en el precio' }
+          { key: 'name', label: 'Nombre', type: 'text', tab: 'info' }, { key: 'price', label: 'Precio', type: 'text', tab: 'info' },
+          { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'], tab: 'info' },
+          { key: 'category', label: 'Categoría', type: 'select', options: categoryNames, tab: 'info' },
+          { key: 'subcategory', label: 'Subcategoría', type: 'select', options: subOptions, tab: 'info' },
+          { key: 'tag', label: 'Etiqueta (opcional)', type: 'text', tab: 'info' }, { key: 'delivery', label: 'Tiempo de entrega', type: 'text', tab: 'info' },
+          { key: 'desc', label: 'Descripción', type: 'textarea', tab: 'content' }, { key: 'imageUrl', label: 'Imagen principal', type: 'image', aspect: '4/5', tab: 'images' },
+          { key: 'sizes', label: 'Tamaños disponibles (uno por línea)', type: 'lines', placeholder: 'Pequeña (20 cm)', tab: 'options' },
+          { key: 'includes', label: 'Qué incluye (uno por línea)', type: 'lines', placeholder: 'Boceto digital previo', tab: 'content' },
+          { key: 'excludes', label: 'Qué no incluye (uno por línea)', type: 'lines', placeholder: 'Envío incluido en el precio', tab: 'content' }
         ];
         const isSelected = s.expanded.products === p.id;
         const status = p.status || 'Activo';
         return {
-          id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products'), onRemove: () => this.removeProduct(p.id),
+          id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products').map((field, index) => ({ ...field, display: defs[index].tab === s.productTab ? 'block' : 'none' })), onRemove: () => this.removeProduct(p.id),
           name: p.name || 'Sin nombre', price: p.price || '', imageUrl: p.imageUrl || '', noImage: !p.imageUrl,
           status, statusBg: status === 'Activo' ? '#E8F3E9' : status === 'Borrador' ? '#F3EEE4' : '#FDECEC',
           statusColor: status === 'Activo' ? '#2E7D32' : status === 'Borrador' ? '#8B795E' : '#C0392B',
-          isSelected, onSelect: () => this.selectTile('products', p.id),
+          isSelected, onSelect: () => this.openProductEditor(p.id),
           colors: ((p.colors || []).map((color, index) => ({ id: color.id || ('color' + index), name: color.name || '', hex: color.hex || '#F3EEE4', onNameChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, color.id || ('color' + index)) }))),
           onAddColor: () => this.addProductColor(p.id),
           gallery: this.normalizeGallery(p).map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment); const slotId = 'cms-product-gallery-' + p.id + '-' + entry.id; return { ...entry, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onMoveUp: () => this.moveProductGallery(p.id, entry.id, -1), onMoveDown: () => this.moveProductGallery(p.id, entry.id, 1), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
-          onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id)
+          onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
+          colorsDisplay: s.productTab === 'options' ? 'block' : 'none', galleryDisplay: s.productTab === 'images' ? 'block' : 'none',
+          tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', border: s.productTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ productTab: tab.id }) }))
         };
       });
-      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
+      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
@@ -1435,7 +1454,7 @@ class Component extends DCLogic {
       }),
       isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, tiendaFaqs, selectedProduct,
-      onDeselectProduct: () => this.selectTile('products', null), stopPropagation: (e) => e.stopPropagation(),
+      onDeselectProduct: () => this.closeProductEditor(), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
       onAddTiendaFaq: () => this.addTiendaFaq(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
