@@ -454,8 +454,9 @@ x-dc{display:none!important}
       </div>
       <div style="margin-bottom:24px;">
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
-          <div style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
+          <div data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
             <div onClick="{{ item.onSelect }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;">
+              <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;flex:0 0 34px;color:#8B795E;cursor:grab;touch-action:none;font-size:19px;line-height:1;user-select:none;">⠿</span>
               <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:{{ item.summaryImageWidth }};height:{{ item.summaryImageHeight }};border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
               <input type="text" value="{{ item.name }}" onChange="{{ item.onNameChange }}" onClick="{{ stopPropagation }}" style="flex:1;border:{{ item.nameFieldBorder }};border-radius:4px;padding:10px;background:transparent;font-size:13px;color:#000;font-family:Montserrat;outline:none;" style-focus="outline:none;">
               <div style="display:{{ item.summaryDisplay }};font-size:12px;color:#8B795E;flex-shrink:0;">{{ item.price }}</div>
@@ -512,8 +513,6 @@ x-dc{display:none!important}
                   </div>
                 </sc-for>
                 <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
-                  <span onClick="{{ item.onMoveUp }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Subir</span>
-                  <span onClick="{{ item.onMoveDown }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span>
                   <span onClick="{{ item.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span>
                 </div>
               </div>
@@ -526,15 +525,16 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:16px 0 10px;">Preguntas frecuentes</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
           <sc-for list="{{ aprendeFaqs }}" as="faq" hint-placeholder-count="3">
-            <div style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
+            <div data-reorder-group="{{ faq.dragGroup }}" data-reorder-id="{{ faq.id }}" style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
               <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;cursor:pointer;">
+                <span onPointerDown="{{ faq.onDragStart }}" onPointerMove="{{ faq.onDragMove }}" onPointerUp="{{ faq.onDragEnd }}" onPointerCancel="{{ faq.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;flex:0 0 34px;color:#8B795E;cursor:grab;touch-action:none;font-size:19px;line-height:1;user-select:none;">⠿</span>
                 <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" onClick="{{ stopPropagation }}" onFocus="{{ faq.onOpen }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
                 <span aria-label="Plegar o desplegar respuesta" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span>
               </div>
               <sc-if value="{{ faq.isOpen }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:0 18px 18px;border-top:1px solid #F3EEE4;">
                   <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;margin-top:14px;"></textarea>
-                  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;"><span onClick="{{ faq.onMoveUp }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+                  <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;"><span onClick="{{ faq.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
                 </div>
               </sc-if>
             </div>
@@ -888,6 +888,45 @@ class Component extends DCLogic {
     if (index < 0 || target < 0 || target >= items.length) return;
     [items[index], items[target]] = [items[target], items[index]];
     this.setListArray(listKey, items);
+  }
+  moveItemTo(listKey, sourceId, targetId) {
+    const items = [...this.getListArray(listKey)], from = items.findIndex((item) => item.id === sourceId), to = items.findIndex((item) => item.id === targetId);
+    if (from < 0 || to < 0 || from === to) return;
+    const [moved] = items.splice(from, 1);
+    items.splice(to, 0, moved);
+    this.setListArray(listKey, items);
+  }
+  moveAprendeFaqTo(tab, sourceId, targetId) {
+    const faqs = [...this.getAprendeFaqs(tab)], from = faqs.findIndex((faq) => faq.id === sourceId), to = faqs.findIndex((faq) => faq.id === targetId);
+    if (from < 0 || to < 0 || from === to) return;
+    const [moved] = faqs.splice(from, 1);
+    faqs.splice(to, 0, moved);
+    this.setAprendeFaqs(tab, faqs);
+  }
+  beginPointerReorder(group, id, event) {
+    event.preventDefault(); event.stopPropagation();
+    this._pointerReorder = { group, sourceId: id, targetId: id };
+    if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
+  }
+  trackPointerReorder(event) {
+    if (!this._pointerReorder) return;
+    event.preventDefault();
+    const target = document.elementFromPoint(event.clientX, event.clientY);
+    const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
+    if (row && row.getAttribute('data-reorder-group') === this._pointerReorder.group) this._pointerReorder.targetId = row.getAttribute('data-reorder-id');
+  }
+  finishPointerReorder(event) {
+    if (!this._pointerReorder) return;
+    event.preventDefault(); event.stopPropagation();
+    this.trackPointerReorder(event);
+    const drag = this._pointerReorder; this._pointerReorder = null;
+    if (!drag.targetId || drag.sourceId === drag.targetId) return;
+    if (drag.group.indexOf('aprende-item:') === 0) this.moveItemTo(drag.group.split(':')[1], drag.sourceId, drag.targetId);
+    if (drag.group.indexOf('aprende-faq:') === 0) this.moveAprendeFaqTo(drag.group.split(':')[1], drag.sourceId, drag.targetId);
+  }
+  cancelPointerReorder(event) {
+    if (event) { event.preventDefault(); event.stopPropagation(); }
+    this._pointerReorder = null;
   }
   async removeAprendeItem(listKey, id) {
     if (!await this.askConfirmation('¿Confirmas que deseas eliminar este contenido?', 'Eliminar contenido')) return;
@@ -1421,6 +1460,8 @@ class Component extends DCLogic {
         return {
           id: item.id, fields: this.buildTextFields(itemForFields, restDefs, s.aprendeTab), onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
+          dragGroup: 'aprende-item:' + s.aprendeTab,
+          onDragStart: (e) => this.beginPointerReorder('aprende-item:' + s.aprendeTab, item.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
           name: item.name || item.title || 'Sin título', price: item.price || item.format || itemForFields.status || '', imageUrl: item.imageUrl || '', noImage: !item.imageUrl,
           onNameChange: nameKey ? (e) => this.updateItem(s.aprendeTab, item.id, nameKey, e.target.value) : null,
           nameFieldBorder: isSelected ? '1px solid #E4DCCB' : '1px solid transparent',
@@ -1433,6 +1474,8 @@ class Component extends DCLogic {
       });
       aprendeFaqs = this.getAprendeFaqs(s.aprendeTab).map((faq) => ({
         ...faq,
+        dragGroup: 'aprende-faq:' + s.aprendeTab,
+        onDragStart: (e) => this.beginPointerReorder('aprende-faq:' + s.aprendeTab, faq.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
         isOpen: s.expanded.aprendeFaq === faq.id,
         arrow: s.expanded.aprendeFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)',
         onToggle: () => this.setState({ expanded: { ...this.state.expanded, aprendeFaq: this.state.expanded.aprendeFaq === faq.id ? null : faq.id } }),
