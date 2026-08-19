@@ -906,27 +906,53 @@ class Component extends DCLogic {
   beginPointerReorder(group, id, event) {
     event.preventDefault(); event.stopPropagation();
     const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
-    this._pointerReorder = { group, sourceId: id, sourceElement };
-    if (sourceElement) { sourceElement.style.position = 'relative'; sourceElement.style.zIndex = '8'; sourceElement.style.transform = 'translateY(-3px) scale(1.01)'; sourceElement.style.boxShadow = '0 16px 34px rgba(43,36,32,.20)'; sourceElement.style.transition = 'transform .15s ease, box-shadow .15s ease'; }
+    if (!sourceElement) return;
+    const rect = sourceElement.getBoundingClientRect(), ghost = sourceElement.cloneNode(true);
+    ghost.removeAttribute('data-reorder-group'); ghost.removeAttribute('data-reorder-id');
+    Object.assign(ghost.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
+    document.body.appendChild(ghost); sourceElement.style.visibility = 'hidden';
+    this._pointerReorder = { group, sourceId: id, sourceElement, ghost, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY };
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
+    this.startReorderAutoScroll();
+  }
+  positionPointerReorder(clientX, clientY) {
+    const drag = this._pointerReorder; if (!drag) return;
+    drag.pointerX = clientX; drag.pointerY = clientY;
+    if (drag.ghost) drag.ghost.style.top = (clientY - drag.offsetY) + 'px';
+    const target = document.elementFromPoint(clientX, clientY);
+    const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
+    const source = drag.sourceElement;
+    if (!row || !source || row === source || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== source.parentElement) return;
+    const rect = row.getBoundingClientRect(), placeAfter = clientY > rect.top + rect.height / 2;
+    source.parentElement.insertBefore(source, placeAfter ? row.nextSibling : row);
   }
   trackPointerReorder(event) {
     if (!this._pointerReorder) return;
     event.preventDefault();
-    const target = document.elementFromPoint(event.clientX, event.clientY);
-    const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
-    const drag = this._pointerReorder, source = drag.sourceElement;
-    if (!row || !source || row === source || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== source.parentElement) return;
-    const rect = row.getBoundingClientRect(), placeAfter = event.clientY > rect.top + rect.height / 2;
-    source.parentElement.insertBefore(source, placeAfter ? row.nextSibling : row);
+    this.positionPointerReorder(event.clientX, event.clientY);
+  }
+  startReorderAutoScroll() {
+    if (this._reorderFrame) cancelAnimationFrame(this._reorderFrame);
+    const step = () => {
+      const drag = this._pointerReorder; if (!drag) { this._reorderFrame = null; return; }
+      const edge = 90, y = drag.pointerY, speed = y < edge ? -Math.ceil((edge - y) / 6) : y > window.innerHeight - edge ? Math.ceil((y - (window.innerHeight - edge)) / 6) : 0;
+      if (speed) { window.scrollBy(0, Math.max(-18, Math.min(18, speed))); this.positionPointerReorder(drag.pointerX, drag.pointerY); }
+      this._reorderFrame = requestAnimationFrame(step);
+    };
+    this._reorderFrame = requestAnimationFrame(step);
+  }
+  clearPointerReorderVisual(drag) {
+    if (this._reorderFrame) { cancelAnimationFrame(this._reorderFrame); this._reorderFrame = null; }
+    if (drag && drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
+    if (drag && drag.sourceElement) drag.sourceElement.style.visibility = '';
   }
   finishPointerReorder(event) {
     if (!this._pointerReorder) return;
     event.preventDefault(); event.stopPropagation();
     this.trackPointerReorder(event);
     const drag = this._pointerReorder; this._pointerReorder = null;
+    this.clearPointerReorderVisual(drag);
     if (!drag.sourceElement) return;
-    drag.sourceElement.style.position = ''; drag.sourceElement.style.zIndex = ''; drag.sourceElement.style.transform = ''; drag.sourceElement.style.boxShadow = ''; drag.sourceElement.style.transition = '';
     const orderedIds = Array.from(drag.sourceElement.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
     if (drag.group.indexOf('aprende-item:') === 0) {
       const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getListArray(tab).map((item) => [item.id, item]));
@@ -939,7 +965,7 @@ class Component extends DCLogic {
   }
   cancelPointerReorder(event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
-    if (this._pointerReorder && this._pointerReorder.sourceElement) { this._pointerReorder.sourceElement.style.position = ''; this._pointerReorder.sourceElement.style.zIndex = ''; this._pointerReorder.sourceElement.style.transform = ''; this._pointerReorder.sourceElement.style.boxShadow = ''; this._pointerReorder.sourceElement.style.transition = ''; }
+    this.clearPointerReorderVisual(this._pointerReorder);
     this._pointerReorder = null;
     this.setState({});
   }
