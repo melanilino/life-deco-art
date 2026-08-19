@@ -146,7 +146,7 @@
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
             <sc-for list="{{ pastGallery }}" as="g" hint-placeholder-count="3">
               <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-                <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="{{ g.placeholder }}"></image-slot>
+                <image-slot id="{{ g.id }}" shape="rect" fit="cover" view-scale="{{ g.viewScale }}" view-x="{{ g.viewX }}" view-y="{{ g.viewY }}" style="width:100%;height:100%;" src="{{ g.url }}" placeholder="{{ g.placeholder }}"></image-slot>
               </div>
             </sc-for>
           </div>
@@ -333,6 +333,7 @@ class Component extends DCLogic {
       faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
       testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
       gallery: live.gallery || live.pastGallery || [],
+      pastGallery: (live.gallery || live.pastGallery || []).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, id: 'ap-past-' + index, placeholder: 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
       mapImage: live.mapImageUrl || fallback.mapImage,
       locationDetail: live.locationDetail || fallback.locationDetail,
       cancelPolicy: live.cancellationPolicy || fallback.cancelPolicy,

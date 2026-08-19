@@ -458,7 +458,7 @@ x-dc{display:none!important}
       <div style="margin-bottom:24px;">
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
           <div data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" style="position:{{ item.cardPosition }};inset:{{ item.cardInset }};z-index:{{ item.cardZ }};background:{{ item.cardBackground }};border:{{ item.cardBorder }};border-radius:{{ item.cardRadius }};margin-bottom:10px;overflow-y:{{ item.cardOverflowY }};padding:{{ item.cardPadding }};box-sizing:border-box;">
-            <sc-if value="{{ item.isCourseEditor }}" hint-placeholder-val="{{ false }}"><div style="width:100%;max-width:980px;margin:0 auto 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;"><div><span onClick="{{ item.onClose }}" style="display:inline-flex;align-items:center;min-height:38px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 6px;padding:0 8px 0 0;">← Volver a cursos</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">{{ item.name }}</div></div><span onClick="{{ item.onClose }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span></div></sc-if>
+            <sc-if value="{{ item.isCourseEditor }}" hint-placeholder-val="{{ false }}"><div style="width:100%;max-width:980px;margin:0 auto 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:20px;"><div><span onClick="{{ item.onClose }}" style="display:inline-flex;align-items:center;min-height:38px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 6px;padding:0 8px 0 0;">← Volver a {{ item.editorBackLabel }}</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">{{ item.name }}</div></div><span onClick="{{ item.onClose }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span></div></sc-if>
             <div onClick="{{ item.onSelect }}" style="display:{{ item.summaryHeaderDisplay }};align-items:center;gap:8px;padding:12px 16px;cursor:pointer;">
               <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;line-height:1;user-select:none;">⠿</span>
               <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:{{ item.summaryImageWidth }};height:{{ item.summaryImageHeight }};border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
@@ -500,6 +500,10 @@ x-dc{display:none!important}
                         </sc-for>
                         <span onClick="{{ f.onAdd }}" style="display:inline-block;align-self:flex-start;padding:8px 0;font-size:12px;color:#F65091;cursor:pointer;">{{ f.addLabel }}</span>
                       </div>
+                    </sc-if>
+                    <sc-if value="{{ f.isImageCollection }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;"><sc-for list="{{ f.items }}" as="photo" hint-placeholder-count="3"><div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:150px;"><div style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="foto del taller"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span onClick="{{ photo.onRemove }}" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div></div></sc-for></div>
+                      <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;">Subir<input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;"></label><sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                     </sc-if>
                     <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -738,7 +742,19 @@ class Component extends DCLogic {
       { key: 'ctaLabel', label: 'Texto del botón de reserva', type: 'text' }, { key: 'reservationStatus', label: 'Estado de la reserva', type: 'select', options: ['Disponible', 'Lista de espera', 'Próximamente', 'Cerrado'] },
       { key: 'nextItemId', label: 'Curso o taller relacionado', type: 'relation' }
     ],
-    talleres: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'dateLevel', label: 'Fecha / nivel', type: 'text' }, { key: 'location', label: 'Ubicación', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'badge', label: 'Cupos / estado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }],
+    talleres: [
+      { key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
+      { key: 'date', label: 'Fecha', type: 'text' }, { key: 'time', label: 'Hora', type: 'text' }, { key: 'level', label: 'Nivel', type: 'text' }, { key: 'modality', label: 'Modalidad', type: 'text' },
+      { key: 'location', label: 'Ubicación', type: 'text' }, { key: 'duration', label: 'Duración', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'badge', label: 'Cupos / estado', type: 'text' },
+      { key: 'desc', label: 'Descripción breve', type: 'textarea' }, { key: 'summary', label: 'Descripción completa', type: 'textarea' }, { key: 'audience', label: 'Para quién está dirigido', type: 'textarea' },
+      { key: 'badges', label: 'Etiquetas (una por línea)', type: 'lines' }, { key: 'imageUrl', label: 'Fotografía principal', type: 'image', aspect: '16/9' },
+      { key: 'modules', label: 'Actividades del taller', type: 'collection', collectionKind: 'modules' }, { key: 'materials', label: 'Materiales incluidos o necesarios', type: 'textarea' },
+      { key: 'locationDetail', label: 'Dirección e instrucciones de llegada', type: 'textarea' }, { key: 'mapImageUrl', label: 'Imagen de referencia del lugar', type: 'image', aspect: '16/7' },
+      { key: 'cancellationPolicy', label: 'Política de cancelación o reprogramación', type: 'textarea' }, { key: 'faqs', label: 'Preguntas frecuentes', type: 'collection', collectionKind: 'faqs' },
+      { key: 'gallery', label: 'Galería de talleres anteriores', type: 'imageCollection' },
+      { key: 'ctaLabel', label: 'Texto del botón de reserva', type: 'text' }, { key: 'reservationStatus', label: 'Estado de la reserva', type: 'select', options: ['Disponible', 'Pocos cupos', 'Agotado', 'Lista de espera', 'Próximamente', 'Cerrado'] },
+      { key: 'nextItemId', label: 'Curso o taller relacionado', type: 'relation' }
+    ],
     gratis: [{ key: 'format', label: 'Formato', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'imageUrl', label: 'Foto de vista previa', type: 'image', aspect: '4/3' }, { key: 'fileUrl', label: 'Documento adjunto', type: 'file' }],
     blog: [{ key: 'category', label: 'Categoría', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'excerpt', label: 'Extracto', type: 'textarea' }, { key: 'meta', label: 'Fecha / tiempo de lectura', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }, { key: 'content', label: 'Contenido completo del artículo', type: 'richtext' }, { key: 'authorName', label: 'Nombre del autor', type: 'text' }, { key: 'authorRole', label: 'Cargo del autor', type: 'text' }, { key: 'authorPhoto', label: 'Foto del autor', type: 'image', aspect: '1/1' }],
     esenciales: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link externo o de afiliado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }],
@@ -1438,6 +1454,27 @@ class Component extends DCLogic {
     const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
     this.updateItem(listKey, itemId, fieldKey, this.orderByIds(entries, orderedIds, (entry, index) => entry.id || (fieldKey + index)));
   }
+  uploadItemCollectionImage(listKey, itemId, fieldKey, file) {
+    if (!file) return;
+    const uploadKey = listKey + ':' + itemId + ':' + fieldKey;
+    this.setState({ uploading: uploadKey });
+    this.state.cms.uploadImage('content-images/' + listKey, file).then((url) => {
+      const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || []), { id: fieldKey + Date.now(), url, adjustment: null }];
+      this.updateItem(listKey, itemId, fieldKey, entries); this.setState({ uploading: null });
+    }).catch(() => this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }));
+  }
+  openItemCollectionImageEditor(listKey, itemId, fieldKey, entryId, slotId) {
+    this.openFrameEditor(listKey + ':' + itemId + ':' + fieldKey + ':' + entryId, slotId, (adjustment) => {
+      const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])].map((entry, index) => String(entry.id || (fieldKey + index)) === String(entryId) ? { ...entry, id: entryId, adjustment } : entry);
+      this.updateItem(listKey, itemId, fieldKey, entries);
+    });
+  }
+  async removeItemCollectionImage(listKey, itemId, fieldKey, entryId) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar esta imagen?', 'Eliminar imagen')) return;
+    const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])], target = entries.find((entry, index) => String(entry.id || (fieldKey + index)) === String(entryId));
+    this.updateItem(listKey, itemId, fieldKey, entries.filter((entry, index) => String(entry.id || (fieldKey + index)) !== String(entryId)));
+    if (target && target.url) this.state.cms.deleteMediaUrl(target.url).catch(() => {});
+  }
 
   handleSave = async () => {
     this.setState({ saving: true, saved: false, error: '' });
@@ -1469,6 +1506,10 @@ class Component extends DCLogic {
         const entries = Array.isArray(item[d.key]) ? item[d.key] : [], dragGroup = listKey + ':' + item.id + ':' + d.key;
         const labels = d.collectionKind === 'modules' ? [['title', 'Título'], ['desc', 'Descripción']] : d.collectionKind === 'faqs' ? [['q', 'Pregunta'], ['a', 'Respuesta']] : [['quote', 'Testimonio'], ['author', 'Nombre']];
         return { key: d.key, label: d.label, isCollection: true, addLabel: d.collectionKind === 'modules' ? '+ Agregar módulo' : d.collectionKind === 'faqs' ? '+ Agregar pregunta' : '+ Agregar testimonio', items: entries.map((entry, index) => { const entryId = entry.id || (d.key + index); return { id: entryId, dragGroup, inputs: labels.map(([key, label], inputIndex) => { const isTextarea = inputIndex === 1 && d.collectionKind !== 'testimonials' || key === 'quote'; return { label, value: entry[key] || '', isTextarea, isText: !isTextarea, onChange: (e) => this.updateItemCollectionEntry(listKey, item.id, d.key, entryId, key, e.target.value) }; }), onDragStart: (e) => this.beginPointerReorder(dragGroup, entryId, e, (ids) => this.commitItemCollectionOrder(listKey, item.id, d.key, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeItemCollectionEntry(listKey, item.id, d.key, entryId) }; }), onAdd: () => this.addItemCollectionEntry(listKey, item.id, d.key, d.collectionKind) };
+      }
+      if (d.type === 'imageCollection') {
+        const entries = Array.isArray(item[d.key]) ? item[d.key] : [], dragGroup = listKey + ':' + item.id + ':' + d.key;
+        return { key: d.key, label: d.label, isImageCollection: true, uploading: this.state.uploading === dragGroup, onUpload: (e) => this.uploadItemCollectionImage(listKey, item.id, d.key, e.target.files[0]), items: entries.map((entry, index) => { const normalized = typeof entry === 'string' ? { id: d.key + index, url: entry } : entry, entryId = normalized.id || (d.key + index), adjustment = this.normalizeImageAdjustment(normalized.adjustment), slotId = 'cms-' + listKey + '-' + item.id + '-' + d.key + '-' + entryId; return { ...normalized, id: entryId, slotId, dragGroup, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, onAdjust: () => this.openItemCollectionImageEditor(listKey, item.id, d.key, entryId, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entryId, e, (ids) => this.commitItemCollectionOrder(listKey, item.id, d.key, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeItemCollectionImage(listKey, item.id, d.key, entryId) }; }) };
       }
       if (d.type === 'relation') {
         const courseOptions = (this.state.aprendeData.cursos || []).filter((entry) => entry.id !== item.id).map((entry) => ({ id: 'curso:' + entry.id, label: 'Curso: ' + (entry.name || 'Sin nombre') }));
@@ -1607,12 +1648,16 @@ class Component extends DCLogic {
       const restDefs = defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
-        const itemForFields = s.aprendeTab === 'esenciales' || s.aprendeTab === 'cursos' ? { ...item, status: item.status || 'Activo' } : item;
+        const isLongEditorType = s.aprendeTab === 'cursos' || s.aprendeTab === 'talleres';
+        const itemForFields = s.aprendeTab === 'esenciales' || isLongEditorType ? { ...item, status: item.status || 'Activo' } : item;
         const courseFieldTabs = { status: 'info', price: 'info', level: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
-        const courseTabs = [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }].map((tab) => ({ ...tab, color: s.courseTab === tab.id ? '#F65091' : '#8B795E', border: s.courseTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ courseTab: tab.id }) }));
-        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: s.aprendeTab !== 'cursos' || courseFieldTabs[field.key] === s.courseTab ? 'block' : 'none' }));
+        const workshopFieldTabs = { status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', locationDetail: 'location', mapImageUrl: 'location', cancellationPolicy: 'policies', faqs: 'policies', gallery: 'gallery', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
+        const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : courseFieldTabs;
+        const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
+        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: s.courseTab === tab.id ? '#F65091' : '#8B795E', border: s.courseTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ courseTab: tab.id }) }));
+        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !isLongEditorType || activeFieldTabs[field.key] === s.courseTab ? 'block' : 'none' }));
         return {
-          id: item.id, fields: itemFields, showCourseTabs: s.aprendeTab === 'cursos', courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          id: item.id, fields: itemFields, showCourseTabs: isLongEditorType, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
           onDragStart: (e) => this.beginPointerReorder('aprende-item:' + s.aprendeTab, item.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
@@ -1622,13 +1667,13 @@ class Component extends DCLogic {
           summaryDisplay: isSelected ? 'none' : 'block',
           summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
           summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
-          isSelected, onSelect: () => this.selectTile(s.aprendeTab, item.id),
+          isSelected, onSelect: () => isLongEditorType ? this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info' }) : this.selectTile(s.aprendeTab, item.id),
           onClose: () => this.selectTile(s.aprendeTab, null),
-          isCourseEditor: s.aprendeTab === 'cursos' && isSelected,
-          summaryHeaderDisplay: s.aprendeTab === 'cursos' && isSelected ? 'none' : 'flex',
-          cardPosition: s.aprendeTab === 'cursos' && isSelected ? 'fixed' : 'relative', cardInset: s.aprendeTab === 'cursos' && isSelected ? '0' : 'auto', cardZ: s.aprendeTab === 'cursos' && isSelected ? '50' : 'auto',
-          cardBackground: s.aprendeTab === 'cursos' && isSelected ? '#F7F2E8' : '#FFFFFF', cardBorder: s.aprendeTab === 'cursos' && isSelected ? '0' : '1px solid #FFFFFF', cardRadius: s.aprendeTab === 'cursos' && isSelected ? '0' : '6px', cardOverflowY: s.aprendeTab === 'cursos' && isSelected ? 'scroll' : 'hidden', cardPadding: s.aprendeTab === 'cursos' && isSelected ? '32px 24px 70px' : '0',
-          editorPadding: s.aprendeTab === 'cursos' && isSelected ? '28px' : '16px', editorRadius: s.aprendeTab === 'cursos' && isSelected ? '10px' : '0',
+          isCourseEditor: isLongEditorType && isSelected, editorBackLabel: s.aprendeTab === 'talleres' ? 'talleres' : 'cursos',
+          summaryHeaderDisplay: isLongEditorType && isSelected ? 'none' : 'flex',
+          cardPosition: isLongEditorType && isSelected ? 'fixed' : 'relative', cardInset: isLongEditorType && isSelected ? '0' : 'auto', cardZ: isLongEditorType && isSelected ? '50' : 'auto',
+          cardBackground: isLongEditorType && isSelected ? '#F7F2E8' : '#FFFFFF', cardBorder: isLongEditorType && isSelected ? '0' : '1px solid #FFFFFF', cardRadius: isLongEditorType && isSelected ? '0' : '6px', cardOverflowY: isLongEditorType && isSelected ? 'scroll' : 'hidden', cardPadding: isLongEditorType && isSelected ? '32px 24px 70px' : '0',
+          editorPadding: isLongEditorType && isSelected ? '28px' : '16px', editorRadius: isLongEditorType && isSelected ? '10px' : '0',
           selectBorder: isSelected ? '#F65091' : '#E4DCCB', selectBg: isSelected ? '#FDF3F7' : 'transparent'
         };
       });
