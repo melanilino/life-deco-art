@@ -907,7 +907,7 @@ class Component extends DCLogic {
     event.preventDefault(); event.stopPropagation();
     const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
     this._pointerReorder = { group, sourceId: id, sourceElement };
-    if (sourceElement) { sourceElement.style.opacity = '.72'; sourceElement.style.boxShadow = '0 10px 24px rgba(43,36,32,.14)'; sourceElement.style.transition = 'box-shadow .15s ease, opacity .15s ease'; }
+    if (sourceElement) { sourceElement.style.position = 'relative'; sourceElement.style.zIndex = '8'; sourceElement.style.transform = 'translateY(-3px) scale(1.01)'; sourceElement.style.boxShadow = '0 16px 34px rgba(43,36,32,.20)'; sourceElement.style.transition = 'transform .15s ease, box-shadow .15s ease'; }
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
   }
   trackPointerReorder(event) {
@@ -926,7 +926,7 @@ class Component extends DCLogic {
     this.trackPointerReorder(event);
     const drag = this._pointerReorder; this._pointerReorder = null;
     if (!drag.sourceElement) return;
-    drag.sourceElement.style.opacity = ''; drag.sourceElement.style.boxShadow = ''; drag.sourceElement.style.transition = '';
+    drag.sourceElement.style.position = ''; drag.sourceElement.style.zIndex = ''; drag.sourceElement.style.transform = ''; drag.sourceElement.style.boxShadow = ''; drag.sourceElement.style.transition = '';
     const orderedIds = Array.from(drag.sourceElement.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
     if (drag.group.indexOf('aprende-item:') === 0) {
       const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getListArray(tab).map((item) => [item.id, item]));
@@ -939,7 +939,7 @@ class Component extends DCLogic {
   }
   cancelPointerReorder(event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
-    if (this._pointerReorder && this._pointerReorder.sourceElement) { this._pointerReorder.sourceElement.style.opacity = ''; this._pointerReorder.sourceElement.style.boxShadow = ''; this._pointerReorder.sourceElement.style.transition = ''; }
+    if (this._pointerReorder && this._pointerReorder.sourceElement) { this._pointerReorder.sourceElement.style.position = ''; this._pointerReorder.sourceElement.style.zIndex = ''; this._pointerReorder.sourceElement.style.transform = ''; this._pointerReorder.sourceElement.style.boxShadow = ''; this._pointerReorder.sourceElement.style.transition = ''; }
     this._pointerReorder = null;
     this.setState({});
   }
