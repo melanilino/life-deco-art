@@ -304,6 +304,7 @@ body{margin:0;background:#fff}
         <input value="{{ recSearch }}" onInput="{{ onRecSearch }}" type="text" placeholder="Buscar producto..." style="flex:1;min-width:0;padding:12px 16px;border:1px solid #E4DDCC;border-radius:6px;font-size:14px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;">
         <div style="position:relative;display:inline-block;flex-shrink:0;">
           <select value="{{ recSort }}" onChange="{{ onRecSort }}" aria-label="Ordenar productos" style="appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:12px 40px 12px 14px;border:1px solid #E4DDCC;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;cursor:pointer;min-width:{{ recSortMinW }};">
+            <option value="manual">Orden predeterminado</option>
             <option value="az">Orden: A-Z</option>
             <option value="za">Orden: Z-A</option>
           </select>
@@ -565,7 +566,7 @@ class Component extends DCLogic {
       setTimeout(() => { if (this.state.copiedSlug === slug) this.setState({ copiedSlug: null }); }, 1600);
     });
   }
-  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'az', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
   TABS = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'];
   ALL_COURSES = [
     { name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
@@ -859,7 +860,7 @@ class Component extends DCLogic {
       onRecSort: (e) => this.setState({ recSort: e.target.value }),
       recommendedProductsView: (() => {
         const source = live.esenciales || this.RECOMMENDED_PRODUCTS;
-        let list = source.filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
+        let list = source.filter(p => (!p.status || p.status === 'Activo' || p.status === 'Publicado') && p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
         if (this.state.recSort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name));
         if (this.state.recSort === 'za') list = [...list].sort((a, b) => b.name.localeCompare(a.name));
         return list.map(p => {

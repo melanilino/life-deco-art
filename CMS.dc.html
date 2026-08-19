@@ -468,6 +468,11 @@ x-dc{display:none!important}
                     <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
                     <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                     <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
+                    <sc-if value="{{ f.isSelect }}" hint-placeholder-val="{{ false }}">
+                      <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B795E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
+                        <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2"><option value="{{ o }}">{{ o }}</option></sc-for>
+                      </select>
+                    </sc-if>
                     <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                         <div style="position:relative;width:{{ f.maxWidth }};aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;"><image-slot id="{{ f.slotId }}" shape="rect" fit="cover" view-scale="{{ f.viewScale }}" view-x="{{ f.viewX }}" view-y="{{ f.viewY }}" style="width:100%;height:100%;" src="{{ f.value }}" placeholder="foto"></image-slot><sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></sc-if></div>
@@ -506,8 +511,10 @@ x-dc{display:none!important}
                     </sc-if>
                   </div>
                 </sc-for>
-                <div style="text-align:right;">
-                  <span onClick="{{ item.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span>
+                <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
+                  <span onClick="{{ item.onMoveUp }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Subir</span>
+                  <span onClick="{{ item.onMoveDown }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span>
+                  <span onClick="{{ item.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span>
                 </div>
               </div>
             </sc-if>
@@ -675,7 +682,7 @@ class Component extends DCLogic {
     talleres: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'dateLevel', label: 'Fecha / nivel', type: 'text' }, { key: 'location', label: 'Ubicación', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'badge', label: 'Cupos / estado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }],
     gratis: [{ key: 'format', label: 'Formato', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'imageUrl', label: 'Foto de vista previa', type: 'image', aspect: '4/3' }, { key: 'fileUrl', label: 'Documento adjunto', type: 'file' }],
     blog: [{ key: 'category', label: 'Categoría', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'excerpt', label: 'Extracto', type: 'textarea' }, { key: 'meta', label: 'Fecha / tiempo de lectura', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }, { key: 'content', label: 'Contenido completo del artículo', type: 'richtext' }, { key: 'authorName', label: 'Nombre del autor', type: 'text' }, { key: 'authorRole', label: 'Cargo del autor', type: 'text' }, { key: 'authorPhoto', label: 'Foto del autor', type: 'image', aspect: '1/1' }],
-    esenciales: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link de Amazon', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }],
+    esenciales: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link externo o de afiliado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }],
     comunidad: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }]
   };
 
@@ -850,6 +857,17 @@ class Component extends DCLogic {
     this.setListArray(listKey, arr);
   }
   removeItem(listKey, id) { this.setListArray(listKey, this.getListArray(listKey).filter((it) => it.id !== id)); }
+  moveItem(listKey, id, direction) {
+    const items = [...this.getListArray(listKey)], index = items.findIndex((item) => item.id === id), target = index + direction;
+    if (index < 0 || target < 0 || target >= items.length) return;
+    [items[index], items[target]] = [items[target], items[index]];
+    this.setListArray(listKey, items);
+  }
+  async removeAprendeItem(listKey, id) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar este contenido?', 'Eliminar contenido')) return;
+    this.removeItem(listKey, id);
+    this.selectTile(listKey, null);
+  }
   addItem(listKey, defaults) {
     const id = 'i' + Date.now() + Math.random().toString(36).slice(2, 6);
     this.setListArray(listKey, [...this.getListArray(listKey), { id, ...defaults }]);
@@ -1347,9 +1365,11 @@ class Component extends DCLogic {
       const restDefs = defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
+        const itemForFields = s.aprendeTab === 'esenciales' ? { ...item, status: item.status || 'Activo' } : item;
         return {
-          id: item.id, fields: this.buildTextFields(item, restDefs, s.aprendeTab), onRemove: () => this.removeItem(s.aprendeTab, item.id),
-          name: item.name || item.title || 'Sin título', price: item.price || item.format || '', imageUrl: item.imageUrl || '', noImage: !item.imageUrl,
+          id: item.id, fields: this.buildTextFields(itemForFields, restDefs, s.aprendeTab), onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
+          name: item.name || item.title || 'Sin título', price: item.price || item.format || itemForFields.status || '', imageUrl: item.imageUrl || '', noImage: !item.imageUrl,
           onNameChange: nameKey ? (e) => this.updateItem(s.aprendeTab, item.id, nameKey, e.target.value) : null,
           nameFieldBorder: isSelected ? '1px solid #E4DCCB' : '1px solid transparent',
           isSelected, onSelect: () => this.selectTile(s.aprendeTab, item.id),
@@ -1471,7 +1491,7 @@ class Component extends DCLogic {
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems,
       onAddAprendeItem: () => {
-        const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', desc: '', href: '#', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
+        const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
       },
       onSave: this.handleSave, saving: s.saving,
