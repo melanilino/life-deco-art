@@ -70,7 +70,7 @@ x-dc{display:none!important}
     </sc-for>
     </div>
     <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.15);padding-top:20px;">
-      <div onClick="{{ onLogout }}" style="font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;" style-hover="color:#FFFFFF;">Cerrar sesión</div>
+      <div onClick="{{ onLogout }}" style="font-size:13px;color:rgba(255,255,255,.6);cursor:pointer;padding:10px 14px;margin:0 -14px;border-radius:4px;" style-hover="color:#FFFFFF;">Cerrar sesión</div>
     </div>
   </div>
   <div style="flex: 1; padding: 26px 56px 48px; background-color: #F9F6EF; position: relative;">
@@ -305,13 +305,13 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Productos</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
           <sc-for list="{{ tiendaProducts }}" as="item" hint-placeholder-count="6">
-            <div style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:8px;overflow:hidden;">
+            <div onClick="{{ item.onSelect }}" style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:8px;overflow:hidden;cursor:pointer;">
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto"></image-slot></div>
               <div style="padding:12px 14px;">
                 <div style="font-size:13px;color:#000;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.name }}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                   <div style="font-size:12px;color:#8B795E;">{{ item.price }}</div>
-                  <div onClick="{{ item.onSelect }}" style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                  <div style="display:flex;align-items:center;gap:6px;">
                     <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;padding:3px 8px;border-radius:3px;background:{{ item.statusBg }};color:{{ item.statusColor }};">{{ item.status }}</span>
                     <span style="font-size:14px;color:#8B795E;">✎</span>
                   </div>
@@ -325,11 +325,11 @@ x-dc{display:none!important}
           <div style="position:fixed;inset:0;background:#F7F2E8;z-index:50;overflow-y:scroll;scrollbar-gutter:stable;padding:32px 24px 70px;box-sizing:border-box;">
             <div style="width:100%;max-width:980px;margin:0 auto;">
               <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px;">
-                <div><span onClick="{{ onDeselectProduct }}" style="display:inline-block;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:14px;">← Volver a productos</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">{{ selectedProduct.name }}</div></div>
+                <div><span onClick="{{ onDeselectProduct }}" style="display:inline-flex;align-items:center;min-height:38px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 6px;padding:0 8px 0 0;">← Volver a productos</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">{{ selectedProduct.name }}</div></div>
                 <span onClick="{{ onDeselectProduct }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span>
               </div>
               <div style="display:flex;gap:20px;overflow-x:auto;border-bottom:1px solid #E4DCCB;margin-bottom:24px;">
-                <sc-for list="{{ selectedProduct.tabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="white-space:nowrap;padding:0 2px 10px;font-size:13px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for>
+                <sc-for list="{{ selectedProduct.tabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for>
               </div>
               <div style="background:#FFFFFF;border-radius:10px;padding:28px;">
               <sc-for list="{{ selectedProduct.fields }}" as="f" hint-placeholder-count="4">
@@ -408,8 +408,8 @@ x-dc{display:none!important}
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
           <sc-for list="{{ tiendaFaqs }}" as="faq" hint-placeholder-count="5">
             <div style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;">
-                <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
+              <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;cursor:pointer;">
+                <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" onClick="{{ stopPropagation }}" onFocus="{{ faq.onOpen }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
                 <span onClick="{{ faq.onToggle }}" aria-label="Plegar o desplegar respuesta" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;cursor:pointer;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span>
               </div>
               <sc-if value="{{ faq.isOpen }}" hint-placeholder-val="{{ false }}">
@@ -429,7 +429,7 @@ x-dc{display:none!important}
     <sc-if value="{{ isAprendePage }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
         <sc-for list="{{ aprendeTabs }}" as="t" hint-placeholder-count="5">
-          <div onClick="{{ t.onClick }}" style="padding: 0 4px 9px; font-size: 14px; line-height: 1.4; cursor: pointer; color: {{ t.color }}; font-weight: {{ t.weight }}; border-bottom: {{ t.borderBottom }}">{{ t.label }}</div>
+          <div onClick="{{ t.onClick }}" style="display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;padding:8px 4px 9px;font-size:14px;line-height:1.4;cursor:pointer;color:{{ t.color }};font-weight:{{ t.weight }};border-bottom:{{ t.borderBottom }};">{{ t.label }}</div>
         </sc-for>
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
@@ -1321,7 +1321,7 @@ class Component extends DCLogic {
           tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', border: s.productTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ productTab: tab.id }) }))
         };
       });
-      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
+      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onOpen: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
