@@ -455,8 +455,8 @@ x-dc{display:none!important}
       <div style="margin-bottom:24px;">
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
           <div data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
-            <div onClick="{{ item.onSelect }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;">
-              <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;flex:0 0 34px;color:#8B795E;cursor:grab;touch-action:none;font-size:19px;line-height:1;user-select:none;">⠿</span>
+            <div onClick="{{ item.onSelect }}" style="display:flex;align-items:center;gap:8px;padding:12px 16px;cursor:pointer;">
+              <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;line-height:1;user-select:none;">⠿</span>
               <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:{{ item.summaryImageWidth }};height:{{ item.summaryImageHeight }};border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
               <input type="text" value="{{ item.name }}" onChange="{{ item.onNameChange }}" onClick="{{ stopPropagation }}" style="flex:1;border:{{ item.nameFieldBorder }};border-radius:4px;padding:10px;background:transparent;font-size:13px;color:#000;font-family:Montserrat;outline:none;" style-focus="outline:none;">
               <div style="display:{{ item.summaryDisplay }};font-size:12px;color:#8B795E;flex-shrink:0;">{{ item.price }}</div>
@@ -527,7 +527,7 @@ x-dc{display:none!important}
           <sc-for list="{{ aprendeFaqs }}" as="faq" hint-placeholder-count="3">
             <div data-reorder-group="{{ faq.dragGroup }}" data-reorder-id="{{ faq.id }}" style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
               <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;cursor:pointer;">
-                <span onPointerDown="{{ faq.onDragStart }}" onPointerMove="{{ faq.onDragMove }}" onPointerUp="{{ faq.onDragEnd }}" onPointerCancel="{{ faq.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:40px;flex:0 0 34px;color:#8B795E;cursor:grab;touch-action:none;font-size:19px;line-height:1;user-select:none;">⠿</span>
+                <span onPointerDown="{{ faq.onDragStart }}" onPointerMove="{{ faq.onDragMove }}" onPointerUp="{{ faq.onDragEnd }}" onPointerCancel="{{ faq.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;line-height:1;user-select:none;">⠿</span>
                 <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" onClick="{{ stopPropagation }}" onFocus="{{ faq.onOpen }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
                 <span aria-label="Plegar o desplegar respuesta" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span>
               </div>
@@ -905,7 +905,9 @@ class Component extends DCLogic {
   }
   beginPointerReorder(group, id, event) {
     event.preventDefault(); event.stopPropagation();
-    this._pointerReorder = { group, sourceId: id, targetId: id };
+    const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
+    this._pointerReorder = { group, sourceId: id, sourceElement };
+    if (sourceElement) { sourceElement.style.opacity = '.72'; sourceElement.style.boxShadow = '0 10px 24px rgba(43,36,32,.14)'; sourceElement.style.transition = 'box-shadow .15s ease, opacity .15s ease'; }
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
   }
   trackPointerReorder(event) {
@@ -913,20 +915,33 @@ class Component extends DCLogic {
     event.preventDefault();
     const target = document.elementFromPoint(event.clientX, event.clientY);
     const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
-    if (row && row.getAttribute('data-reorder-group') === this._pointerReorder.group) this._pointerReorder.targetId = row.getAttribute('data-reorder-id');
+    const drag = this._pointerReorder, source = drag.sourceElement;
+    if (!row || !source || row === source || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== source.parentElement) return;
+    const rect = row.getBoundingClientRect(), placeAfter = event.clientY > rect.top + rect.height / 2;
+    source.parentElement.insertBefore(source, placeAfter ? row.nextSibling : row);
   }
   finishPointerReorder(event) {
     if (!this._pointerReorder) return;
     event.preventDefault(); event.stopPropagation();
     this.trackPointerReorder(event);
     const drag = this._pointerReorder; this._pointerReorder = null;
-    if (!drag.targetId || drag.sourceId === drag.targetId) return;
-    if (drag.group.indexOf('aprende-item:') === 0) this.moveItemTo(drag.group.split(':')[1], drag.sourceId, drag.targetId);
-    if (drag.group.indexOf('aprende-faq:') === 0) this.moveAprendeFaqTo(drag.group.split(':')[1], drag.sourceId, drag.targetId);
+    if (!drag.sourceElement) return;
+    drag.sourceElement.style.opacity = ''; drag.sourceElement.style.boxShadow = ''; drag.sourceElement.style.transition = '';
+    const orderedIds = Array.from(drag.sourceElement.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
+    if (drag.group.indexOf('aprende-item:') === 0) {
+      const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getListArray(tab).map((item) => [item.id, item]));
+      this.setListArray(tab, orderedIds.map((id) => byId[id]).filter(Boolean));
+    }
+    if (drag.group.indexOf('aprende-faq:') === 0) {
+      const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getAprendeFaqs(tab).map((faq) => [faq.id, faq]));
+      this.setAprendeFaqs(tab, orderedIds.map((id) => byId[id]).filter(Boolean));
+    }
   }
   cancelPointerReorder(event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
+    if (this._pointerReorder && this._pointerReorder.sourceElement) { this._pointerReorder.sourceElement.style.opacity = ''; this._pointerReorder.sourceElement.style.boxShadow = ''; this._pointerReorder.sourceElement.style.transition = ''; }
     this._pointerReorder = null;
+    this.setState({});
   }
   async removeAprendeItem(listKey, id) {
     if (!await this.askConfirmation('¿Confirmas que deseas eliminar este contenido?', 'Eliminar contenido')) return;
