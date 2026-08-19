@@ -907,24 +907,26 @@ class Component extends DCLogic {
     event.preventDefault(); event.stopPropagation();
     const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
     if (!sourceElement) return;
-    const rect = sourceElement.getBoundingClientRect(), ghost = sourceElement.cloneNode(true);
-    ghost.removeAttribute('data-reorder-group'); ghost.removeAttribute('data-reorder-id');
-    Object.assign(ghost.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
-    document.body.appendChild(ghost); sourceElement.style.visibility = 'hidden';
-    this._pointerReorder = { group, sourceId: id, sourceElement, ghost, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY };
+    const rect = sourceElement.getBoundingClientRect(), parent = sourceElement.parentElement, originalStyle = sourceElement.getAttribute('style') || '', originalNextSibling = sourceElement.nextSibling;
+    const placeholder = document.createElement('div');
+    placeholder.setAttribute('data-reorder-group', group); placeholder.setAttribute('data-reorder-id', id);
+    Object.assign(placeholder.style, { height: rect.height + 'px', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: '10px' });
+    parent.insertBefore(placeholder, sourceElement); document.body.appendChild(sourceElement);
+    Object.assign(sourceElement.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
+    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY };
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
     this.startReorderAutoScroll();
   }
   positionPointerReorder(clientX, clientY) {
     const drag = this._pointerReorder; if (!drag) return;
     drag.pointerX = clientX; drag.pointerY = clientY;
-    if (drag.ghost) drag.ghost.style.top = (clientY - drag.offsetY) + 'px';
+    if (drag.sourceElement) drag.sourceElement.style.top = (clientY - drag.offsetY) + 'px';
     const target = document.elementFromPoint(clientX, clientY);
     const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
-    const source = drag.sourceElement;
-    if (!row || !source || row === source || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== source.parentElement) return;
+    const placeholder = drag.placeholder;
+    if (!row || !placeholder || row === placeholder || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== placeholder.parentElement) return;
     const rect = row.getBoundingClientRect(), placeAfter = clientY > rect.top + rect.height / 2;
-    source.parentElement.insertBefore(source, placeAfter ? row.nextSibling : row);
+    placeholder.parentElement.insertBefore(placeholder, placeAfter ? row.nextSibling : row);
   }
   trackPointerReorder(event) {
     if (!this._pointerReorder) return;
@@ -941,19 +943,25 @@ class Component extends DCLogic {
     };
     this._reorderFrame = requestAnimationFrame(step);
   }
-  clearPointerReorderVisual(drag) {
+  clearPointerReorderVisual(drag, keepNewPosition) {
     if (this._reorderFrame) { cancelAnimationFrame(this._reorderFrame); this._reorderFrame = null; }
-    if (drag && drag.ghost && drag.ghost.parentNode) drag.ghost.parentNode.removeChild(drag.ghost);
-    if (drag && drag.sourceElement) drag.sourceElement.style.visibility = '';
+    if (!drag || !drag.sourceElement) return;
+    const source = drag.sourceElement, placeholder = drag.placeholder;
+    if (keepNewPosition && placeholder && placeholder.parentNode) placeholder.parentNode.replaceChild(source, placeholder);
+    else {
+      if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+      if (drag.parent) drag.parent.insertBefore(source, drag.originalNextSibling && drag.originalNextSibling.parentNode === drag.parent ? drag.originalNextSibling : null);
+    }
+    source.setAttribute('style', drag.originalStyle);
   }
   finishPointerReorder(event) {
     if (!this._pointerReorder) return;
     event.preventDefault(); event.stopPropagation();
     this.trackPointerReorder(event);
     const drag = this._pointerReorder; this._pointerReorder = null;
-    this.clearPointerReorderVisual(drag);
-    if (!drag.sourceElement) return;
-    const orderedIds = Array.from(drag.sourceElement.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
+    if (!drag.sourceElement || !drag.placeholder || !drag.placeholder.parentElement) { this.clearPointerReorderVisual(drag, false); return; }
+    const orderedIds = Array.from(drag.placeholder.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
+    this.clearPointerReorderVisual(drag, true);
     if (drag.group.indexOf('aprende-item:') === 0) {
       const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getListArray(tab).map((item) => [item.id, item]));
       this.setListArray(tab, orderedIds.map((id) => byId[id]).filter(Boolean));
@@ -965,7 +973,7 @@ class Component extends DCLogic {
   }
   cancelPointerReorder(event) {
     if (event) { event.preventDefault(); event.stopPropagation(); }
-    this.clearPointerReorderVisual(this._pointerReorder);
+    this.clearPointerReorderVisual(this._pointerReorder, false);
     this._pointerReorder = null;
     this.setState({});
   }
