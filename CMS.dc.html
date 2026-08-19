@@ -905,6 +905,7 @@ class Component extends DCLogic {
   }
   beginPointerReorder(group, id, event) {
     event.preventDefault(); event.stopPropagation();
+    if (this._pointerReorder) this.cancelPointerReorder(event);
     const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
     if (!sourceElement) return;
     const rect = sourceElement.getBoundingClientRect(), parent = sourceElement.parentElement, originalStyle = sourceElement.getAttribute('style') || '', originalNextSibling = sourceElement.nextSibling;
@@ -913,7 +914,9 @@ class Component extends DCLogic {
     Object.assign(placeholder.style, { height: rect.height + 'px', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: '10px' });
     parent.insertBefore(placeholder, sourceElement); document.body.appendChild(sourceElement);
     Object.assign(sourceElement.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
-    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY };
+    const globalMove = (e) => this.trackPointerReorder(e), globalEnd = (e) => this.finishPointerReorder(e), globalCancel = (e) => this.cancelPointerReorder(e);
+    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY, globalMove, globalEnd, globalCancel };
+    window.addEventListener('pointermove', globalMove, true); window.addEventListener('pointerup', globalEnd, true); window.addEventListener('pointercancel', globalCancel, true); window.addEventListener('blur', globalCancel, true);
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
     this.startReorderAutoScroll();
   }
@@ -945,6 +948,9 @@ class Component extends DCLogic {
   }
   clearPointerReorderVisual(drag, keepNewPosition) {
     if (this._reorderFrame) { cancelAnimationFrame(this._reorderFrame); this._reorderFrame = null; }
+    if (drag) {
+      window.removeEventListener('pointermove', drag.globalMove, true); window.removeEventListener('pointerup', drag.globalEnd, true); window.removeEventListener('pointercancel', drag.globalCancel, true); window.removeEventListener('blur', drag.globalCancel, true);
+    }
     if (!drag || !drag.sourceElement) return;
     const source = drag.sourceElement, placeholder = drag.placeholder;
     if (keepNewPosition && placeholder && placeholder.parentNode) placeholder.parentNode.replaceChild(source, placeholder);
