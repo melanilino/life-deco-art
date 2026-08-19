@@ -202,12 +202,14 @@ x-dc{display:none!important}
           <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}">
             <div style="font-size:13px;color:#5C5142;margin-bottom:10px;">{{ videoFileName }}</div>
           </sc-if>
-          <label style="display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
-            Subir
-            <input type="file" accept="video/*" onChange="{{ onVideoUpload }}" style="display:none;">
-          </label>
-          <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onVideoRemove }}" title="Eliminar video" aria-label="Eliminar video" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;margin-left:8px;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
-          <sc-if value="{{ videoUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:10px;">Subiendo…</span></sc-if>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <label style="display:inline-flex;align-items:center;gap:6px;height:40px;box-sizing:border-box;padding:0 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;font-family:Montserrat;cursor:pointer;">
+              Subir
+              <input type="file" accept="video/*" onChange="{{ onVideoUpload }}" style="display:none;">
+            </label>
+            <sc-if value="{{ videoValue }}" hint-placeholder-val="{{ false }}"><span onClick="{{ onVideoRemove }}" title="Eliminar video" aria-label="Eliminar video" style="display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
+            <sc-if value="{{ videoUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
+          </div>
         </div>
         <sc-for list="{{ inicioPhotoGroups }}" as="grp" hint-placeholder-count="3">
           <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">{{ grp.label }}</div>
@@ -480,7 +482,7 @@ class Component extends DCLogic {
   state = {
     cms: null, user: null, authChecked: false,
     email: '', password: '', error: '', loginError: '', loggingIn: false, showPassword: false,
-    page: 'config', content: {}, saving: false, saved: false,
+    page: 'inicio', content: {}, saving: false, saved: false,
     tiendaData: null, tiendaLoaded: false,
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales',
     sobremiData: null, sobremiLoaded: false,
