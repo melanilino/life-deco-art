@@ -456,7 +456,7 @@ x-dc{display:none!important}
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
           <div style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
             <div onClick="{{ item.onSelect }}" style="display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;">
-              <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:80px;height:52px;border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
+              <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:{{ item.summaryImageWidth }};height:{{ item.summaryImageHeight }};border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
               <input type="text" value="{{ item.name }}" onChange="{{ item.onNameChange }}" onClick="{{ stopPropagation }}" style="flex:1;border:{{ item.nameFieldBorder }};border-radius:4px;padding:10px;background:transparent;font-size:13px;color:#000;font-family:Montserrat;outline:none;" style-focus="outline:none;">
               <div style="display:{{ item.summaryDisplay }};font-size:12px;color:#8B795E;flex-shrink:0;">{{ item.price }}</div>
               <span style="font-size:14px;color:#8B795E;flex-shrink:0;">✎</span>
@@ -1373,6 +1373,8 @@ class Component extends DCLogic {
           onNameChange: nameKey ? (e) => this.updateItem(s.aprendeTab, item.id, nameKey, e.target.value) : null,
           nameFieldBorder: isSelected ? '1px solid #E4DCCB' : '1px solid transparent',
           summaryDisplay: isSelected ? 'none' : 'block',
+          summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
+          summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
           isSelected, onSelect: () => this.selectTile(s.aprendeTab, item.id),
           selectBorder: isSelected ? '#F65091' : '#E4DCCB', selectBg: isSelected ? '#FDF3F7' : 'transparent'
         };
