@@ -535,12 +535,12 @@ class Component extends DCLogic {
       const comunidadMerged = mergeAdjustments(comunidad, data.comunidad);
       this.setState({
         aprendeLive: {
-          cursos: cursosMerged.length ? cursosMerged.map((item) => ({ ...item, desc: item.shortDescription || item.description || item.desc || '', level: item.level || item.modality || '' })) : ((data.cursos && data.cursos.length) ? data.cursos : null),
-          talleres: talleresMerged.length ? talleresMerged.map((item) => ({ ...item, dateLevel: [item.date, item.level].filter(Boolean).join(' · '), location: item.location || '', badge: item.capacity || '' })) : ((data.talleres && data.talleres.length) ? data.talleres : null),
-          gratis: gratisMerged.length ? gratisMerged : ((data.gratis && data.gratis.length) ? data.gratis : null),
-          blog: blogMerged.length ? blogMerged.map((item) => ({ ...item, meta: [item.publishedAt, item.readingTime].filter(Boolean).join(' · ') })) : ((data.blog && data.blog.length) ? data.blog : null),
-          esenciales: esencialesMerged.length ? esencialesMerged.map((item) => ({ ...item, desc: item.description || item.desc || '' })) : ((data.esenciales && data.esenciales.length) ? data.esenciales : null),
-          comunidad: comunidadMerged.length ? comunidadMerged : ((data.comunidad && data.comunidad.length) ? data.comunidad : null),
+          cursos: (data.cursos && data.cursos.length) ? data.cursos : (cursosMerged.length ? cursosMerged.map((item) => ({ ...item, desc: item.shortDescription || item.description || item.desc || '', level: item.level || item.modality || '' })) : null),
+          talleres: (data.talleres && data.talleres.length) ? data.talleres : (talleresMerged.length ? talleresMerged.map((item) => ({ ...item, dateLevel: [item.date, item.level].filter(Boolean).join(' · '), location: item.location || '', badge: item.capacity || '' })) : null),
+          gratis: (data.gratis && data.gratis.length) ? data.gratis : (gratisMerged.length ? gratisMerged : null),
+          blog: (data.blog && data.blog.length) ? data.blog : (blogMerged.length ? blogMerged.map((item) => ({ ...item, meta: [item.publishedAt, item.readingTime].filter(Boolean).join(' · ') })) : null),
+          esenciales: (data.esenciales && data.esenciales.length) ? data.esenciales : (esencialesMerged.length ? esencialesMerged.map((item) => ({ ...item, desc: item.description || item.desc || '' })) : null),
+          comunidad: (data.comunidad && data.comunidad.length) ? data.comunidad : (comunidadMerged.length ? comunidadMerged : null),
           banners: data.banners || {},
           bannerImageAdjustments: data.bannerImageAdjustments || {},
         },
@@ -739,7 +739,7 @@ class Component extends DCLogic {
     const isTalleres = category === 'Talleres';
     const isCursos = category === 'Cursos';
     const live = this.state.aprendeLive || {};
-    const coursesSource = (live.cursos || this.ALL_COURSES).map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
+    const coursesSource = (live.cursos || this.ALL_COURSES).filter(c => (c.status || 'Activo') !== 'Borrador').map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
     const courses = (isCursos ? coursesSource : []).map((c,i) => ({ ...c, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }));
     const isComunidad = category === 'Comunidad';
     const isBlog = category === 'Blog';

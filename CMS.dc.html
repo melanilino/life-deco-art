@@ -467,8 +467,9 @@ x-dc{display:none!important}
             </div>
             <sc-if value="{{ item.isSelected }}" hint-placeholder-val="{{ false }}">
               <div style="padding: 16px; background-color: #FFFFFF">
+                <sc-if value="{{ item.showCourseTabs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:18px;overflow-x:auto;border-bottom:1px solid #E4DCCB;margin-bottom:18px;"><sc-for list="{{ item.courseTabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="display:inline-flex;align-items:center;min-height:40px;white-space:nowrap;padding:6px 2px 9px;font-size:12px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for></div></sc-if>
                 <sc-for list="{{ item.fields }}" as="f" hint-placeholder-count="4">
-                  <div style="margin-bottom:14px;">
+                  <div style="display:{{ f.display }};margin-bottom:14px;">
                     <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
                     <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                     <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
@@ -476,6 +477,28 @@ x-dc{display:none!important}
                       <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B795E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
                         <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2"><option value="{{ o }}">{{ o }}</option></sc-for>
                       </select>
+                    </sc-if>
+                    <sc-if value="{{ f.isRelation }}" hint-placeholder-val="{{ false }}">
+                      <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;background:#FFFFFF;">
+                        <option value="">Sin contenido relacionado</option>
+                        <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="3"><option value="{{ o.id }}">{{ o.label }}</option></sc-for>
+                      </select>
+                    </sc-if>
+                    <sc-if value="{{ f.isCollection }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:10px;">
+                        <sc-for list="{{ f.items }}" as="row" hint-placeholder-count="3">
+                          <div data-reorder-group="{{ row.dragGroup }}" data-reorder-id="{{ row.id }}" style="display:flex;align-items:flex-start;gap:10px;padding:14px;border:1px solid #E4DCCB;border-radius:6px;background:#FBF9F5;">
+                            <span onPointerDown="{{ row.onDragStart }}" onPointerMove="{{ row.onDragMove }}" onPointerUp="{{ row.onDragEnd }}" onPointerCancel="{{ row.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:34px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
+                            <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;flex:1;min-width:0;">
+                              <sc-for list="{{ row.inputs }}" as="input" hint-placeholder-count="2">
+                                <div><label style="display:block;font-size:10px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:5px;">{{ input.label }}</label><sc-if value="{{ input.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ input.value }}" onChange="{{ input.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;resize:vertical;"></textarea></sc-if><sc-if value="{{ input.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ input.value }}" onChange="{{ input.onChange }}" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></sc-if></div>
+                              </sc-for>
+                            </div>
+                            <span onClick="{{ row.onRemove }}" title="Eliminar" aria-label="Eliminar" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;">×</span>
+                          </div>
+                        </sc-for>
+                        <span onClick="{{ f.onAdd }}" style="display:inline-block;align-self:flex-start;padding:8px 0;font-size:12px;color:#F65091;cursor:pointer;">{{ f.addLabel }}</span>
+                      </div>
                     </sc-if>
                     <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -580,7 +603,7 @@ class Component extends DCLogic {
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
-    adjustingImage: null, productTab: 'info',
+    adjustingImage: null, productTab: 'info', courseTab: 'info',
     confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
   };
 
@@ -701,7 +724,19 @@ class Component extends DCLogic {
 
   APRENDE_TAB_LABELS = { esenciales: 'Esenciales', cursos: 'Cursos', talleres: 'Talleres', gratis: 'Gratis', blog: 'Blog', comunidad: 'Comunidad' };
   APRENDE_FIELD_DEFS = {
-    cursos: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'level', label: 'Nivel / modalidad', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '4/3' }],
+    cursos: [
+      { key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
+      { key: 'price', label: 'Precio', type: 'text' }, { key: 'level', label: 'Nivel / modalidad', type: 'text' }, { key: 'duration', label: 'Duración', type: 'text' },
+      { key: 'availability', label: 'Disponibilidad', type: 'text' }, { key: 'paymentNote', label: 'Nota sobre el pago', type: 'text' },
+      { key: 'desc', label: 'Descripción breve', type: 'textarea' }, { key: 'summary', label: 'Descripción principal', type: 'textarea' },
+      { key: 'audience', label: 'Para quién está dirigido', type: 'textarea' }, { key: 'badges', label: 'Etiquetas (una por línea)', type: 'lines' },
+      { key: 'imageUrl', label: 'Fotografía principal', type: 'image', aspect: '4/3' },
+      { key: 'modules', label: 'Temario', type: 'collection', collectionKind: 'modules' }, { key: 'materials', label: 'Materiales', type: 'textarea' },
+      { key: 'faqs', label: 'Preguntas frecuentes', type: 'collection', collectionKind: 'faqs' },
+      { key: 'testimonials', label: 'Testimonios', type: 'collection', collectionKind: 'testimonials' },
+      { key: 'ctaLabel', label: 'Texto del botón de reserva', type: 'text' }, { key: 'reservationStatus', label: 'Estado de la reserva', type: 'select', options: ['Disponible', 'Lista de espera', 'Próximamente', 'Cerrado'] },
+      { key: 'nextItemId', label: 'Curso o taller relacionado', type: 'relation' }
+    ],
     talleres: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'dateLevel', label: 'Fecha / nivel', type: 'text' }, { key: 'location', label: 'Ubicación', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'badge', label: 'Cupos / estado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }],
     gratis: [{ key: 'format', label: 'Formato', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'imageUrl', label: 'Foto de vista previa', type: 'image', aspect: '4/3' }, { key: 'fileUrl', label: 'Documento adjunto', type: 'file' }],
     blog: [{ key: 'category', label: 'Categoría', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'excerpt', label: 'Extracto', type: 'textarea' }, { key: 'meta', label: 'Fecha / tiempo de lectura', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }, { key: 'content', label: 'Contenido completo del artículo', type: 'richtext' }, { key: 'authorName', label: 'Nombre del autor', type: 'text' }, { key: 'authorRole', label: 'Cargo del autor', type: 'text' }, { key: 'authorPhoto', label: 'Foto del autor', type: 'image', aspect: '1/1' }],
@@ -1384,6 +1419,25 @@ class Component extends DCLogic {
     });
   }
 
+  updateItemCollectionEntry(listKey, itemId, fieldKey, entryId, key, value) {
+    const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
+    this.updateItem(listKey, itemId, fieldKey, entries.map((entry, index) => String(entry.id || (fieldKey + index)) === String(entryId) ? { ...entry, id: entryId, [key]: value } : entry));
+  }
+  addItemCollectionEntry(listKey, itemId, fieldKey, kind) {
+    const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])], id = fieldKey + Date.now();
+    const defaults = kind === 'modules' ? { id, title: '', desc: '' } : kind === 'faqs' ? { id, q: '', a: '' } : { id, quote: '', author: '' };
+    this.updateItem(listKey, itemId, fieldKey, [...entries, defaults]);
+  }
+  async removeItemCollectionEntry(listKey, itemId, fieldKey, entryId) {
+    if (!await this.askConfirmation('¿Confirmas que deseas eliminar este elemento?', 'Eliminar elemento')) return;
+    const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
+    this.updateItem(listKey, itemId, fieldKey, entries.filter((entry, index) => String(entry.id || (fieldKey + index)) !== String(entryId)));
+  }
+  commitItemCollectionOrder(listKey, itemId, fieldKey, orderedIds) {
+    const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
+    this.updateItem(listKey, itemId, fieldKey, this.orderByIds(entries, orderedIds, (entry, index) => entry.id || (fieldKey + index)));
+  }
+
   handleSave = async () => {
     this.setState({ saving: true, saved: false, error: '' });
     const s = this.state;
@@ -1410,6 +1464,16 @@ class Component extends DCLogic {
 
   buildTextFields(item, defs, listKey) {
     return defs.map((d) => {
+      if (d.type === 'collection') {
+        const entries = Array.isArray(item[d.key]) ? item[d.key] : [], dragGroup = listKey + ':' + item.id + ':' + d.key;
+        const labels = d.collectionKind === 'modules' ? [['title', 'Título'], ['desc', 'Descripción']] : d.collectionKind === 'faqs' ? [['q', 'Pregunta'], ['a', 'Respuesta']] : [['quote', 'Testimonio'], ['author', 'Nombre']];
+        return { key: d.key, label: d.label, isCollection: true, addLabel: d.collectionKind === 'modules' ? '+ Agregar módulo' : d.collectionKind === 'faqs' ? '+ Agregar pregunta' : '+ Agregar testimonio', items: entries.map((entry, index) => { const entryId = entry.id || (d.key + index); return { id: entryId, dragGroup, inputs: labels.map(([key, label], inputIndex) => { const isTextarea = inputIndex === 1 && d.collectionKind !== 'testimonials' || key === 'quote'; return { label, value: entry[key] || '', isTextarea, isText: !isTextarea, onChange: (e) => this.updateItemCollectionEntry(listKey, item.id, d.key, entryId, key, e.target.value) }; }), onDragStart: (e) => this.beginPointerReorder(dragGroup, entryId, e, (ids) => this.commitItemCollectionOrder(listKey, item.id, d.key, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeItemCollectionEntry(listKey, item.id, d.key, entryId) }; }), onAdd: () => this.addItemCollectionEntry(listKey, item.id, d.key, d.collectionKind) };
+      }
+      if (d.type === 'relation') {
+        const courseOptions = (this.state.aprendeData.cursos || []).filter((entry) => entry.id !== item.id).map((entry) => ({ id: 'curso:' + entry.id, label: 'Curso: ' + (entry.name || 'Sin nombre') }));
+        const workshopOptions = (this.state.aprendeData.talleres || []).map((entry) => ({ id: 'taller:' + entry.id, label: 'Taller: ' + (entry.name || 'Sin nombre') }));
+        return { key: d.key, label: d.label, isRelation: true, value: item[d.key] || '', options: [...courseOptions, ...workshopOptions], onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value) };
+      }
       if (d.type === 'lines') {
         return { key: d.key, label: d.label, isLines: true, value: Array.isArray(item[d.key]) ? item[d.key].join('\n') : '', placeholder: d.placeholder || '', onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value.split('\n')) };
       }
@@ -1542,9 +1606,12 @@ class Component extends DCLogic {
       const restDefs = defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
-        const itemForFields = s.aprendeTab === 'esenciales' ? { ...item, status: item.status || 'Activo' } : item;
+        const itemForFields = s.aprendeTab === 'esenciales' || s.aprendeTab === 'cursos' ? { ...item, status: item.status || 'Activo' } : item;
+        const courseFieldTabs = { status: 'info', price: 'info', level: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
+        const courseTabs = [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }].map((tab) => ({ ...tab, color: s.courseTab === tab.id ? '#F65091' : '#8B795E', border: s.courseTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ courseTab: tab.id }) }));
+        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: s.aprendeTab !== 'cursos' || courseFieldTabs[field.key] === s.courseTab ? 'block' : 'none' }));
         return {
-          id: item.id, fields: this.buildTextFields(itemForFields, restDefs, s.aprendeTab), onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          id: item.id, fields: itemFields, showCourseTabs: s.aprendeTab === 'cursos', courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
           onDragStart: (e) => this.beginPointerReorder('aprende-item:' + s.aprendeTab, item.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
@@ -1686,7 +1753,7 @@ class Component extends DCLogic {
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs,
       showAprendeEssentialsFaqs: s.aprendeTab === 'esenciales', onAddAprendeFaq: () => this.addAprendeFaq(),
       onAddAprendeItem: () => {
-        const defaults = { cursos: { name: 'Nuevo curso', level: '', price: '', desc: '', imageUrl: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
+        const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: '', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
       },
       onSave: this.handleSave, saving: s.saving,

@@ -214,17 +214,23 @@ class Component extends DCLogic {
       const id = qs.get('id');
       const cms = await import('/cms.js');
       const entityType = type === 'taller' ? 'workshops' : 'courses';
-      const [data, entities] = await Promise.all([
+      const [data, entities, allCourses, allWorkshops] = await Promise.all([
         cms.getPageContent('aprende'),
         cms.getEntities(entityType).catch(() => []),
+        cms.getEntities('courses').catch(() => []),
+        cms.getEntities('workshops').catch(() => []),
       ]);
       const legacyItems = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
-      const items = entities.length ? entities.map((entry, index) => {
+      const items = legacyItems.length ? legacyItems : entities.map((entry, index) => {
         const legacy = legacyItems.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
         return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
-      }) : legacyItems;
+      });
       const item = items.find((entry, index) => String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)) === String(id));
-      if (item) this.setState({ liveItem: item });
+      if (item) {
+        const relation = String(item.nextItemId || '').split(':'), relatedList = relation[0] === 'taller' ? ((data.talleres && data.talleres.length) ? data.talleres : allWorkshops) : ((data.cursos && data.cursos.length) ? data.cursos : allCourses);
+        const relatedItem = relation[1] ? relatedList.find((entry) => String(entry.id) === relation[1]) : null;
+        this.setState({ liveItem: { ...item, relatedItem } });
+      }
     } catch (error) {
       console.error('No se pudo cargar el contenido del curso o taller.', error);
     }
@@ -312,13 +318,18 @@ class Component extends DCLogic {
       ...fallback,
       title: live.name || fallback.title,
       tagline: live.shortDescription || live.desc || live.description || fallback.tagline,
-      summary: live.shortDescription || live.desc || live.description || fallback.summary,
+      summary: live.summary || live.shortDescription || live.desc || live.description || fallback.summary,
       price: live.price || fallback.price,
       cuposLabel: live.badge || fallback.cuposLabel,
       modules: Array.isArray(live.modules) && live.modules.length ? live.modules : fallback.modules,
       materials: live.materials || fallback.materials,
       forWho: live.audience || fallback.forWho,
       paymentNote: live.paymentNote || fallback.paymentNote,
+      badges: Array.isArray(live.badges) && live.badges.length ? live.badges : fallback.badges,
+      ctaLabel: live.ctaLabel || fallback.ctaLabel,
+      reservationStatus: live.reservationStatus || 'Disponible',
+      nextTitle: live.relatedItem ? ((String(live.nextItemId).startsWith('taller:') ? 'Taller: ' : 'Curso: ') + (live.relatedItem.name || '')) : fallback.nextTitle,
+      nextSubtitle: live.relatedItem ? 'Contenido recomendado para continuar' : fallback.nextSubtitle,
       faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
       testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
       gallery: live.gallery || live.pastGallery || [],
