@@ -164,10 +164,9 @@ x-dc{display:none!important}
         <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Estas opciones aparecen en el selector del formulario de contacto, en el mismo orden mostrado aquí.</div>
         <div style="display:flex;flex-direction:column;gap:10px;">
           <sc-for list="{{ contactProjectTypes }}" as="type" hint-placeholder-count="5">
-            <div style="display:flex;align-items:center;gap:8px;">
+            <div data-reorder-group="{{ type.dragGroup }}" data-reorder-id="{{ type.id }}" style="display:flex;align-items:center;gap:8px;">
+              <span onPointerDown="{{ type.onDragStart }}" onPointerMove="{{ type.onDragMove }}" onPointerUp="{{ type.onDragEnd }}" onPointerCancel="{{ type.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:38px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
               <input type="text" value="{{ type.value }}" onChange="{{ type.onChange }}" style="flex:1;box-sizing:border-box;padding:11px 12px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
-              <span onClick="{{ type.onMoveUp }}" title="Mover arriba" aria-label="Mover arriba" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;">↑</span>
-              <span onClick="{{ type.onMoveDown }}" title="Mover abajo" aria-label="Mover abajo" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;">↓</span>
               <span onClick="{{ type.onRemove }}" title="Eliminar opción" aria-label="Eliminar opción" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span>
             </div>
           </sc-for>
@@ -238,8 +237,8 @@ x-dc{display:none!important}
           <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Selecciona y ordena los cuatro productos de Tienda que aparecerán en Inicio. El nombre, la foto, el precio, la etiqueta y el enlace se toman directamente de cada producto.</div>
           <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
             <sc-for list="{{ recentProductSelectors }}" as="selector" hint-placeholder-count="4">
-              <div style="border:1px solid #E4DCCB;border-radius:6px;padding:14px;">
-                <label style="display:block;font-size:12px;color:#8B795E;margin-bottom:7px;">Posición {{ selector.position }}</label>
+              <div data-reorder-group="{{ selector.dragGroup }}" data-reorder-id="{{ selector.id }}" style="border:1px solid #E4DCCB;border-radius:6px;padding:14px;">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;"><span onPointerDown="{{ selector.onDragStart }}" onPointerMove="{{ selector.onDragMove }}" onPointerUp="{{ selector.onDragEnd }}" onPointerCancel="{{ selector.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:24px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><label style="font-size:12px;color:#8B795E;">Posición {{ selector.position }}</label></div>
                 <select value="{{ selector.value }}" onChange="{{ selector.onChange }}" style="width:100%;padding:10px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000000;font-family:Montserrat;font-size:13px;">
                   <option value="">Seleccionar producto</option>
                   <sc-for list="{{ selector.options }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.id }}" disabled="{{ opt.disabled }}">{{ opt.name }}</option></sc-for>
@@ -272,8 +271,9 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Categorías</div>
         <div style="margin-bottom:12px;">
           <sc-for list="{{ tiendaCategories }}" as="cat" hint-placeholder-count="3">
-            <div style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
+            <div data-reorder-group="{{ cat.dragGroup }}" data-reorder-id="{{ cat.id }}" style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;margin-bottom:10px;overflow:hidden;">
               <div onClick="{{ cat.onToggle }}" style="display:flex;align-items:center;padding:13px 16px;cursor:pointer;">
+                <span onPointerDown="{{ cat.onDragStart }}" onPointerMove="{{ cat.onDragMove }}" onPointerUp="{{ cat.onDragEnd }}" onPointerCancel="{{ cat.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;margin-right:6px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
                 <input type="text" value="{{ cat.name }}" onChange="{{ cat.onRename }}" onClick="{{ stopPropagation }}" style="flex:1;border:{{ cat.nameFieldBorder }};background:transparent;padding:10px;border-radius:4px;font-size:13px;color:#000;font-family:Montserrat;outline:none;" style-focus="outline:none;">
                 <div style="font-size: 12px; color: #8B795E; margin-right: 10px; margin-left: 12px">{{ cat.subCount }}</div>
                 <span style="display:inline-flex;transform:{{ cat.toggleTransform }};transition:transform .15s;">
@@ -284,15 +284,15 @@ x-dc{display:none!important}
                 <div style="padding: 0 16px 16px; background-color: #FFFFFF;">
                   <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
                     <sc-for list="{{ cat.subcategories }}" as="sub" hint-placeholder-count="3">
-                      <div style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:999px;padding:5px 6px 5px 10px;">
+                      <div data-reorder-group="{{ sub.dragGroup }}" data-reorder-id="{{ sub.id }}" style="display:flex;align-items:center;gap:6px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:999px;padding:5px 6px;">
+                        <span onPointerDown="{{ sub.onDragStart }}" onPointerMove="{{ sub.onDragMove }}" onPointerUp="{{ sub.onDragEnd }}" onPointerCancel="{{ sub.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:24px;color:#8B795E;cursor:grab;touch-action:none;font-size:14px;user-select:none;">⠿</span>
                         <input type="text" value="{{ sub.name }}" onChange="{{ sub.onRename }}" style="border:none;background:transparent;font-size:12px;width:100px;font-family:Montserrat;">
-                        <span onClick="{{ sub.onMoveUp }}" title="Mover antes" style="cursor:pointer;color:#8B795E;font-size:11px;">↑</span><span onClick="{{ sub.onMoveDown }}" title="Mover después" style="cursor:pointer;color:#8B795E;font-size:11px;">↓</span><span onClick="{{ sub.onRemove }}" title="Eliminar" style="cursor:pointer;color:#C0392B;font-size:13px;">×</span>
+                        <span onClick="{{ sub.onRemove }}" title="Eliminar" style="cursor:pointer;color:#C0392B;font-size:13px;">×</span>
                       </div>
                     </sc-for>
                     <span onClick="{{ cat.onAddSub }}" style="font-size:12px;color:#F65091;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
                   </div>
                   <div style="text-align:right;">
-                    <span onClick="{{ cat.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;margin-right:12px;">Subir</span><span onClick="{{ cat.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;margin-right:12px;">Bajar</span>
                     <span onClick="{{ cat.onRemove }}" style="font-size: 12px; color: #C0392B; cursor: pointer">Eliminar categoría</span>
                   </div>
                 </div>
@@ -305,7 +305,8 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Productos</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
           <sc-for list="{{ tiendaProducts }}" as="item" hint-placeholder-count="6">
-            <div onClick="{{ item.onSelect }}" style="background:#FFFFFF;border:1px solid #FFFFFF;border-radius:8px;overflow:hidden;cursor:pointer;">
+            <div data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" onClick="{{ item.onSelect }}" style="position:relative;background:#FFFFFF;border:1px solid #FFFFFF;border-radius:8px;overflow:hidden;cursor:pointer;">
+              <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="position:absolute;top:8px;left:8px;z-index:3;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;box-shadow:0 2px 8px rgba(0,0,0,.1);">⠿</span>
               <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto"></image-slot></div>
               <div style="padding:12px 14px;">
                 <div style="font-size:13px;color:#000;margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.name }}</div>
@@ -361,7 +362,8 @@ x-dc{display:none!important}
             <div style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Colores disponibles</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.colors }}" as="color" hint-placeholder-count="2">
-                <div style="display:flex;align-items:center;gap:8px;">
+                <div data-reorder-group="{{ color.dragGroup }}" data-reorder-id="{{ color.id }}" style="display:flex;align-items:center;gap:8px;">
+                  <span onPointerDown="{{ color.onDragStart }}" onPointerMove="{{ color.onDragMove }}" onPointerUp="{{ color.onDragEnd }}" onPointerCancel="{{ color.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:38px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
                   <input type="color" value="{{ color.hex }}" onChange="{{ color.onHexChange }}" title="Elegir color" style="width:40px;height:38px;padding:3px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;cursor:pointer;">
                   <input type="text" value="{{ color.name }}" onChange="{{ color.onNameChange }}" placeholder="Nombre del color" style="flex:1;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
                   <span onClick="{{ color.onRemove }}" title="Eliminar color" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;">×</span>
@@ -375,9 +377,9 @@ x-dc{display:none!important}
             <div style="margin:4px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Galería de imágenes</div>
             <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.gallery }}" as="photo" hint-placeholder-count="2">
-                <div style="width:{{ photo.maxWidth }};">
+                <div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:{{ photo.maxWidth }};">
                   <div style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="imagen de galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div>
-                  <div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onClick="{{ photo.onMoveUp }}" title="Mover antes" style="font-size:12px;color:#8B795E;cursor:pointer;">←</span><span style="font-size:11px;color:#8B795E;">{{ photo.position }}</span><span onClick="{{ photo.onMoveDown }}" title="Mover después" style="font-size:12px;color:#8B795E;cursor:pointer;">→</span><span onClick="{{ photo.onRemove }}" title="Eliminar imagen" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div>
+                  <div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span style="font-size:11px;color:#8B795E;">{{ photo.position }}</span><span onClick="{{ photo.onRemove }}" title="Eliminar imagen" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div>
                   <sc-if value="{{ photo.isAdjusting }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#8B795E;margin-top:6px;">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                 </div>
               </sc-for>
@@ -414,15 +416,16 @@ x-dc{display:none!important}
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
           <sc-for list="{{ tiendaFaqs }}" as="faq" hint-placeholder-count="5">
-            <div style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
+            <div data-reorder-group="{{ faq.dragGroup }}" data-reorder-id="{{ faq.id }}" style="background:#FFFFFF;border-radius:8px;overflow:hidden;">
               <div onClick="{{ faq.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;cursor:pointer;">
+                <span onPointerDown="{{ faq.onDragStart }}" onPointerMove="{{ faq.onDragMove }}" onPointerUp="{{ faq.onDragEnd }}" onPointerCancel="{{ faq.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
                 <input type="text" value="{{ faq.q }}" onChange="{{ faq.onQuestionChange }}" onClick="{{ stopPropagation }}" onFocus="{{ faq.onOpen }}" aria-label="Pregunta frecuente" placeholder="Pregunta" style="flex:1;min-width:0;padding:6px 0;border:0;background:transparent;font-family:Montserrat;font-size:13px;color:#2B2420;line-height:1.5;outline:none;">
                 <span onClick="{{ faq.onToggle }}" aria-label="Plegar o desplegar respuesta" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;cursor:pointer;transform:{{ faq.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="#8B795E" stroke-width="1.5"></path></svg></span>
               </div>
               <sc-if value="{{ faq.isOpen }}" hint-placeholder-val="{{ false }}">
                 <div style="padding:0 18px 18px;border-top:1px solid #F3EEE4;">
                   <textarea value="{{ faq.a }}" onChange="{{ faq.onAnswerChange }}" placeholder="Respuesta" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;margin-top:14px;"></textarea>
-                  <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;"><span onClick="{{ faq.onMoveUp }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Subir</span><span onClick="{{ faq.onMoveDown }}" style="font-size:12px;color:#8B795E;cursor:pointer;">Bajar</span><span onClick="{{ faq.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
+                  <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px;"><span onClick="{{ faq.onRemove }}" style="font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></div>
                 </div>
               </sc-if>
             </div>
@@ -896,6 +899,31 @@ class Component extends DCLogic {
     items.splice(to, 0, moved);
     this.setListArray(listKey, items);
   }
+  orderByIds(items, orderedIds, getId = (item) => item.id) {
+    const byId = Object.fromEntries(items.map((item, index) => [String(getId(item, index)), item]));
+    return orderedIds.map((id) => byId[String(id)]).filter(Boolean);
+  }
+  commitContactOrder(orderedIds) {
+    const items = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
+    this.setState({ contactData: { ...this.state.contactData, projectTypes: this.orderByIds(items, orderedIds, (_, index) => index) }, saved: false });
+  }
+  commitRecentProductsOrder(orderedIds) {
+    const items = [...((this.state.content && this.state.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'])];
+    this.setState({ content: { ...this.state.content, recentProductIds: this.orderByIds(items, orderedIds, (_, index) => index) }, saved: false });
+  }
+  commitTiendaOrder(key, orderedIds) {
+    const items = [...((this.state.tiendaData && this.state.tiendaData[key]) || [])];
+    this.setState({ tiendaData: { ...this.state.tiendaData, [key]: this.orderByIds(items, orderedIds) }, saved: false });
+  }
+  commitProductCollectionOrder(productId, key, orderedIds) {
+    const product = this.state.tiendaData.products.find((item) => item.id === productId);
+    const items = key === 'gallery' ? this.normalizeGallery(product) : [...((product && product[key]) || [])];
+    this.updateProductCollection(productId, key, this.orderByIds(items, orderedIds, (item, index) => item.id || (key + index)));
+  }
+  commitSubcategoryOrder(categoryId, orderedIds) {
+    const categories = this.state.tiendaData.categories.map((category) => category.id === categoryId ? { ...category, subcategories: this.orderByIds(category.subcategories, orderedIds) } : category);
+    this.setState({ tiendaData: { ...this.state.tiendaData, categories }, saved: false });
+  }
   moveAprendeFaqTo(tab, sourceId, targetId) {
     const faqs = [...this.getAprendeFaqs(tab)], from = faqs.findIndex((faq) => faq.id === sourceId), to = faqs.findIndex((faq) => faq.id === targetId);
     if (from < 0 || to < 0 || from === to) return;
@@ -903,7 +931,7 @@ class Component extends DCLogic {
     faqs.splice(to, 0, moved);
     this.setAprendeFaqs(tab, faqs);
   }
-  beginPointerReorder(group, id, event) {
+  beginPointerReorder(group, id, event, onCommit) {
     event.preventDefault(); event.stopPropagation();
     if (this._pointerReorder) this.cancelPointerReorder(event);
     const sourceElement = event.currentTarget.closest ? event.currentTarget.closest('[data-reorder-group]') : null;
@@ -911,11 +939,11 @@ class Component extends DCLogic {
     const rect = sourceElement.getBoundingClientRect(), parent = sourceElement.parentElement, originalStyle = sourceElement.getAttribute('style') || '', originalNextSibling = sourceElement.nextSibling;
     const placeholder = document.createElement('div');
     placeholder.setAttribute('data-reorder-group', group); placeholder.setAttribute('data-reorder-id', id);
-    Object.assign(placeholder.style, { height: rect.height + 'px', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: '10px' });
+    Object.assign(placeholder.style, { width: rect.width + 'px', height: rect.height + 'px', flex: '0 0 ' + rect.width + 'px', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: '10px' });
     parent.insertBefore(placeholder, sourceElement); document.body.appendChild(sourceElement);
     Object.assign(sourceElement.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
     const globalMove = (e) => this.trackPointerReorder(e), globalEnd = (e) => this.finishPointerReorder(e), globalCancel = (e) => this.cancelPointerReorder(e);
-    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY, globalMove, globalEnd, globalCancel };
+    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY, globalMove, globalEnd, globalCancel, onCommit };
     window.addEventListener('pointermove', globalMove, true); window.addEventListener('pointerup', globalEnd, true); window.addEventListener('pointercancel', globalCancel, true); window.addEventListener('blur', globalCancel, true);
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
     this.startReorderAutoScroll();
@@ -928,7 +956,7 @@ class Component extends DCLogic {
     const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
     const placeholder = drag.placeholder;
     if (!row || !placeholder || row === placeholder || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== placeholder.parentElement) return;
-    const rect = row.getBoundingClientRect(), placeAfter = clientY > rect.top + rect.height / 2;
+    const rect = row.getBoundingClientRect(), isHorizontal = clientY >= rect.top && clientY <= rect.bottom && Math.abs(clientY - (rect.top + rect.height / 2)) < rect.height * .35, placeAfter = isHorizontal ? clientX > rect.left + rect.width / 2 : clientY > rect.top + rect.height / 2;
     placeholder.parentElement.insertBefore(placeholder, placeAfter ? row.nextSibling : row);
   }
   trackPointerReorder(event) {
@@ -968,6 +996,7 @@ class Component extends DCLogic {
     if (!drag.sourceElement || !drag.placeholder || !drag.placeholder.parentElement) { this.clearPointerReorderVisual(drag, false); return; }
     const orderedIds = Array.from(drag.placeholder.parentElement.children).filter((row) => row.getAttribute && row.getAttribute('data-reorder-group') === drag.group).map((row) => row.getAttribute('data-reorder-id'));
     this.clearPointerReorderVisual(drag, true);
+    if (drag.onCommit) { drag.onCommit(orderedIds); return; }
     if (drag.group.indexOf('aprende-item:') === 0) {
       const tab = drag.group.split(':')[1], byId = Object.fromEntries(this.getListArray(tab).map((item) => [item.id, item]));
       this.setListArray(tab, orderedIds.map((id) => byId[id]).filter(Boolean));
@@ -1452,6 +1481,7 @@ class Component extends DCLogic {
       categoryNames = s.tiendaData.categories.map((c) => c.name);
       tiendaCategories = s.tiendaData.categories.map((cat) => ({
         id: cat.id, name: cat.name, onRename: (e) => this.renameCategory(cat.id, e.target.value),
+        dragGroup: 'tienda-categories', onDragStart: (e) => this.beginPointerReorder('tienda-categories', cat.id, e, (ids) => this.commitTiendaOrder('categories', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
         onRemove: () => this.removeCategory(cat.id), onAddSub: () => this.addSubcategory(cat.id),
         onMoveUp: () => this.moveCategory(cat.id, -1), onMoveDown: () => this.moveCategory(cat.id, 1),
         isOpen: s.expanded.category === cat.id, onToggle: () => this.selectTile('category', cat.id),
@@ -1460,7 +1490,7 @@ class Component extends DCLogic {
         toggleColor: '#8B795E',
         toggleTransform: s.expanded.category === cat.id ? 'rotate(180deg)' : 'rotate(0deg)',
         subCount: cat.subcategories.length,
-        subcategories: cat.subcategories.map((sub) => ({ name: sub.name, onRename: (e) => this.renameSubcategory(cat.id, sub.id, e.target.value), onRemove: () => this.removeSubcategory(cat.id, sub.id), onMoveUp: () => this.moveSubcategory(cat.id, sub.id, -1), onMoveDown: () => this.moveSubcategory(cat.id, sub.id, 1) }))
+        subcategories: cat.subcategories.map((sub) => ({ id: sub.id, name: sub.name, dragGroup: 'tienda-subcategories:' + cat.id, onDragStart: (e) => this.beginPointerReorder('tienda-subcategories:' + cat.id, sub.id, e, (ids) => this.commitSubcategoryOrder(cat.id, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRename: (e) => this.renameSubcategory(cat.id, sub.id, e.target.value), onRemove: () => this.removeSubcategory(cat.id, sub.id) }))
       }));
       tiendaProducts = s.tiendaData.products.map((p) => {
         const cat = s.tiendaData.categories.find((c) => c.name === p.category);
@@ -1481,20 +1511,21 @@ class Component extends DCLogic {
         const gallery = this.normalizeGallery(p);
         return {
           id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products').map((field, index) => ({ ...field, display: defs[index].tab === s.productTab ? 'block' : 'none' })), onRemove: () => this.removeProduct(p.id),
+          dragGroup: 'tienda-products', onDragStart: (e) => this.beginPointerReorder('tienda-products', p.id, e, (ids) => this.commitTiendaOrder('products', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
           name: p.name || 'Sin nombre', price: p.price || '', imageUrl: p.imageUrl || '', noImage: !p.imageUrl,
           status, statusBg: status === 'Activo' ? '#E8F3E9' : status === 'Borrador' ? '#F3EEE4' : '#FDECEC',
           statusColor: status === 'Activo' ? '#2E7D32' : status === 'Borrador' ? '#8B795E' : '#C0392B',
           isSelected, onSelect: () => this.openProductEditor(p.id),
-          colors: ((p.colors || []).map((color, index) => ({ id: color.id || ('color' + index), name: color.name || '', hex: color.hex || '#F3EEE4', onNameChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, color.id || ('color' + index), 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, color.id || ('color' + index)) }))),
+          colors: ((p.colors || []).map((color, index) => { const colorId = color.id || ('color' + index), dragGroup = 'product-colors:' + p.id; return { id: colorId, name: color.name || '', hex: color.hex || '#F3EEE4', dragGroup, onDragStart: (e) => this.beginPointerReorder(dragGroup, colorId, e, (ids) => this.commitProductCollectionOrder(p.id, 'colors', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onNameChange: (e) => this.updateProductColor(p.id, colorId, 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, colorId, 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, colorId) }; })),
           onAddColor: () => this.addProductColor(p.id),
-          gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment); const slotId = 'cms-product-gallery-' + p.id + '-' + entry.id; return { ...entry, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onMoveUp: () => this.moveProductGallery(p.id, entry.id, -1), onMoveDown: () => this.moveProductGallery(p.id, entry.id, 1), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
+          gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment), slotId = 'cms-product-gallery-' + p.id + '-' + entry.id, dragGroup = 'product-gallery:' + p.id; return { ...entry, dragGroup, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id) ? '520px' : '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entry.id, e, (ids) => this.commitProductCollectionOrder(p.id, 'gallery', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
           galleryPlaceholders: Array.from({ length: Math.max(0, 4 - gallery.length) }, (_, index) => ({ position: gallery.length + index + 1, onUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]) })),
           onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
           colorsDisplay: s.productTab === 'options' ? 'block' : 'none', galleryDisplay: s.productTab === 'images' ? 'block' : 'none',
           tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', border: s.productTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ productTab: tab.id }) }))
         };
       });
-      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onOpen: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onMoveUp: () => this.moveTiendaFaq(faq.id, -1), onMoveDown: () => this.moveTiendaFaq(faq.id, 1), onRemove: () => this.removeTiendaFaq(faq.id) }));
+      tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, dragGroup: 'tienda-faqs', onDragStart: (e) => this.beginPointerReorder('tienda-faqs', faq.id, e, (ids) => this.commitTiendaOrder('faqs', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onOpen: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onRemove: () => this.removeTiendaFaq(faq.id) }));
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
@@ -1579,10 +1610,9 @@ class Component extends DCLogic {
       isComingSoon: false,
       isContactoPage: s.page === 'contacto' && !!s.contactData,
       contactProjectTypes: ((s.contactData && s.contactData.projectTypes) || []).map((value, index) => ({
-        value,
+        id: String(index), value, dragGroup: 'contact-project-types',
+        onDragStart: (e) => this.beginPointerReorder('contact-project-types', String(index), e, (ids) => this.commitContactOrder(ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
         onChange: (e) => this.updateContactType(index, e.target.value),
-        onMoveUp: () => this.moveContactType(index, -1),
-        onMoveDown: () => this.moveContactType(index, 1),
         onRemove: () => this.removeContactType(index)
       })),
       onAddContactType: () => this.addContactType(),
@@ -1640,7 +1670,8 @@ class Component extends DCLogic {
         const value = ids[position] || '';
         const selected = s.inicioProductOptions.find((p) => p.id === value);
         return {
-          position: position + 1, value,
+          id: String(position), position: position + 1, value, dragGroup: 'inicio-recent-products',
+          onDragStart: (e) => this.beginPointerReorder('inicio-recent-products', String(position), e, (orderedIds) => this.commitRecentProductsOrder(orderedIds)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
           options: s.inicioProductOptions.filter((p) => (p.status || 'Activo') !== 'Borrador').map((p) => ({ id: p.id, name: p.name || 'Producto sin nombre', disabled: ids.some((id, index) => index !== position && id === p.id) })),
           warning: value && (!selected || (selected.status || 'Activo') === 'Borrador') ? 'Este producto ya no está disponible en Tienda. Selecciona otro.' : '',
           onChange: (e) => this.updateRecentProduct(position, e.target.value)
