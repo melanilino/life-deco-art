@@ -28,11 +28,12 @@ x-dc{display:none!important}
 <div id="dc-boot-fallback" aria-hidden="true"><div class="dc-fb-nav"><span class="dc-fb-brand">Life Deco Art</span></div></div>
 <x-dc>
 <helmet>
-<script src="./image-slot.js?v=20260818a3" defer></script>
+<script src="./image-slot.js?v=20260825a1" defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700&amp;family=Homemade+Apple&amp;display=swap" rel="stylesheet">
 <style>
   body { margin: 0; background: #F3EEE4; font-family: 'Montserrat', sans-serif; }
+  image-slot { --image-slot-empty-background: #F3EEE4; --image-slot-empty-color: #8B795E; --image-slot-empty-border: #CFC4B2; }
   input, textarea, select, button { outline: none; }
   input:focus, textarea:focus, select:focus, button:focus, button:focus-visible { outline: none; box-shadow: none; }
   input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; -webkit-text-fill-color: #000000; transition: background-color 9999s ease-in-out 0s; }
@@ -388,7 +389,7 @@ x-dc{display:none!important}
                 </div>
               </sc-for>
               <sc-for list="{{ selectedProduct.galleryPlaceholders }}" as="slot" hint-placeholder-count="2">
-                <label style="width:150px;aspect-ratio:1;box-sizing:border-box;border:1px dashed #CFC4B2;border-radius:6px;background:#FBF9F5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#8B795E;cursor:pointer;text-align:center;">
+                <label style="width:150px;aspect-ratio:1;box-sizing:border-box;border:1px dashed #CFC4B2;border-radius:6px;background:#F3EEE4;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#8B795E;cursor:pointer;text-align:center;">
                   <span style="font-size:22px;font-weight:300;line-height:1;">+</span>
                   <span style="font-size:11px;line-height:1.4;">Miniatura {{ slot.position }}</span>
                   <input type="file" accept="image/*" onChange="{{ slot.onUpload }}" style="display:none;">
