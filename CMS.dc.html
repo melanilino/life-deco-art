@@ -802,6 +802,29 @@ class Component extends DCLogic {
     });
   }
 
+  componentDidUpdate() {
+    const s = this.state;
+    const editorOpen = !!(s.user && ((s.page === 'tienda' && s.expanded.products) || (s.page === 'aprende' && s.aprendeSectionOpen && s.expanded[s.aprendeTab])));
+    if (editorOpen && !this._pageScrollLocked) {
+      this._pageScrollLocked = true;
+      this._previousPageOverflow = { html: document.documentElement.style.overflow, body: document.body.style.overflow };
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else if (!editorOpen && this._pageScrollLocked) {
+      this.releasePageScrollLock();
+    }
+  }
+
+  componentWillUnmount() { this.releasePageScrollLock(); }
+
+  releasePageScrollLock() {
+    if (!this._pageScrollLocked) return;
+    document.documentElement.style.overflow = (this._previousPageOverflow && this._previousPageOverflow.html) || '';
+    document.body.style.overflow = (this._previousPageOverflow && this._previousPageOverflow.body) || '';
+    this._pageScrollLocked = false;
+    this._previousPageOverflow = null;
+  }
+
   async loadLegalUpdatedDates() {
     const files = {
       privacidad: 'Politica de Privacidad.dc.html',
