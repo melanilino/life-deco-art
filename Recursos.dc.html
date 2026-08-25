@@ -33,7 +33,7 @@
   <div style="max-width:1100px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:#8B795E;font-weight:300;">
     <a href="/aprende" style="text-decoration:none;color:#8B795E;">Aprende</a>
     <span>/</span>
-    <a href="/aprende" style="text-decoration:none;color:#8B795E;">Gratis</a>
+    <a href="/aprende?tab=Gratis" style="text-decoration:none;color:#8B795E;">Gratis</a>
     <span>/</span>
     <span style="color:#000000;">{{ title }}</span>
   </div>
@@ -49,12 +49,12 @@
     <div>
       <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:12px;">Recurso gratuito</div>
       <h1 style="font-size:{{ h1Size }};line-height:1.2;color:#000000;font-weight:300;margin:0 0 14px;">{{ title }}</h1>
-      <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0 0 24px;">Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.</p>
+      <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0 0 24px;">{{ description }}</p>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;">
         <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">{{ format }}</div>
-        <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">6 páginas</div>
-        <div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">Imprimible</div>
+        <sc-if value="{{ pageCount }}" hint-placeholder-val="{{ false }}"><div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">{{ pageCount }}</div></sc-if>
+        <sc-if value="{{ printableLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:7px 14px;border-radius:999px;background:#F3EEE4;font-size:12px;color:#2B2420;font-weight:400;">{{ printableLabel }}</div></sc-if>
       </div>
 
       <div style="margin-bottom:24px;">
@@ -68,17 +68,17 @@
 
       <div style="margin-bottom:24px;">
         <div style="font-size:14px;color:#000;font-weight:400;margin-bottom:8px;">Para quién está pensado</div>
-        <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:0;">Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.</p>
+        <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:0;">{{ audience }}</p>
       </div>
 
       <div style="margin-bottom:32px;">
         <div style="font-size:14px;color:#000;font-weight:400;margin-bottom:8px;">Cómo usarla</div>
-        <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:0;">Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.</p>
+        <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:0;">{{ usage }}</p>
       </div>
 
       <a href="{{ downloadUrl }}" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:15px 30px;border-radius:6px;font-size:14px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"></path></svg>
-        Descargar gratis
+        {{ downloadLabel }}
       </a>
     </div>
 
@@ -89,7 +89,7 @@
     <div style="display:grid;grid-template-columns:{{ previewCols }};gap:14px;">
       <sc-for list="{{ previewPages }}" as="pg" hint-placeholder-count="3">
         <div style="aspect-ratio:3/4;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-          <image-slot id="{{ pg.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="{{ pg.placeholder }}"></image-slot>
+          <image-slot id="{{ pg.id }}" shape="rect" fit="cover" view-scale="{{ pg.viewScale }}" view-x="{{ pg.viewX }}" view-y="{{ pg.viewY }}" style="width:100%;height:100%;" src="{{ pg.url }}" placeholder="{{ pg.placeholder }}"></image-slot>
         </div>
       </sc-for>
     </div>
@@ -97,13 +97,13 @@
 
   <div style="max-width:1100px;margin:0 auto;padding:{{ nextPad }};">
     <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:12px;">Tu siguiente paso</div>
-    <a href="/aprende/curso?id=cu1" style="display:flex;align-items:center;gap:16px;text-decoration:none;background:#F3EEE4;border-radius:12px;padding:18px;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
+    <a href="{{ nextHref }}" style="display:flex;align-items:center;gap:16px;text-decoration:none;background:#F3EEE4;border-radius:12px;padding:18px;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
       <div style="width:64px;height:64px;border-radius:8px;background:#FFFFFF;flex-shrink:0;overflow:hidden;">
-        <image-slot id="rc-next" shape="rect" fit="cover" style="width:100%;height:100%;" src="" placeholder="curso relacionado"></image-slot>
+        <image-slot id="rc-next" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ nextImageUrl }}" placeholder="contenido relacionado"></image-slot>
       </div>
       <div>
-        <div style="font-size:14px;color:#000;font-weight:400;">Curso: Lettering para Bodas</div>
-        <div style="font-size:12px;color:#8B795E;font-weight:300;">Cuando domines los trazos, dale forma a piezas completas.</div>
+        <div style="font-size:14px;color:#000;font-weight:400;">{{ nextTitle }}</div>
+        <div style="font-size:12px;color:#8B795E;font-weight:300;">{{ nextDescription }}</div>
       </div>
     </a>
   </div>
@@ -116,7 +116,7 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null };
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null, related: null };
   async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
@@ -134,7 +134,12 @@ class Component extends DCLogic {
         return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
       }) : legacyResources;
       const resource = resources.find((entry, index) => String(entry.id || `g${index + 1}`) === String(id));
-      if (resource) this.setState({ resource });
+      if (resource) {
+        const relation = String(resource.nextItemId || '').split(':');
+        const list = relation[0] === 'taller' ? (data.talleres || []) : (data.cursos || []);
+        const related = list.find((entry) => String(entry.id) === relation.slice(1).join(':')) || null;
+        this.setState({ resource, related });
+      }
     } catch (error) {
       console.error('No se pudo cargar el recurso.', error);
     }
@@ -142,7 +147,10 @@ class Component extends DCLogic {
   renderVals() {
     const m = this.state.isMobile;
     const resource = this.state.resource || {};
+    const related = this.state.related || {};
     const adjustment = resource.imageAdjustments && resource.imageAdjustments.imageUrl;
+    const previews = Array.isArray(resource.previewImages) ? resource.previewImages : [];
+    const relationType = String(resource.nextItemId || '').split(':')[0];
     return {
       navGap: m ? '64px' : '88px',
       crumbPad: m ? '16px 24px 0' : '24px 48px 0',
@@ -152,14 +160,24 @@ class Component extends DCLogic {
       h1Size: m ? '24px' : '34px',
       title: resource.title || 'Plantilla de Trazos Básicos',
       format: resource.format || 'PDF',
+      pageCount: resource.pageCount || '',
+      printableLabel: resource.printableLabel || '',
+      description: resource.description || 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.',
+      audience: resource.audience || 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.',
+      usage: resource.usage || 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.',
       imageUrl: resource.imageUrl || '',
       imageView: { scale: Number(adjustment && (adjustment.scale || adjustment.zoom / 100)) || 1, x: Number(adjustment && adjustment.x) || 0, y: Number(adjustment && adjustment.y) || 0 },
       previewSectionPad: m ? '10px 24px 0' : '10px 48px 0',
       previewCols: m ? 'repeat(3,1fr)' : 'repeat(3,1fr)',
-      previewPages: [1, 2, 3].map(i => ({ id: `rc-preview-${i}`, placeholder: `página ${i} de la plantilla` })),
+      previewPages: (previews.length ? previews : [1, 2, 3].map(() => ({}))).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, view = item.adjustment || {}; return { ...item, id: `rc-preview-${index + 1}`, placeholder: `página ${index + 1} de la plantilla`, viewScale: Number(view.scale || view.zoom / 100) || 1, viewX: Number(view.x) || 0, viewY: Number(view.y) || 0 }; }),
       nextPad: m ? '30px 24px 60px' : '40px 48px 90px',
       contains: Array.isArray(resource.contains) && resource.contains.length ? resource.contains : ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
       downloadUrl: resource.fileUrl || '#',
+      downloadLabel: resource.downloadLabel || 'Descargar gratis',
+      nextHref: related.id ? `/aprende/${relationType === 'taller' ? 'taller' : 'curso'}?id=${encodeURIComponent(related.id)}` : '/aprende?tab=Cursos',
+      nextImageUrl: related.imageUrl || '',
+      nextTitle: related.name ? `${relationType === 'taller' ? 'Taller' : 'Curso'}: ${related.name}` : 'Explora los cursos y talleres',
+      nextDescription: related.desc || related.summary || 'Sigue aprendiendo con el contenido disponible en Aprende.',
     };
   }
 }

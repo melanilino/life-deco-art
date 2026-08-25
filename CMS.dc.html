@@ -608,7 +608,7 @@ class Component extends DCLogic {
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
-    adjustingImage: null, productTab: 'info', courseTab: 'info',
+    adjustingImage: null, productTab: 'info', courseTab: 'info', resourceTab: 'info',
     confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
   };
 
@@ -755,7 +755,15 @@ class Component extends DCLogic {
       { key: 'ctaLabel', label: 'Texto del botón de reserva', type: 'text' }, { key: 'reservationStatus', label: 'Estado de la reserva', type: 'select', options: ['Disponible', 'Pocos cupos', 'Agotado', 'Lista de espera', 'Próximamente', 'Cerrado'] },
       { key: 'nextItemId', label: 'Curso o taller relacionado', type: 'relation' }
     ],
-    gratis: [{ key: 'format', label: 'Formato', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'imageUrl', label: 'Foto de vista previa', type: 'image', aspect: '4/3' }, { key: 'fileUrl', label: 'Documento adjunto', type: 'file' }],
+    gratis: [
+      { key: 'title', label: 'Título', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
+      { key: 'format', label: 'Formato', type: 'text' }, { key: 'pageCount', label: 'Cantidad de páginas', type: 'text' }, { key: 'printableLabel', label: 'Tipo de uso', type: 'text' },
+      { key: 'description', label: 'Descripción principal', type: 'textarea' }, { key: 'imageUrl', label: 'Portada / vista previa', type: 'image', aspect: '3/4' },
+      { key: 'contains', label: 'Qué contiene (un punto por línea)', type: 'lines' }, { key: 'audience', label: 'Para quién está pensado', type: 'textarea' }, { key: 'usage', label: 'Cómo usarlo', type: 'textarea' },
+      { key: 'previewImages', label: 'Páginas de vista previa', type: 'imageCollection' },
+      { key: 'fileUrl', label: 'Documento adjunto', type: 'file' }, { key: 'downloadLabel', label: 'Texto del botón', type: 'text' },
+      { key: 'nextItemId', label: 'Curso o taller relacionado', type: 'relation' }
+    ],
     blog: [{ key: 'category', label: 'Categoría', type: 'text' }, { key: 'title', label: 'Título', type: 'text' }, { key: 'excerpt', label: 'Extracto', type: 'textarea' }, { key: 'meta', label: 'Fecha / tiempo de lectura', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '16/9' }, { key: 'content', label: 'Contenido completo del artículo', type: 'richtext' }, { key: 'authorName', label: 'Nombre del autor', type: 'text' }, { key: 'authorRole', label: 'Cargo del autor', type: 'text' }, { key: 'authorPhoto', label: 'Foto del autor', type: 'image', aspect: '1/1' }],
     esenciales: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link externo o de afiliado', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }],
     comunidad: [{ key: 'name', label: 'Nombre', type: 'text' }, { key: 'desc', label: 'Descripción', type: 'textarea' }, { key: 'href', label: 'Link', type: 'text' }, { key: 'imageUrl', label: 'Foto', type: 'image', aspect: '1/1' }]
@@ -1648,14 +1656,16 @@ class Component extends DCLogic {
       const restDefs = defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
-        const isLongEditorType = s.aprendeTab === 'cursos' || s.aprendeTab === 'talleres';
+        const isLongEditorType = s.aprendeTab === 'cursos' || s.aprendeTab === 'talleres' || s.aprendeTab === 'gratis';
         const itemForFields = s.aprendeTab === 'esenciales' || isLongEditorType ? { ...item, status: item.status || 'Activo' } : item;
         const courseFieldTabs = { status: 'info', price: 'info', level: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
         const workshopFieldTabs = { status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', locationDetail: 'location', mapImageUrl: 'location', cancellationPolicy: 'policies', faqs: 'policies', gallery: 'gallery', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
-        const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : courseFieldTabs;
-        const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
-        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: s.courseTab === tab.id ? '#F65091' : '#8B795E', border: s.courseTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState({ courseTab: tab.id }) }));
-        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !isLongEditorType || activeFieldTabs[field.key] === s.courseTab ? 'block' : 'none' }));
+        const resourceFieldTabs = { status: 'info', format: 'info', pageCount: 'info', printableLabel: 'info', description: 'presentation', imageUrl: 'presentation', contains: 'content', audience: 'content', usage: 'content', previewImages: 'preview', fileUrl: 'download', downloadLabel: 'download', nextItemId: 'related' };
+        const activeEditorTab = s.aprendeTab === 'gratis' ? s.resourceTab : s.courseTab;
+        const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : s.aprendeTab === 'gratis' ? resourceFieldTabs : courseFieldTabs;
+        const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : s.aprendeTab === 'gratis' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'preview', label: 'Vista previa' }, { id: 'download', label: 'Descarga' }, { id: 'related', label: 'Relacionado' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
+        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', border: activeEditorTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }) }));
+        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !isLongEditorType || activeFieldTabs[field.key] === activeEditorTab ? 'block' : 'none' }));
         return {
           id: item.id, fields: itemFields, showCourseTabs: isLongEditorType, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
@@ -1667,9 +1677,9 @@ class Component extends DCLogic {
           summaryDisplay: isSelected ? 'none' : 'block',
           summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
           summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
-          isSelected, onSelect: () => isLongEditorType ? this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info' }) : this.selectTile(s.aprendeTab, item.id),
+          isSelected, onSelect: () => isLongEditorType ? this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info' }) : this.selectTile(s.aprendeTab, item.id),
           onClose: () => this.selectTile(s.aprendeTab, null),
-          isCourseEditor: isLongEditorType && isSelected, editorBackLabel: s.aprendeTab === 'talleres' ? 'talleres' : 'cursos',
+          isCourseEditor: isLongEditorType && isSelected, editorBackLabel: s.aprendeTab === 'talleres' ? 'talleres' : s.aprendeTab === 'gratis' ? 'Gratis' : 'cursos',
           summaryHeaderDisplay: isLongEditorType && isSelected ? 'none' : 'flex',
           cardPosition: isLongEditorType && isSelected ? 'fixed' : 'relative', cardInset: isLongEditorType && isSelected ? '0' : 'auto', cardZ: isLongEditorType && isSelected ? '50' : 'auto',
           cardBackground: isLongEditorType && isSelected ? '#F7F2E8' : '#FFFFFF', cardBorder: isLongEditorType && isSelected ? '0' : '1px solid #FFFFFF', cardRadius: isLongEditorType && isSelected ? '0' : '6px', cardOverflowY: isLongEditorType && isSelected ? 'scroll' : 'hidden', cardPadding: isLongEditorType && isSelected ? '32px 24px 70px' : '0',
@@ -1805,7 +1815,7 @@ class Component extends DCLogic {
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs,
       showAprendeEssentialsFaqs: s.aprendeTab === 'esenciales', onAddAprendeFaq: () => this.addAprendeFaq(),
       onAddAprendeItem: () => {
-        const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: '', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { format: 'PDF', title: 'Nuevo descargable', imageUrl: '', fileUrl: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
+        const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: '', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { title: 'Nuevo descargable', status: 'Borrador', format: 'PDF', pageCount: '', printableLabel: '', description: '', imageUrl: '', contains: [], audience: '', usage: '', previewImages: [], fileUrl: '', downloadLabel: 'Descargar gratis', nextItemId: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
       },
       onSave: this.handleSave, saving: s.saving,
