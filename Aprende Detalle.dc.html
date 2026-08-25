@@ -203,7 +203,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1400},&quot;type&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;taller&quot;,&quot;options&quot;:[&quot;curso&quot;,&quot;taller&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: null, liveItem: null };
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: null, liveItem: null, whatsappNumber: '18495390410' };
   async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
@@ -214,22 +214,25 @@ class Component extends DCLogic {
       const id = qs.get('id');
       const cms = await import('/cms.js');
       const entityType = type === 'taller' ? 'workshops' : 'courses';
-      const [data, entities, allCourses, allWorkshops] = await Promise.all([
+      const [data, entities, allCourses, allWorkshops, globalData] = await Promise.all([
         cms.getPageContent('aprende'),
         cms.getEntities(entityType).catch(() => []),
         cms.getEntities('courses').catch(() => []),
         cms.getEntities('workshops').catch(() => []),
+        cms.getPageContent('global').catch(() => ({})),
       ]);
       const legacyItems = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
       const items = legacyItems.length ? legacyItems : entities.map((entry, index) => {
         const legacy = legacyItems.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
         return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
       });
-      const item = items.find((entry, index) => String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)) === String(id));
+      const item = items.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry, index) => String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)) === String(id));
       if (item) {
         const relation = String(item.nextItemId || '').split(':'), relatedList = relation[0] === 'taller' ? ((data.talleres && data.talleres.length) ? data.talleres : allWorkshops) : ((data.cursos && data.cursos.length) ? data.cursos : allCourses);
-        const relatedItem = relation[1] ? relatedList.find((entry) => String(entry.id) === relation[1]) : null;
-        this.setState({ liveItem: { ...item, relatedItem } });
+        const relatedItem = relation[1] ? relatedList.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry) => String(entry.id) === relation[1]) : null;
+        this.setState({ liveItem: { ...item, relatedItem }, whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410' });
+      } else {
+        window.location.replace(`/aprende?tab=${type === 'taller' ? 'Talleres' : 'Cursos'}`);
       }
     } catch (error) {
       console.error('No se pudo cargar el contenido del curso o taller.', error);
@@ -320,7 +323,7 @@ class Component extends DCLogic {
       tagline: live.shortDescription || live.desc || live.description || fallback.tagline,
       summary: live.summary || live.shortDescription || live.desc || live.description || fallback.summary,
       price: live.price || fallback.price,
-      cuposLabel: live.badge || fallback.cuposLabel,
+      cuposLabel: live.badge || live.reservationStatus || fallback.cuposLabel,
       modules: Array.isArray(live.modules) && live.modules.length ? live.modules : fallback.modules,
       materials: live.materials || fallback.materials,
       forWho: live.audience || fallback.forWho,
@@ -342,10 +345,13 @@ class Component extends DCLogic {
             { label: 'Fecha', value: live.date || live.dateLevel || '' },
             { label: 'Hora', value: live.time || '' },
             { label: 'Nivel', value: live.level || '' },
+            { label: 'Modalidad', value: live.modality || '' },
             { label: 'Ubicación', value: live.location || '' },
+            { label: 'Duración', value: live.duration || '' },
           ].filter(row => row.value)
         : [
-            { label: 'Nivel / modalidad', value: live.level || '' },
+            { label: 'Nivel', value: live.level || '' },
+            { label: 'Modalidad', value: live.modality || '' },
             { label: 'Duración', value: live.duration || '' },
             { label: 'Disponibilidad', value: live.availability || '' },
           ].filter(row => row.value),
@@ -374,7 +380,7 @@ class Component extends DCLogic {
       isMobile: m,
       showDesktopBooking: !m,
       isTaller: type === 'taller', isCurso: type === 'curso',
-      whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
+      whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
       ...d, faqs,
     };
   }

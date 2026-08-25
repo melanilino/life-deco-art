@@ -141,24 +141,7 @@ body{margin:0;background:#fff}
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};text-align:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">{{ heroEyebrow }}</div>
     <h1 style="font-size: {{ h1Size }}; line-height: 1.2; color: #000000; font-weight: 300; margin: 0">{{ heroBefore }}<span style="font-family: 'Homemade Apple', cursive; font-weight: 400; font-size: 1.22em; position: relative; top: 0px">{{ heroHighlight }}</span>{{ heroAfter }}</h1>
-    <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ true }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Empieza desde cero o perfecciona tu técnica: <br>presenciales u online.</p>
-    </sc-if>
-    <sc-if value="{{ isTalleres }}" hint-placeholder-val="{{ false }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Sesiones prácticas en grupos pequeños<br>(cupos limitados), aprende haciendo.</p>
-    </sc-if>
-    <sc-if value="{{ isGratis }}" hint-placeholder-val="{{ false }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Plantillas, guías y ejercicios para seguir <br>aprendiendo, a tu ritmo.</p>
-    </sc-if>
-    <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Consejos útiles y curados para seguir <br>mejorando entre clases.</p>
-    </sc-if>
-    <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Comparte tu trabajo, participa en los retos mensuales y entérate primero de encuentros y ofertas.</p>
-    </sc-if>
-    <sc-if value="{{ isRecomendados }}" hint-placeholder-val="{{ false }}">
-      <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;">Materiales y herramientas que me han funcionado, <br>algunos enlaces son de afiliado.</p>
-    </sc-if>
+    <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;white-space:pre-line;">{{ heroSubtitle }}</p>
   </div>
 
   <div style="max-width:1240px;margin:0 auto;padding:0 {{ sidePad }};">
@@ -262,7 +245,7 @@ body{margin:0;background:#fff}
       </div>
     </sc-if>
 
-    <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ showCommunityContent }}" hint-placeholder-val="{{ false }}">
       <div style="display:grid;grid-template-columns:{{ comunidadCols }};gap:24px;align-items:stretch;min-width:0;">
         <div style="display:flex;flex-direction:column;gap:24px;">
           <div style="background:#F3EEE4;border-radius:8px;padding:28px;">
@@ -400,24 +383,7 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;">
     <div style="background:#0CC0DF;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-      <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ true }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">¿Nos vemos en el próximo <span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">curso</span>?</div>
-      </sc-if>
-      <sc-if value="{{ isTalleres }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">Deja de intentar aprender a&nbsp;&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em; position: relative; top: 0px;">solas</span></div>
-      </sc-if>
-      <sc-if value="{{ isGratis }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">Menos teoría y más&nbsp;&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em; position: relative; top: -2px;">práctica</span> desde hoy</div>
-      </sc-if>
-      <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">¿Quieres más&nbsp;&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em; position: relative; top: 0px;">contenido</span>&nbsp; como este?</div>
-      </sc-if>
-      <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">¿Qué esperas para unirte a la <span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: -2px">comunidad</span>?</div>
-      </sc-if>
-      <sc-if value="{{ isRecomendados }}" hint-placeholder-val="{{ false }}">
-        <div style="font-size: {{ h2Size }}; color: #FFFFFF; line-height: 1.3; font-weight: 300">Descubre más&nbsp;&nbsp;<span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: -2px;">herramientas</span></div>
-      </sc-if>
+      <div style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;">{{ ctaBefore }}<span style="font-family:'Homemade Apple',cursive;font-size:1.2em;">{{ ctaHighlight }}</span>{{ ctaAfter }}</div>
       <p style="font-size:{{ ctaTextSize }};color:#E3F9FC;font-weight:300;margin:{{ ctaTextGap }} 0 0;text-align:center;white-space:pre-line;">{{ ctaSubtitle }}</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
         <a href="{{ ctaPrimaryHref }}" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">{{ ctaPrimaryLabel }}</a>
@@ -514,7 +480,7 @@ class Component extends DCLogic {
   async loadLive() {
     try {
       const cms = await import('./cms.js');
-      const [data, cursos, talleres, gratis, blog, esenciales, comunidad] = await Promise.all([
+      const [data, cursos, talleres, gratis, blog, esenciales, comunidad, globalData] = await Promise.all([
         cms.getPageContent('aprende'),
         cms.getEntities('courses').catch(() => []),
         cms.getEntities('workshops').catch(() => []),
@@ -522,6 +488,7 @@ class Component extends DCLogic {
         cms.getEntities('posts').catch(() => []),
         cms.getEntities('essentials').catch(() => []),
         cms.getEntities('communities').catch(() => []),
+        cms.getPageContent('global').catch(() => ({})),
       ]);
       const mergeAdjustments = (entities, pageItems) => {
         const map = Object.fromEntries((pageItems || []).map((item) => [item.id, item]));
@@ -543,6 +510,9 @@ class Component extends DCLogic {
           comunidad: (data.comunidad && data.comunidad.length) ? data.comunidad : (comunidadMerged.length ? comunidadMerged : null),
           banners: data.banners || {},
           bannerImageAdjustments: data.bannerImageAdjustments || {},
+          faqs: data.faqs || {},
+          sections: data.sections || {},
+          whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410',
         },
       });
     } catch (e) {}
@@ -738,12 +708,13 @@ class Component extends DCLogic {
 
     const isTalleres = category === 'Talleres';
     const isCursos = category === 'Cursos';
+    const isComunidad = category === 'Comunidad';
     const live = this.state.aprendeLive || {};
     const communitySource = (live.comunidad || []).filter(item => (item.status || 'Activo') !== 'Borrador');
     const community = { challengeEyebrow: 'Reto de este mes', challengeTitle: '"Tu nombre en 3 estilos"', challengeDescription: 'Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: 'Sesión de preguntas y práctica', eventDescription: 'Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.', testimonial: '"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."', testimonialAuthor: '— Miembro de la comunidad', ...(communitySource[0] || {}) };
+    const showCommunityContent = isComunidad && (!Array.isArray(live.comunidad) || communitySource.length > 0);
     const coursesSource = (live.cursos || this.ALL_COURSES).filter(c => (c.status || 'Activo') !== 'Borrador').map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
-    const courses = (isCursos ? coursesSource : []).map((c,i) => { const rawLevel = String(c.level || ''), hasCombined = rawLevel.includes('·'), level = hasCombined ? rawLevel : [rawLevel ? `Nivel ${rawLevel.toLowerCase()}` : '', c.modality || ''].filter(Boolean).join(' · '); return { ...c, level, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }; });
-    const isComunidad = category === 'Comunidad';
+    const courses = (isCursos ? coursesSource : []).map((c,i) => { const rawLevel = String(c.level || ''), hasCombined = rawLevel.includes('·'), level = hasCombined ? rawLevel : [rawLevel ? `Nivel ${rawLevel.toLowerCase()}` : '', c.modality || ''].filter(Boolean).join(' · '); return { ...c, level, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }; });
     const isBlog = category === 'Blog';
     const isGratis = category === 'Gratis';
     const isRecomendados = category === 'Esenciales';
@@ -758,8 +729,12 @@ class Component extends DCLogic {
       onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i }),
     }));
     const faqInfo = this.FAQ_HEADINGS[category];
-    const heroInfo = this.HERO_BY_CATEGORY[category];
-    const ctaInfo = this.CTA_BY_CATEGORY[category];
+    const sectionInfo = { ...this.HERO_BY_CATEGORY[category], ...((live.sections || {})[category.toLowerCase()] || {}) };
+    const heroInfo = { eyebrow: sectionInfo.heroEyebrow || sectionInfo.eyebrow, before: sectionInfo.heroBefore || sectionInfo.before, highlight: sectionInfo.heroHighlight || sectionInfo.highlight, after: sectionInfo.heroAfter !== undefined ? sectionInfo.heroAfter : sectionInfo.after, subtitle: sectionInfo.heroSubtitle || sectionInfo.subtitle };
+    const fixedCta = this.CTA_BY_CATEGORY[category];
+    const ctaInfo = { before: sectionInfo.ctaBefore || fixedCta.before, highlight: sectionInfo.ctaHighlight || fixedCta.highlight, after: sectionInfo.ctaAfter !== undefined ? sectionInfo.ctaAfter : fixedCta.after, subtitle: sectionInfo.ctaSubtitle || fixedCta.subtitle, primaryLabel: sectionInfo.ctaLabel || fixedCta.primaryLabel, primaryHref: sectionInfo.ctaHref || fixedCta.primaryHref };
+    const editableFaq = { before: sectionInfo.faqBefore, highlight: sectionInfo.faqHighlight, after: sectionInfo.faqAfter, subtitle: sectionInfo.faqSubtitle };
+    const resolvedFaqInfo = editableFaq.before || editableFaq.highlight || editableFaq.subtitle ? editableFaq : faqInfo;
 
     const m = this.state.isMobile;
     return {
@@ -833,20 +808,21 @@ class Component extends DCLogic {
       onComunidadSubmit,
       faqs,
       hasFaqs: faqs.length > 0,
-      faqBefore: faqInfo ? faqInfo.before : '',
-      faqHighlight: faqInfo ? faqInfo.highlight : '',
-      faqAfter: faqInfo ? faqInfo.after : '',
-      faqSubtitle: faqInfo ? faqInfo.subtitle : '',
+      faqBefore: resolvedFaqInfo ? resolvedFaqInfo.before : '',
+      faqHighlight: resolvedFaqInfo ? resolvedFaqInfo.highlight : '',
+      faqAfter: resolvedFaqInfo ? resolvedFaqInfo.after : '',
+      faqSubtitle: resolvedFaqInfo ? resolvedFaqInfo.subtitle : '',
       heroEyebrow: heroInfo.eyebrow,
       heroBefore: heroInfo.before,
       heroHighlight: heroInfo.highlight,
       heroAfter: heroInfo.after,
+      heroSubtitle: heroInfo.subtitle,
       ctaBefore: ctaInfo.before,
       ctaHighlight: ctaInfo.highlight,
       ctaAfter: ctaInfo.after,
       ctaSubtitle: ctaInfo.subtitle,
       ctaPrimaryLabel: ctaInfo.primaryLabel,
-      ctaPrimaryHref: ctaInfo.primaryHref,
+      ctaPrimaryHref: ctaInfo.primaryLabel.toLowerCase().includes('whatsapp') ? `https://wa.me/${live.whatsappNumber || '18495390410'}` : ctaInfo.primaryHref,
       closingBtnGap: m ? '14px' : '24px',
       closingBtnDir: m ? 'column' : 'row',
       tabs,
@@ -855,6 +831,7 @@ class Component extends DCLogic {
       hasEssentialsBanner: isRecomendados && !!bannerUrl,
       courses,
       isComunidad,
+      showCommunityContent,
       isBlog,
       isGratis,
       isCursos,
@@ -879,7 +856,7 @@ class Component extends DCLogic {
         });
       })(),
       recEmpty: (live.esenciales || this.RECOMMENDED_PRODUCTS).filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
-      workshops: (live.talleres || this.WORKSHOPS).filter(w => (w.status || 'Activo') !== 'Borrador').map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
+      workshops: (live.talleres || this.WORKSHOPS).filter(w => (w.status || 'Activo') !== 'Borrador').map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
       posts: (live.blog || this.BLOG_POSTS).filter(post => (post.status || 'Activo') !== 'Borrador').map(post => ({ placeholder: 'foto del artículo', ...post, meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
       freebies: (live.gratis || this.FREEBIES).filter(item => (item.status || 'Activo') !== 'Borrador').map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
