@@ -188,7 +188,7 @@ class Component extends DCLogic {
         cms.getEntities('posts').catch(() => []),
       ]);
       const legacyPosts = data.blog || [];
-      const posts = entities.length ? entities.map((post, index) => ({
+      const posts = legacyPosts.length ? legacyPosts : entities.map((post, index) => ({
         ...post,
         imageAdjustments: post.imageAdjustments || ((legacyPosts.find((old, oldIndex) => String(old.id || oldIndex) === String(post.id || index)) || {}).imageAdjustments) || {},
         meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · '),
@@ -229,7 +229,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const { loading, allPosts } = this.state;
-    const posts = allPosts.length ? allPosts : this.DEFAULT_POSTS;
+    const posts = (allPosts.length ? allPosts : this.DEFAULT_POSTS).filter(post => (post.status || 'Activo') !== 'Borrador');
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id') || (posts[0] && posts[0].id);
     const found = posts.find(p => p.id === id) || null;
@@ -243,6 +243,7 @@ class Component extends DCLogic {
 
     const post = {
       ...found,
+      meta: [found.publishedAt, found.readingTime].filter(Boolean).join(' · ') || found.meta || '',
       ...this.splitTitle(found.title),
       noImage: !found.imageUrl,
       noAuthorPhoto: !found.authorPhoto,

@@ -266,35 +266,35 @@ body{margin:0;background:#fff}
       <div style="display:grid;grid-template-columns:{{ comunidadCols }};gap:24px;align-items:stretch;min-width:0;">
         <div style="display:flex;flex-direction:column;gap:24px;">
           <div style="background:#F3EEE4;border-radius:8px;padding:28px;">
-            <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">Reto de este mes</div>
-            <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">"Tu nombre en 3 estilos"</div>
-            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.</p>
+            <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ community.challengeEyebrow }}</div>
+            <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">{{ community.challengeTitle }}</div>
+            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">{{ community.challengeDescription }}</p>
           </div>
           <div style="border:1px solid #F0EBE0;border-radius:8px;padding:28px;">
-            <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">Próximo encuentro en vivo</div>
-            <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">Sesión de preguntas y práctica</div>
-            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.</p>
+            <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ community.eventEyebrow }}</div>
+            <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">{{ community.eventTitle }}</div>
+            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">{{ community.eventDescription }}</p>
           </div>
         </div>
 
         <div style="background: #0CC0DF; border-radius: 13px; padding: 36px; display: flex; flex-direction: column; justify-content: center">
           <sc-if value="{{ comunidadNotSubscribed }}" hint-placeholder-val="{{ true }}">
-            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FFFFFF; text-align: center">Suscríbete gratis</div>
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FFFFFF; text-align: center">{{ community.signupEyebrow }}</div>
             <input type="text" name="name" autocomplete="name" class="comunidad-input" value="{{ comunidadName }}" onChange="{{ onComunidadNameChange }}" placeholder="Tu nombre" style="margin-top:26px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
             <input type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
             <button type="button" onClick="{{ onComunidadSubmit }}" disabled="{{ comunidadSubscribing }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border:0;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">{{ comunidadSubmitLabel }}</button>
             <sc-if value="{{ comunidadError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#FFFFFF;font-weight:500;margin:12px 0 0;">{{ comunidadError }}</p></sc-if>
-            <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">Puedes darte de baja cuando quieras.</p>
+            <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">{{ community.signupPrivacy }}</p>
           </sc-if>
           <sc-if value="{{ comunidadSubscribed }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">Solicitud enviada. Revisa tu correo para confirmar la suscripción.</p>
+            <p style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">{{ community.successMessage }}</p>
           </sc-if>
         </div>
       </div>
 
       <div style="max-width:600px;margin:40px auto 0;text-align:center;">
-        <p style="font-size:15px;color:#000;font-weight:300;line-height:1.7;font-style:italic;">"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."</p>
-        <div style="font-size:12px;color:#8B795E;margin-top:10px;">— Miembro de la comunidad</div>
+        <p style="font-size:15px;color:#000;font-weight:300;line-height:1.7;font-style:italic;">{{ community.testimonial }}</p>
+        <div style="font-size:12px;color:#8B795E;margin-top:10px;">{{ community.testimonialAuthor }}</div>
       </div>
 
     </sc-if>
@@ -739,6 +739,8 @@ class Component extends DCLogic {
     const isTalleres = category === 'Talleres';
     const isCursos = category === 'Cursos';
     const live = this.state.aprendeLive || {};
+    const communitySource = (live.comunidad || []).filter(item => (item.status || 'Activo') !== 'Borrador');
+    const community = { challengeEyebrow: 'Reto de este mes', challengeTitle: '"Tu nombre en 3 estilos"', challengeDescription: 'Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: 'Sesión de preguntas y práctica', eventDescription: 'Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.', testimonial: '"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."', testimonialAuthor: '— Miembro de la comunidad', ...(communitySource[0] || {}) };
     const coursesSource = (live.cursos || this.ALL_COURSES).filter(c => (c.status || 'Activo') !== 'Borrador').map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
     const courses = (isCursos ? coursesSource : []).map((c,i) => ({ ...c, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }));
     const isComunidad = category === 'Comunidad';
@@ -819,12 +821,13 @@ class Component extends DCLogic {
       ctaWaPad: m ? '13px 26px' : '15px 30px',
       ctaWaSize: m ? '13.5px' : '14px',
       comunidadName,
+      community,
       comunidadEmail,
       comunidadSubscribed,
       comunidadNotSubscribed: !comunidadSubscribed,
       comunidadSubscribing: this.state.comunidadSubscribing,
       comunidadError: this.state.comunidadError,
-      comunidadSubmitLabel: this.state.comunidadSubscribing ? 'Enviando…' : 'Quiero unirme a la comunidad',
+      comunidadSubmitLabel: this.state.comunidadSubscribing ? 'Enviando…' : community.signupButtonLabel,
       onComunidadNameChange,
       onComunidadEmailChange,
       onComunidadSubmit,
@@ -877,7 +880,7 @@ class Component extends DCLogic {
       })(),
       recEmpty: (live.esenciales || this.RECOMMENDED_PRODUCTS).filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
       workshops: (live.talleres || this.WORKSHOPS).filter(w => (w.status || 'Activo') !== 'Borrador').map((w,i) => { const dateLevel = w.dateLevel || [w.date, w.level].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/18495390410?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
-      posts: (live.blog || this.BLOG_POSTS).map(post => ({ placeholder: 'foto del artículo', ...post, imageView: imageView(post) })),
+      posts: (live.blog || this.BLOG_POSTS).filter(post => (post.status || 'Activo') !== 'Borrador').map(post => ({ placeholder: 'foto del artículo', ...post, meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
       freebies: (live.gratis || this.FREEBIES).filter(item => (item.status || 'Activo') !== 'Borrador').map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
         const hasImage = !!(item.imageUrl && String(item.imageUrl).trim());
