@@ -1034,7 +1034,8 @@ class Component extends DCLogic {
     const rect = sourceElement.getBoundingClientRect(), parent = sourceElement.parentElement, originalStyle = sourceElement.getAttribute('style') || '', originalNextSibling = sourceElement.nextSibling;
     const placeholder = document.createElement('div');
     placeholder.setAttribute('data-reorder-group', group); placeholder.setAttribute('data-reorder-id', id);
-    Object.assign(placeholder.style, { width: rect.width + 'px', height: rect.height + 'px', flex: '0 0 ' + rect.width + 'px', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: '10px' });
+    const sourceStyle = window.getComputedStyle(sourceElement);
+    Object.assign(placeholder.style, { width: rect.width + 'px', height: rect.height + 'px', flex: '0 0 auto', boxSizing: 'border-box', border: '1px dashed #CFC4B2', borderRadius: '6px', background: '#FBF9F5', marginBottom: sourceStyle.marginBottom });
     parent.insertBefore(placeholder, sourceElement); document.body.appendChild(sourceElement);
     Object.assign(sourceElement.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
     const globalMove = (e) => this.trackPointerReorder(e), globalEnd = (e) => this.finishPointerReorder(e), globalCancel = (e) => this.cancelPointerReorder(e);
