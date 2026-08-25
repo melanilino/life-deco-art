@@ -511,7 +511,6 @@ class Component extends DCLogic {
           banners: data.banners || {},
           bannerImageAdjustments: data.bannerImageAdjustments || {},
           faqs: data.faqs || {},
-          sections: data.sections || {},
           whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410',
         },
       });
@@ -729,12 +728,8 @@ class Component extends DCLogic {
       onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i }),
     }));
     const faqInfo = this.FAQ_HEADINGS[category];
-    const sectionInfo = { ...this.HERO_BY_CATEGORY[category], ...((live.sections || {})[category.toLowerCase()] || {}) };
-    const heroInfo = { eyebrow: sectionInfo.heroEyebrow || sectionInfo.eyebrow, before: sectionInfo.heroBefore || sectionInfo.before, highlight: sectionInfo.heroHighlight || sectionInfo.highlight, after: sectionInfo.heroAfter !== undefined ? sectionInfo.heroAfter : sectionInfo.after, subtitle: sectionInfo.heroSubtitle || sectionInfo.subtitle };
-    const fixedCta = this.CTA_BY_CATEGORY[category];
-    const ctaInfo = { before: sectionInfo.ctaBefore || fixedCta.before, highlight: sectionInfo.ctaHighlight || fixedCta.highlight, after: sectionInfo.ctaAfter !== undefined ? sectionInfo.ctaAfter : fixedCta.after, subtitle: sectionInfo.ctaSubtitle || fixedCta.subtitle, primaryLabel: sectionInfo.ctaLabel || fixedCta.primaryLabel, primaryHref: sectionInfo.ctaHref || fixedCta.primaryHref };
-    const editableFaq = { before: sectionInfo.faqBefore, highlight: sectionInfo.faqHighlight, after: sectionInfo.faqAfter, subtitle: sectionInfo.faqSubtitle };
-    const resolvedFaqInfo = editableFaq.before || editableFaq.highlight || editableFaq.subtitle ? editableFaq : faqInfo;
+    const heroInfo = this.HERO_BY_CATEGORY[category];
+    const ctaInfo = this.CTA_BY_CATEGORY[category];
 
     const m = this.state.isMobile;
     return {
@@ -808,10 +803,10 @@ class Component extends DCLogic {
       onComunidadSubmit,
       faqs,
       hasFaqs: faqs.length > 0,
-      faqBefore: resolvedFaqInfo ? resolvedFaqInfo.before : '',
-      faqHighlight: resolvedFaqInfo ? resolvedFaqInfo.highlight : '',
-      faqAfter: resolvedFaqInfo ? resolvedFaqInfo.after : '',
-      faqSubtitle: resolvedFaqInfo ? resolvedFaqInfo.subtitle : '',
+      faqBefore: faqInfo ? faqInfo.before : '',
+      faqHighlight: faqInfo ? faqInfo.highlight : '',
+      faqAfter: faqInfo ? faqInfo.after : '',
+      faqSubtitle: faqInfo ? faqInfo.subtitle : '',
       heroEyebrow: heroInfo.eyebrow,
       heroBefore: heroInfo.before,
       heroHighlight: heroInfo.highlight,

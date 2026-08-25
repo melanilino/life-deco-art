@@ -41,9 +41,8 @@ x-dc{display:none!important}
   a { color: #F65091; }
   a:hover { color: #000000; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
-  .cms-aprende-section-fields { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto; }
-  @media(max-width:859px){ .cms-aprende-sections,.cms-aprende-section-fields { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
+  @media(max-width:859px){ .cms-aprende-sections { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
 </helmet>
 
@@ -455,10 +454,6 @@ x-dc{display:none!important}
         </div>
       </sc-if>
       <sc-if value="{{ showAprendeSectionEditor }}" hint-placeholder-val="{{ false }}">
-      <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Textos de la sección</div>
-      <div class="cms-aprende-section-fields" style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <sc-for list="{{ aprendeSectionFields }}" as="field" hint-placeholder-count="12"><label style="display:block;grid-column:{{ field.gridColumn }};"><span style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ field.label }}</span><sc-if value="{{ field.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ field.value }}" onChange="{{ field.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if><sc-if value="{{ field.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ field.value }}" onChange="{{ field.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if></label></sc-for>
-      </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -751,14 +746,6 @@ class Component extends DCLogic {
   };
 
   APRENDE_TAB_LABELS = { esenciales: 'Esenciales', cursos: 'Cursos', talleres: 'Talleres', gratis: 'Gratis', blog: 'Blog', comunidad: 'Comunidad' };
-  APRENDE_SECTION_DEFAULTS = {
-    cursos:{heroEyebrow:'LA ESCUELA',heroBefore:'Aprende a dibujar letras ',heroHighlight:'bonitas',heroAfter:'',heroSubtitle:'Empieza desde cero o perfecciona tu técnica: presenciales u online.',faqBefore:'Aclaremos esto antes de tu ',faqHighlight:'primera',faqAfter:' clase',faqSubtitle:'Requisitos, certificado y acceso a las clases.',ctaBefore:'¿Nos vemos en el próximo ',ctaHighlight:'curso',ctaAfter:'?',ctaSubtitle:'Escríbeme y te cuento cuál nivel se ajusta mejor a lo que buscas aprender.',ctaLabel:'WhatsApp',ctaHref:'/contacto'},
-    talleres:{heroEyebrow:'LA ESCUELA',heroBefore:'Juntos es más ',heroHighlight:'divertido',heroAfter:'',heroSubtitle:'Sesiones prácticas en grupos pequeños — cupo limitado, aprende haciendo.',faqBefore:'Diseñado para que te ',faqHighlight:'salga bien',faqAfter:'',faqSubtitle:'Qué llevar, qué esperar y si necesitas experiencia previa.',ctaBefore:'Deja de intentar aprender a ',ctaHighlight:'solas',ctaAfter:'',ctaSubtitle:'Únete a un grupo que comparte tus mismos intereses y cuenta con acompañamiento posterior para asegurar tus resultados.',ctaLabel:'WhatsApp',ctaHref:'/contacto'},
-    gratis:{heroEyebrow:'LA ESCUELA',heroBefore:'Recursos gratuitos para ',heroHighlight:'practicar',heroAfter:'',heroSubtitle:'Plantillas, guías y ejercicios para seguir aprendiendo, a tu ritmo.',faqBefore:'Listo para usar en un ',faqHighlight:'clic',faqAfter:'',faqSubtitle:'Formato, uso y acceso.',ctaBefore:'Menos teoría y más ',ctaHighlight:'práctica',ctaAfter:' desde hoy',ctaSubtitle:'Escríbeme para enviártelo o descubre más herramientas listas para usar en la tienda.',ctaLabel:'WhatsApp',ctaHref:'/contacto'},
-    blog:{heroEyebrow:'LA ESCUELA',heroBefore:'Ideas, tips y detrás de ',heroHighlight:'cámaras',heroAfter:'',heroSubtitle:'Consejos útiles y curados para seguir mejorando entre clases.',faqBefore:'Contenido diseñado para ',faqHighlight:'sumarte',faqAfter:'',faqSubtitle:'Acceso, contenido y frecuencia.',ctaBefore:'¿Quieres más ',ctaHighlight:'contenido',ctaAfter:' como este?',ctaSubtitle:'Escríbeme si tienes un tema que te gustaría que abordemos.',ctaLabel:'WhatsApp',ctaHref:'/contacto'},
-    comunidad:{heroEyebrow:'LA ESCUELA',heroBefore:'Más de 200 personas ',heroHighlight:'aprendiendo',heroAfter:'',heroSubtitle:'Comparte tu trabajo, participa en los retos mensuales y entérate primero de encuentros y ofertas.',faqBefore:'Lo que recibes en tu ',faqHighlight:'bandeja',faqAfter:'',faqSubtitle:'Costo (gratis), frecuencia y qué esperar de la comunidad.',ctaBefore:'¿Qué esperas para unirte a la ',ctaHighlight:'comunidad',ctaAfter:'?',ctaSubtitle:'Deja tu correo arriba y sé parte de los retos, encuentros y ofertas exclusivas.',ctaLabel:'WhatsApp',ctaHref:'/contacto'},
-    esenciales:{heroEyebrow:'LA ESCUELA',heroBefore:'Lo que uso y ',heroHighlight:'recomiendo',heroAfter:'',heroSubtitle:'Materiales y herramientas que me han funcionado, algunos enlaces son de afiliado.',faqBefore:'Transparencia sobre estos ',faqHighlight:'enlaces',faqAfter:'',faqSubtitle:'De dónde vienen estos productos y cómo funcionan los enlaces.',ctaBefore:'Descubre más ',ctaHighlight:'herramientas',ctaAfter:'',ctaSubtitle:'Escríbeme si tienes dudas sobre cuál producto se ajusta mejor a lo que buscas.',ctaLabel:'WhatsApp',ctaHref:'/contacto'}
-  };
   APRENDE_FAQ_DEFAULTS = {
     cursos:[{q:'¿Necesito saber dibujar para tomar algún curso?',a:'Para nada. El lettering es una técnica que se aprende paso a paso, no un talento con el que se nace. Si puedes sostener un lápiz, puedes aprender lettering.'},{q:'¿Otorgan certificados al finalizar?',a:'Sí, al completar el curso recibes un certificado digital que confirma tu finalización.'},{q:'¿Hay límite de edad para participar?',a:'No hay límite de edad. Los cursos están abiertos a cualquier persona interesada en aprender lettering.'},{q:'¿Cuáles son las formas de pago disponibles?',a:'Transferencia bancaria: 50% de anticipo para reservar tu cupo y el resto antes de iniciar el curso.'},{q:'¿Puedo tomar el curso si vivo fuera del país?',a:'Sí, los cursos online se toman en vivo por videollamada, así que puedes unirte desde donde estés.'}],
     talleres:[{q:'¿Necesito saber dibujar para tomar un taller?',a:'Para nada. El lettering es una técnica que se aprende paso a paso, no un talento con el que se nace. Si puedes sostener un lápiz, puedes aprender lettering.'},{q:'¿Puedo asistir a un taller si ya tengo experiencia en lettering?',a:'Sí. Los talleres se adaptan al nivel del grupo. Si vienes con experiencia, el enfoque será perfeccionar tu técnica.'},{q:'¿Otorgan certificados al finalizar?',a:'Sí, al completar el taller recibes un certificado digital que confirma tu finalización.'},{q:'¿Hay límite de edad para participar?',a:'No hay límite de edad. Los talleres están abiertos a cualquier persona interesada en aprender lettering.'},{q:'¿Cuánto dura cada taller?',a:'La mayoría dura entre 3 y 4 horas, en una sola sesión presencial.'}],
@@ -922,8 +909,6 @@ class Component extends DCLogic {
       try { data = await this.state.cms.getPageContent('aprende'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       const merged = {};
       Object.keys(this.DEFAULT_APRENDE).forEach((k) => { merged[k] = (data[k] && data[k].length) ? data[k] : this.DEFAULT_APRENDE[k]; });
-      merged.sections = {};
-      Object.keys(this.APRENDE_SECTION_DEFAULTS).forEach((key) => { merged.sections[key] = { ...this.APRENDE_SECTION_DEFAULTS[key], ...((data.sections || {})[key] || {}) }; });
       const normalizeLevel = (value) => { const text = String(value || '').toLowerCase(); return text.includes('avanz') ? 'Avanzado' : text.includes('inter') ? 'Intermedio' : text.includes('bás') || text.includes('inicia') ? 'Básico' : ''; };
       const normalizeModality = (value, fallbackText) => { const text = (String(value || '') + ' ' + String(fallbackText || '')).toLowerCase(); return text.includes('presencial') ? 'Presencial' : text.includes('online') ? 'Online' : ''; };
       merged.cursos = (merged.cursos || []).map((item) => ({ ...item, level: normalizeLevel(item.level), modality: normalizeModality(item.modality, item.level) }));
@@ -1716,15 +1701,12 @@ class Component extends DCLogic {
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
-    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [], aprendeSectionFields = [];
+    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [];
     const sectionDescriptions = {
       esenciales: 'Materiales y herramientas recomendadas.', cursos: 'Cursos disponibles y su contenido completo.', talleres: 'Talleres, fechas, cupos y reservas.',
       gratis: 'Recursos gratuitos y archivos descargables.', blog: 'Artículos y contenido educativo.', comunidad: 'Contenido y accesos de la comunidad.'
     };
     if (s.page === 'aprende' && s.aprendeData) {
-      const sectionFieldDefs = [['heroEyebrow','Encabezado'],['heroBefore','Título — inicio'],['heroHighlight','Título destacado'],['heroAfter','Título — final'],['heroSubtitle','Descripción'],['faqBefore','Preguntas — título inicial'],['faqHighlight','Preguntas — texto destacado'],['faqAfter','Preguntas — título final'],['faqSubtitle','Preguntas — descripción'],['ctaBefore','Cierre — título inicial'],['ctaHighlight','Cierre — texto destacado'],['ctaAfter','Cierre — título final'],['ctaSubtitle','Cierre — descripción'],['ctaLabel','Cierre — texto del botón'],['ctaHref','Cierre — enlace del botón']];
-      const sectionData = (s.aprendeData.sections && s.aprendeData.sections[s.aprendeTab]) || this.APRENDE_SECTION_DEFAULTS[s.aprendeTab] || {};
-      aprendeSectionFields = sectionFieldDefs.map(([key,label]) => ({ key,label,value:sectionData[key] || '',isTextarea:['heroSubtitle','faqSubtitle','ctaSubtitle'].includes(key),isText:!['heroSubtitle','faqSubtitle','ctaSubtitle'].includes(key),gridColumn:['heroSubtitle','faqSubtitle','ctaSubtitle'].includes(key)?'1 / -1':'auto',onChange:(e)=>this.setState({aprendeData:{...this.state.aprendeData,sections:{...(this.state.aprendeData.sections||{}),[this.state.aprendeTab]:{...((this.state.aprendeData.sections||{})[this.state.aprendeTab]),[key]:e.target.value}}},saved:false})}));
       aprendeSectionCards = Object.keys(this.APRENDE_TAB_LABELS).map((key) => {
         const items = Array.isArray(s.aprendeData[key]) ? s.aprendeData[key] : [];
         const drafts = items.filter((item) => item.status === 'Borrador').length;
@@ -1905,7 +1887,7 @@ class Component extends DCLogic {
       onAddCategory: () => this.addCategory(),
       onAddTiendaFaq: () => this.addTiendaFaq(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', shipping: 'Envío a todo el país', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
-      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards, aprendeSectionFields,
+      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards,
       showAprendeSections: s.page === 'aprende' && !s.aprendeSectionOpen,
       showAprendeSectionEditor: s.page === 'aprende' && s.aprendeSectionOpen,
       showAprendeEssentialsFaqs: true, onAddAprendeFaq: () => this.addAprendeFaq(),
