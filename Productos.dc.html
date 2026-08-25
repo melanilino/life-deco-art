@@ -131,10 +131,10 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
             Elaboración: {{ productDelivery }}
           </div>
-          <sc-if value="{{ showShipping }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2B2420;font-weight:400;margin-top:26px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><path d="M16 8h4l3 3v5h-7V8z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
             {{ shippingText }}
-          </div></sc-if>
+          </div>
         </div>
       </div>
 
@@ -193,8 +193,6 @@ class Component extends DCLogic {
       allProducts: products,
       productReady: !!product,
       whatsappNumber: '18495390410',
-      shippingText: 'Envío a todo el país',
-      shippingVisible: true,
       color: 'Negro',
       size: 'Mediana (25cm)',
       faqOpen: null,
@@ -235,8 +233,6 @@ class Component extends DCLogic {
       }
       const publicSettings = {
         whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410',
-        shippingText: data.shippingText || 'Envío a todo el país',
-        shippingVisible: data.shippingVisible !== false,
         productReady: true,
       };
       if (!hadCachedProduct) this.setState({ product, allProducts: products, ...publicSettings });
@@ -347,8 +343,7 @@ class Component extends DCLogic {
       includes: Array.isArray(product.includes) ? product.includes.filter(Boolean) : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
       excludes: Array.isArray(product.excludes) ? product.excludes.filter(Boolean) : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
-      shippingText: this.state.shippingText || 'Envío a todo el país',
-      showShipping: this.state.shippingVisible !== false,
+      shippingText: product.shipping || 'Envío a todo el país',
       related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) })),
       faqs,
     };
