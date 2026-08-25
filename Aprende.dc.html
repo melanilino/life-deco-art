@@ -747,8 +747,8 @@ class Component extends DCLogic {
     const isBlog = category === 'Blog';
     const isGratis = category === 'Gratis';
     const isRecomendados = category === 'Esenciales';
-    const bannerUrl = (live.banners || {})[category.toLowerCase()] || '';
-    const bannerView = imageView({ imageAdjustments: { imageUrl: (live.bannerImageAdjustments || {})[category.toLowerCase()] } });
+    const bannerUrl = category === 'Comunidad' && community.imageUrl ? community.imageUrl : (live.banners || {})[category.toLowerCase()] || '';
+    const bannerView = category === 'Comunidad' && community.imageUrl ? imageView(community) : imageView({ imageAdjustments: { imageUrl: (live.bannerImageAdjustments || {})[category.toLowerCase()] } });
 
     const faqSet = ((live.faqs || {})[category.toLowerCase()] || this.FAQS_BY_CATEGORY[category] || []);
     const faqs = faqSet.map((f, i) => ({

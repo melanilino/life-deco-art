@@ -188,11 +188,11 @@ class Component extends DCLogic {
         cms.getEntities('posts').catch(() => []),
       ]);
       const legacyPosts = data.blog || [];
-      const posts = legacyPosts.length ? legacyPosts : entities.map((post, index) => ({
+      const posts = legacyPosts.length ? legacyPosts : (entities.length ? entities.map((post, index) => ({
         ...post,
         imageAdjustments: post.imageAdjustments || ((legacyPosts.find((old, oldIndex) => String(old.id || oldIndex) === String(post.id || index)) || {}).imageAdjustments) || {},
         meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · '),
-      })) : ((data.blog && data.blog.length) ? data.blog : this.DEFAULT_POSTS);
+      })) : this.DEFAULT_POSTS);
       this.setState({ allPosts: posts, loading: false });
     } catch (e) {
       this.setState({ allPosts: this.DEFAULT_POSTS, loading: false });
