@@ -294,7 +294,7 @@ x-dc{display:none!important}
                         <span onClick="{{ sub.onRemove }}" title="Eliminar" style="cursor:pointer;color:#C0392B;font-size:13px;">×</span>
                       </div>
                     </sc-for>
-                    <span onClick="{{ cat.onAddSub }}" style="font-size:12px;color:#F65091;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
+                    <span onClick="{{ cat.onAddSub }}" style="display:inline-flex;align-items:center;min-height:36px;box-sizing:border-box;font-size:12px;color:#F65091;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
                   </div>
                   <div style="text-align:right;">
                     <span onClick="{{ cat.onRemove }}" style="font-size: 12px; color: #C0392B; cursor: pointer">Eliminar categoría</span>
@@ -478,8 +478,8 @@ x-dc{display:none!important}
               <span style="font-size:14px;color:#8B795E;flex-shrink:0;">✎</span>
             </div>
             <sc-if value="{{ item.isSelected }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ item.showCourseTabs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:20px;overflow-x:auto;border-bottom:1px solid #E4DCCB;margin-bottom:24px;"><sc-for list="{{ item.courseTabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for></div></sc-if>
               <div style="width:100%;margin:0;padding:{{ item.editorPadding }};box-sizing:border-box;background-color:#FFFFFF;border-radius:{{ item.editorRadius }};">
-                <sc-if value="{{ item.showCourseTabs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:18px;overflow-x:auto;border-bottom:1px solid #E4DCCB;margin-bottom:18px;"><sc-for list="{{ item.courseTabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="display:inline-flex;align-items:center;min-height:40px;white-space:nowrap;padding:6px 2px 9px;font-size:12px;color:{{ tab.color }};border-bottom:{{ tab.border }};cursor:pointer;">{{ tab.label }}</span></sc-for></div></sc-if>
                 <sc-for list="{{ item.fields }}" as="f" hint-placeholder-count="4">
                   <div style="display:{{ f.display }};margin-bottom:14px;">
                     <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
