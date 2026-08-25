@@ -454,7 +454,6 @@ x-dc{display:none!important}
         </div>
       </sc-if>
       <sc-if value="{{ showAprendeSectionEditor }}" hint-placeholder-val="{{ false }}">
-      <span onClick="{{ onBackToAprendeSections }}" style="display:inline-flex;align-items:center;min-height:32px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 10px;padding:0 8px 0 0;">← Volver a Aprende</span>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -1873,7 +1872,6 @@ class Component extends DCLogic {
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards,
       showAprendeSections: s.page === 'aprende' && !s.aprendeSectionOpen,
       showAprendeSectionEditor: s.page === 'aprende' && s.aprendeSectionOpen,
-      onBackToAprendeSections: () => this.setState({ aprendeSectionOpen: false, expanded: { ...this.state.expanded, [s.aprendeTab]: null } }),
       showAprendeEssentialsFaqs: ['esenciales', 'blog', 'comunidad'].includes(s.aprendeTab), onAddAprendeFaq: () => this.addAprendeFaq(),
       showAddAprendeItem: s.aprendeTab !== 'comunidad',
       onAddAprendeItem: () => {
