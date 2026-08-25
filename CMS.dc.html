@@ -491,6 +491,11 @@ x-dc{display:none!important}
                         <sc-for list="{{ f.options }}" as="o" hint-placeholder-count="2"><option value="{{ o }}">{{ o }}</option></sc-for>
                       </select>
                     </sc-if>
+                    <sc-if value="{{ f.isChoiceButtons }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <sc-for list="{{ f.choices }}" as="choice" hint-placeholder-count="3"><button type="button" onClick="{{ choice.onClick }}" style="min-width:110px;padding:10px 16px;border:1px solid {{ choice.border }};border-radius:999px;background:{{ choice.background }};color:{{ choice.color }};font-family:Montserrat;font-size:12px;cursor:pointer;transition:background .2s ease,border-color .2s ease,color .2s ease;">{{ choice.label }}</button></sc-for>
+                      </div>
+                    </sc-if>
                     <sc-if value="{{ f.isRelation }}" hint-placeholder-val="{{ false }}">
                       <select value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;background:#FFFFFF;">
                         <option value="">Sin contenido relacionado</option>
@@ -686,8 +691,8 @@ class Component extends DCLogic {
 
   DEFAULT_APRENDE = {
     cursos: [
-      { id: 'cu1', name: 'Lettering para bodas', level: 'Nivel intermedio · Online', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', imageUrl: '' },
-      { id: 'cu2', name: 'Lettering digital', level: 'Nivel avanzado · Online', price: '$60 / persona', desc: 'Lleva tus trazos a tablet: pinceles, texturas y acabados listos para imprimir.', imageUrl: '' }
+      { id: 'cu1', name: 'Lettering para bodas', level: 'Intermedio', modality: 'Online', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', imageUrl: '' },
+      { id: 'cu2', name: 'Lettering digital', level: 'Avanzado', modality: 'Online', price: '$60 / persona', desc: 'Lleva tus trazos a tablet: pinceles, texturas y acabados listos para imprimir.', imageUrl: '' }
     ],
     talleres: [
       { id: 'w1', name: 'Lettering desde cero', dateLevel: 'Sáb 25 jul · Nivel iniciación', location: 'Estudio, Santo Domingo', price: '$40 / persona', badge: '3 cupos disponibles', imageUrl: '' },
@@ -744,7 +749,7 @@ class Component extends DCLogic {
   APRENDE_FIELD_DEFS = {
     cursos: [
       { key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
-      { key: 'price', label: 'Precio', type: 'text' }, { key: 'level', label: 'Nivel / modalidad', type: 'text' }, { key: 'duration', label: 'Duración', type: 'text' },
+      { key: 'price', label: 'Precio', type: 'text' }, { key: 'level', label: 'Nivel', type: 'choiceButtons', options: ['Básico', 'Intermedio', 'Avanzado'] }, { key: 'modality', label: 'Modalidad', type: 'choiceButtons', options: ['Online', 'Presencial'] }, { key: 'duration', label: 'Duración', type: 'text' },
       { key: 'availability', label: 'Disponibilidad', type: 'text' }, { key: 'paymentNote', label: 'Nota sobre el pago', type: 'text' },
       { key: 'desc', label: 'Descripción breve', type: 'textarea' }, { key: 'summary', label: 'Descripción principal', type: 'textarea' },
       { key: 'audience', label: 'Para quién está dirigido', type: 'textarea' }, { key: 'badges', label: 'Etiquetas (una por línea)', type: 'lines' },
@@ -757,7 +762,7 @@ class Component extends DCLogic {
     ],
     talleres: [
       { key: 'name', label: 'Nombre', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
-      { key: 'date', label: 'Fecha', type: 'text' }, { key: 'time', label: 'Hora', type: 'text' }, { key: 'level', label: 'Nivel', type: 'text' }, { key: 'modality', label: 'Modalidad', type: 'text' },
+      { key: 'date', label: 'Fecha', type: 'text' }, { key: 'time', label: 'Hora', type: 'text' }, { key: 'level', label: 'Nivel', type: 'choiceButtons', options: ['Básico', 'Intermedio', 'Avanzado'] }, { key: 'modality', label: 'Modalidad', type: 'choiceButtons', options: ['Online', 'Presencial'] },
       { key: 'location', label: 'Ubicación', type: 'text' }, { key: 'duration', label: 'Duración', type: 'text' }, { key: 'price', label: 'Precio', type: 'text' }, { key: 'badge', label: 'Cupos / estado', type: 'text' },
       { key: 'desc', label: 'Descripción breve', type: 'textarea' }, { key: 'summary', label: 'Descripción completa', type: 'textarea' }, { key: 'audience', label: 'Para quién está dirigido', type: 'textarea' },
       { key: 'badges', label: 'Etiquetas (una por línea)', type: 'lines' }, { key: 'imageUrl', label: 'Fotografía principal', type: 'image', aspect: '16/9' },
@@ -896,6 +901,10 @@ class Component extends DCLogic {
       try { data = await this.state.cms.getPageContent('aprende'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       const merged = {};
       Object.keys(this.DEFAULT_APRENDE).forEach((k) => { merged[k] = (data[k] && data[k].length) ? data[k] : this.DEFAULT_APRENDE[k]; });
+      const normalizeLevel = (value) => { const text = String(value || '').toLowerCase(); return text.includes('avanz') ? 'Avanzado' : text.includes('inter') ? 'Intermedio' : text.includes('bás') || text.includes('inicia') ? 'Básico' : ''; };
+      const normalizeModality = (value, fallbackText) => { const text = (String(value || '') + ' ' + String(fallbackText || '')).toLowerCase(); return text.includes('presencial') ? 'Presencial' : text.includes('online') ? 'Online' : ''; };
+      merged.cursos = (merged.cursos || []).map((item) => ({ ...item, level: normalizeLevel(item.level), modality: normalizeModality(item.modality, item.level) }));
+      merged.talleres = (merged.talleres || []).map((item) => ({ ...item, date: item.date || String(item.dateLevel || '').split('·')[0].trim(), dateLevel: '', level: normalizeLevel(item.level || item.dateLevel), modality: normalizeModality(item.modality, item.location) || 'Presencial' }));
       merged.banners = data.banners || {};
       merged.bannerImageAdjustments = data.bannerImageAdjustments || {};
       merged.faqs = data.faqs || {};
@@ -1593,6 +1602,10 @@ class Component extends DCLogic {
       if (d.type === 'select') {
         return { key: d.key, label: d.label, isSelect: true, value: item[d.key] || '', options: d.options || [], onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value) };
       }
+      if (d.type === 'choiceButtons') {
+        const value = item[d.key] || '';
+        return { key: d.key, label: d.label, isChoiceButtons: true, choices: (d.options || []).map((option) => { const selected = value === option; return { label: option, border: selected ? '#F65091' : '#E4DCCB', background: selected ? '#FDF3F7' : '#FFFFFF', color: selected ? '#F65091' : '#8B795E', onClick: () => this.updateItem(listKey, item.id, d.key, option) }; }) };
+      }
       return { key: d.key, label: d.label, isTextarea: d.type === 'textarea', isText: d.type !== 'textarea', value: item[d.key] || '', onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value) };
     });
   }
@@ -1705,7 +1718,7 @@ class Component extends DCLogic {
         const isLongEditorType = true;
         const usesTabbedEditor = ['cursos', 'talleres', 'gratis', 'blog', 'comunidad'].includes(s.aprendeTab);
         const itemForFields = { ...item, status: item.status || 'Activo' };
-        const courseFieldTabs = { status: 'info', price: 'info', level: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
+        const courseFieldTabs = { status: 'info', price: 'info', level: 'info', modality: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
         const workshopFieldTabs = { status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', locationDetail: 'location', mapImageUrl: 'location', cancellationPolicy: 'policies', faqs: 'policies', gallery: 'gallery', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
         const resourceFieldTabs = { status: 'info', format: 'info', pageCount: 'info', printableLabel: 'info', description: 'presentation', imageUrl: 'presentation', contains: 'content', audience: 'content', usage: 'content', previewImages: 'preview', fileUrl: 'download', downloadLabel: 'download', nextItemId: 'related' };
         const blogFieldTabs = { title: 'info', status: 'info', category: 'info', publishedAt: 'info', readingTime: 'info', excerpt: 'presentation', imageUrl: 'presentation', content: 'content', authorName: 'author', authorRole: 'author', authorPhoto: 'author' };
@@ -1871,7 +1884,7 @@ class Component extends DCLogic {
       showAprendeEssentialsFaqs: ['esenciales', 'blog', 'comunidad'].includes(s.aprendeTab), onAddAprendeFaq: () => this.addAprendeFaq(),
       showAddAprendeItem: s.aprendeTab !== 'comunidad',
       onAddAprendeItem: () => {
-        const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: '', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { title: 'Nuevo descargable', status: 'Borrador', format: 'PDF', pageCount: '', printableLabel: '', description: '', imageUrl: '', contains: [], audience: '', usage: '', previewImages: [], fileUrl: '', downloadLabel: 'Descargar gratis', nextItemId: '' }, blog: { category: '', title: 'Nuevo artículo', status: 'Borrador', publishedAt: '', readingTime: '', excerpt: '', imageUrl: '', content: '', authorName: '', authorRole: '', authorPhoto: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Comunidad', status: 'Borrador', desc: '', href: '#', imageUrl: '', challengeEyebrow: 'Reto de este mes', challengeTitle: '', challengeDescription: '', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: '', eventDescription: '', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.', testimonial: '', testimonialAuthor: '' } }[s.aprendeTab];
+        const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: 'Básico', modality: 'Online', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', status: 'Borrador', date: '', time: '', level: 'Básico', modality: 'Presencial', location: '', duration: '', price: '', badge: '', imageUrl: '' }, gratis: { title: 'Nuevo descargable', status: 'Borrador', format: 'PDF', pageCount: '', printableLabel: '', description: '', imageUrl: '', contains: [], audience: '', usage: '', previewImages: [], fileUrl: '', downloadLabel: 'Descargar gratis', nextItemId: '' }, blog: { category: '', title: 'Nuevo artículo', status: 'Borrador', publishedAt: '', readingTime: '', excerpt: '', imageUrl: '', content: '', authorName: '', authorRole: '', authorPhoto: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Comunidad', status: 'Borrador', desc: '', href: '#', imageUrl: '', challengeEyebrow: 'Reto de este mes', challengeTitle: '', challengeDescription: '', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: '', eventDescription: '', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.', testimonial: '', testimonialAuthor: '' } }[s.aprendeTab];
         this.addItem(s.aprendeTab, defaults);
       },
       onSave: this.handleSave, saving: s.saving,
