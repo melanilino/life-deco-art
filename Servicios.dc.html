@@ -82,7 +82,7 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1600},&quot;service&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;rotulacion&quot;,&quot;options&quot;:[&quot;rotulacion&quot;,&quot;personalizados&quot;,&quot;packaging&quot;,&quot;souvenirs&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: 0, liveService: null };
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, faqOpen: null, liveService: null };
   setupReveal() {
     const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; };
     const els = Array.from(document.querySelectorAll('[data-reveal]'));

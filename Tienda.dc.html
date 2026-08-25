@@ -404,10 +404,10 @@ class Component extends DCLogic {
       ...f,
       open: faqOpen === i,
       arrow: faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
-      onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i }),
+      onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i, sortOpen: false }),
     }));
 
-    const toggleSort = () => this.setState({ sortOpen: !sortOpen });
+    const toggleSort = () => this.setState({ sortOpen: !sortOpen, faqOpen: null });
     const sortLabelMap = {};
     this.SORT_OPTIONS.forEach(o => { sortLabelMap[o.value] = o.label; });
     const sortOptions = this.SORT_OPTIONS.map(o => ({
@@ -417,7 +417,7 @@ class Component extends DCLogic {
       onClick: () => this.setState({ sortBy: o.value, sortOpen: false }),
     }));
 
-    const onSelectAll = () => this.setState({ category: null, subcategory: null, expanded: null });
+    const onSelectAll = () => this.setState({ category: null, subcategory: null, expanded: null, sortOpen: false, faqOpen: null });
     const allActive = !category;
 
     const categories = data.categories.map(cat => {
@@ -427,6 +427,8 @@ class Component extends DCLogic {
         category: cat.name,
         subcategory: null,
         expanded: isExpanded ? null : cat.name,
+        sortOpen: false,
+        faqOpen: null,
       });
       const subcategories = cat.subcategories.map(sub => {
         const subActive = isActive && subcategory === sub.name;
@@ -435,7 +437,7 @@ class Component extends DCLogic {
           weight: subActive ? 500 : 400,
           color: '#8B795E',
           borderLeft: subActive ? '2px solid #F65091' : '2px solid transparent',
-          onClick: () => this.setState({ category: cat.name, subcategory: sub.name, expanded: cat.name }),
+          onClick: () => this.setState({ category: cat.name, subcategory: sub.name, expanded: cat.name, sortOpen: false, faqOpen: null }),
         };
       });
       return {
