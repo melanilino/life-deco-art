@@ -643,8 +643,8 @@ class Component extends DCLogic {
     const cur = this.state.expanded[scope];
     this.setState({ expanded: { ...this.state.expanded, [scope]: id === null ? null : (cur === id ? null : id) } });
   }
-  openProductEditor(id) { this.setState({ expanded: { ...this.state.expanded, products: id }, productTab: 'info' }); }
-  closeProductEditor() { this.setState({ expanded: { ...this.state.expanded, products: null }, productTab: 'info' }); }
+  openProductEditor(id) { this.setState({ expanded: { products: id }, productTab: 'info' }); }
+  closeProductEditor() { this.setState({ expanded: {}, productTab: 'info' }); }
 
   INICIO_SCHEMA = [
     { key: 'heroTitlePre', label: 'Título hero (antes de la palabra cursiva)', type: 'text', default: 'La evolución de una' },
@@ -846,7 +846,7 @@ class Component extends DCLogic {
   }
 
   async loadPage(pageId) {
-    this.setState({ page: pageId, saved: false, error: '', ...(pageId === 'aprende' ? { aprendeSectionOpen: false } : {}) });
+    this.setState({ page: pageId, saved: false, error: '', expanded: {}, adjustingImage: null, productTab: 'info', courseTab: 'info', resourceTab: 'info', ...(pageId === 'aprende' ? { aprendeSectionOpen: false } : {}) });
     if (pageId === 'config') {
       this.setState({ configLoading: true });
       let data = {};
@@ -1675,7 +1675,7 @@ class Component extends DCLogic {
           galleryPlaceholders: Array.from({ length: Math.max(0, 4 - gallery.length) }, (_, index) => ({ position: gallery.length + index + 1, onUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]) })),
           onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
           colorsDisplay: s.productTab === 'options' ? 'block' : 'none', galleryDisplay: s.productTab === 'images' ? 'block' : 'none',
-          tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: s.productTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ productTab: tab.id }) }))
+          tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: s.productTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ productTab: tab.id, expanded: { products: p.id } }) }))
         };
       });
       tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, dragGroup: 'tienda-faqs', onDragStart: (e) => this.beginPointerReorder('tienda-faqs', faq.id, e, (ids) => this.commitTiendaOrder('faqs', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onOpen: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onRemove: () => this.removeTiendaFaq(faq.id) }));
@@ -1691,7 +1691,7 @@ class Component extends DCLogic {
       aprendeSectionCards = Object.keys(this.APRENDE_TAB_LABELS).map((key) => {
         const items = Array.isArray(s.aprendeData[key]) ? s.aprendeData[key] : [];
         const drafts = items.filter((item) => item.status === 'Borrador').length;
-        const onSelect = () => this.setState({ aprendeTab: key, aprendeSectionOpen: true, expanded: { ...this.state.expanded, [key]: null } });
+        const onSelect = () => this.setState({ aprendeTab: key, aprendeSectionOpen: true, expanded: {}, courseTab: 'info', resourceTab: 'info' });
         return { key, label: this.APRENDE_TAB_LABELS[key], description: sectionDescriptions[key], countLabel: key === 'comunidad' ? 'Configuración' : items.length + (items.length === 1 ? ' contenido' : ' contenidos'), hasDrafts: drafts > 0, draftLabel: drafts + (drafts === 1 ? ' borrador' : ' borradores'), onSelect, onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(); } } };
       });
       aprendeTabs = Object.keys(this.APRENDE_TAB_LABELS).map((k) => ({
@@ -1716,7 +1716,7 @@ class Component extends DCLogic {
         const activeEditorTab = s.aprendeTab === 'gratis' ? s.resourceTab : s.courseTab;
         const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : s.aprendeTab === 'gratis' ? resourceFieldTabs : s.aprendeTab === 'blog' ? blogFieldTabs : s.aprendeTab === 'comunidad' ? communityFieldTabs : courseFieldTabs;
         const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : s.aprendeTab === 'gratis' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'preview', label: 'Vista previa' }, { id: 'download', label: 'Descarga' }, { id: 'related', label: 'Relacionado' }] : s.aprendeTab === 'blog' ? [{ id: 'info', label: 'Publicación' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'author', label: 'Autor' }] : s.aprendeTab === 'comunidad' ? [{ id: 'info', label: 'Información' }, { id: 'content', label: 'Reto y encuentro' }, { id: 'signup', label: 'Suscripción' }, { id: 'testimonial', label: 'Testimonio' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
-        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: activeEditorTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }) }));
+        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: activeEditorTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ ...(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }), expanded: { [s.aprendeTab]: item.id } }) }));
         const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !usesTabbedEditor || activeFieldTabs[field.key] === activeEditorTab ? 'block' : 'none' }));
         return {
           id: item.id, fields: itemFields, showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
@@ -1730,8 +1730,8 @@ class Component extends DCLogic {
           summaryDisplay: isSelected ? 'none' : 'block',
           summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
           summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
-          isSelected, onSelect: () => this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info' }),
-          onClose: () => this.selectTile(s.aprendeTab, null),
+          isSelected, onSelect: () => this.setState({ expanded: { [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info' }),
+          onClose: () => this.setState({ expanded: {}, courseTab: 'info', resourceTab: 'info' }),
           isCourseEditor: isLongEditorType && isSelected, editorBackLabel: this.APRENDE_TAB_LABELS[s.aprendeTab] || 'Aprende',
           summaryHeaderDisplay: isLongEditorType && isSelected ? 'none' : 'flex',
           cardPosition: isLongEditorType && isSelected ? 'fixed' : 'relative', cardInset: isLongEditorType && isSelected ? '0 0 0 250px' : 'auto', cardZ: isLongEditorType && isSelected ? '50' : 'auto',
