@@ -1015,7 +1015,8 @@ class Component extends DCLogic {
     parent.insertBefore(placeholder, sourceElement); document.body.appendChild(sourceElement);
     Object.assign(sourceElement.style, { position: 'fixed', left: rect.left + 'px', top: rect.top + 'px', width: rect.width + 'px', height: rect.height + 'px', margin: '0', zIndex: '10020', pointerEvents: 'none', transform: 'translateY(-3px) scale(1.01)', boxShadow: '0 18px 40px rgba(43,36,32,.24)', transition: 'box-shadow .15s ease', opacity: '1' });
     const globalMove = (e) => this.trackPointerReorder(e), globalEnd = (e) => this.finishPointerReorder(e), globalCancel = (e) => this.cancelPointerReorder(e);
-    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY, globalMove, globalEnd, globalCancel, onCommit };
+    const isGrid = window.getComputedStyle(parent).display === 'grid';
+    this._pointerReorder = { group, sourceId: id, sourceElement, placeholder, parent, originalStyle, originalNextSibling, offsetX: event.clientX - rect.left, offsetY: event.clientY - rect.top, pointerX: event.clientX, pointerY: event.clientY, isGrid, globalMove, globalEnd, globalCancel, onCommit };
     window.addEventListener('pointermove', globalMove, true); window.addEventListener('pointerup', globalEnd, true); window.addEventListener('pointercancel', globalCancel, true); window.addEventListener('blur', globalCancel, true);
     if (event.currentTarget.setPointerCapture) event.currentTarget.setPointerCapture(event.pointerId);
     this.startReorderAutoScroll();
@@ -1023,12 +1024,13 @@ class Component extends DCLogic {
   positionPointerReorder(clientX, clientY) {
     const drag = this._pointerReorder; if (!drag) return;
     drag.pointerX = clientX; drag.pointerY = clientY;
-    if (drag.sourceElement) drag.sourceElement.style.top = (clientY - drag.offsetY) + 'px';
+    if (drag.sourceElement) { drag.sourceElement.style.left = (clientX - drag.offsetX) + 'px'; drag.sourceElement.style.top = (clientY - drag.offsetY) + 'px'; }
     const target = document.elementFromPoint(clientX, clientY);
     const row = target && target.closest ? target.closest('[data-reorder-group]') : null;
     const placeholder = drag.placeholder;
     if (!row || !placeholder || row === placeholder || row.getAttribute('data-reorder-group') !== drag.group || row.parentElement !== placeholder.parentElement) return;
-    const rect = row.getBoundingClientRect(), isHorizontal = clientY >= rect.top && clientY <= rect.bottom && Math.abs(clientY - (rect.top + rect.height / 2)) < rect.height * .35, placeAfter = isHorizontal ? clientX > rect.left + rect.width / 2 : clientY > rect.top + rect.height / 2;
+    const rect = row.getBoundingClientRect();
+    const placeAfter = drag.isGrid && clientY >= rect.top && clientY <= rect.bottom ? clientX > rect.left + rect.width / 2 : clientY > rect.top + rect.height / 2;
     placeholder.parentElement.insertBefore(placeholder, placeAfter ? row.nextSibling : row);
   }
   trackPointerReorder(event) {
@@ -1678,8 +1680,9 @@ class Component extends DCLogic {
       const restDefs = defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
-        const isLongEditorType = s.aprendeTab === 'cursos' || s.aprendeTab === 'talleres' || s.aprendeTab === 'gratis';
-        const itemForFields = s.aprendeTab === 'esenciales' || isLongEditorType ? { ...item, status: item.status || 'Activo' } : item;
+        const isLongEditorType = true;
+        const usesTabbedEditor = s.aprendeTab === 'cursos' || s.aprendeTab === 'talleres' || s.aprendeTab === 'gratis';
+        const itemForFields = ['esenciales', 'cursos', 'talleres', 'gratis'].includes(s.aprendeTab) ? { ...item, status: item.status || 'Activo' } : item;
         const courseFieldTabs = { status: 'info', price: 'info', level: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
         const workshopFieldTabs = { status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', locationDetail: 'location', mapImageUrl: 'location', cancellationPolicy: 'policies', faqs: 'policies', gallery: 'gallery', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
         const resourceFieldTabs = { status: 'info', format: 'info', pageCount: 'info', printableLabel: 'info', description: 'presentation', imageUrl: 'presentation', contains: 'content', audience: 'content', usage: 'content', previewImages: 'preview', fileUrl: 'download', downloadLabel: 'download', nextItemId: 'related' };
@@ -1687,9 +1690,9 @@ class Component extends DCLogic {
         const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : s.aprendeTab === 'gratis' ? resourceFieldTabs : courseFieldTabs;
         const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : s.aprendeTab === 'gratis' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'preview', label: 'Vista previa' }, { id: 'download', label: 'Descarga' }, { id: 'related', label: 'Relacionado' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
         const courseTabs = tabDefs.map((tab) => ({ ...tab, color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', border: activeEditorTab === tab.id ? '2px solid #F65091' : '2px solid transparent', onClick: () => this.setState(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }) }));
-        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !isLongEditorType || activeFieldTabs[field.key] === activeEditorTab ? 'block' : 'none' }));
+        const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !usesTabbedEditor || activeFieldTabs[field.key] === activeEditorTab ? 'block' : 'none' }));
         return {
-          id: item.id, fields: itemFields, showCourseTabs: isLongEditorType, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          id: item.id, fields: itemFields, showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
           onDragStart: (e) => this.beginPointerReorder('aprende-item:' + s.aprendeTab, item.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
@@ -1699,9 +1702,9 @@ class Component extends DCLogic {
           summaryDisplay: isSelected ? 'none' : 'block',
           summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
           summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
-          isSelected, onSelect: () => isLongEditorType ? this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info' }) : this.selectTile(s.aprendeTab, item.id),
+          isSelected, onSelect: () => this.setState({ expanded: { ...this.state.expanded, [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info' }),
           onClose: () => this.selectTile(s.aprendeTab, null),
-          isCourseEditor: isLongEditorType && isSelected, editorBackLabel: s.aprendeTab === 'talleres' ? 'talleres' : s.aprendeTab === 'gratis' ? 'Gratis' : 'cursos',
+          isCourseEditor: isLongEditorType && isSelected, editorBackLabel: this.APRENDE_TAB_LABELS[s.aprendeTab] || 'Aprende',
           summaryHeaderDisplay: isLongEditorType && isSelected ? 'none' : 'flex',
           cardPosition: isLongEditorType && isSelected ? 'fixed' : 'relative', cardInset: isLongEditorType && isSelected ? '0 0 0 250px' : 'auto', cardZ: isLongEditorType && isSelected ? '50' : 'auto',
           cardClass: isLongEditorType && isSelected ? 'cms-contained-editor' : '',
