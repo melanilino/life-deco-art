@@ -38,6 +38,8 @@ x-dc{display:none!important}
   input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; -webkit-text-fill-color: #000000; transition: background-color 9999s ease-in-out 0s; }
   a { color: #F65091; }
   a:hover { color: #000000; }
+  .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+  @media(max-width:859px){ .cms-aprende-sections { grid-template-columns:1fr; } }
 </style>
 </helmet>
 
@@ -437,11 +439,20 @@ x-dc{display:none!important}
     </sc-if>
 
     <sc-if value="{{ isAprendePage }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-        <sc-for list="{{ aprendeTabs }}" as="t" hint-placeholder-count="5">
-          <div onClick="{{ t.onClick }}" style="display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;padding:8px 4px 9px;font-size:14px;line-height:1.4;cursor:pointer;color:{{ t.color }};font-weight:{{ t.weight }};border-bottom:{{ t.borderBottom }};">{{ t.label }}</div>
+      <sc-if value="{{ showAprendeSections }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-bottom:22px;"><div style="font-size:26px;font-weight:300;color:#000000;margin-bottom:8px;">Secciones de Aprende</div><div style="font-size:13px;line-height:1.6;color:#8B795E;">Selecciona la sección que deseas administrar.</div></div>
+        <div class="cms-aprende-sections">
+        <sc-for list="{{ aprendeSectionCards }}" as="section" hint-placeholder-count="6">
+          <div onClick="{{ section.onSelect }}" onKeyDown="{{ section.onKeyDown }}" role="button" tabindex="0" style="display:flex;flex-direction:column;min-height:160px;box-sizing:border-box;padding:22px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:10px;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-2px);border-color:#F65091;box-shadow:0 8px 24px rgba(43,36,32,.07);">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px;"><div style="font-size:18px;font-weight:500;color:#2B2420;">{{ section.label }}</div><span style="color:#F65091;font-size:18px;line-height:1;">→</span></div>
+            <div style="font-size:12px;line-height:1.55;color:#8B795E;flex:1;">{{ section.description }}</div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;font-size:11px;"><span style="padding:6px 9px;border-radius:999px;background:#F3EEE4;color:#5C5142;">{{ section.countLabel }}</span><sc-if value="{{ section.hasDrafts }}" hint-placeholder-val="{{ false }}"><span style="padding:6px 9px;border-radius:999px;background:#FDECEC;color:#C0392B;">{{ section.draftLabel }}</span></sc-if></div>
+          </div>
         </sc-for>
-      </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ showAprendeSectionEditor }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;"><span onClick="{{ onBackToAprendeSections }}" style="display:inline-flex;align-items:center;min-height:40px;padding-right:8px;font-size:13px;color:#8B795E;cursor:pointer;">← Volver a secciones de Aprende</span><div style="font-size:20px;font-weight:400;color:#2B2420;">{{ aprendeSectionTitle }}</div></div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -573,6 +584,7 @@ x-dc{display:none!important}
         </div>
         <span onClick="{{ onAddAprendeFaq }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;padding:8px 0;margin-bottom:24px;">+ Agregar pregunta</span>
       </sc-if>
+      </sc-if>
     </sc-if>
 
   </div>
@@ -601,7 +613,7 @@ class Component extends DCLogic {
     email: '', password: '', error: '', loginError: '', loggingIn: false, showPassword: false,
     page: 'inicio', content: {}, saving: false, saved: false,
     tiendaData: null, tiendaLoaded: false,
-    aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales',
+    aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales', aprendeSectionOpen: false,
     sobremiData: null, sobremiLoaded: false,
     uploading: null, expanded: {},
     configData: null, configLoaded: false, configLoading: false,
@@ -810,7 +822,7 @@ class Component extends DCLogic {
   }
 
   async loadPage(pageId) {
-    this.setState({ page: pageId, saved: false, error: '' });
+    this.setState({ page: pageId, saved: false, error: '', ...(pageId === 'aprende' ? { aprendeSectionOpen: false } : {}) });
     if (pageId === 'config') {
       this.setState({ configLoading: true });
       let data = {};
@@ -1643,8 +1655,18 @@ class Component extends DCLogic {
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
-    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [];
+    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [];
     if (s.page === 'aprende' && s.aprendeData) {
+      const sectionDescriptions = {
+        esenciales: 'Materiales y herramientas recomendadas.', cursos: 'Cursos disponibles y su contenido completo.', talleres: 'Talleres, fechas, cupos y reservas.',
+        gratis: 'Recursos gratuitos y archivos descargables.', blog: 'Artículos y contenido educativo.', comunidad: 'Contenido y accesos de la comunidad.'
+      };
+      aprendeSectionCards = Object.keys(this.APRENDE_TAB_LABELS).map((key) => {
+        const items = Array.isArray(s.aprendeData[key]) ? s.aprendeData[key] : [];
+        const drafts = items.filter((item) => item.status === 'Borrador').length;
+        const onSelect = () => this.setState({ aprendeTab: key, aprendeSectionOpen: true, expanded: { ...this.state.expanded, [key]: null } });
+        return { key, label: this.APRENDE_TAB_LABELS[key], description: sectionDescriptions[key], countLabel: items.length + (items.length === 1 ? ' contenido' : ' contenidos'), hasDrafts: drafts > 0, draftLabel: drafts + (drafts === 1 ? ' borrador' : ' borradores'), onSelect, onKeyDown: (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); onSelect(); } } };
+      });
       aprendeTabs = Object.keys(this.APRENDE_TAB_LABELS).map((k) => ({
         label: this.APRENDE_TAB_LABELS[k], onClick: () => this.setState({ aprendeTab: k }),
         color: s.aprendeTab === k ? '#F65091' : '#000000', weight: s.aprendeTab === k ? 600 : 500,
@@ -1812,7 +1834,11 @@ class Component extends DCLogic {
       onAddCategory: () => this.addCategory(),
       onAddTiendaFaq: () => this.addTiendaFaq(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
-      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs,
+      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards,
+      showAprendeSections: s.page === 'aprende' && !s.aprendeSectionOpen,
+      showAprendeSectionEditor: s.page === 'aprende' && s.aprendeSectionOpen,
+      aprendeSectionTitle: this.APRENDE_TAB_LABELS[s.aprendeTab] || '',
+      onBackToAprendeSections: () => this.setState({ aprendeSectionOpen: false, expanded: { ...this.state.expanded, [s.aprendeTab]: null } }),
       showAprendeEssentialsFaqs: s.aprendeTab === 'esenciales', onAddAprendeFaq: () => this.addAprendeFaq(),
       onAddAprendeItem: () => {
         const defaults = { cursos: { name: 'Nuevo curso', status: 'Borrador', level: '', price: '', duration: '', availability: '', paymentNote: '', desc: '', summary: '', audience: '', badges: [], imageUrl: '', modules: [], materials: '', faqs: [], testimonials: [], ctaLabel: 'Reservar plaza', reservationStatus: 'Disponible', nextItemId: '' }, talleres: { name: 'Nuevo taller', dateLevel: '', location: '', price: '', badge: '', imageUrl: '' }, gratis: { title: 'Nuevo descargable', status: 'Borrador', format: 'PDF', pageCount: '', printableLabel: '', description: '', imageUrl: '', contains: [], audience: '', usage: '', previewImages: [], fileUrl: '', downloadLabel: 'Descargar gratis', nextItemId: '' }, blog: { category: '', title: 'Nuevo artículo', excerpt: '', meta: '', imageUrl: '' }, esenciales: { name: 'Nuevo producto', status: 'Borrador', desc: '', href: '', imageUrl: '' }, comunidad: { name: 'Nueva comunidad', desc: '', href: '#', imageUrl: '' } }[s.aprendeTab];
