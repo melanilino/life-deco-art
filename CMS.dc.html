@@ -175,7 +175,7 @@ x-dc{display:none!important}
             </div>
           </sc-for>
         </div>
-        <span onClick="{{ onAddContactType }}" style="display:inline-block;font-size:13px;color:#F65091;cursor:pointer;margin-top:16px;">+ Agregar tipo de proyecto</span>
+        <span onClick="{{ onAddContactType }}" style="display:inline-block;font-size:13px;color:#8B795E;cursor:pointer;margin-top:16px;">+ Agregar tipo de proyecto</span>
       </div>
     </sc-if>
 
@@ -294,7 +294,7 @@ x-dc{display:none!important}
                         <span onClick="{{ sub.onRemove }}" title="Eliminar" style="cursor:pointer;color:#C0392B;font-size:13px;">×</span>
                       </div>
                     </sc-for>
-                    <span onClick="{{ cat.onAddSub }}" style="display:inline-flex;align-items:center;min-height:36px;box-sizing:border-box;font-size:12px;color:#F65091;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
+                    <span onClick="{{ cat.onAddSub }}" style="display:inline-flex;align-items:center;min-height:36px;box-sizing:border-box;font-size:12px;color:#8B795E;cursor:pointer;padding:5px 10px;">+ Subcategoría</span>
                   </div>
                   <div style="text-align:right;">
                     <span onClick="{{ cat.onRemove }}" style="font-size: 12px; color: #C0392B; cursor: pointer">Eliminar categoría</span>
@@ -304,7 +304,7 @@ x-dc{display:none!important}
             </div>
           </sc-for>
         </div>
-        <span onClick="{{ onAddCategory }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;margin-bottom:28px;">+ Agregar categoría</span>
+        <span onClick="{{ onAddCategory }}" style="display:block;text-align:right;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:28px;">+ Agregar categoría</span>
 
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Productos</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
@@ -374,7 +374,7 @@ x-dc{display:none!important}
                 </div>
               </sc-for>
             </div>
-            <span onClick="{{ selectedProduct.onAddColor }}" style="display:inline-block;font-size:12px;color:#F65091;cursor:pointer;margin-bottom:20px;">+ Agregar color</span>
+            <span onClick="{{ selectedProduct.onAddColor }}" style="display:inline-block;font-size:12px;color:#8B795E;cursor:pointer;margin-bottom:20px;">+ Agregar color</span>
             </div>
 
             <div style="display:{{ selectedProduct.galleryDisplay }};">
@@ -435,7 +435,7 @@ x-dc{display:none!important}
             </div>
           </sc-for>
         </div>
-        <span onClick="{{ onAddTiendaFaq }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;margin-bottom:24px;">+ Agregar pregunta</span>
+        <span onClick="{{ onAddTiendaFaq }}" style="display:block;text-align:right;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:24px;">+ Agregar pregunta</span>
 
       </div>
     </sc-if>
@@ -509,7 +509,7 @@ x-dc{display:none!important}
                             <span onClick="{{ row.onRemove }}" title="Eliminar" aria-label="Eliminar" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;">×</span>
                           </div>
                         </sc-for>
-                        <span onClick="{{ f.onAdd }}" style="display:inline-block;align-self:flex-start;padding:8px 0;font-size:12px;color:#F65091;cursor:pointer;">{{ f.addLabel }}</span>
+                        <span onClick="{{ f.onAdd }}" style="display:inline-block;align-self:flex-start;padding:8px 0;font-size:12px;color:#8B795E;cursor:pointer;">{{ f.addLabel }}</span>
                       </div>
                     </sc-if>
                     <sc-if value="{{ f.isImageCollection }}" hint-placeholder-val="{{ false }}">
@@ -562,7 +562,7 @@ x-dc{display:none!important}
           </div>
         </sc-for>
       </div>
-      <sc-if value="{{ showAddAprendeItem }}" hint-placeholder-val="{{ true }}"><span onClick="{{ onAddAprendeItem }}" style="display:inline-block;font-size:13px;color:#F65091;cursor:pointer;margin-bottom:24px;">+ Agregar</span></sc-if>
+      <sc-if value="{{ showAddAprendeItem }}" hint-placeholder-val="{{ true }}"><span onClick="{{ onAddAprendeItem }}" style="display:inline-block;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:24px;">+ Agregar</span></sc-if>
       <sc-if value="{{ showAprendeEssentialsFaqs }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:16px 0 10px;">Preguntas frecuentes</div>
         <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
@@ -582,7 +582,7 @@ x-dc{display:none!important}
             </div>
           </sc-for>
         </div>
-        <span onClick="{{ onAddAprendeFaq }}" style="display:block;text-align:right;font-size:13px;color:#F65091;cursor:pointer;padding:8px 0;margin-bottom:24px;">+ Agregar pregunta</span>
+        <span onClick="{{ onAddAprendeFaq }}" style="display:block;text-align:right;font-size:13px;color:#8B795E;cursor:pointer;padding:8px 0;margin-bottom:24px;">+ Agregar pregunta</span>
       </sc-if>
       </sc-if>
     </sc-if>
