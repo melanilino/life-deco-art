@@ -319,10 +319,11 @@ class Component extends DCLogic {
     window.addEventListener('resize', this._resizeHandler, { passive: true });
     try {
       const cms = await import('./cms.js');
-      const [data, entityCategories, entityProducts] = await Promise.all([
+      const [data, entityCategories, entityProducts, globalData] = await Promise.all([
         cms.getPageContent('tienda'),
         cms.getEntities('categories').catch(() => []),
         cms.getEntities('products').catch(() => []),
+        cms.getPageContent('global').catch(() => ({})),
       ]);
       const entityCategoryData = entityCategories.map((cat) => ({
         ...cat,
@@ -343,6 +344,7 @@ class Component extends DCLogic {
         products: normalizedProducts.length ? normalizedProducts : this.DEFAULT_PRODUCTS,
         bannerImageUrl: data.bannerImageUrl || '',
         bannerImageAdjustment: data.bannerImageAdjustment || null,
+        whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, ''),
         faqs: Array.isArray(data.faqs) ? data.faqs : this.FAQS,
       };
       this.updateFaqSchema(merged.faqs);
@@ -451,9 +453,9 @@ class Component extends DCLogic {
       };
     });
 
-    const whatsappNumber = '18495390410';
+    const whatsappNumber = String(data.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410';
     const deliveryDays = (d) => { const m = String(d || '').match(/\d+/g); return m ? parseInt(m[m.length - 1], 10) : 99; };
-    const rawProducts = data.products.filter(p => {
+    const rawProducts = data.products.filter(p => !p.status || p.status === 'Activo' || p.status === 'Publicado').filter(p => {
       if (subcategory) return p.category === category && p.subcategory === subcategory;
       if (category) return p.category === category;
       return true;

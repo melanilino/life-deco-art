@@ -41,8 +41,9 @@ x-dc{display:none!important}
   a { color: #F65091; }
   a:hover { color: #000000; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+  .cms-shipping-grid { display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,240px);gap:18px;align-items:end; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto; }
-  @media(max-width:859px){ .cms-aprende-sections { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
+  @media(max-width:859px){ .cms-aprende-sections,.cms-shipping-grid { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
 </helmet>
 
@@ -416,6 +417,12 @@ x-dc{display:none!important}
             <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+        </div>
+
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Información de envío</div>
+        <div class="cms-shipping-grid" style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+          <label style="display:block;min-width:0;"><span style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:7px;">Texto de envío</span><input type="text" value="{{ tiendaShippingText }}" onChange="{{ onTiendaShippingText }}" placeholder="Envío a todo el país" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;color:#2B2420;"></label>
+          <label style="display:block;min-width:0;"><span style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#8B795E;font-weight:600;margin-bottom:7px;">Visibilidad</span><span style="position:relative;display:block;"><select value="{{ tiendaShippingVisibility }}" onChange="{{ onTiendaShippingVisibility }}" style="width:100%;box-sizing:border-box;padding:11px 34px 11px 12px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;font-family:Montserrat;font-size:13px;color:#2B2420;appearance:none;"><option value="true">Mostrar</option><option value="false">Ocultar</option></select><span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:#8B795E;">⌄</span></span></label>
         </div>
 
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
@@ -886,6 +893,8 @@ class Component extends DCLogic {
         })),
         bannerImageUrl: data.bannerImageUrl || '',
         bannerImageAdjustment: data.bannerImageAdjustment || null,
+        shippingText: data.shippingText || 'Envío a todo el país',
+        shippingVisible: data.shippingVisible !== false,
         faqs: (Array.isArray(data.faqs) ? data.faqs : this.DEFAULT_TIENDA.faqs).map((faq, index) => ({ ...faq, id: faq.id || ('faq' + index) }))
       };
       this.setState({ tiendaData: merged, tiendaLoaded: true, tiendaLoading: false });
@@ -1824,6 +1833,10 @@ class Component extends DCLogic {
       onTiendaBannerUpload: (e) => this.handleTiendaBannerUpload(e.target.files[0]),
       onTiendaBannerRemove: () => this.removeTiendaBanner(),
       tiendaBannerUploading: s.uploading === 'tiendaBanner',
+      tiendaShippingText: (s.tiendaData && s.tiendaData.shippingText) || 'Envío a todo el país',
+      tiendaShippingVisibility: String(!s.tiendaData || s.tiendaData.shippingVisible !== false),
+      onTiendaShippingText: (e) => this.setState({ tiendaData: { ...this.state.tiendaData, shippingText: e.target.value }, saved: false }),
+      onTiendaShippingVisibility: (e) => this.setState({ tiendaData: { ...this.state.tiendaData, shippingVisible: e.target.value === 'true' }, saved: false }),
       aprendeBannerUrl: (s.aprendeData && s.aprendeData.banners && s.aprendeData.banners[s.aprendeTab]) || '',
       aprendeBannerView: imageView(s.aprendeData && s.aprendeData.bannerImageAdjustments && s.aprendeData.bannerImageAdjustments[s.aprendeTab]),
       aprendeBannerAdjusting: s.adjustingImage === ('aprende:banner:' + s.aprendeTab),
