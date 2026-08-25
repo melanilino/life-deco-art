@@ -239,12 +239,12 @@ x-dc{display:none!important}
         </sc-for>
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Piezas recientes</div>
         <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-          <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Selecciona y ordena los cuatro productos de Tienda que aparecerán en Inicio. El nombre, la foto, el precio, la etiqueta y el enlace se toman directamente de cada producto.</div>
+          <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:16px;">Selecciona los cuatro productos de Tienda que aparecerán en Inicio. El nombre, la foto, el precio, la etiqueta y el enlace se toman directamente de cada producto.</div>
           <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
             <sc-for list="{{ recentProductSelectors }}" as="selector" hint-placeholder-count="4">
-              <div data-reorder-group="{{ selector.dragGroup }}" data-reorder-id="{{ selector.id }}" style="border:1px solid #E4DCCB;border-radius:6px;padding:14px;">
-                <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;"><span onPointerDown="{{ selector.onDragStart }}" onPointerMove="{{ selector.onDragMove }}" onPointerUp="{{ selector.onDragEnd }}" onPointerCancel="{{ selector.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:24px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><label style="font-size:12px;color:#8B795E;">Posición {{ selector.position }}</label></div>
-                <select value="{{ selector.value }}" onChange="{{ selector.onChange }}" style="width:100%;padding:10px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000000;font-family:Montserrat;font-size:13px;">
+              <div style="border:1px solid #E4DCCB;border-radius:6px;padding:14px;">
+                <div style="margin-bottom:7px;"><label style="font-size:12px;color:#8B795E;">Posición {{ selector.position }}</label></div>
+                <select value="{{ selector.value }}" onChange="{{ selector.onChange }}" style="width:100%;box-sizing:border-box;padding:10px 32px 10px 10px;border:1px solid #E4DCCB;border-radius:4px;background-color:#FFFFFF;color:#000000;font-family:Montserrat;font-size:13px;appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238B795E' stroke-width='1.5' fill='none'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
                   <option value="">Seleccionar producto</option>
                   <sc-for list="{{ selector.options }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.id }}" disabled="{{ opt.disabled }}">{{ opt.name }}</option></sc-for>
                 </select>
@@ -1002,10 +1002,6 @@ class Component extends DCLogic {
   commitContactOrder(orderedIds) {
     const items = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
     this.setState({ contactData: { ...this.state.contactData, projectTypes: this.orderByIds(items, orderedIds, (_, index) => index) }, saved: false });
-  }
-  commitRecentProductsOrder(orderedIds) {
-    const items = [...((this.state.content && this.state.content.recentProductIds) || ['p1', 'p11', 'p9', 'p3'])];
-    this.setState({ content: { ...this.state.content, recentProductIds: this.orderByIds(items, orderedIds, (_, index) => index) }, saved: false });
   }
   commitTiendaOrder(key, orderedIds) {
     const items = [...((this.state.tiendaData && this.state.tiendaData[key]) || [])];
@@ -1855,8 +1851,7 @@ class Component extends DCLogic {
         const value = ids[position] || '';
         const selected = s.inicioProductOptions.find((p) => p.id === value);
         return {
-          id: String(position), position: position + 1, value, dragGroup: 'inicio-recent-products',
-          onDragStart: (e) => this.beginPointerReorder('inicio-recent-products', String(position), e, (orderedIds) => this.commitRecentProductsOrder(orderedIds)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
+          id: String(position), position: position + 1, value,
           options: s.inicioProductOptions.filter((p) => (p.status || 'Activo') !== 'Borrador').map((p) => ({ id: p.id, name: p.name || 'Producto sin nombre', disabled: ids.some((id, index) => index !== position && id === p.id) })),
           warning: value && (!selected || (selected.status || 'Activo') === 'Borrador') ? 'Este producto ya no está disponible en Tienda. Selecciona otro.' : '',
           onChange: (e) => this.updateRecentProduct(position, e.target.value)
