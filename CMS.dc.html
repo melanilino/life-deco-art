@@ -452,7 +452,7 @@ x-dc{display:none!important}
         </div>
       </sc-if>
       <sc-if value="{{ showAprendeSectionEditor }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px;"><span onClick="{{ onBackToAprendeSections }}" style="display:inline-flex;align-items:center;min-height:40px;padding-right:8px;font-size:13px;color:#8B795E;cursor:pointer;">← Volver a secciones de Aprende</span><div style="font-size:20px;font-weight:400;color:#2B2420;">{{ aprendeSectionTitle }}</div></div>
+      <div style="display:flex;align-items:center;margin-bottom:18px;"><span onClick="{{ onBackToAprendeSections }}" style="display:inline-flex;align-items:center;min-height:40px;padding-right:8px;font-size:13px;color:#8B795E;cursor:pointer;">← Volver a secciones de Aprende</span></div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Portada / banner</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
@@ -1658,11 +1658,11 @@ class Component extends DCLogic {
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
     let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [];
+    const sectionDescriptions = {
+      esenciales: 'Materiales y herramientas recomendadas.', cursos: 'Cursos disponibles y su contenido completo.', talleres: 'Talleres, fechas, cupos y reservas.',
+      gratis: 'Recursos gratuitos y archivos descargables.', blog: 'Artículos y contenido educativo.', comunidad: 'Contenido y accesos de la comunidad.'
+    };
     if (s.page === 'aprende' && s.aprendeData) {
-      const sectionDescriptions = {
-        esenciales: 'Materiales y herramientas recomendadas.', cursos: 'Cursos disponibles y su contenido completo.', talleres: 'Talleres, fechas, cupos y reservas.',
-        gratis: 'Recursos gratuitos y archivos descargables.', blog: 'Artículos y contenido educativo.', comunidad: 'Contenido y accesos de la comunidad.'
-      };
       aprendeSectionCards = Object.keys(this.APRENDE_TAB_LABELS).map((key) => {
         const items = Array.isArray(s.aprendeData[key]) ? s.aprendeData[key] : [];
         const drafts = items.filter((item) => item.status === 'Borrador').length;
@@ -1742,7 +1742,9 @@ class Component extends DCLogic {
       onLogin: this.handleLogin, loggingIn: s.loggingIn,
       loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
       onLogout: this.handleLogout,
-      pages, currentPageLabel: currentPage ? currentPage.label : '', currentPageDesc: currentPage ? currentPage.desc : '',
+      pages,
+      currentPageLabel: s.page === 'aprende' && s.aprendeSectionOpen ? (this.APRENDE_TAB_LABELS[s.aprendeTab] || 'Aprende') : (currentPage ? currentPage.label : ''),
+      currentPageDesc: s.page === 'aprende' && s.aprendeSectionOpen ? (sectionDescriptions[s.aprendeTab] || '') : (currentPage ? currentPage.desc : ''),
       isConfigPage: s.page === 'config' && !!s.configData,
       configFaviconUrl: (s.configData && s.configData.faviconUrl) || '/favicon.svg',
       configHasFavicon: !!(s.configData && s.configData.faviconUrl),
@@ -1841,7 +1843,6 @@ class Component extends DCLogic {
       isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards,
       showAprendeSections: s.page === 'aprende' && !s.aprendeSectionOpen,
       showAprendeSectionEditor: s.page === 'aprende' && s.aprendeSectionOpen,
-      aprendeSectionTitle: this.APRENDE_TAB_LABELS[s.aprendeTab] || '',
       onBackToAprendeSections: () => this.setState({ aprendeSectionOpen: false, expanded: { ...this.state.expanded, [s.aprendeTab]: null } }),
       showAprendeEssentialsFaqs: s.aprendeTab === 'esenciales', onAddAprendeFaq: () => this.addAprendeFaq(),
       onAddAprendeItem: () => {
