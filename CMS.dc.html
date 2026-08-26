@@ -41,8 +41,9 @@ x-dc{display:none!important}
   a { color: #F65091; }
   a:hover { color: #000000; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
+  .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto; }
-  @media(max-width:859px){ .cms-aprende-sections { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
+  @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
 </helmet>
 
@@ -469,7 +470,7 @@ x-dc{display:none!important}
         <sc-if value="{{ aprendeBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
       </div>
       <sc-if value="{{ showCommunityOverviewCards }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+        <div class="cms-community-overview" style="margin-bottom:24px;">
           <sc-for list="{{ communityOverviewCards }}" as="card" hint-placeholder-count="2">
             <div style="border:1px solid #E4DCCB;border-radius:8px;background:#FFFFFF;overflow:hidden;">
               <div onClick="{{ card.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px;cursor:pointer;">
