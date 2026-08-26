@@ -709,10 +709,14 @@ class Component extends DCLogic {
     const isCursos = category === 'Cursos';
     const isComunidad = category === 'Comunidad';
     const live = this.state.aprendeLive || {};
-    const communitySource = (live.comunidad || []).filter(item => (item.status || 'Activo') !== 'Borrador');
+    const publishedOrPlaceholders = (items, placeholders, isPublished = (item) => (item.status || 'Activo') !== 'Borrador') => {
+      const published = (Array.isArray(items) ? items : []).filter(isPublished);
+      return published.length ? published : placeholders;
+    };
+    const communitySource = publishedOrPlaceholders(live.comunidad, [{}]);
     const community = { challengeEyebrow: 'Reto de este mes', challengeTitle: '"Tu nombre en 3 estilos"', challengeDescription: 'Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: 'Sesión de preguntas y práctica', eventDescription: 'Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.', testimonial: '"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."', testimonialAuthor: '— Miembro de la comunidad', ...(communitySource[0] || {}) };
-    const showCommunityContent = isComunidad && (!Array.isArray(live.comunidad) || communitySource.length > 0);
-    const coursesSource = (live.cursos || this.ALL_COURSES).filter(c => (c.status || 'Activo') !== 'Borrador').map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
+    const showCommunityContent = isComunidad;
+    const coursesSource = publishedOrPlaceholders(live.cursos, this.ALL_COURSES).map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
     const courses = (isCursos ? coursesSource : []).map((c,i) => { const rawLevel = String(c.level || ''), hasCombined = rawLevel.includes('·'), level = hasCombined ? rawLevel : [rawLevel ? `Nivel ${rawLevel.toLowerCase()}` : '', c.modality || ''].filter(Boolean).join(' · '); return { ...c, level, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }; });
     const isBlog = category === 'Blog';
     const isGratis = category === 'Gratis';
@@ -834,14 +838,14 @@ class Component extends DCLogic {
       isRecomendados,
       tabsRow1,
       tabsRow2,
-      recommendedProducts: live.esenciales || this.RECOMMENDED_PRODUCTS,
+      recommendedProducts: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado'),
       recSearch: this.state.recSearch,
       recSort: this.state.recSort,
       onRecSearch: (e) => this.setState({ recSearch: e.target.value }),
       onRecSort: (e) => this.setState({ recSort: e.target.value }),
       recommendedProductsView: (() => {
-        const source = live.esenciales || this.RECOMMENDED_PRODUCTS;
-        let list = source.filter(p => (!p.status || p.status === 'Activo' || p.status === 'Publicado') && p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
+        const source = publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado');
+        let list = source.filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
         if (this.state.recSort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name));
         if (this.state.recSort === 'za') list = [...list].sort((a, b) => b.name.localeCompare(a.name));
         return list.map(p => {
@@ -850,10 +854,10 @@ class Component extends DCLogic {
           return { ...p, imageView: imageView(p), slug, ref: this.registerProductRef(slug), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
         });
       })(),
-      recEmpty: (live.esenciales || this.RECOMMENDED_PRODUCTS).filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
-      workshops: (live.talleres || this.WORKSHOPS).filter(w => (w.status || 'Activo') !== 'Borrador').map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
-      posts: (live.blog || this.BLOG_POSTS).filter(post => (post.status || 'Activo') !== 'Borrador').map(post => ({ placeholder: 'foto del artículo', ...post, meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
-      freebies: (live.gratis || this.FREEBIES).filter(item => (item.status || 'Activo') !== 'Borrador').map((item,i) => {
+      recEmpty: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado').filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
+      workshops: publishedOrPlaceholders(live.talleres, this.WORKSHOPS).map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
+      posts: publishedOrPlaceholders(live.blog, this.BLOG_POSTS).map(post => ({ placeholder: 'foto del artículo', ...post, meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
+      freebies: publishedOrPlaceholders(live.gratis, this.FREEBIES).map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
         const hasImage = !!(item.imageUrl && String(item.imageUrl).trim());
         const viewItem = { ...item, imageView: imageView(item), hasImage, noImage: !hasImage };
