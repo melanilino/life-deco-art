@@ -841,8 +841,8 @@ class Component extends DCLogic {
 
   async loadLegalUpdatedDates() {
     const files = {
-      privacidad: 'Politica de Privacidad.dc.html',
-      terminos: 'Terminos y Condiciones.dc.html'
+      privacidad: '/politica-de-privacidad',
+      terminos: '/terminos-y-condiciones'
     };
     const dates = { ...this.state.legalUpdatedDates };
     await Promise.all(Object.entries(files).map(async ([key, path]) => {
