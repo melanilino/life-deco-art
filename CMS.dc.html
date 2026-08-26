@@ -699,12 +699,12 @@ class Component extends DCLogic {
       { id: 'w2', name: 'Monogramas y composición', dateLevel: 'Sáb 8 ago · Nivel intermedio', location: 'Estudio, Santiago', price: '$45 / persona', badge: 'Agotado', imageUrl: '' }
     ],
     gratis: [
-      { id: 'g1', format: 'PDF', title: 'Plantilla de práctica de trazos básicos' },
-      { id: 'g2', format: 'PDF', title: 'Alfabeto completo para calcar' },
-      { id: 'g3', format: 'PDF', title: 'Guía de proporciones y espaciado' },
-      { id: 'g4', format: 'PNG', title: 'Set de fondos digitales para tablet' },
-      { id: 'g5', format: 'PDF', title: 'Checklist: materiales para empezar' },
-      { id: 'g6', format: 'PDF', title: 'Cuaderno de práctica de 30 días' }
+      { id: 'g1', format: 'PDF', title: 'Plantilla de práctica de trazos básicos', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' },
+      { id: 'g2', format: 'PDF', title: 'Alfabeto completo para calcar', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' },
+      { id: 'g3', format: 'PDF', title: 'Guía de proporciones y espaciado', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' },
+      { id: 'g4', format: 'PNG', title: 'Set de fondos digitales para tablet', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' },
+      { id: 'g5', format: 'PDF', title: 'Checklist: materiales para empezar', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' },
+      { id: 'g6', format: 'PDF', title: 'Cuaderno de práctica de 30 días', description: 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.', contains: ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'], audience: 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.', usage: 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.', downloadLabel: 'Descargar gratis' }
     ],
     blog: [
       { id: 'b1', category: 'Técnica', title: 'Cómo sostener el marcador: el error que comete el 90% de las principiantes', excerpt: 'Un pequeño ajuste en la posición de tu mano puede cambiarlo todo.', meta: '3 jul 2026 · 4 min', imageUrl: '' },
@@ -783,7 +783,7 @@ class Component extends DCLogic {
     ],
     gratis: [
       { key: 'title', label: 'Título', type: 'text' }, { key: 'status', label: 'Estado', type: 'select', options: ['Activo', 'Borrador'] },
-      { key: 'format', label: 'Formato', type: 'text' }, { key: 'pageCount', label: 'Cantidad de páginas', type: 'text' }, { key: 'printableLabel', label: 'Tipo de uso', type: 'text' },
+      { key: 'format', label: 'Formato', type: 'select', options: ['PDF', 'PNG'] }, { key: 'pageCount', label: 'Cantidad de páginas', type: 'text' }, { key: 'printableLabel', label: 'Tipo de uso', type: 'text' },
       { key: 'description', label: 'Descripción principal', type: 'textarea' }, { key: 'imageUrl', label: 'Portada / vista previa', type: 'image', aspect: '3/4' },
       { key: 'contains', label: 'Qué contiene (un punto por línea)', type: 'lines' }, { key: 'audience', label: 'Para quién está pensado', type: 'textarea' }, { key: 'usage', label: 'Cómo usarlo', type: 'textarea' },
       { key: 'previewImages', label: 'Páginas de vista previa', type: 'imageCollection' },
@@ -909,6 +909,8 @@ class Component extends DCLogic {
       try { data = await this.state.cms.getPageContent('aprende'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       const merged = {};
       Object.keys(this.DEFAULT_APRENDE).forEach((k) => { merged[k] = (data[k] && data[k].length) ? data[k] : this.DEFAULT_APRENDE[k]; });
+      const gratisDefaultsById = Object.fromEntries(this.DEFAULT_APRENDE.gratis.map((item) => [item.id, item]));
+      merged.gratis = (merged.gratis || []).map((item) => ({ ...(gratisDefaultsById[item.id] || {}), ...item }));
       const normalizeLevel = (value) => { const text = String(value || '').toLowerCase(); return text.includes('avanz') ? 'Avanzado' : text.includes('inter') ? 'Intermedio' : text.includes('bás') || text.includes('inicia') ? 'Básico' : ''; };
       const normalizeModality = (value, fallbackText) => { const text = (String(value || '') + ' ' + String(fallbackText || '')).toLowerCase(); return text.includes('presencial') ? 'Presencial' : text.includes('online') ? 'Online' : ''; };
       merged.cursos = (merged.cursos || []).map((item) => ({ ...item, level: normalizeLevel(item.level), modality: normalizeModality(item.modality, item.level) }));
