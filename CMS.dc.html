@@ -335,7 +335,7 @@ x-dc{display:none!important}
                 <span onClick="{{ onDeselectProduct }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span>
               </div>
               <div style="display:flex;gap:20px;overflow-x:auto;margin-bottom:24px;">
-                <sc-for list="{{ selectedProduct.tabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="position:relative;display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};cursor:pointer;">{{ tab.label }}<span style="position:absolute;left:0;right:0;bottom:0;height:1px;background:{{ tab.indicatorColor }};pointer-events:none;"></span></span></sc-for>
+                <sc-for list="{{ selectedProduct.tabs }}" as="tab" hint-placeholder-count="6"><span onClick="{{ tab.onClick }}" style="position:relative;display:inline-flex;align-items:center;gap:6px;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};cursor:pointer;">{{ tab.label }}<sc-if value="{{ tab.empty }}" hint-placeholder-val="{{ false }}"><span style="font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:#A99D8B;">Vacío</span></sc-if><span style="position:absolute;left:0;right:0;bottom:0;height:1px;background:{{ tab.indicatorColor }};pointer-events:none;"></span></span></sc-for>
               </div>
               <div style="background:#FFFFFF;border-radius:10px;padding:28px;">
               <sc-for list="{{ selectedProduct.fields }}" as="f" hint-placeholder-count="4">
@@ -363,6 +363,7 @@ x-dc{display:none!important}
                 </sc-if>
               </div>
             </sc-for>
+            <sc-if value="{{ selectedProduct.emptySection }}" hint-placeholder-val="{{ false }}"><div style="padding:36px 20px;text-align:center;color:#8B795E;font-size:13px;line-height:1.6;">Esta sección todavía está vacía.</div></sc-if>
             <div style="display:{{ selectedProduct.colorsDisplay }};">
             <div style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Colores disponibles</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
@@ -479,7 +480,7 @@ x-dc{display:none!important}
               <span style="font-size:14px;color:#8B795E;flex-shrink:0;">✎</span>
             </div>
             <sc-if value="{{ item.isSelected }}" hint-placeholder-val="{{ false }}">
-              <sc-if value="{{ item.showCourseTabs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:20px;overflow-x:auto;margin-bottom:24px;"><sc-for list="{{ item.courseTabs }}" as="tab" hint-placeholder-count="4"><span onClick="{{ tab.onClick }}" style="position:relative;display:inline-flex;align-items:center;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};cursor:pointer;">{{ tab.label }}<span style="position:absolute;left:0;right:0;bottom:0;height:1px;background:{{ tab.indicatorColor }};pointer-events:none;"></span></span></sc-for></div></sc-if>
+              <sc-if value="{{ item.showCourseTabs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:20px;overflow-x:auto;margin-bottom:24px;"><sc-for list="{{ item.courseTabs }}" as="tab" hint-placeholder-count="6"><span onClick="{{ tab.onClick }}" style="position:relative;display:inline-flex;align-items:center;gap:6px;min-height:42px;box-sizing:border-box;white-space:nowrap;padding:8px 2px 10px;font-size:13px;color:{{ tab.color }};cursor:pointer;">{{ tab.label }}<sc-if value="{{ tab.empty }}" hint-placeholder-val="{{ false }}"><span style="font-size:9px;text-transform:uppercase;letter-spacing:.04em;color:#A99D8B;">Vacío</span></sc-if><span style="position:absolute;left:0;right:0;bottom:0;height:1px;background:{{ tab.indicatorColor }};pointer-events:none;"></span></span></sc-for></div></sc-if>
               <div style="width:100%;margin:0;padding:{{ item.editorPadding }};box-sizing:border-box;background-color:#FFFFFF;border-radius:{{ item.editorRadius }};">
                 <sc-for list="{{ item.fields }}" as="f" hint-placeholder-count="4">
                   <div style="display:{{ f.display }};margin-bottom:14px;">
@@ -561,6 +562,7 @@ x-dc{display:none!important}
                     </sc-if>
                   </div>
                 </sc-for>
+                <sc-if value="{{ item.emptySection }}" hint-placeholder-val="{{ false }}"><div style="padding:36px 20px;text-align:center;color:#8B795E;font-size:13px;line-height:1.6;">Esta sección todavía está vacía.</div></sc-if>
                 <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
                   <sc-if value="{{ item.canRemove }}" hint-placeholder-val="{{ true }}"><span onClick="{{ item.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></sc-if>
                 </div>
@@ -1631,6 +1633,14 @@ class Component extends DCLogic {
 
   renderVals() {
     const s = this.state;
+    const standardEditorTabs = [
+      { id: 'info', label: 'Información' },
+      { id: 'content', label: 'Contenido' },
+      { id: 'gallery', label: 'Galería' },
+      { id: 'action', label: 'Acción' },
+      { id: 'related', label: 'Relacionados' },
+      { id: 'author', label: 'Autor' }
+    ];
     const imageView = (value) => { const a = this.normalizeImageAdjustment(value); return { scale: a.zoom / 100, x: a.x, y: a.y }; };
     const buildInicioPhoto = (p) => {
       const adjustment = ((s.content && s.content.imageAdjustments) || {})[p.key] || { zoom: 100, x: 0, y: 0 };
@@ -1683,16 +1693,18 @@ class Component extends DCLogic {
           { key: 'subcategory', label: 'Subcategoría', type: 'select', options: subOptions, tab: 'info' },
           { key: 'tag', label: 'Etiqueta (opcional)', type: 'text', tab: 'info' }, { key: 'delivery', label: 'Tiempo de entrega', type: 'text', tab: 'info' },
           { key: 'shipping', label: 'Información de envío', type: 'text', tab: 'info' },
-          { key: 'desc', label: 'Descripción', type: 'textarea', tab: 'content' }, { key: 'imageUrl', label: 'Imagen principal', type: 'image', aspect: '4/5', tab: 'images' },
-          { key: 'sizes', label: 'Tamaños disponibles (uno por línea)', type: 'lines', placeholder: 'Pequeña (20 cm)', tab: 'options' },
+          { key: 'desc', label: 'Descripción', type: 'textarea', tab: 'content' }, { key: 'imageUrl', label: 'Imagen principal', type: 'image', aspect: '4/5', tab: 'gallery' },
+          { key: 'sizes', label: 'Tamaños disponibles (uno por línea)', type: 'lines', placeholder: 'Pequeña (20 cm)', tab: 'content' },
           { key: 'includes', label: 'Qué incluye (uno por línea)', type: 'lines', placeholder: 'Boceto digital previo', tab: 'content' },
           { key: 'excludes', label: 'Qué no incluye (uno por línea)', type: 'lines', placeholder: 'Envío incluido en el precio', tab: 'content' }
         ];
         const isSelected = s.expanded.products === p.id;
         const status = p.status || 'Activo';
         const gallery = this.normalizeGallery(p);
+        const productFields = this.buildTextFields({ ...p, status }, defs, 'products').map((field, index) => ({ ...field, display: defs[index].tab === s.productTab ? 'block' : 'none' }));
+        const productSectionHasContent = { info: true, content: true, gallery: true, action: false, related: false, author: false };
         return {
-          id: p.id, fields: this.buildTextFields({ ...p, status }, defs, 'products').map((field, index) => ({ ...field, display: defs[index].tab === s.productTab ? 'block' : 'none' })), onRemove: () => this.removeProduct(p.id),
+          id: p.id, fields: productFields, emptySection: !productSectionHasContent[s.productTab], onRemove: () => this.removeProduct(p.id),
           dragGroup: 'tienda-products', onDragStart: (e) => this.beginPointerReorder('tienda-products', p.id, e, (ids) => this.commitTiendaOrder('products', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
           name: p.name || 'Sin nombre', price: p.price || '', imageUrl: p.imageUrl || '', noImage: !p.imageUrl,
           status, statusBg: status === 'Activo' ? '#E8F3E9' : status === 'Borrador' ? '#F3EEE4' : '#FDECEC',
@@ -1703,8 +1715,8 @@ class Component extends DCLogic {
           gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment), slotId = 'cms-product-gallery-' + p.id + '-' + entry.id, dragGroup = 'product-gallery:' + p.id; return { ...entry, dragGroup, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entry.id, e, (ids) => this.commitProductCollectionOrder(p.id, 'gallery', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
           galleryPlaceholders: Array.from({ length: Math.max(0, 4 - gallery.length) }, (_, index) => ({ position: gallery.length + index + 1, onUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]) })),
           onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
-          colorsDisplay: s.productTab === 'options' ? 'block' : 'none', galleryDisplay: s.productTab === 'images' ? 'block' : 'none',
-          tabs: [{ id: 'info', label: 'Información' }, { id: 'images', label: 'Imágenes' }, { id: 'options', label: 'Opciones' }, { id: 'content', label: 'Contenido' }].map((tab) => ({ ...tab, color: s.productTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: s.productTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ productTab: tab.id, expanded: { products: p.id } }) }))
+          colorsDisplay: s.productTab === 'content' ? 'block' : 'none', galleryDisplay: s.productTab === 'gallery' ? 'block' : 'none',
+          tabs: standardEditorTabs.map((tab) => ({ ...tab, empty: !productSectionHasContent[tab.id], color: s.productTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: s.productTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ productTab: tab.id, expanded: { products: p.id } }) }))
         };
       });
       tiendaFaqs = (s.tiendaData.faqs || []).map((faq) => ({ ...faq, dragGroup: 'tienda-faqs', onDragStart: (e) => this.beginPointerReorder('tienda-faqs', faq.id, e, (ids) => this.commitTiendaOrder('faqs', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), isOpen: s.expanded.tiendaFaq === faq.id, arrow: s.expanded.tiendaFaq === faq.id ? 'rotate(180deg)' : 'rotate(0deg)', onToggle: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: this.state.expanded.tiendaFaq === faq.id ? null : faq.id } }), onOpen: () => this.setState({ expanded: { ...this.state.expanded, tiendaFaq: faq.id } }), onQuestionChange: (e) => this.updateTiendaFaq(faq.id, 'q', e.target.value), onAnswerChange: (e) => this.updateTiendaFaq(faq.id, 'a', e.target.value), onRemove: () => this.removeTiendaFaq(faq.id) }));
@@ -1735,20 +1747,21 @@ class Component extends DCLogic {
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
         const isLongEditorType = true;
-        const usesTabbedEditor = ['cursos', 'talleres', 'gratis', 'blog', 'comunidad'].includes(s.aprendeTab);
+        const usesTabbedEditor = true;
         const itemForFields = { ...item, status: item.status || 'Activo' };
-        const courseFieldTabs = { name: 'info', status: 'info', price: 'info', level: 'info', modality: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
-        const workshopFieldTabs = { name: 'info', status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'presentation', summary: 'presentation', audience: 'presentation', badges: 'presentation', imageUrl: 'presentation', modules: 'content', materials: 'content', locationDetail: 'location', mapImageUrl: 'location', cancellationPolicy: 'policies', faqs: 'policies', gallery: 'gallery', ctaLabel: 'reservation', reservationStatus: 'reservation', nextItemId: 'reservation' };
-        const resourceFieldTabs = { title: 'info', status: 'info', format: 'info', pageCount: 'info', printableLabel: 'info', description: 'content', gallery: 'gallery', contains: 'content', audience: 'content', usage: 'content', fileUrl: 'download', downloadLabel: 'download', nextItemId: 'related' };
-        const blogFieldTabs = { title: 'info', status: 'info', category: 'info', publishedAt: 'info', readingTime: 'info', excerpt: 'presentation', imageUrl: 'presentation', content: 'content', authorName: 'author', authorRole: 'author', authorPhoto: 'author' };
-        const communityFieldTabs = { name: 'info', status: 'info', desc: 'info', href: 'info', imageUrl: 'info', challengeEyebrow: 'content', challengeTitle: 'content', challengeDescription: 'content', eventEyebrow: 'content', eventTitle: 'content', eventDescription: 'content', signupEyebrow: 'signup', signupButtonLabel: 'signup', signupPrivacy: 'signup', successMessage: 'signup', testimonial: 'testimonial', testimonialAuthor: 'testimonial' };
+        const courseFieldTabs = { name: 'info', status: 'info', price: 'info', level: 'info', modality: 'info', duration: 'info', availability: 'info', paymentNote: 'info', desc: 'info', summary: 'content', audience: 'content', badges: 'content', imageUrl: 'gallery', modules: 'content', materials: 'content', faqs: 'content', testimonials: 'content', ctaLabel: 'action', reservationStatus: 'action', nextItemId: 'related' };
+        const workshopFieldTabs = { name: 'info', status: 'info', date: 'info', time: 'info', level: 'info', modality: 'info', location: 'info', duration: 'info', price: 'info', badge: 'info', desc: 'info', summary: 'content', audience: 'content', badges: 'content', imageUrl: 'gallery', modules: 'content', materials: 'content', locationDetail: 'content', mapImageUrl: 'gallery', cancellationPolicy: 'content', faqs: 'content', gallery: 'gallery', ctaLabel: 'action', reservationStatus: 'action', nextItemId: 'related' };
+        const resourceFieldTabs = { title: 'info', status: 'info', format: 'info', pageCount: 'info', printableLabel: 'info', description: 'content', gallery: 'gallery', contains: 'content', audience: 'content', usage: 'content', fileUrl: 'action', downloadLabel: 'action', nextItemId: 'related' };
+        const blogFieldTabs = { title: 'info', status: 'info', category: 'info', publishedAt: 'info', readingTime: 'info', excerpt: 'info', imageUrl: 'gallery', content: 'content', authorName: 'author', authorRole: 'author', authorPhoto: 'author' };
+        const essentialFieldTabs = { name: 'info', status: 'info', desc: 'info', href: 'action', imageUrl: 'gallery' };
+        const communityFieldTabs = { name: 'info', status: 'info', desc: 'info', href: 'action', imageUrl: 'gallery', challengeEyebrow: 'content', challengeTitle: 'content', challengeDescription: 'content', eventEyebrow: 'content', eventTitle: 'content', eventDescription: 'content', signupEyebrow: 'action', signupButtonLabel: 'action', signupPrivacy: 'action', successMessage: 'action', testimonial: 'content', testimonialAuthor: 'content' };
         const activeEditorTab = s.aprendeTab === 'gratis' ? s.resourceTab : s.courseTab;
-        const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : s.aprendeTab === 'gratis' ? resourceFieldTabs : s.aprendeTab === 'blog' ? blogFieldTabs : s.aprendeTab === 'comunidad' ? communityFieldTabs : courseFieldTabs;
-        const tabDefs = s.aprendeTab === 'talleres' ? [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'location', label: 'Ubicación' }, { id: 'policies', label: 'Políticas y preguntas' }, { id: 'gallery', label: 'Galería' }, { id: 'reservation', label: 'Reserva' }] : s.aprendeTab === 'gratis' ? [{ id: 'info', label: 'Información' }, { id: 'content', label: 'Contenido' }, { id: 'gallery', label: 'Galería' }, { id: 'download', label: 'Descarga' }, { id: 'related', label: 'Relacionado' }] : s.aprendeTab === 'blog' ? [{ id: 'info', label: 'Publicación' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'author', label: 'Autor' }] : s.aprendeTab === 'comunidad' ? [{ id: 'info', label: 'Información' }, { id: 'content', label: 'Reto y encuentro' }, { id: 'signup', label: 'Suscripción' }, { id: 'testimonial', label: 'Testimonio' }] : [{ id: 'info', label: 'Información' }, { id: 'presentation', label: 'Presentación' }, { id: 'content', label: 'Contenido' }, { id: 'reservation', label: 'Reserva' }];
-        const courseTabs = tabDefs.map((tab) => ({ ...tab, color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: activeEditorTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ ...(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }), expanded: { [s.aprendeTab]: item.id } }) }));
+        const activeFieldTabs = s.aprendeTab === 'talleres' ? workshopFieldTabs : s.aprendeTab === 'gratis' ? resourceFieldTabs : s.aprendeTab === 'blog' ? blogFieldTabs : s.aprendeTab === 'esenciales' ? essentialFieldTabs : s.aprendeTab === 'comunidad' ? communityFieldTabs : courseFieldTabs;
+        const availableSections = new Set(Object.values(activeFieldTabs));
+        const courseTabs = standardEditorTabs.map((tab) => ({ ...tab, empty: !availableSections.has(tab.id), color: activeEditorTab === tab.id ? '#F65091' : '#8B795E', indicatorColor: activeEditorTab === tab.id ? '#F65091' : 'transparent', onClick: () => this.setState({ ...(s.aprendeTab === 'gratis' ? { resourceTab: tab.id } : { courseTab: tab.id }), expanded: { [s.aprendeTab]: item.id } }) }));
         const itemFields = this.buildTextFields(itemForFields, restDefs, s.aprendeTab).map((field) => ({ ...field, display: !usesTabbedEditor || activeFieldTabs[field.key] === activeEditorTab ? 'block' : 'none' }));
         return {
-          id: item.id, fields: itemFields, showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          id: item.id, fields: itemFields, emptySection: !availableSections.has(activeEditorTab), showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           showDragHandle: s.aprendeTab !== 'comunidad', canRemove: s.aprendeTab !== 'comunidad',
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
