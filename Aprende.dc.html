@@ -297,7 +297,7 @@ body{margin:0;background:#fff}
         </div>
       </div>
       <sc-for list="{{ recommendedProductsView }}" as="p" hint-placeholder-count="3">
-        <a id="prod-{{ p.slug }}" ref="{{ p.ref }}" href="{{ p.safeHref }}" target="{{ p.linkTarget }}" rel="{{ p.linkRel }}" class="lda-prod-card" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC">
+        <a href="{{ p.safeHref }}" target="{{ p.linkTarget }}" rel="{{ p.linkRel }}" onClick="{{ p.onOpen }}" class="lda-prod-card" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC">
           <image-slot id="esencial-{{ p.slug }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="aspect-ratio:1;border-radius:6px;" src="{{ p.imageUrl }}" placeholder="{{ p.name }}"></image-slot>
           <div>
             <div style="font-size:{{ esencialNameSize }};color:#000;font-weight:400;">{{ p.name }}</div>
@@ -446,12 +446,6 @@ class Component extends DCLogic {
       const valid = ['Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad', 'Esenciales'];
       const match = valid.find(t => t.toLowerCase() === (tab || '').toLowerCase());
       if (match) this.setState({ category: match });
-      const hash = window.location.hash || '';
-      if (hash.indexOf('#prod-') === 0) {
-        this.setState({ category: 'Esenciales' });
-        this._pendingScrollSlug = hash.slice(6);
-        setTimeout(() => this.scrollToProduct(this._pendingScrollSlug), 350);
-      }
     } catch (err) {}
     this.loadLive();
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
@@ -516,25 +510,13 @@ class Component extends DCLogic {
       });
     } catch (e) {}
   }
-  productRefs = {};
   slugify(str) {
     return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-  }
-  registerProductRef(slug) {
-    return (el) => { this.productRefs[slug] = el; };
-  }
-  scrollToProduct(slug) {
-    const el = this.productRefs[slug];
-    if (!el) return;
-    const y = el.getBoundingClientRect().top + window.scrollY - 120;
-    window.scrollTo({ top: y, behavior: 'smooth' });
-    el.style.boxShadow = '0 0 0 3px #0CC0DF';
-    setTimeout(() => { el.style.boxShadow = ''; }, 2000);
   }
   copyProductLink(slug, e) {
     e.preventDefault();
     e.stopPropagation();
-    const url = window.location.origin + window.location.pathname + '?tab=Esenciales#prod-' + slug;
+    const url = window.location.origin + window.location.pathname + '?tab=Esenciales';
     navigator.clipboard.writeText(url).then(() => {
       this.setState({ copiedSlug: slug });
       setTimeout(() => { if (this.state.copiedSlug === slug) this.setState({ copiedSlug: null }); }, 1600);
@@ -853,7 +835,7 @@ class Component extends DCLogic {
           const copied = this.state.copiedSlug === slug;
           const href = String(p.href || '').trim();
           const externalHref = href && href !== '#';
-          return { ...p, imageView: imageView(p), slug, safeHref: externalHref ? href : `?tab=Esenciales#prod-${slug}`, linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', ref: this.registerProductRef(slug), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
+          return { ...p, imageView: imageView(p), slug, safeHref: externalHref ? href : '#', linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', onOpen: externalHref ? undefined : (e) => e.preventDefault(), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
         });
       })(),
       recEmpty: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado').filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
