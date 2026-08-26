@@ -41,9 +41,14 @@
   <div style="max-width:1100px;margin:0 auto;padding:{{ mainPad }};display:grid;grid-template-columns:{{ mainCols }};gap:{{ mainGap }};min-width:0;">
 
     <div>
-      <div style="aspect-ratio:3/4;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-        <image-slot id="rc-portada" shape="rect" fit="cover" view-scale="{{ imageView.scale }}" view-x="{{ imageView.x }}" view-y="{{ imageView.y }}" style="width:100%;height:100%;" src="{{ imageUrl }}" placeholder="portada / vista previa del recurso"></image-slot>
+      <div style="position:relative;aspect-ratio:3/4;border-radius:14px;background:#F3EEE4;overflow:hidden;">
+        <image-slot id="{{ activeGalleryImage.id }}" shape="rect" fit="cover" view-scale="{{ activeGalleryImage.viewScale }}" view-x="{{ activeGalleryImage.viewX }}" view-y="{{ activeGalleryImage.viewY }}" style="width:100%;height:100%;" src="{{ activeGalleryImage.url }}" placeholder="{{ activeGalleryImage.placeholder }}"></image-slot>
+        <sc-if value="{{ showGalleryNavigation }}" hint-placeholder-val="{{ true }}">
+          <button type="button" onClick="{{ onPreviousGallery }}" aria-label="Imagen anterior" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;border-radius:999px;background:rgba(255,255,255,.9);color:#5C5142;font-size:25px;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(43,36,32,.16);">‹</button>
+          <button type="button" onClick="{{ onNextGallery }}" aria-label="Imagen siguiente" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;border-radius:999px;background:rgba(255,255,255,.9);color:#5C5142;font-size:25px;line-height:1;cursor:pointer;box-shadow:0 3px 12px rgba(43,36,32,.16);">›</button>
+        </sc-if>
       </div>
+      <sc-if value="{{ showGalleryNavigation }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:30px;padding-top:10px;"><sc-for list="{{ galleryDots }}" as="dot" hint-placeholder-count="4"><button type="button" onClick="{{ dot.onClick }}" aria-label="{{ dot.label }}" style="width:{{ dot.width }};height:7px;padding:0;border:0;border-radius:999px;background:{{ dot.background }};cursor:pointer;transition:width .2s ease,background .2s ease;"></button></sc-for></div></sc-if>
     </div>
 
     <div>
@@ -84,17 +89,6 @@
 
   </div>
 
-  <div style="max-width:1100px;margin:0 auto;padding:{{ previewSectionPad }};">
-    <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:12px;">Vista previa</div>
-    <div style="display:grid;grid-template-columns:{{ previewCols }};gap:14px;">
-      <sc-for list="{{ previewPages }}" as="pg" hint-placeholder-count="3">
-        <div style="aspect-ratio:3/4;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-          <image-slot id="{{ pg.id }}" shape="rect" fit="cover" view-scale="{{ pg.viewScale }}" view-x="{{ pg.viewX }}" view-y="{{ pg.viewY }}" style="width:100%;height:100%;" src="{{ pg.url }}" placeholder="{{ pg.placeholder }}"></image-slot>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-
   <div style="max-width:1100px;margin:0 auto;padding:{{ nextPad }};">
     <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:12px;">Tu siguiente paso</div>
     <a href="{{ nextHref }}" style="display:flex;align-items:center;gap:16px;text-decoration:none;background:#F3EEE4;border-radius:12px;padding:18px;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
@@ -116,7 +110,8 @@
 <script type="text/x-dc" data-dc-script>
 
 class Component extends DCLogic {
-  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null, related: null };
+  state = { isMobile: typeof window !== 'undefined' && window.innerWidth < 860, resource: null, related: null, galleryIndex: 0 };
+  setGalleryIndex(index) { this.setState({ galleryIndex: index }); }
   async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
     check();
@@ -138,7 +133,7 @@ class Component extends DCLogic {
         const relation = String(resource.nextItemId || '').split(':');
         const list = relation[0] === 'taller' ? (data.talleres || []) : (data.cursos || []);
         const related = list.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry) => String(entry.id) === relation.slice(1).join(':')) || null;
-        this.setState({ resource, related });
+        this.setState({ resource, related, galleryIndex: 0 });
       } else {
         const placeholders = [
           { id: 'g1', format: 'PDF', title: 'Plantilla de práctica de trazos básicos' },
@@ -149,7 +144,7 @@ class Component extends DCLogic {
           { id: 'g6', format: 'PDF', title: 'Cuaderno de práctica de 30 días' },
         ];
         const placeholder = placeholders.find((entry) => entry.id === id);
-        if (placeholder) this.setState({ resource: placeholder, related: null });
+        if (placeholder) this.setState({ resource: placeholder, related: null, galleryIndex: 0 });
         else window.location.replace('/aprende?tab=Gratis');
       }
     } catch (error) {
@@ -161,7 +156,17 @@ class Component extends DCLogic {
     const resource = this.state.resource || {};
     const related = this.state.related || {};
     const adjustment = resource.imageAdjustments && resource.imageAdjustments.imageUrl;
-    const previews = Array.isArray(resource.previewImages) ? resource.previewImages : [];
+    const legacyGallery = [
+      ...(resource.imageUrl ? [{ id: 'gallery-cover', url: resource.imageUrl, adjustment: adjustment || null }] : []),
+      ...(Array.isArray(resource.previewImages) ? resource.previewImages : [])
+    ];
+    const savedGallery = Array.isArray(resource.gallery) ? resource.gallery : legacyGallery;
+    const gallery = (savedGallery.length ? savedGallery : [0, 1, 2, 3].map((index) => ({ id: 'gallery-placeholder-' + index }))).map((entry, index) => {
+      const item = typeof entry === 'string' ? { url: entry } : entry, view = item.adjustment || {};
+      return { ...item, id: item.id || ('rc-gallery-' + index), placeholder: index === 0 ? 'portada del recurso' : 'página ' + (index + 1) + ' del recurso', viewScale: Number(view.scale || view.zoom / 100) || 1, viewX: Number(view.x) || 0, viewY: Number(view.y) || 0 };
+    });
+    const galleryIndex = Math.min(this.state.galleryIndex, gallery.length - 1);
+    const activeGalleryImage = gallery[galleryIndex];
     const relationType = String(resource.nextItemId || '').split(':')[0];
     return {
       navGap: m ? '64px' : '88px',
@@ -177,12 +182,12 @@ class Component extends DCLogic {
       description: resource.description || 'Una guía imprimible para practicar los trazos fundamentales del lettering antes de pasar a las letras completas.',
       audience: resource.audience || 'Para quien nunca ha practicado lettering y quiere empezar por los fundamentos, sin necesidad de un curso completo.',
       usage: resource.usage || 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.',
-      imageUrl: resource.imageUrl || '',
-      imageView: { scale: Number(adjustment && (adjustment.scale || adjustment.zoom / 100)) || 1, x: Number(adjustment && adjustment.x) || 0, y: Number(adjustment && adjustment.y) || 0 },
-      previewSectionPad: m ? '10px 24px 0' : '10px 48px 0',
-      previewCols: m ? 'repeat(3,1fr)' : 'repeat(3,1fr)',
-      previewPages: (previews.length ? previews : [1, 2, 3].map(() => ({}))).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, view = item.adjustment || {}; return { ...item, id: `rc-preview-${index + 1}`, placeholder: `página ${index + 1} de la plantilla`, viewScale: Number(view.scale || view.zoom / 100) || 1, viewX: Number(view.x) || 0, viewY: Number(view.y) || 0 }; }),
-      nextPad: m ? '30px 24px 60px' : '40px 48px 90px',
+      activeGalleryImage,
+      showGalleryNavigation: gallery.length > 1,
+      galleryDots: gallery.map((entry, index) => ({ id: entry.id + '-dot', label: 'Mostrar imagen ' + (index + 1), width: index === galleryIndex ? '18px' : '7px', background: index === galleryIndex ? '#F65091' : '#CFC4B2', onClick: () => this.setGalleryIndex(index) })),
+      onPreviousGallery: () => this.setGalleryIndex((galleryIndex - 1 + gallery.length) % gallery.length),
+      onNextGallery: () => this.setGalleryIndex((galleryIndex + 1) % gallery.length),
+      nextPad: m ? '10px 24px 60px' : '0 48px 90px',
       contains: Array.isArray(resource.contains) && resource.contains.length ? resource.contains : ['6 láminas de trazos progresivos', 'Guía de postura y agarre', 'Espacio para practicar tu propio nombre'],
       downloadUrl: resource.fileUrl || '#',
       downloadLabel: resource.downloadLabel || 'Descargar gratis',
