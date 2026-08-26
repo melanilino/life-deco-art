@@ -1721,7 +1721,7 @@ class Component extends DCLogic {
       const defs = this.APRENDE_FIELD_DEFS[s.aprendeTab];
       const nameField = defs.find((d) => d.key === 'name' || d.key === 'title');
       const nameKey = nameField ? nameField.key : null;
-      const restDefs = ['blog', 'comunidad'].includes(s.aprendeTab) ? defs : defs.filter((d) => d.key !== nameKey);
+      const restDefs = ['esenciales', 'blog', 'comunidad'].includes(s.aprendeTab) ? defs : defs.filter((d) => d.key !== nameKey);
       aprendeItems = (s.aprendeData[s.aprendeTab] || []).map((item) => {
         const isSelected = s.expanded[s.aprendeTab] === item.id;
         const isLongEditorType = true;
