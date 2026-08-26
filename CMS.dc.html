@@ -468,6 +468,19 @@ x-dc{display:none!important}
         </div>
         <sc-if value="{{ aprendeBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
       </div>
+      <sc-if value="{{ showCommunityOverviewCards }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
+          <sc-for list="{{ communityOverviewCards }}" as="card" hint-placeholder-count="2">
+            <div style="border:1px solid #E4DCCB;border-radius:8px;background:#FFFFFF;overflow:hidden;">
+              <div onClick="{{ card.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px;cursor:pointer;">
+                <div style="min-width:0;"><div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8B795E;margin-bottom:6px;">{{ card.label }}</div><div style="font-size:16px;font-weight:400;color:#2B2420;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ card.title }}</div></div>
+                <span aria-label="Abrir o cerrar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;color:#8B795E;transform:{{ card.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5"></path></svg></span>
+              </div>
+              <sc-if value="{{ card.isOpen }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;border-top:1px solid #F3EEE4;"><sc-for list="{{ card.fields }}" as="f" hint-placeholder-count="3"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label><sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if><sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if></div></sc-for></div></sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
       <div style="margin-bottom:24px;">
         <sc-for list="{{ aprendeItems }}" as="item" hint-placeholder-count="4">
           <div class="{{ item.cardClass }}" data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" style="position:{{ item.cardPosition }};inset:{{ item.cardInset }};z-index:{{ item.cardZ }};background:{{ item.cardBackground }};border:{{ item.cardBorder }};border-radius:{{ item.cardRadius }};margin-bottom:{{ item.cardMarginBottom }};overflow-y:{{ item.cardOverflowY }};padding:{{ item.cardPadding }};box-sizing:border-box;">
@@ -562,19 +575,6 @@ x-dc{display:none!important}
                     </sc-if>
                   </div>
                 </sc-for>
-                <sc-if value="{{ item.showCommunityContentCards }}" hint-placeholder-val="{{ false }}">
-                  <div style="display:flex;flex-direction:column;gap:12px;">
-                    <sc-for list="{{ item.communityContentCards }}" as="card" hint-placeholder-count="2">
-                      <div style="border:1px solid #E4DCCB;border-radius:8px;background:#FFFFFF;overflow:hidden;">
-                        <div onClick="{{ card.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px;cursor:pointer;">
-                          <div style="min-width:0;"><div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8B795E;margin-bottom:6px;">{{ card.label }}</div><div style="font-size:16px;font-weight:400;color:#2B2420;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ card.title }}</div></div>
-                          <span aria-label="Abrir o cerrar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;color:#8B795E;transform:{{ card.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5"></path></svg></span>
-                        </div>
-                        <sc-if value="{{ card.isOpen }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;border-top:1px solid #F3EEE4;"><sc-for list="{{ card.fields }}" as="f" hint-placeholder-count="3"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label><sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if><sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if></div></sc-for></div></sc-if>
-                      </div>
-                    </sc-for>
-                  </div>
-                </sc-if>
                 <sc-if value="{{ item.emptySection }}" hint-placeholder-val="{{ false }}"><div style="padding:36px 20px;text-align:center;color:#8B795E;font-size:13px;line-height:1.6;">Esta sección todavía está vacía.</div></sc-if>
                 <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
                   <sc-if value="{{ item.canRemove }}" hint-placeholder-val="{{ true }}"><span onClick="{{ item.onRemove }}" style="display:inline-flex;align-items:center;min-height:36px;padding:0 8px;font-size:12px;color:#C0392B;cursor:pointer;">Eliminar</span></sc-if>
@@ -1736,7 +1736,7 @@ class Component extends DCLogic {
     }
     const selectedProduct = tiendaProducts.find((p) => p.isSelected) || null;
 
-    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [];
+    let aprendeTabs = [], aprendeItems = [], aprendeFaqs = [], aprendeSectionCards = [], communityOverviewCards = [];
     const sectionDescriptions = {
       esenciales: 'Materiales y herramientas recomendadas.', cursos: 'Cursos disponibles y su contenido completo.', talleres: 'Talleres, fechas, cupos y reservas.',
       gratis: 'Recursos gratuitos y archivos descargables.', blog: 'Artículos y contenido educativo.', comunidad: 'Contenido y accesos de la comunidad.'
@@ -1779,14 +1779,14 @@ class Component extends DCLogic {
           id, label, title: item[titleKey] || 'Sin título', isOpen: s.communityContentCard === id,
           arrow: s.communityContentCard === id ? 'rotate(180deg)' : 'rotate(0deg)',
           fields: fieldKeys.map((key) => communityFieldsByKey[key]).filter(Boolean),
-          onToggle: () => this.setState({ communityContentCard: this.state.communityContentCard === id ? null : id, expanded: { comunidad: item.id } })
+          onToggle: () => this.setState({ communityContentCard: this.state.communityContentCard === id ? null : id })
         });
         const communityContentCards = [
           buildCommunityCard('challenge', 'Reto del mes', 'challengeTitle', ['challengeEyebrow', 'challengeTitle', 'challengeDescription']),
           buildCommunityCard('event', 'Próximo encuentro', 'eventTitle', ['eventEyebrow', 'eventTitle', 'eventDescription'])
         ];
         return {
-          id: item.id, fields: itemFields, showCommunityContentCards: s.aprendeTab === 'comunidad' && activeEditorTab === 'content', communityContentCards, emptySection: !availableSections.has(activeEditorTab), showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
+          id: item.id, fields: itemFields, communityContentCards, emptySection: !availableSections.has(activeEditorTab), showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           showDragHandle: s.aprendeTab !== 'comunidad', canRemove: s.aprendeTab !== 'comunidad',
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
@@ -1809,6 +1809,7 @@ class Component extends DCLogic {
           selectBorder: isSelected ? '#F65091' : '#E4DCCB', selectBg: isSelected ? '#FDF3F7' : 'transparent'
         };
       });
+      communityOverviewCards = s.aprendeTab === 'comunidad' && aprendeItems[0] ? aprendeItems[0].communityContentCards : [];
       aprendeFaqs = this.getAprendeFaqs(s.aprendeTab).map((faq) => ({
         ...faq,
         dragGroup: 'aprende-faq:' + s.aprendeTab,
@@ -1935,9 +1936,10 @@ class Component extends DCLogic {
       onAddCategory: () => this.addCategory(),
       onAddTiendaFaq: () => this.addTiendaFaq(),
       onAddProduct: () => this.addItem('products', { name: 'Nuevo producto', price: '', status: 'Borrador', category: categoryNames[0] || '', subcategory: '', tag: '', delivery: '', shipping: 'Envío a todo el país', desc: '', imageUrl: '', colors: [], sizes: [], includes: [], excludes: [], gallery: [] }),
-      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards,
+      isAprendePage: s.page === 'aprende' && !s.aprendeLoading, aprendeTabs, aprendeItems, aprendeFaqs, aprendeSectionCards, communityOverviewCards,
       showAprendeSections: s.page === 'aprende' && !s.aprendeSectionOpen,
       showAprendeSectionEditor: s.page === 'aprende' && s.aprendeSectionOpen,
+      showCommunityOverviewCards: s.page === 'aprende' && s.aprendeSectionOpen && s.aprendeTab === 'comunidad' && communityOverviewCards.length > 0,
       showAprendeEssentialsFaqs: true, onAddAprendeFaq: () => this.addAprendeFaq(),
       showAddAprendeItem: s.aprendeTab !== 'comunidad',
       onAddAprendeItem: () => {
