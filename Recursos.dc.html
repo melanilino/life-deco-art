@@ -184,7 +184,7 @@ class Component extends DCLogic {
       usage: resource.usage || 'Imprime la plantilla en papel liso y repasa cada trazo con un marcador de punta pincel, siguiendo el orden sugerido en la guía.',
       activeGalleryImage,
       showGalleryNavigation: gallery.length > 1,
-      galleryDots: gallery.map((entry, index) => ({ id: entry.id + '-dot', label: 'Mostrar imagen ' + (index + 1), width: index === galleryIndex ? '18px' : '7px', background: index === galleryIndex ? '#F65091' : '#CFC4B2', onClick: () => this.setGalleryIndex(index) })),
+      galleryDots: gallery.map((entry, index) => ({ id: entry.id + '-dot', label: 'Mostrar imagen ' + (index + 1), width: index === galleryIndex ? '18px' : '7px', background: index === galleryIndex ? '#0CC0DF' : '#CFC4B2', onClick: () => this.setGalleryIndex(index) })),
       onPreviousGallery: () => this.setGalleryIndex((galleryIndex - 1 + gallery.length) % gallery.length),
       onNextGallery: () => this.setGalleryIndex((galleryIndex + 1) % gallery.length),
       nextPad: m ? '10px 24px 60px' : '0 48px 90px',
