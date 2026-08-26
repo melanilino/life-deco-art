@@ -129,10 +129,10 @@ class Component extends DCLogic {
         cms.getEntities('resources').catch(() => []),
       ]);
       const legacyResources = data.gratis || [];
-      const resources = entities.length ? entities.map((entry, index) => {
+      const resources = legacyResources.length ? legacyResources : entities.map((entry, index) => {
         const legacy = legacyResources.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
         return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
-      }) : legacyResources;
+      });
       const resource = resources.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry, index) => String(entry.id || `g${index + 1}`) === String(id));
       if (resource) {
         const relation = String(resource.nextItemId || '').split(':');
@@ -140,7 +140,17 @@ class Component extends DCLogic {
         const related = list.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry) => String(entry.id) === relation.slice(1).join(':')) || null;
         this.setState({ resource, related });
       } else {
-        window.location.replace('/aprende?tab=Gratis');
+        const placeholders = [
+          { id: 'g1', format: 'PDF', title: 'Plantilla de práctica de trazos básicos' },
+          { id: 'g2', format: 'PDF', title: 'Alfabeto completo para calcar' },
+          { id: 'g3', format: 'PDF', title: 'Guía de proporciones y espaciado' },
+          { id: 'g4', format: 'PNG', title: 'Set de fondos digitales para tablet' },
+          { id: 'g5', format: 'PDF', title: 'Checklist: materiales para empezar' },
+          { id: 'g6', format: 'PDF', title: 'Cuaderno de práctica de 30 días' },
+        ];
+        const placeholder = placeholders.find((entry) => entry.id === id);
+        if (placeholder) this.setState({ resource: placeholder, related: null });
+        else window.location.replace('/aprende?tab=Gratis');
       }
     } catch (error) {
       console.error('No se pudo cargar el recurso.', error);

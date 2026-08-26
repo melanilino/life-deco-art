@@ -297,7 +297,7 @@ body{margin:0;background:#fff}
         </div>
       </div>
       <sc-for list="{{ recommendedProductsView }}" as="p" hint-placeholder-count="3">
-        <a id="prod-{{ p.slug }}" ref="{{ p.ref }}" href="{{ p.href }}" target="_blank" rel="noopener sponsored" class="lda-prod-card" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC">
+        <a id="prod-{{ p.slug }}" ref="{{ p.ref }}" href="{{ p.safeHref }}" target="{{ p.linkTarget }}" rel="{{ p.linkRel }}" class="lda-prod-card" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC">
           <image-slot id="esencial-{{ p.slug }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="aspect-ratio:1;border-radius:6px;" src="{{ p.imageUrl }}" placeholder="{{ p.name }}"></image-slot>
           <div>
             <div style="font-size:{{ esencialNameSize }};color:#000;font-weight:400;">{{ p.name }}</div>
@@ -543,28 +543,28 @@ class Component extends DCLogic {
   state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
   TABS = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'];
   ALL_COURSES = [
-    { name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
-    { name: 'Lettering digital', level: 'Nivel avanzado · Online', category: 'Cursos', price: '$60 / persona', desc: 'Lleva tus trazos a tablet: pinceles, texturas y acabados listos para imprimir.', placeholder: 'foto: lettering digital en tablet' },
+    { id: 'cu1', name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
+    { id: 'cu2', name: 'Lettering digital', level: 'Nivel avanzado · Online', category: 'Cursos', price: '$60 / persona', desc: 'Lleva tus trazos a tablet: pinceles, texturas y acabados listos para imprimir.', placeholder: 'foto: lettering digital en tablet' },
   ];
   WORKSHOPS = [
-    { name: 'Lettering desde cero', dateLevel: 'Sáb 25 jul · Nivel iniciación', location: 'Estudio, Santo Domingo', price: '$40 / persona', placeholder: 'foto: taller presencial', badge: '3 cupos disponibles', badgeBg: '#0CC0DF', ctaLabel: 'Reservar', ctaBg: '#0CC0DF', ctaColor: '#FFFFFF' },
-    { name: 'Monogramas y composición', dateLevel: 'Sáb 8 ago · Nivel intermedio', location: 'Estudio, Santiago', price: '$45 / persona', placeholder: 'foto: taller de monogramas', badge: 'Agotado', badgeBg: '#8B795E', ctaLabel: 'Lista de espera', ctaBg: '#F3EEE4', ctaColor: '#8B795E' },
+    { id: 'w1', name: 'Lettering desde cero', dateLevel: 'Sáb 25 jul · Nivel iniciación', location: 'Estudio, Santo Domingo', price: '$40 / persona', placeholder: 'foto: taller presencial', badge: '3 cupos disponibles', badgeBg: '#0CC0DF', ctaLabel: 'Reservar', ctaBg: '#0CC0DF', ctaColor: '#FFFFFF' },
+    { id: 'w2', name: 'Monogramas y composición', dateLevel: 'Sáb 8 ago · Nivel intermedio', location: 'Estudio, Santiago', price: '$45 / persona', placeholder: 'foto: taller de monogramas', badge: 'Agotado', badgeBg: '#8B795E', ctaLabel: 'Lista de espera', ctaBg: '#F3EEE4', ctaColor: '#8B795E' },
   ];
   FREEBIES = [
-    { format: 'PDF', title: 'Plantilla de práctica de trazos básicos' },
-    { format: 'PDF', title: 'Alfabeto completo para calcar' },
-    { format: 'PDF', title: 'Guía de proporciones y espaciado' },
-    { format: 'PNG', title: 'Set de fondos digitales para tablet' },
-    { format: 'PDF', title: 'Checklist: materiales para empezar' },
-    { format: 'PDF', title: 'Cuaderno de práctica de 30 días' },
+    { id: 'g1', format: 'PDF', title: 'Plantilla de práctica de trazos básicos' },
+    { id: 'g2', format: 'PDF', title: 'Alfabeto completo para calcar' },
+    { id: 'g3', format: 'PDF', title: 'Guía de proporciones y espaciado' },
+    { id: 'g4', format: 'PNG', title: 'Set de fondos digitales para tablet' },
+    { id: 'g5', format: 'PDF', title: 'Checklist: materiales para empezar' },
+    { id: 'g6', format: 'PDF', title: 'Cuaderno de práctica de 30 días' },
   ];
   BLOG_POSTS = [
-    { category: 'Técnica', title: 'Cómo sostener el marcador: el error que comete el 90% de las principiantes', excerpt: 'Un pequeño ajuste en la posición de tu mano puede cambiarlo todo.', meta: '3 jul 2026 · 4 min', placeholder: 'foto: mano sosteniendo un brush pen' },
-    { category: 'Materiales', title: 'Mis herramientas favoritas: guía honesta para quien empieza', excerpt: 'Sin marcas de lujo ni listas interminables — lo que yo misma uso.', meta: '26 jun 2026 · 6 min', placeholder: 'foto: set de marcadores brush pen' },
-    { category: 'Ideas creativas', title: '5 superficies que no sabías que podías usar para lettering', excerpt: 'El papel es solo el comienzo — cinco superficies sorprendentes.', meta: '18 jun 2026 · 5 min', placeholder: 'foto: lettering sobre distintas superficies' },
-    { category: 'Diseño', title: 'Combinaciones de tipografías que sí funcionan', excerpt: 'Pares clásicos para tus composiciones de lettering.', meta: '10 jun 2026 · 5 min', placeholder: 'foto: muestras de tipografías combinadas' },
-    { category: 'Lettering', title: 'De boceto a pieza final: mi proceso creativo', excerpt: 'Los pasos que sigo antes de dibujar la versión final.', meta: '2 jun 2026 · 7 min', placeholder: 'foto: boceto junto a pieza terminada' },
-    { category: 'Manualidades', title: '3 manualidades con lettering para regalar', excerpt: 'Proyectos fáciles de hacer en una tarde.', meta: '26 may 2026 · 4 min', placeholder: 'foto: manualidad con lettering terminada' },
+    { id: 'b1', category: 'Técnica', title: 'Cómo sostener el marcador: el error que comete el 90% de las principiantes', excerpt: 'Un pequeño ajuste en la posición de tu mano puede cambiarlo todo.', meta: '3 jul 2026 · 4 min', placeholder: 'foto: mano sosteniendo un brush pen' },
+    { id: 'b2', category: 'Materiales', title: 'Mis herramientas favoritas: guía honesta para quien empieza', excerpt: 'Sin marcas de lujo ni listas interminables — lo que yo misma uso.', meta: '26 jun 2026 · 6 min', placeholder: 'foto: set de marcadores brush pen' },
+    { id: 'b3', category: 'Ideas creativas', title: '5 superficies que no sabías que podías usar para lettering', excerpt: 'El papel es solo el comienzo — cinco superficies sorprendentes.', meta: '18 jun 2026 · 5 min', placeholder: 'foto: lettering sobre distintas superficies' },
+    { id: 'b4', category: 'Diseño', title: 'Combinaciones de tipografías que sí funcionan', excerpt: 'Pares clásicos para tus composiciones de lettering.', meta: '10 jun 2026 · 5 min', placeholder: 'foto: muestras de tipografías combinadas' },
+    { id: 'b5', category: 'Lettering', title: 'De boceto a pieza final: mi proceso creativo', excerpt: 'Los pasos que sigo antes de dibujar la versión final.', meta: '2 jun 2026 · 7 min', placeholder: 'foto: boceto junto a pieza terminada' },
+    { id: 'b6', category: 'Manualidades', title: '3 manualidades con lettering para regalar', excerpt: 'Proyectos fáciles de hacer en una tarde.', meta: '26 may 2026 · 4 min', placeholder: 'foto: manualidad con lettering terminada' },
   ];
   FAQS_BY_CATEGORY = {
     Cursos: [
@@ -851,7 +851,9 @@ class Component extends DCLogic {
         return list.map(p => {
           const slug = this.slugify(p.name);
           const copied = this.state.copiedSlug === slug;
-          return { ...p, imageView: imageView(p), slug, ref: this.registerProductRef(slug), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
+          const href = String(p.href || '').trim();
+          const externalHref = href && href !== '#';
+          return { ...p, imageView: imageView(p), slug, safeHref: externalHref ? href : `?tab=Esenciales#prod-${slug}`, linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', ref: this.registerProductRef(slug), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
         });
       })(),
       recEmpty: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado').filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,

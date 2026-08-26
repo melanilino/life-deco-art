@@ -232,7 +232,18 @@ class Component extends DCLogic {
         const relatedItem = relation[1] ? relatedList.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry) => String(entry.id) === relation[1]) : null;
         this.setState({ liveItem: { ...item, relatedItem }, whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410' });
       } else {
-        window.location.replace(`/aprende?tab=${type === 'taller' ? 'Talleres' : 'Cursos'}`);
+        const placeholders = type === 'taller'
+          ? [
+              { id: 'w1', name: 'Lettering desde cero', dateLevel: 'Sáb 25 jul · Nivel iniciación', location: 'Estudio, Santo Domingo', price: '$40 / persona', badge: '3 cupos disponibles' },
+              { id: 'w2', name: 'Monogramas y composición', dateLevel: 'Sáb 8 ago · Nivel intermedio', location: 'Estudio, Santiago', price: '$45 / persona', badge: 'Agotado' },
+            ]
+          : [
+              { id: 'cu1', name: 'Lettering para bodas', level: 'Nivel intermedio · Online', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.' },
+              { id: 'cu2', name: 'Lettering digital', level: 'Nivel avanzado · Online', price: '$60 / persona', desc: 'Lleva tus trazos a tablet: pinceles, texturas y acabados listos para imprimir.' },
+            ];
+        const placeholder = placeholders.find((entry) => entry.id === id);
+        if (placeholder) this.setState({ liveItem: placeholder, whatsappNumber: String(globalData.whatsappNumber || '18495390410').replace(/\D/g, '') || '18495390410' });
+        else window.location.replace(`/aprende?tab=${type === 'taller' ? 'Talleres' : 'Cursos'}`);
       }
     } catch (error) {
       console.error('No se pudo cargar el contenido del curso o taller.', error);
