@@ -153,7 +153,7 @@
   }
 
   function updateDynamicMetadata() {
-    const dynamicPage = /^\/(tienda\/(producto|[^/]+)|aprende\/(curso|taller|recurso|cursos\/[^/]+|talleres\/[^/]+|gratis\/[^/]+))$/.test(window.location.pathname);
+    const dynamicPage = /^\/(tienda\/(producto|[^/]+)|aprende\/(curso|taller|recurso|cursos\/[^/]+|talleres\/[^/]+|gratis\/[^/]+)|blog|servicios\/[^/]+)$/.test(window.location.pathname);
     if (!dynamicPage) return;
     const heading = document.querySelector("h1");
     const title = heading?.textContent?.trim();
@@ -180,7 +180,28 @@
     if (description) {
       setMeta('meta[name="description"]', "content", description);
       setMeta('meta[property="og:description"]', "content", description);
+      setMeta('meta[name="twitter:description"]', "content", description);
     }
+    setMeta('meta[name="twitter:card"]', "content", "summary_large_image");
+    setMeta('meta[name="twitter:title"]', "content", document.title);
+    const mainImage = document.querySelector('image-slot[priority="high"], image-slot');
+    const imageUrl = mainImage?.getAttribute('src');
+    if (imageUrl && !imageUrl.includes('{{')) {
+      const absoluteImage = new URL(imageUrl, window.location.origin).href;
+      setMeta('meta[property="og:image"]', "content", absoluteImage);
+      setMeta('meta[name="twitter:image"]', "content", absoluteImage);
+    }
+    const path = window.location.pathname;
+    let schemaType = 'WebPage';
+    if (path.startsWith('/tienda/')) schemaType = 'Product';
+    else if (path.startsWith('/blog')) schemaType = 'BlogPosting';
+    else if (path.includes('/curso')) schemaType = 'Course';
+    else if (path.includes('/taller')) schemaType = 'Event';
+    else if (path.includes('/recurso') || path.includes('/gratis/')) schemaType = 'DigitalDocument';
+    else if (path.startsWith('/servicios/')) schemaType = 'Service';
+    let structured = document.getElementById('lda-dynamic-structured-data');
+    if (!structured) { structured = document.createElement('script'); structured.id = 'lda-dynamic-structured-data'; structured.type = 'application/ld+json'; document.head.appendChild(structured); }
+    structured.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': schemaType, name: title, description: description || undefined, url, image: imageUrl ? new URL(imageUrl, window.location.origin).href : undefined, provider: { '@type': 'Organization', name: 'Life Deco Art', url: window.location.origin } });
   }
 
   function currentCmsPageId() {
