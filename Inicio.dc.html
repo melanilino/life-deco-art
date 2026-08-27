@@ -22,6 +22,7 @@ x-dc{display:none!important}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
 <script src="./site-enhancements.js?v=20260817a3" defer></script>
+<link rel="preload" as="image" href="/hero-video-poster.png" fetchpriority="high">
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Inicio</title>
@@ -647,7 +648,7 @@ class Component extends DCLogic {
       testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
       closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
       heroVideoSrc: c.heroVideoUrl || '',
-      heroVideoPosterSrc: c.heroVideoPosterUrl || '',
+      heroVideoPosterSrc: c.heroVideoPosterUrl || '/hero-video-poster.png',
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
       melaniPhotoUrl: c.melaniPhotoUrl || '',
