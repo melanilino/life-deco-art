@@ -148,6 +148,7 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ sobremiHeroAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+          <input type="text" value="{{ sobremiHeroAlt }}" onChange="{{ onSobremiHeroAlt }}" placeholder="Texto alternativo: describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía principal" style="width:100%;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
         </div>
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía destacada</div>
@@ -163,6 +164,7 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ sobremiFeaturedAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+          <input type="text" value="{{ sobremiFeaturedAlt }}" onChange="{{ onSobremiFeaturedAlt }}" placeholder="Texto alternativo: describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía destacada" style="width:100%;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
         </div>
       </div>
     </sc-if>
@@ -235,6 +237,7 @@ x-dc{display:none!important}
                     <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                     <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+                    <input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:8px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
                   </div>
                 </div>
               </sc-for>
@@ -268,6 +271,7 @@ x-dc{display:none!important}
                 <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                 <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                 <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+                <input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:8px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
               </div>
             </div>
           </sc-for>
@@ -422,6 +426,7 @@ x-dc{display:none!important}
             <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+          <input type="text" value="{{ tiendaBannerAlt }}" onChange="{{ onTiendaBannerAlt }}" placeholder="Texto alternativo del banner" aria-label="Texto alternativo del banner de Tienda" style="width:100%;max-width:520px;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
         </div>
 
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
@@ -472,6 +477,7 @@ x-dc{display:none!important}
           <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
         <sc-if value="{{ aprendeBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
+        <input type="text" value="{{ aprendeBannerAlt }}" onChange="{{ onAprendeBannerAlt }}" placeholder="Texto alternativo del banner" aria-label="Texto alternativo del banner de Aprende" style="width:100%;max-width:520px;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
       </div>
       <sc-if value="{{ showCommunityOverviewCards }}" hint-placeholder-val="{{ false }}">
         <div class="cms-community-overview" style="margin-bottom:24px;">
@@ -1303,6 +1309,9 @@ class Component extends DCLogic {
     try { const result = await this.uploadOptimizedImage('content-files/tienda', file); this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageUrl: result.url, bannerImageMeta: this.compactImageMeta(result), bannerImageAdjustment: null }, uploading: null, saved: false }); }
     catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
+  updateTiendaBannerAlt(value) {
+    this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageAlt: value }, saved: false });
+  }
   async handleAprendeBannerUpload(file) {
     if (!file) return;
     const tab = this.state.aprendeTab;
@@ -1311,6 +1320,12 @@ class Component extends DCLogic {
       const bannerImageAdjustments={...((this.state.aprendeData&&this.state.aprendeData.bannerImageAdjustments)||{})};delete bannerImageAdjustments[tab];
       this.setState({ aprendeData: { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: result.url }, bannerImageMeta: { ...(this.state.aprendeData.bannerImageMeta || {}), [tab]: this.compactImageMeta(result) }, bannerImageAdjustments }, uploading: null, saved: false });
     } catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
+  }
+  updateAprendeBannerAlt(tab, value) {
+    this.setState({ aprendeData: { ...this.state.aprendeData, bannerImageAlts: { ...(this.state.aprendeData.bannerImageAlts || {}), [tab]: value } }, saved: false });
+  }
+  updateSobremiImageAlt(key, value) {
+    this.setState({ sobremiData: { ...this.state.sobremiData, imageAlts: { ...(this.state.sobremiData.imageAlts || {}), [key]: value } }, saved: false });
   }
   async handleSobremiFeaturedUpload(file) {
     if (!file) return;
@@ -1700,6 +1715,7 @@ class Component extends DCLogic {
       return {
         key: p.key, label: p.label,
         url: (s.content && s.content[p.key]) || '',
+        alt: (s.content && s.content.imageAlts && s.content.imageAlts[p.key]) || '',
         hasImage: !!(s.content && s.content[p.key]),
         uploading: s.uploading === ('inicioPhoto_' + p.key),
         viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y,
@@ -1707,6 +1723,7 @@ class Component extends DCLogic {
         gridColumn: 'auto',
         maxWidth: '100%',
         onUpload: (e) => this.handleInicioPhotoUpload(p.key, e.target.files[0]),
+        onAltChange: (e) => this.setState({ content: { ...this.state.content, imageAlts: { ...((this.state.content && this.state.content.imageAlts) || {}), [p.key]: e.target.value } }, saved: false }),
         onRemove: () => this.removeInicioPhoto(p.key),
         onAdjust: () => this.openInicioFrameEditor(p.key)
       };
@@ -1918,6 +1935,8 @@ class Component extends DCLogic {
       legalUpdatedAt: s.legalUpdatedDates[s.page] || 'Julio de 2026',
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
+      sobremiFeaturedAlt: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.featuredImageUrl) || '',
+      onSobremiFeaturedAlt: (e) => this.updateSobremiImageAlt('featuredImageUrl', e.target.value),
       sobremiFeaturedView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.featuredImageUrl),
       sobremiFeaturedAdjusting: s.adjustingImage === 'sobremi:featuredImageUrl',
       sobremiFeaturedMaxWidth: '560px',
@@ -1926,6 +1945,8 @@ class Component extends DCLogic {
       onSobremiFeaturedRemove: () => this.removeSobremiImage('featuredImageUrl'),
       sobremiFeaturedUploading: s.uploading === 'sobremiFeatured',
       sobremiHeroUrl: (s.sobremiData && s.sobremiData.heroImageUrl) || '',
+      sobremiHeroAlt: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.heroImageUrl) || '',
+      onSobremiHeroAlt: (e) => this.updateSobremiImageAlt('heroImageUrl', e.target.value),
       sobremiHeroView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.heroImageUrl),
       sobremiHeroAdjusting: s.adjustingImage === 'sobremi:heroImageUrl',
       sobremiHeroMaxWidth: '280px',
@@ -1934,6 +1955,8 @@ class Component extends DCLogic {
       onSobremiHeroRemove: () => this.removeSobremiImage('heroImageUrl'),
       sobremiHeroUploading: s.uploading === 'sobremiHero',
       tiendaBannerUrl: (s.tiendaData && s.tiendaData.bannerImageUrl) || '',
+      tiendaBannerAlt: (s.tiendaData && s.tiendaData.bannerImageAlt) || '',
+      onTiendaBannerAlt: (e) => this.updateTiendaBannerAlt(e.target.value),
       tiendaBannerView: imageView(s.tiendaData && s.tiendaData.bannerImageAdjustment),
       tiendaBannerAdjusting: s.adjustingImage === 'tienda:banner',
       tiendaBannerMaxWidth: '220px',
@@ -1942,6 +1965,8 @@ class Component extends DCLogic {
       onTiendaBannerRemove: () => this.removeTiendaBanner(),
       tiendaBannerUploading: s.uploading === 'tiendaBanner',
       aprendeBannerUrl: (s.aprendeData && s.aprendeData.banners && s.aprendeData.banners[s.aprendeTab]) || '',
+      aprendeBannerAlt: (s.aprendeData && s.aprendeData.bannerImageAlts && s.aprendeData.bannerImageAlts[s.aprendeTab]) || '',
+      onAprendeBannerAlt: (e) => this.updateAprendeBannerAlt(s.aprendeTab, e.target.value),
       aprendeBannerView: imageView(s.aprendeData && s.aprendeData.bannerImageAdjustments && s.aprendeData.bannerImageAdjustments[s.aprendeTab]),
       aprendeBannerAdjusting: s.adjustingImage === ('aprende:banner:' + s.aprendeTab),
       aprendeBannerMaxWidth: '220px',

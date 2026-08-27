@@ -216,7 +216,7 @@ body{margin:0;background:#fff}
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:96px 48px 72px;margin-top:0;display:grid;grid-template-columns:0.85fr 1.15fr;gap:32px;align-items:center;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="aspect-ratio:4/5;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <image-slot id="inicio-melani" shape="rect" fit="cover" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;height:100%;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+      <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;height:100%;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
     <div style="padding-top:48px;">
       <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Conóceme</div>
@@ -228,7 +228,7 @@ body{margin:0;background:#fff}
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div style="padding:44px 26px 0;">
-    <image-slot id="inicio-melani" shape="rect" fit="cover" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;aspect-ratio:4/5;border-radius:8px;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+    <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;aspect-ratio:4/5;border-radius:8px;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin:22px 0 12px;">Conóceme</div>
     <div style="font-size:22px;font-weight:300;color:#000000;line-height:1.4;margin-bottom:14px;">Soy Melani, me apasionan <br>los <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;color:#000000;">detalles</span>.</div>
     <p style="font-size: 14px; line-height: 1.7; color: #8B795E; font-weight: 300; margin: 0 0 20px">Trabajo con personas, marcas y espacios que tienen algo importante que decir y quieren decirlo con belleza.</p>
@@ -246,22 +246,22 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
     <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1),transform 0.95s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
-      <image-slot id="serv-personalizados" shape="rect" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
     </div>
     <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .08s,transform 0.95s cubic-bezier(.22,1,.36,1) .08s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
-      <image-slot id="serv-rotulacion" shape="rect" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
     </div>
     <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .16s,transform 0.95s cubic-bezier(.22,1,.36,1) .16s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
-      <image-slot id="serv-packaging" shape="rect" fit="cover" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
     </div>
     <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .24s,transform 0.95s cubic-bezier(.22,1,.36,1) .24s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
-      <image-slot id="serv-souvenirs" shape="rect" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
     </div>
@@ -273,7 +273,7 @@ body{margin:0;background:#fff}
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;text-align:center;margin-bottom:12px;">Servicios</div>
     <div style="font-size:24px;color:#000000;font-weight:300;text-align:center;margin-bottom:8px;">En qué puedo <span style="font-family:'Homemade Apple',cursive;font-size:28px;color:#8B795E;">ayudarte</span></div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-personalizados" shape="rect" fit="cover" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:260px;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-personalizados" shape="rect" fit="cover" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:260px;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Personalizados</div>
@@ -281,7 +281,7 @@ body{margin:0;background:#fff}
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-rotulacion" shape="rect" fit="cover" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:260px;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-rotulacion" shape="rect" fit="cover" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:260px;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Rotulación</div>
@@ -289,7 +289,7 @@ body{margin:0;background:#fff}
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-packaging" shape="rect" fit="cover" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:260px;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:260px;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Packaging</div>
@@ -297,7 +297,7 @@ body{margin:0;background:#fff}
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-souvenirs" shape="rect" fit="cover" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:260px;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-souvenirs" shape="rect" fit="cover" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:260px;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Souvenirs</div>
@@ -321,25 +321,25 @@ body{margin:0;background:#fff}
       <div style="position:sticky;top:150px;z-index:1;background:#F3EEE4;padding:20px 0;border-top:1px solid #DCD2BC;">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">01.</span><span style="font-size:16px;font-weight:500;color:#000000;">Cuéntame tu idea</span></div>
         <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.</p>
-        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-cuentame" shape="rect" fit="cover" view-scale="{{ cwCuentameScale }}" view-x="{{ cwCuentameX }}" view-y="{{ cwCuentameY }}" style="width:100%;height:100%;" src="{{ cwCuentameUrl }}" placeholder="foto: mensaje/nota inicial"></image-slot></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-cuentame" shape="rect" fit="cover" alt="{{ cwCuentameAlt }}" view-scale="{{ cwCuentameScale }}" view-x="{{ cwCuentameX }}" view-y="{{ cwCuentameY }}" style="width:100%;height:100%;" src="{{ cwCuentameUrl }}" placeholder="foto: mensaje/nota inicial"></image-slot></div>
       </div>
       <div style="height:34vh;"></div>
       <div style="position:sticky;top:188px;z-index:2;background:#F3EEE4;padding:20px 0;">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">02.</span><span style="font-size:16px;font-weight:500;color:#000000;">Boceto y aprobación</span></div>
         <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Te comparto un boceto digital antes de empezar a producir.</p>
-        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-boceto" shape="rect" fit="cover" view-scale="{{ cwBocetoScale }}" view-x="{{ cwBocetoX }}" view-y="{{ cwBocetoY }}" style="width:100%;height:100%;" src="{{ cwBocetoUrl }}" placeholder="foto: boceto a lápiz"></image-slot></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-boceto" shape="rect" fit="cover" alt="{{ cwBocetoAlt }}" view-scale="{{ cwBocetoScale }}" view-x="{{ cwBocetoX }}" view-y="{{ cwBocetoY }}" style="width:100%;height:100%;" src="{{ cwBocetoUrl }}" placeholder="foto: boceto a lápiz"></image-slot></div>
       </div>
       <div style="height:34vh;"></div>
       <div style="position:sticky;top:226px;z-index:3;background:#F3EEE4;padding:20px 0;">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">03.</span><span style="font-size:16px;font-weight:500;color:#000000;">Trazo a mano</span></div>
         <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Cada letra se dibuja con cuidado, cuidando cada detalle.</p>
-        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-trazo" shape="rect" fit="cover" view-scale="{{ cwTrazoScale }}" view-x="{{ cwTrazoX }}" view-y="{{ cwTrazoY }}" style="width:100%;height:100%;" src="{{ cwTrazoUrl }}" placeholder="foto: trazo a mano en proceso"></image-slot></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-trazo" shape="rect" fit="cover" alt="{{ cwTrazoAlt }}" view-scale="{{ cwTrazoScale }}" view-x="{{ cwTrazoX }}" view-y="{{ cwTrazoY }}" style="width:100%;height:100%;" src="{{ cwTrazoUrl }}" placeholder="foto: trazo a mano en proceso"></image-slot></div>
       </div>
       <div style="height:34vh;"></div>
       <div style="position:sticky;top:264px;z-index:4;background:#F3EEE4;padding:20px 0;border-bottom:1px solid #DCD2BC;">
         <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:#8B795E;">04.</span><span style="font-size:16px;font-weight:500;color:#000000;">Entrega</span></div>
         <p style="font-size:13.5px;color:#8B795E;font-weight:300;line-height:1.6;margin:0 0 14px;">Recibes tu pieza lista, empacada con el mismo cuidado con que se hizo.</p>
-        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-final" shape="rect" fit="cover" view-scale="{{ cwFinalScale }}" view-x="{{ cwFinalX }}" view-y="{{ cwFinalY }}" style="width:100%;height:100%;" src="{{ cwFinalUrl }}" placeholder="foto: pieza final terminada"></image-slot></div>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-final" shape="rect" fit="cover" alt="{{ cwFinalAlt }}" view-scale="{{ cwFinalScale }}" view-x="{{ cwFinalX }}" view-y="{{ cwFinalY }}" style="width:100%;height:100%;" src="{{ cwFinalUrl }}" placeholder="foto: pieza final terminada"></image-slot></div>
       </div>
       <div style="height:38vh;"></div>
     </div>
@@ -431,7 +431,7 @@ body{margin:0;background:#fff}
         <a href="/aprende" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">Reservar mi plaza</a>
       </div>
       <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">
-        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" view-scale="{{ cursoSpotlightScale }}" view-x="{{ cursoSpotlightX }}" view-y="{{ cursoSpotlightY }}" style="width:100%;height:100%;" src="{{ cursoSpotlightUrl }}" placeholder="foto: taller de lettering en vivo, alumnas trabajando"></image-slot>
+        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ cursoSpotlightAlt }}" view-scale="{{ cursoSpotlightScale }}" view-x="{{ cursoSpotlightX }}" view-y="{{ cursoSpotlightY }}" style="width:100%;height:100%;" src="{{ cursoSpotlightUrl }}" placeholder="foto: taller de lettering en vivo, alumnas trabajando"></image-slot>
       </div>
     </div>
   </div>
@@ -617,22 +617,31 @@ class Component extends DCLogic {
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
       melaniPhotoUrl: c.melaniPhotoUrl || '',
+      melaniPhotoAlt: (c.imageAlts && c.imageAlts.melaniPhotoUrl) || 'Melani trabajando en su estudio',
       melaniPhotoScale: imageAdjustment('melaniPhotoUrl').scale, melaniPhotoX: imageAdjustment('melaniPhotoUrl').x, melaniPhotoY: imageAdjustment('melaniPhotoUrl').y,
       servPersonalizadosUrl: c.servPersonalizadosUrl || '',
+      servPersonalizadosAlt: (c.imageAlts && c.imageAlts.servPersonalizadosUrl) || 'Servicio de piezas personalizadas',
       servPersonalizadosScale: imageAdjustment('servPersonalizadosUrl').scale, servPersonalizadosX: imageAdjustment('servPersonalizadosUrl').x, servPersonalizadosY: imageAdjustment('servPersonalizadosUrl').y,
       servRotulacionUrl: c.servRotulacionUrl || '',
+      servRotulacionAlt: (c.imageAlts && c.imageAlts.servRotulacionUrl) || 'Servicio de rotulación artística',
       servRotulacionScale: imageAdjustment('servRotulacionUrl').scale, servRotulacionX: imageAdjustment('servRotulacionUrl').x, servRotulacionY: imageAdjustment('servRotulacionUrl').y,
       servPackagingUrl: c.servPackagingUrl || '',
+      servPackagingAlt: (c.imageAlts && c.imageAlts.servPackagingUrl) || 'Packaging personalizado con lettering',
       servPackagingScale: imageAdjustment('servPackagingUrl').scale, servPackagingX: imageAdjustment('servPackagingUrl').x, servPackagingY: imageAdjustment('servPackagingUrl').y,
       servSouvenirsUrl: c.servSouvenirsUrl || '',
+      servSouvenirsAlt: (c.imageAlts && c.imageAlts.servSouvenirsUrl) || 'Souvenirs personalizados',
       servSouvenirsScale: imageAdjustment('servSouvenirsUrl').scale, servSouvenirsX: imageAdjustment('servSouvenirsUrl').x, servSouvenirsY: imageAdjustment('servSouvenirsUrl').y,
       cwCuentameUrl: c.cwCuentameUrl || '',
+      cwCuentameAlt: (c.imageAlts && c.imageAlts.cwCuentameUrl) || 'Mensaje inicial de un proyecto personalizado',
       cwCuentameScale: imageAdjustment('cwCuentameUrl').scale, cwCuentameX: imageAdjustment('cwCuentameUrl').x, cwCuentameY: imageAdjustment('cwCuentameUrl').y,
       cwBocetoUrl: c.cwBocetoUrl || '',
+      cwBocetoAlt: (c.imageAlts && c.imageAlts.cwBocetoUrl) || 'Boceto inicial realizado a lápiz',
       cwBocetoScale: imageAdjustment('cwBocetoUrl').scale, cwBocetoX: imageAdjustment('cwBocetoUrl').x, cwBocetoY: imageAdjustment('cwBocetoUrl').y,
       cwTrazoUrl: c.cwTrazoUrl || '',
+      cwTrazoAlt: (c.imageAlts && c.imageAlts.cwTrazoUrl) || 'Proceso de trazado a mano',
       cwTrazoScale: imageAdjustment('cwTrazoUrl').scale, cwTrazoX: imageAdjustment('cwTrazoUrl').x, cwTrazoY: imageAdjustment('cwTrazoUrl').y,
       cwFinalUrl: c.cwFinalUrl || '',
+      cwFinalAlt: (c.imageAlts && c.imageAlts.cwFinalUrl) || 'Pieza personalizada terminada',
       cwFinalScale: imageAdjustment('cwFinalUrl').scale, cwFinalX: imageAdjustment('cwFinalUrl').x, cwFinalY: imageAdjustment('cwFinalUrl').y,
       pasos: this.PASOS.map((p, i) => ({
         n: p.n, title: p.title, desc: p.desc, imgId: p.imgId, placeholder: p.placeholder,
@@ -643,6 +652,7 @@ class Component extends DCLogic {
         onToggle: () => this.setState({ cwOpen: this.state.cwOpen === i ? null : i }),
       })),
       cursoSpotlightUrl: c.cursoSpotlightUrl || '',
+      cursoSpotlightAlt: (c.imageAlts && c.imageAlts.cursoSpotlightUrl) || 'Alumnas practicando lettering en un taller',
       cursoSpotlightScale: imageAdjustment('cursoSpotlightUrl').scale, cursoSpotlightX: imageAdjustment('cursoSpotlightUrl').x, cursoSpotlightY: imageAdjustment('cursoSpotlightUrl').y,
       recentProducts,
     };
