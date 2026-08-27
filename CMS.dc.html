@@ -871,6 +871,7 @@ class Component extends DCLogic {
       try {
         [data, tienda] = await Promise.all([this.state.cms.getPageContent('inicio'), this.state.cms.getPageContent('tienda')]);
       } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
+      if (data.heroVideoUrl) this.state.cms.ensurePublicMediaCache(data.heroVideoUrl).catch(() => {});
       const products = (tienda.products && tienda.products.length) ? tienda.products : this.DEFAULT_TIENDA.products;
       this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products });
     } else if (pageId === 'tienda' && !this.state.tiendaLoaded) {
@@ -1318,6 +1319,7 @@ class Component extends DCLogic {
     }).catch(() => { this.setState({ uploading: null }); });
   }
   INICIO_PHOTO_GROUPS = [
+    { label: 'Portada del video', aspect: '16/9', columns: 'minmax(0,560px)', fields: [{ key: 'heroVideoPosterUrl', label: 'Imagen visible mientras carga el video' }] },
     { label: 'Conóceme', aspect: '4/5', columns: 'minmax(0,280px)', fields: [{ key: 'melaniPhotoUrl', label: 'Melani en su estudio' }] },
     { label: 'Servicios', aspect: '4/5', columns: 'repeat(3,minmax(0,1fr))', fields: [
       { key: 'servPersonalizadosUrl', label: 'Personalizados' },

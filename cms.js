@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, getDoc, setDoc, collection, getDocs, deleteDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, getMetadata, updateMetadata } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 const app = initializeApp(firebaseConfig);
@@ -301,7 +301,26 @@ export async function uploadFile(pathPrefix, file) {
 
 export async function uploadVideo(pathPrefix, file, options = {}) {
   const prepared = await optimizeHeroVideo(file, options);
-  return uploadPrepared(pathPrefix, prepared);
+  return uploadPrepared(pathPrefix, prepared, {
+    cacheControl: 'public,max-age=31536000,immutable',
+    customMetadata: { optimizedBy: 'life-deco-art-cms' },
+  });
+}
+
+export async function ensurePublicMediaCache(url) {
+  if (!url || !/firebasestorage\.googleapis\.com|storage\.googleapis\.com/.test(String(url))) return false;
+  await updateMetadata(ref(storage, url), { cacheControl: 'public,max-age=31536000,immutable' });
+  return true;
+}
+
+export function getCachedPageContent(pageId) {
+  try {
+    if (typeof sessionStorage === 'undefined') return null;
+    const cached = JSON.parse(sessionStorage.getItem(`lda:page:${pageId}`) || 'null');
+    return cached && typeof cached === 'object' ? sanitizePageContent(pageId, cached) : null;
+  } catch (_) {
+    return null;
+  }
 }
 
 export async function getPageContent(pageId) {
