@@ -1319,7 +1319,6 @@ class Component extends DCLogic {
     }).catch(() => { this.setState({ uploading: null }); });
   }
   INICIO_PHOTO_GROUPS = [
-    { label: 'Portada del video', aspect: '16/9', columns: 'minmax(0,560px)', fields: [{ key: 'heroVideoPosterUrl', label: 'Imagen visible mientras carga el video' }] },
     { label: 'Conóceme', aspect: '4/5', columns: 'minmax(0,280px)', fields: [{ key: 'melaniPhotoUrl', label: 'Melani en su estudio' }] },
     { label: 'Servicios', aspect: '4/5', columns: 'repeat(3,minmax(0,1fr))', fields: [
       { key: 'servPersonalizadosUrl', label: 'Personalizados' },
