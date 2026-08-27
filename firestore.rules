@@ -1,11 +1,26 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Lectura pública: cualquiera puede ver el contenido del sitio
-    // Escritura: solo usuarios autenticados (login del CMS)
+    // El contenido publicado debe poder leerse sin iniciar sesión.
     match /content/{pageId} {
       allow read: if true;
       allow write: if request.auth != null;
+    }
+
+    // Catálogos administrados por el CMS (productos, cursos, servicios, etc.).
+    match /cmsEntities/{type}/items/{itemId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // El historial es exclusivamente administrativo.
+    match /cmsHistory/{snapshotId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Todo lo que no esté expresamente previsto queda cerrado.
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

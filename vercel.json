@@ -42,6 +42,24 @@
       ]
     },
     {
+      "source": "/(design-system|site-enhancements)\\.(css|js)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(svg|png|jpg|jpeg|webp|avif|woff|woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=2592000"
+        }
+      ]
+    },
+    {
       "source": "/(cms|firebase-config)\\.js",
       "headers": [
         {

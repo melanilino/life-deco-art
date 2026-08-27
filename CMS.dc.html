@@ -36,7 +36,7 @@ x-dc{display:none!important}
   image-slot { --image-slot-empty-background: #F3EEE4; --image-slot-empty-color: #8B795E; --image-slot-empty-border: #CFC4B2; }
   .cms-frame-hint { position:fixed;left:calc(50% + 125px);bottom:24px;transform:translateX(-50%);z-index:10030;padding:9px 14px;border:1px solid #E4DCCB;border-radius:6px;background:#FFFFFF;box-shadow:0 4px 18px rgba(43,36,32,.12);font-size:11px;color:#8B795E;white-space:nowrap;pointer-events:none; }
   input, textarea, select, button { outline: none; }
-  input:focus, textarea:focus, select:focus, button:focus, button:focus-visible { outline: none; box-shadow: none; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, [role="button"]:focus-visible { outline: 2px solid #0CC0DF; outline-offset: 2px; box-shadow: 0 0 0 3px rgba(12,192,223,.14); }
   input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; -webkit-text-fill-color: #000000; transition: background-color 9999s ease-in-out 0s; }
   a { color: #F65091; }
   a:hover { color: #000000; }
@@ -794,6 +794,29 @@ class Component extends DCLogic {
     } else if (!editorOpen && this._pageScrollLocked) {
       this.releasePageScrollLock();
     }
+    this.enhanceCmsAccessibility();
+  }
+
+  enhanceCmsAccessibility() {
+    window.requestAnimationFrame(() => {
+      const selector = 'span[style*="cursor"],div[style*="cursor"]';
+      document.querySelectorAll(selector).forEach((element) => {
+        if (window.getComputedStyle(element).cursor !== 'pointer') return;
+        if (element.hasAttribute('data-cms-keyboard')) return;
+        element.setAttribute('data-cms-keyboard', 'true');
+        if (!element.hasAttribute('role')) element.setAttribute('role', 'button');
+        if (!element.hasAttribute('tabindex')) element.setAttribute('tabindex', '0');
+        if (!element.hasAttribute('aria-label')) {
+          const label = String(element.textContent || '').replace(/\s+/g, ' ').trim();
+          if (label) element.setAttribute('aria-label', label.slice(0, 120));
+        }
+        element.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          element.click();
+        });
+      });
+    });
   }
 
   componentWillUnmount() { this.releasePageScrollLock(); }
