@@ -42,7 +42,7 @@
       <p style="font-size:15px;color:#8B795E;font-weight:300;line-height:1.7;margin:0;">{{ data.desc }}</p>
     </div>
     <div style="aspect-ratio:4/3;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-      <image-slot id="sv-hero" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ data.imageUrl }}" placeholder="foto principal del servicio"></image-slot>
+      <image-slot id="sv-hero" shape="rect" fit="cover" priority="high" srcset="{{ heroSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ heroAlt }}" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ data.imageUrl }}" placeholder="foto principal del servicio"></image-slot>
     </div>
   </div>
 
@@ -60,7 +60,7 @@
     <div style="display:grid;grid-template-columns:{{ galleryCols }};gap:16px;">
       <sc-for list="{{ gallery }}" as="g" hint-placeholder-count="4">
         <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-          <image-slot id="{{ g.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ g.src }}" placeholder="{{ g.placeholder }}"></image-slot>
+          <image-slot id="{{ g.id }}" shape="rect" fit="cover" srcset="{{ g.srcset }}" sizes="(max-width:859px) 50vw, 300px" alt="{{ g.alt }}" view-scale="{{ g.view.scale }}" view-x="{{ g.view.x }}" view-y="{{ g.view.y }}" style="width:100%;height:100%;" src="{{ g.src }}" placeholder="{{ g.placeholder }}"></image-slot>
         </div>
       </sc-for>
     </div>
@@ -174,8 +174,9 @@ class Component extends DCLogic {
       forWho: live.audience || fallback.forWho,
       priceFrom: live.priceNote || fallback.priceFrom,
     } : fallback;
+    const imageView = (value) => { const a = value || {}; return { scale: Math.max(1, Math.min(3, Number(a.scale || a.zoom / 100 || 1))), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
     const gallerySource = live && Array.isArray(live.gallery) ? live.gallery : [];
-    const gallery = (gallerySource.length ? gallerySource : [1, 2, 3, 4]).map((item, i) => ({ id: `sv-gallery-${i + 1}`, src: typeof item === 'string' ? item : '', placeholder: 'foto de proyecto real' }));
+    const gallery = (gallerySource.length ? gallerySource : [1, 2, 3, 4]).map((item, i) => { const entry = typeof item === 'string' ? { url: item } : (item || {}); return { id: entry.id || `sv-gallery-${i + 1}`, src: entry.url || '', srcset: entry.srcset || '', alt: entry.alt || `${data.name}: proyecto realizado ${i + 1}`, view: imageView(entry.adjustment), placeholder: 'foto de proyecto real' }; });
     const faqSource = live && Array.isArray(live.faqs) && live.faqs.length ? live.faqs : this.FAQS;
     const faqs = faqSource.map((f, i) => ({
       ...f,
@@ -202,7 +203,7 @@ class Component extends DCLogic {
       ctaPad: m ? '48px 24px' : '80px 48px',
       ctaRadius: m ? '16px' : '24px',
       h2Size: m ? '22px' : '30px',
-      data, gallery, faqs,
+      data, heroSrcset: (data.imageMeta && data.imageMeta.imageUrl && data.imageMeta.imageUrl.srcset) || '', heroAlt: (data.imageAlts && data.imageAlts.imageUrl) || data.name || 'Servicio de Life Deco Art', heroView: imageView(data.imageAdjustments && data.imageAdjustments.imageUrl), gallery, faqs,
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(data.whatsappMessage || `Hola! Quiero cotizar un servicio de ${data.name}.`),
     };
   }

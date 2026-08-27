@@ -108,7 +108,7 @@
         <div style="margin-bottom:32px;">
           <div style="font-size:18px;color:#000;font-weight:400;margin-bottom:12px;">Ubicación</div>
           <div style="aspect-ratio:16/7;border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:10px;">
-            <image-slot id="ap-mapa" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ mapImage }}" placeholder="mapa o instrucciones de llegada"></image-slot>
+            <image-slot id="ap-mapa" shape="rect" fit="cover" srcset="{{ mapSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ mapAlt }}" style="width:100%;height:100%;" src="{{ mapImage }}" placeholder="mapa o instrucciones de llegada"></image-slot>
           </div>
           <p style="font-size:13px;color:#8B795E;font-weight:300;margin:0;">{{ locationDetail }}</p>
         </div>
@@ -146,7 +146,7 @@
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
             <sc-for list="{{ pastGallery }}" as="g" hint-placeholder-count="3">
               <div style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;">
-                <image-slot id="{{ g.id }}" shape="rect" fit="cover" view-scale="{{ g.viewScale }}" view-x="{{ g.viewX }}" view-y="{{ g.viewY }}" style="width:100%;height:100%;" src="{{ g.url }}" placeholder="{{ g.placeholder }}"></image-slot>
+                <image-slot id="{{ g.id }}" shape="rect" fit="cover" srcset="{{ g.srcset }}" sizes="(max-width:859px) 50vw, 300px" alt="{{ g.alt }}" view-scale="{{ g.viewScale }}" view-x="{{ g.viewX }}" view-y="{{ g.viewY }}" style="width:100%;height:100%;" src="{{ g.url }}" placeholder="{{ g.placeholder }}"></image-slot>
               </div>
             </sc-for>
           </div>
@@ -347,7 +347,7 @@ class Component extends DCLogic {
       faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
       testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
       gallery: live.gallery || live.pastGallery || [],
-      pastGallery: (live.gallery || live.pastGallery || []).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, id: 'ap-past-' + index, placeholder: 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
+      pastGallery: (live.gallery || live.pastGallery || []).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
       mapImage: live.mapImageUrl || fallback.mapImage,
       locationDetail: live.locationDetail || fallback.locationDetail,
       cancelPolicy: live.cancellationPolicy || fallback.cancelPolicy,
@@ -395,6 +395,8 @@ class Component extends DCLogic {
       ...d, faqs,
       heroSrcset: (d.imageMeta && d.imageMeta.imageUrl && d.imageMeta.imageUrl.srcset) || '',
       heroAlt: (d.imageAlts && d.imageAlts.imageUrl) || d.title || (type === 'taller' ? 'Taller de lettering' : 'Curso de lettering'),
+      mapSrcset: (d.imageMeta && d.imageMeta.mapImageUrl && d.imageMeta.mapImageUrl.srcset) || '',
+      mapAlt: (d.imageAlts && d.imageAlts.mapImageUrl) || `Ubicación de ${d.title}`,
     };
   }
 }

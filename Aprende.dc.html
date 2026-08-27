@@ -327,32 +327,32 @@ body{margin:0;background:#fff}
 
   <sc-if value="{{ isGratis }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-gratis" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumnos practicando lettering en un taller"></image-slot>
+      <image-slot id="aprende-banner-gratis" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumnos practicando lettering en un taller"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-cursos" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumna practicando lettering en un curso"></image-slot>
+      <image-slot id="aprende-banner-cursos" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumna practicando lettering en un curso"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isTalleres }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-talleres" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: grupo en un taller presencial"></image-slot>
+      <image-slot id="aprende-banner-talleres" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: grupo en un taller presencial"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-blog" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: escritorio de trabajo con contenido del blog"></image-slot>
+      <image-slot id="aprende-banner-blog" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: escritorio de trabajo con contenido del blog"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-comunidad" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: comunidad compartiendo su trabajo"></image-slot>
+      <image-slot id="aprende-banner-comunidad" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: comunidad compartiendo su trabajo"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ hasEssentialsBanner }}" hint-placeholder-val="{{ false }}">
     <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
-      <image-slot id="aprende-banner-esenciales" shape="rect" fit="cover" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto de materiales y herramientas recomendadas"></image-slot>
+      <image-slot id="aprende-banner-esenciales" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto de materiales y herramientas recomendadas"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ hasFaqs }}" hint-placeholder-val="{{ true }}">
@@ -402,7 +402,7 @@ body{margin:0;background:#fff}
       <div onClick="{{ stopPropagation }}" role="dialog" aria-modal="true" aria-label="Vista previa del recurso" style="background:#FFFFFF;border-radius:12px;max-width:560px;width:100%;overflow:hidden;animation:lda-modal-in .3s cubic-bezier(.16,1,.3,1);">
       <div style="aspect-ratio:4/3;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
         <sc-if value="{{ previewItem.hasImage }}" hint-placeholder-val="{{ false }}">
-          <image-slot id="aprende-freebie-preview" shape="rect" fit="cover" view-scale="{{ previewItem.imageView.scale }}" view-x="{{ previewItem.imageView.x }}" view-y="{{ previewItem.imageView.y }}" style="width:100%;height:100%;" src="{{ previewItem.imageUrl }}" placeholder="vista previa del descargable"></image-slot>
+          <image-slot id="aprende-freebie-preview" shape="rect" fit="cover" srcset="{{ previewItem.imageSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ previewItem.imageAlt }}" view-scale="{{ previewItem.imageView.scale }}" view-x="{{ previewItem.imageView.x }}" view-y="{{ previewItem.imageView.y }}" style="width:100%;height:100%;" src="{{ previewItem.imageUrl }}" placeholder="vista previa del descargable"></image-slot>
         </sc-if>
         <sc-if value="{{ previewItem.noImage }}" hint-placeholder-val="{{ true }}">
           <span style="font-family:monospace;font-size:11px;color:#8B795E;text-align:center;padding:0 24px;">vista previa: {{ previewItem.title }}</span>
@@ -706,6 +706,7 @@ class Component extends DCLogic {
     const isGratis = category === 'Gratis';
     const isRecomendados = category === 'Esenciales';
     const bannerUrl = category === 'Comunidad' && community.imageUrl ? community.imageUrl : (live.banners || {})[category.toLowerCase()] || '';
+    const bannerSrcset = category === 'Comunidad' && community.imageUrl ? ((community.imageMeta && community.imageMeta.imageUrl && community.imageMeta.imageUrl.srcset) || '') : (((live.bannerImageMeta || {})[category.toLowerCase()] || {}).srcset || '');
     const bannerAlt = category === 'Comunidad' && community.imageUrl ? ((community.imageAlts && community.imageAlts.imageUrl) || 'Comunidad de Life Deco Art') : ((live.bannerImageAlts || {})[category.toLowerCase()] || `Portada de ${category} en Aprende`);
     const bannerView = category === 'Comunidad' && community.imageUrl ? imageView(community) : imageView({ imageAdjustments: { imageUrl: (live.bannerImageAdjustments || {})[category.toLowerCase()] } });
 
@@ -813,7 +814,7 @@ class Component extends DCLogic {
       closingBtnGap: m ? '14px' : '24px',
       closingBtnDir: m ? 'column' : 'row',
       tabs,
-      bannerUrl, bannerAlt,
+      bannerUrl, bannerAlt, bannerSrcset,
       bannerView,
       hasEssentialsBanner: isRecomendados && !!bannerUrl,
       courses,
@@ -850,7 +851,7 @@ class Component extends DCLogic {
       freebies: publishedOrPlaceholders(live.gratis, this.FREEBIES).map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
         const hasImage = !!(item.imageUrl && String(item.imageUrl).trim());
-        const viewItem = { ...item, imageView: imageView(item), hasImage, noImage: !hasImage };
+        const viewItem = { ...item, ...imageProps(item, 'Recurso descargable'), imageView: imageView(item), hasImage, noImage: !hasImage };
         return {
           ...viewItem,
           detailHref:`/aprende/recurso?id=${encodeURIComponent(item.id || ('g'+(i+1)))}`,

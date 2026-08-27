@@ -512,6 +512,41 @@ class Component extends DCLogic {
     requestAnimationFrame(sweep);
     setTimeout(sweep, 400);
     setTimeout(sweep, 1200);
+    requestAnimationFrame(() => this.syncResponsiveImages());
+  }
+  componentDidUpdate() { requestAnimationFrame(() => this.syncResponsiveImages()); }
+  syncResponsiveImages() {
+    const content = this.state.content || {};
+    const meta = content.imageMeta || {};
+    const alts = content.imageAlts || {};
+    const fields = {
+      'inicio-melani': ['melaniPhotoUrl', '(max-width:859px) 100vw, 50vw'],
+      'serv-personalizados': ['servPersonalizadosUrl', '(max-width:859px) 100vw, 50vw'],
+      'serv-rotulacion': ['servRotulacionUrl', '(max-width:859px) 100vw, 50vw'],
+      'serv-packaging': ['servPackagingUrl', '(max-width:859px) 100vw, 50vw'],
+      'serv-souvenirs': ['servSouvenirsUrl', '(max-width:859px) 100vw, 50vw'],
+      'cw-cuentame': ['cwCuentameUrl', '(max-width:859px) 100vw, 520px'],
+      'cw-boceto': ['cwBocetoUrl', '(max-width:859px) 100vw, 520px'],
+      'cw-trazo': ['cwTrazoUrl', '(max-width:859px) 100vw, 520px'],
+      'cw-final': ['cwFinalUrl', '(max-width:859px) 100vw, 520px'],
+      'inicio-curso-spotlight': ['cursoSpotlightUrl', '(max-width:859px) 100vw, 50vw'],
+    };
+    Object.entries(fields).forEach(([id, [key, sizes]]) => {
+      document.querySelectorAll(`#${id}`).forEach((slot) => {
+        const srcset = meta[key] && meta[key].srcset;
+        if (srcset) { slot.setAttribute('srcset', srcset); slot.setAttribute('sizes', sizes); }
+        if (alts[key]) slot.setAttribute('alt', alts[key]);
+      });
+    });
+    const selectedIds = (content.recentProductIds && content.recentProductIds.length === 4) ? content.recentProductIds : ['p1', 'p11', 'p9', 'p3'];
+    selectedIds.forEach((id, index) => {
+      const product = this.state.tiendaProducts[id];
+      const slot = document.getElementById(`inicio-pieza-${index + 1}`);
+      if (!product || !slot) return;
+      const srcset = product.imageMeta && product.imageMeta.imageUrl && product.imageMeta.imageUrl.srcset;
+      if (srcset) { slot.setAttribute('srcset', srcset); slot.setAttribute('sizes', '(max-width:859px) 50vw, 300px'); }
+      slot.setAttribute('alt', (product.imageAlts && product.imageAlts.imageUrl) || product.name || 'Producto artesanal');
+    });
   }
   startHeroVideo = () => {
     const v = document.querySelector('video[data-video-src]');

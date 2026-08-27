@@ -93,7 +93,7 @@
     <div style="font-size:13px;color:#8B795E;font-weight:400;margin-bottom:12px;">Tu siguiente paso</div>
     <a href="{{ nextHref }}" style="display:flex;align-items:center;gap:16px;text-decoration:none;background:#F3EEE4;border-radius:12px;padding:18px;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">
       <div style="width:64px;height:64px;border-radius:8px;background:#FFFFFF;flex-shrink:0;overflow:hidden;">
-        <image-slot id="rc-next" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ nextImageUrl }}" placeholder="contenido relacionado"></image-slot>
+        <image-slot id="rc-next" shape="rect" fit="cover" srcset="{{ nextImageSrcset }}" sizes="(max-width:859px) 100vw, 360px" alt="{{ nextImageAlt }}" style="width:100%;height:100%;" src="{{ nextImageUrl }}" placeholder="contenido relacionado"></image-slot>
       </div>
       <div>
         <div style="font-size:14px;color:#000;font-weight:400;">{{ nextTitle }}</div>
@@ -194,6 +194,8 @@ class Component extends DCLogic {
       downloadLabel: resource.downloadLabel || 'Descargar gratis',
       nextHref: related.id ? `/aprende/${relationType === 'taller' ? 'taller' : 'curso'}?id=${encodeURIComponent(related.id)}` : '/aprende?tab=Cursos',
       nextImageUrl: related.imageUrl || '',
+      nextImageSrcset: (related.imageMeta && related.imageMeta.imageUrl && related.imageMeta.imageUrl.srcset) || '',
+      nextImageAlt: (related.imageAlts && related.imageAlts.imageUrl) || related.name || 'Contenido relacionado de Aprende',
       nextTitle: related.name ? `${relationType === 'taller' ? 'Taller' : 'Curso'}: ${related.name}` : 'Explora los cursos y talleres',
       nextDescription: related.desc || related.summary || 'Sigue aprendiendo con el contenido disponible en Aprende.',
     };

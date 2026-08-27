@@ -62,7 +62,7 @@
         <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
           <sc-for list="{{ thumbs }}" as="t" hint-placeholder-count="4">
             <div onClick="{{ t.onClick }}" style="aspect-ratio:1;border-radius:8px;background:#F3EEE4;overflow:hidden;cursor:pointer;box-shadow:{{ t.ring }};">
-              <image-slot id="{{ t.id }}" shape="rect" fit="cover" view-scale="{{ t.view.scale }}" view-x="{{ t.view.x }}" view-y="{{ t.view.y }}" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
+              <image-slot id="{{ t.id }}" shape="rect" fit="cover" srcset="{{ t.srcset }}" sizes="88px" alt="{{ t.alt }}" view-scale="{{ t.view.scale }}" view-x="{{ t.view.x }}" view-y="{{ t.view.y }}" style="width:100%;height:100%;" src="{{ t.src }}" placeholder="{{ t.placeholder }}"></image-slot>
             </div>
           </sc-for>
         </div>
@@ -154,7 +154,7 @@
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
         <div style="min-width:0;">
           <a href="{{ p.detailHref }}" style="display:block;aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;text-decoration:none;">
-            <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
+            <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" srcset="{{ p.imageSrcset }}" sizes="(max-width:859px) 50vw, 300px" alt="{{ p.imageAlt }}" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
           </a>
           <a href="{{ p.detailHref }}" style="display:block;font-size:14px;font-weight:400;color:#000000;text-decoration:none;">{{ p.name }}</a>
           <div style="font-size:13px;font-weight:500;color:#F65091;margin-top:4px;">{{ p.price }}</div>
@@ -287,7 +287,7 @@ class Component extends DCLogic {
     const gallery = Array.isArray(product.gallery) ? product.gallery.filter(Boolean).map((entry, index) => typeof entry === 'string' ? { id: `gallery-${index}`, url: entry, adjustment: null } : { ...entry, id: entry.id || `gallery-${index}` }) : [];
     const imageView = (item) => { const a = (item && item.imageAdjustments && item.imageAdjustments.imageUrl) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
     const relatedPool = (this.state.allProducts || []).filter(x => String(x.id) !== String(product.id));
-    const relatedLive = [...relatedPool.filter(x => x.subcategory && x.subcategory === product.subcategory), ...relatedPool.filter(x => x.subcategory !== product.subcategory && x.category === product.category), ...relatedPool.filter(x => x.category !== product.category)].slice(0,4).map((item) => ({ ...item, detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) }));
+    const relatedLive = [...relatedPool.filter(x => x.subcategory && x.subcategory === product.subcategory), ...relatedPool.filter(x => x.subcategory !== product.subcategory && x.category === product.category), ...relatedPool.filter(x => x.category !== product.category)].slice(0,4).map((item) => ({ ...item, imageSrcset: (item.imageMeta && item.imageMeta.imageUrl && item.imageMeta.imageUrl.srcset) || '', imageAlt: (item.imageAlts && item.imageAlts.imageUrl) || item.name || 'Producto artesanal', detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) }));
     const colorsSource = Array.isArray(product.colors) ? product.colors : this.COLORS;
     const colors = colorsSource.map(c => ({
       ...c,
@@ -310,7 +310,7 @@ class Component extends DCLogic {
     }));
     const selectedGallery = gallery.find((entry) => entry.id === this.state.gallerySelection) || null;
     const galleryView = (entry) => { const a = (entry && entry.adjustment) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
-    const thumbs = gallery.map((entry, i) => ({ id: `pd-thumb-${entry.id || i}`, src: entry.url || '', view: galleryView(entry), ring: selectedGallery && selectedGallery.id === entry.id ? '0 0 0 2px #F65091' : 'none', onClick: () => this.setState({ gallerySelection: selectedGallery && selectedGallery.id === entry.id ? null : entry.id }), placeholder: `vista ${i+1} de ${product.name}` }));
+    const thumbs = gallery.map((entry, i) => ({ id: `pd-thumb-${entry.id || i}`, src: entry.url || '', srcset: entry.srcset || '', alt: entry.alt || `${product.name}, vista ${i + 1}`, view: galleryView(entry), ring: selectedGallery && selectedGallery.id === entry.id ? '0 0 0 2px #F65091' : 'none', onClick: () => this.setState({ gallerySelection: selectedGallery && selectedGallery.id === entry.id ? null : entry.id }), placeholder: `vista ${i+1} de ${product.name}` }));
     return {
       navGap: m ? '64px' : '88px',
       mainAspect: m ? '1 / 1' : '4 / 5',
@@ -344,7 +344,7 @@ class Component extends DCLogic {
       excludes: Array.isArray(product.excludes) ? product.excludes.filter(Boolean) : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),
       shippingText: product.shipping || 'Envío a todo el país',
-      related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) })),
+      related: relatedLive.length ? relatedLive : this.RELATED.map((item) => ({ ...item, imageSrcset: '', imageAlt: item.name || 'Producto relacionado', detailHref: `/tienda/producto?id=${encodeURIComponent(item.id)}`, imageView: imageView(item) })),
       faqs,
     };
   }

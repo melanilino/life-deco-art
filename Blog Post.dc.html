@@ -109,7 +109,7 @@ x-dc{display:none!important}
 
   <a href="/sobre-mi" style="display:flex;align-items:center;gap:14px;margin-top:32px;padding:20px;background:#F9F6EF;border-radius:8px;text-decoration:none;">
     <div style="width:48px;height:48px;border-radius:50%;overflow:hidden;flex-shrink:0;background:#F3EEE4;">
-      <image-slot id="blog-post-author" shape="circle" fit="cover" view-scale="{{ post.authorView.scale }}" view-x="{{ post.authorView.x }}" view-y="{{ post.authorView.y }}" style="width:100%;height:100%;" src="{{ post.authorPhoto }}" placeholder="foto"></image-slot>
+      <image-slot id="blog-post-author" shape="circle" fit="cover" srcset="{{ post.authorSrcset }}" sizes="72px" alt="{{ post.authorAlt }}" view-scale="{{ post.authorView.scale }}" view-x="{{ post.authorView.x }}" view-y="{{ post.authorView.y }}" style="width:100%;height:100%;" src="{{ post.authorPhoto }}" placeholder="foto"></image-slot>
     </div>
     <div>
       <div style="font-size:14px;font-weight:500;color:#000;">{{ post.authorName }}</div>
@@ -124,7 +124,7 @@ x-dc{display:none!important}
       <sc-for list="{{ related }}" as="r" hint-placeholder-count="2">
       <a href="{{ r.href }}" style="text-decoration:none;display:block;">
         <div style="width:100%;aspect-ratio:16/10;background:#F3EEE4;border-radius:8px;margin-bottom:12px;overflow:hidden;">
-          <image-slot id="related-post-{{ r.id }}" shape="rect" fit="cover" view-scale="{{ r.imageView.scale }}" view-x="{{ r.imageView.x }}" view-y="{{ r.imageView.y }}" style="width:100%;height:100%;" src="{{ r.imageUrl }}" placeholder="foto"></image-slot>
+          <image-slot id="related-post-{{ r.id }}" shape="rect" fit="cover" srcset="{{ r.imageSrcset }}" sizes="(max-width:859px) 100vw, 360px" alt="{{ r.imageAlt }}" view-scale="{{ r.imageView.scale }}" view-x="{{ r.imageView.x }}" view-y="{{ r.imageView.y }}" style="width:100%;height:100%;" src="{{ r.imageUrl }}" placeholder="foto"></image-slot>
         </div>
         <div style="font-size:12px;color:#0CC0DF;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ r.category }}</div>
         <div style="font-size:15px;color:#000;font-weight:400;line-height:1.4;">{{ r.title }}</div>
@@ -253,12 +253,14 @@ class Component extends DCLogic {
       imageSrcset: (found.imageMeta && found.imageMeta.imageUrl && found.imageMeta.imageUrl.srcset) || '',
       imageAlt: (found.imageAlts && found.imageAlts.imageUrl) || found.title || 'Artículo del blog',
       imageView: imageView(found),
+      authorSrcset: (found.imageMeta && found.imageMeta.authorPhoto && found.imageMeta.authorPhoto.srcset) || '',
+      authorAlt: (found.imageAlts && found.imageAlts.authorPhoto) || (found.authorName ? `Retrato de ${found.authorName}` : 'Autora del artículo'),
       authorView: imageView(found, 'authorPhoto'),
     };
     this.setDocumentMeta(post);
 
     const related = posts.filter(p => p.id !== found.id).slice(0, 2).map(r => ({
-      ...r, imageView: imageView(r), noImage: !r.imageUrl, href: `/blog?id=${r.id}`,
+      ...r, imageSrcset: (r.imageMeta && r.imageMeta.imageUrl && r.imageMeta.imageUrl.srcset) || '', imageAlt: (r.imageAlts && r.imageAlts.imageUrl) || r.title || 'Artículo relacionado', imageView: imageView(r), noImage: !r.imageUrl, href: `/blog?id=${r.id}`,
     }));
 
     const url = encodeURIComponent(window.location.href);
