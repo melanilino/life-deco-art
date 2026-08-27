@@ -56,7 +56,7 @@
 
     <div>
       <div style="aspect-ratio:{{ mainAspect }};max-height:{{ mainMaxHeight }};border-radius:10px;background:#F3EEE4;overflow:hidden;margin-bottom:{{ mainImageGap }};">
-        <image-slot id="pd-main" shape="rect" fit="cover" view-scale="{{ mainImageView.scale }}" view-x="{{ mainImageView.x }}" view-y="{{ mainImageView.y }}" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal del producto"></image-slot>
+        <image-slot id="pd-main" shape="rect" fit="cover" priority="high" srcset="{{ mainSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ mainAlt }}" view-scale="{{ mainImageView.scale }}" view-x="{{ mainImageView.x }}" view-y="{{ mainImageView.y }}" style="width:100%;height:100%;" src="{{ mainImage }}" placeholder="foto principal del producto"></image-slot>
       </div>
       <sc-if value="{{ hasThumbs }}" hint-placeholder-val="{{ false }}">
         <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:{{ thumbGap }};">
@@ -339,7 +339,7 @@ class Component extends DCLogic {
       productReady: this.state.productReady,
       isMobile: m,
       productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '', productDelivery: product.delivery || '',
-      mainImage: selectedGallery ? selectedGallery.url : (product.imageUrl || ''), mainImageView: selectedGallery ? galleryView(selectedGallery) : imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes, hasColors: colors.length > 0, hasSizes: sizes.length > 0, colorDisplay: colors.length ? 'block' : 'none', sizeDisplay: sizes.length ? 'block' : 'none',
+      mainImage: selectedGallery ? selectedGallery.url : (product.imageUrl || ''), mainSrcset: selectedGallery ? (selectedGallery.srcset || '') : ((product.imageMeta && product.imageMeta.imageUrl && product.imageMeta.imageUrl.srcset) || ''), mainAlt: selectedGallery ? (selectedGallery.alt || product.name || 'Producto') : ((product.imageAlts && product.imageAlts.imageUrl) || product.name || 'Producto'), mainImageView: selectedGallery ? galleryView(selectedGallery) : imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes, hasColors: colors.length > 0, hasSizes: sizes.length > 0, colorDisplay: colors.length ? 'block' : 'none', sizeDisplay: sizes.length ? 'block' : 'none',
       includes: Array.isArray(product.includes) ? product.includes.filter(Boolean) : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
       excludes: Array.isArray(product.excludes) ? product.excludes.filter(Boolean) : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],
       whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Me interesa ${product.name} (${product.price}).`),

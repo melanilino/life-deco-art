@@ -428,7 +428,7 @@
 
   class ImageSlot extends HTMLElement {
     static get observedAttributes() {
-      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'id', 'credit', 'credit-href', 'view-scale', 'view-x', 'view-y', 'frame-editor'];
+      return ['shape', 'radius', 'mask', 'fit', 'placeholder', 'src', 'srcset', 'sizes', 'alt', 'priority', 'id', 'credit', 'credit-href', 'view-scale', 'view-x', 'view-y', 'frame-editor'];
     }
 
     /** Duplicate-slide hook (called by deck-stage, see its
@@ -1093,6 +1093,15 @@
       if (/^\{\{.*\}\}$/.test(srcAttr.trim())) srcAttr = '';
       this._userUrl = (stored && stored.u) || null;
       const url = this._userUrl || srcAttr;
+      const alt = this.getAttribute('alt') || this.getAttribute('placeholder') || '';
+      const priority = (this.getAttribute('priority') || '').toLowerCase() === 'high';
+      const srcset = this.getAttribute('srcset') || '';
+      const sizes = this.getAttribute('sizes') || '';
+      this._img.alt = alt;
+      this._img.loading = priority ? 'eager' : 'lazy';
+      this._img.fetchPriority = priority ? 'high' : 'auto';
+      if (srcset) this._img.setAttribute('srcset', srcset); else this._img.removeAttribute('srcset');
+      if (sizes) this._img.setAttribute('sizes', sizes); else this._img.removeAttribute('sizes');
       // Don't clobber an in-flight reframe with a store-triggered re-render.
       if (!this.hasAttribute('data-reframe')) {
         const scaleAttr = parseFloat(this.getAttribute('view-scale'));

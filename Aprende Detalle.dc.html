@@ -41,7 +41,7 @@
 
   <div style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};">
     <div style="aspect-ratio:{{ heroRatio }};border-radius:14px;background:#F3EEE4;overflow:hidden;">
-      <image-slot id="ap-hero" shape="rect" fit="cover" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImage }}" placeholder="{{ heroPlaceholder }}"></image-slot>
+      <image-slot id="ap-hero" shape="rect" fit="cover" priority="high" srcset="{{ heroSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ heroAlt }}" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImage }}" placeholder="{{ heroPlaceholder }}"></image-slot>
     </div>
   </div>
 
@@ -393,6 +393,8 @@ class Component extends DCLogic {
       isTaller: type === 'taller', isCurso: type === 'curso',
       whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
       ...d, faqs,
+      heroSrcset: (d.imageMeta && d.imageMeta.imageUrl && d.imageMeta.imageUrl.srcset) || '',
+      heroAlt: (d.imageAlts && d.imageAlts.imageUrl) || d.title || (type === 'taller' ? 'Taller de lettering' : 'Curso de lettering'),
     };
   }
 }

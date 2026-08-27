@@ -42,7 +42,7 @@
 
     <div>
       <div style="position:relative;aspect-ratio:3/4;border-radius:14px;background:#F3EEE4;overflow:hidden;">
-        <image-slot id="{{ activeGalleryImage.id }}" shape="rect" fit="cover" view-scale="{{ activeGalleryImage.viewScale }}" view-x="{{ activeGalleryImage.viewX }}" view-y="{{ activeGalleryImage.viewY }}" style="width:100%;height:100%;" src="{{ activeGalleryImage.url }}" placeholder="{{ activeGalleryImage.placeholder }}"></image-slot>
+        <image-slot id="{{ activeGalleryImage.id }}" shape="rect" fit="cover" priority="high" srcset="{{ activeGalleryImage.srcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ activeGalleryImage.alt }}" view-scale="{{ activeGalleryImage.viewScale }}" view-x="{{ activeGalleryImage.viewX }}" view-y="{{ activeGalleryImage.viewY }}" style="width:100%;height:100%;" src="{{ activeGalleryImage.url }}" placeholder="{{ activeGalleryImage.placeholder }}"></image-slot>
         <sc-if value="{{ showGalleryNavigation }}" hint-placeholder-val="{{ true }}">
           <button type="button" onClick="{{ onPreviousGallery }}" aria-label="Imagen anterior" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;background:transparent;color:#5C5142;font-size:25px;line-height:1;cursor:pointer;">‹</button>
           <button type="button" onClick="{{ onNextGallery }}" aria-label="Imagen siguiente" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:0;background:transparent;color:#5C5142;font-size:25px;line-height:1;cursor:pointer;">›</button>
@@ -163,7 +163,8 @@ class Component extends DCLogic {
     const savedGallery = Array.isArray(resource.gallery) ? resource.gallery : legacyGallery;
     const gallery = (savedGallery.length ? savedGallery : [0, 1, 2, 3].map((index) => ({ id: 'gallery-placeholder-' + index }))).map((entry, index) => {
       const item = typeof entry === 'string' ? { url: entry } : entry, view = item.adjustment || {};
-      return { ...item, id: item.id || ('rc-gallery-' + index), placeholder: index === 0 ? 'portada del recurso' : 'página ' + (index + 1) + ' del recurso', viewScale: Number(view.scale || view.zoom / 100) || 1, viewX: Number(view.x) || 0, viewY: Number(view.y) || 0 };
+      const legacyMeta = index === 0 && resource.imageMeta && resource.imageMeta.imageUrl;
+      return { ...item, srcset: item.srcset || (legacyMeta && legacyMeta.srcset) || '', alt: item.alt || (index === 0 && resource.imageAlts && resource.imageAlts.imageUrl) || resource.title || 'Recurso descargable', id: item.id || ('rc-gallery-' + index), placeholder: index === 0 ? 'portada del recurso' : 'página ' + (index + 1) + ' del recurso', viewScale: Number(view.scale || view.zoom / 100) || 1, viewX: Number(view.x) || 0, viewY: Number(view.y) || 0 };
     });
     const galleryIndex = Math.min(this.state.galleryIndex, gallery.length - 1);
     const activeGalleryImage = gallery[galleryIndex];

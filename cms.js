@@ -101,7 +101,7 @@ export async function optimizeImage(file, options = {}) {
   if (file.size > IMAGE_HARD_LIMIT) throw new Error('La imagen supera 30 MB. Reduce el archivo antes de subirlo.');
   if (file.type === 'image/svg+xml' || file.type === 'image/gif') return file;
 
-  const maxEdge = Math.max(600, Number(options.maxEdge || IMAGE_MAX_EDGE));
+  const maxEdge = Math.max(320, Number(options.maxEdge || IMAGE_MAX_EDGE));
   const quality = Math.min(0.95, Math.max(0.78, Number(options.quality || IMAGE_QUALITY)));
   let bitmap;
   try {
@@ -230,12 +230,69 @@ async function uploadPrepared(pathPrefix, file, metadata = {}) {
   return await getDownloadURL(r);
 }
 
+async function imageFileInfo(file) {
+  let bitmap;
+  try {
+    bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  } catch (_) {
+    bitmap = await createImageBitmap(file);
+  }
+  const info = { width: bitmap.width, height: bitmap.height, bytes: file.size, type: file.type || '' };
+  if (bitmap.close) bitmap.close();
+  return info;
+}
+
+export async function uploadResponsiveImage(pathPrefix, file, options = {}) {
+  if (!file || !file.type || !file.type.startsWith('image/')) {
+    throw new Error('Selecciona un archivo de imagen válido.');
+  }
+  const original = await imageFileInfo(file);
+  const maxEdge = Math.max(600, Number(options.maxEdge || IMAGE_MAX_EDGE));
+  const requested = Array.isArray(options.variantEdges) && options.variantEdges.length
+    ? options.variantEdges
+    : [480, 960, maxEdge];
+  const edges = [...new Set(requested.map(Number).filter(Number.isFinite).map((edge) => Math.max(320, Math.min(maxEdge, edge))))].sort((a, b) => a - b);
+  if (!edges.includes(maxEdge)) edges.push(maxEdge);
+
+  const uploaded = [];
+  for (const edge of edges) {
+    const prepared = await optimizeImage(file, { ...options, maxEdge: edge });
+    const info = await imageFileInfo(prepared);
+    if (uploaded.some((entry) => entry.width === info.width)) continue;
+    const url = await uploadPrepared(pathPrefix, prepared, {
+      cacheControl: 'public,max-age=31536000,immutable',
+      customMetadata: {
+        optimizedBy: 'life-deco-art-cms',
+        originalWidth: String(original.width),
+        originalHeight: String(original.height),
+      },
+    });
+    uploaded.push({ url, width: info.width, height: info.height, bytes: info.bytes, type: info.type });
+  }
+  uploaded.sort((a, b) => a.width - b.width);
+  const primary = uploaded[uploaded.length - 1];
+  return {
+    url: primary.url,
+    srcset: uploaded.map((entry) => `${entry.url} ${entry.width}w`).join(', '),
+    variants: uploaded,
+    width: primary.width,
+    height: primary.height,
+    bytes: primary.bytes,
+    originalBytes: original.bytes,
+    originalWidth: original.width,
+    originalHeight: original.height,
+    format: primary.type || 'image/webp',
+  };
+}
+
 // Compatibilidad: las llamadas existentes a uploadImage ahora optimizan automáticamente.
 export async function uploadImage(pathPrefix, file, options = {}) {
   let prepared = file;
   if (file && file.type && file.type.startsWith('image/')) prepared = await optimizeImage(file, options);
   else if (file && file.type && file.type.startsWith('video/')) prepared = await optimizeHeroVideo(file, options);
-  return uploadPrepared(pathPrefix, prepared);
+  return uploadPrepared(pathPrefix, prepared, file && file.type && file.type.startsWith('image/')
+    ? { cacheControl: 'public,max-age=31536000,immutable' }
+    : {});
 }
 
 export async function uploadFile(pathPrefix, file) {

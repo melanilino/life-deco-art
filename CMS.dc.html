@@ -94,6 +94,9 @@ x-dc{display:none!important}
     <sc-if value="{{ hasLoadError }}" hint-placeholder-val="{{ false }}">
       <div style="background:#FDECEC;color:#C0392B;border-radius:6px;padding:14px 18px;font-size:13px;margin-bottom:8px;">{{ error }}</div>
     </sc-if>
+    <sc-if value="{{ hasImageNotice }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#EEF9F2;color:#2E6B43;border:1px solid #CDE8D6;border-radius:6px;padding:12px 16px;font-size:12px;line-height:1.5;margin-bottom:12px;">{{ imageNotice }}</div>
+    </sc-if>
 
     <sc-if value="{{ isConfigPage }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Identidad</div>
@@ -387,6 +390,7 @@ x-dc{display:none!important}
                 <div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:{{ photo.maxWidth }};">
                   <div style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="imagen de galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div>
                   <div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span style="font-size:11px;color:#8B795E;">{{ photo.position }}</span><span onClick="{{ photo.onRemove }}" title="Eliminar imagen" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div>
+                  <input type="text" value="{{ photo.alt }}" onChange="{{ photo.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de la imagen" style="width:100%;box-sizing:border-box;margin-top:6px;padding:7px 8px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
                   <sc-if value="{{ photo.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                 </div>
               </sc-for>
@@ -535,7 +539,7 @@ x-dc{display:none!important}
                       </div>
                     </sc-if>
                     <sc-if value="{{ f.isImageCollection }}" hint-placeholder-val="{{ false }}">
-                      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;"><sc-for list="{{ f.items }}" as="photo" hint-placeholder-count="3"><div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:150px;"><div style="position:relative;width:100%;aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="imagen de la galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span onClick="{{ photo.onRemove }}" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div></div></sc-for></div>
+                      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;"><sc-for list="{{ f.items }}" as="photo" hint-placeholder-count="3"><div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:150px;"><div style="position:relative;width:100%;aspect-ratio:{{ f.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" alt="{{ photo.alt }}" placeholder="imagen de la galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span onClick="{{ photo.onRemove }}" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div><input type="text" value="{{ photo.alt }}" onChange="{{ photo.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de la imagen" style="width:100%;box-sizing:border-box;margin-top:6px;padding:7px 8px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;"></div></sc-for></div>
                       <label style="display:inline-flex;align-items:center;height:38px;box-sizing:border-box;padding:0 14px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:12px;font-family:Montserrat;cursor:pointer;">Subir<input type="file" accept="image/*" onChange="{{ f.onUpload }}" style="display:none;"></label><sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                     </sc-if>
                     <sc-if value="{{ f.isImage }}" hint-placeholder-val="{{ false }}">
@@ -548,6 +552,7 @@ x-dc{display:none!important}
                         <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                         <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                       </div>
+                      <input type="text" value="{{ f.altValue }}" onChange="{{ f.onAltChange }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía" style="width:100%;max-width:420px;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
                       <sc-if value="{{ f.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                     </sc-if>
                     <sc-if value="{{ f.isFile }}" hint-placeholder-val="{{ false }}">
@@ -638,7 +643,7 @@ class Component extends DCLogic {
     tiendaData: null, tiendaLoaded: false,
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales', aprendeSectionOpen: false,
     sobremiData: null, sobremiLoaded: false,
-    uploading: null, expanded: {},
+    uploading: null, imageNotice: '', expanded: {},
     configData: null, configLoaded: false, configLoading: false,
     contactData: null, contactLoaded: false, contactLoading: false,
     inicioProductOptions: [],
@@ -1244,15 +1249,42 @@ class Component extends DCLogic {
     catch(e){this.setState({error:'No se pudo eliminar la imagen.'});}
   }
 
-  handleImageUpload(listKey, id, key, file) {
+  compactImageMeta(result) {
+    return result ? {
+      srcset: result.srcset || '', width: result.width || 0, height: result.height || 0,
+      bytes: result.bytes || 0, originalBytes: result.originalBytes || 0,
+      originalWidth: result.originalWidth || 0, originalHeight: result.originalHeight || 0,
+      format: result.format || 'image/webp'
+    } : null;
+  }
+  formatFileSize(bytes) {
+    const value = Number(bytes || 0);
+    if (value < 1024) return value + ' B';
+    if (value < 1024 * 1024) return Math.round(value / 1024) + ' KB';
+    return (value / (1024 * 1024)).toFixed(1) + ' MB';
+  }
+  async uploadOptimizedImage(path, file, options = {}) {
+    if (!file) throw new Error('Selecciona una imagen.');
+    const result = await this.state.cms.uploadResponsiveImage(path, file, options);
+    const reduction = result.originalBytes > 0 ? Math.max(0, Math.round((1 - result.bytes / result.originalBytes) * 100)) : 0;
+    const variants = String(result.srcset || '').split(',').filter(Boolean).length;
+    this.setState({
+      imageNotice: `Imagen optimizada: ${result.originalWidth} × ${result.originalHeight} px y ${this.formatFileSize(result.originalBytes)} → ${result.width} × ${result.height} px y ${this.formatFileSize(result.bytes)}. ${variants} tamaños adaptables${reduction ? `, ${reduction}% menos de peso` : ''}.`,
+      error: ''
+    });
+    return result;
+  }
+
+  async handleImageUpload(listKey, id, key, file) {
     if (!file) return;
     const uploadingKey = listKey + id + key;
     this.setState({ uploading: uploadingKey });
-    this.state.cms.uploadImage('content-images/' + listKey, file).then((url) => {
-      const arr = this.getListArray(listKey).map((item) => { if (item.id !== id) return item; const imageAdjustments = { ...(item.imageAdjustments || {}) }; delete imageAdjustments[key]; return { ...item, [key]: url, imageAdjustments }; });
+    try {
+      const result = await this.uploadOptimizedImage('content-images/' + listKey, file);
+      const arr = this.getListArray(listKey).map((item) => { if (item.id !== id) return item; const imageAdjustments = { ...(item.imageAdjustments || {}) }; delete imageAdjustments[key]; return { ...item, [key]: result.url, imageMeta: { ...(item.imageMeta || {}), [key]: this.compactImageMeta(result) }, imageAdjustments }; });
       this.setListArray(listKey, arr);
       this.setState({ uploading: null });
-    }).catch(() => { this.setState({ uploading: null }); });
+    } catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
 
   handleFileUpload(listKey, id, key, file) {
@@ -1265,37 +1297,36 @@ class Component extends DCLogic {
     }).catch(() => { this.setState({ uploading: null }); });
   }
 
-  handleTiendaBannerUpload(file) {
+  async handleTiendaBannerUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'tiendaBanner' });
-    this.state.cms.uploadImage('content-files/tienda', file).then((url) => {
-      this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageUrl: url, bannerImageAdjustment: null }, uploading: null, saved: false });
-    }).catch(() => this.setState({ uploading: null }));
+    try { const result = await this.uploadOptimizedImage('content-files/tienda', file); this.setState({ tiendaData: { ...this.state.tiendaData, bannerImageUrl: result.url, bannerImageMeta: this.compactImageMeta(result), bannerImageAdjustment: null }, uploading: null, saved: false }); }
+    catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
-  handleAprendeBannerUpload(file) {
+  async handleAprendeBannerUpload(file) {
     if (!file) return;
     const tab = this.state.aprendeTab;
     this.setState({ uploading: 'aprendeBanner' + tab });
-    this.state.cms.uploadImage('content-files/aprende', file).then((url) => {
+    try { const result = await this.uploadOptimizedImage('content-files/aprende', file);
       const bannerImageAdjustments={...((this.state.aprendeData&&this.state.aprendeData.bannerImageAdjustments)||{})};delete bannerImageAdjustments[tab];
-      this.setState({ aprendeData: { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: url }, bannerImageAdjustments }, uploading: null, saved: false });
-    }).catch(() => this.setState({ uploading: null }));
+      this.setState({ aprendeData: { ...this.state.aprendeData, banners: { ...(this.state.aprendeData.banners || {}), [tab]: result.url }, bannerImageMeta: { ...(this.state.aprendeData.bannerImageMeta || {}), [tab]: this.compactImageMeta(result) }, bannerImageAdjustments }, uploading: null, saved: false });
+    } catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
-  handleSobremiFeaturedUpload(file) {
+  async handleSobremiFeaturedUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'sobremiFeatured' });
-    this.state.cms.uploadImage('content-files/sobremi', file).then((url) => {
+    try { const result = await this.uploadOptimizedImage('content-files/sobremi', file);
       const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments.featuredImageUrl;
-      this.setState({ sobremiData: { ...this.state.sobremiData, featuredImageUrl: url, imageAdjustments }, uploading: null, saved: false });
-    }).catch(() => this.setState({ uploading: null }));
+      this.setState({ sobremiData: { ...this.state.sobremiData, featuredImageUrl: result.url, imageMeta: { ...(this.state.sobremiData.imageMeta || {}), featuredImageUrl: this.compactImageMeta(result) }, imageAdjustments }, uploading: null, saved: false });
+    } catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
-  handleSobremiHeroUpload(file) {
+  async handleSobremiHeroUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'sobremiHero' });
-    this.state.cms.uploadImage('content-files/sobremi', file).then((url) => {
+    try { const result = await this.uploadOptimizedImage('content-files/sobremi', file);
       const imageAdjustments={...((this.state.sobremiData&&this.state.sobremiData.imageAdjustments)||{})};delete imageAdjustments.heroImageUrl;
-      this.setState({ sobremiData: { ...this.state.sobremiData, heroImageUrl: url, imageAdjustments }, uploading: null, saved: false });
-    }).catch(() => this.setState({ uploading: null }));
+      this.setState({ sobremiData: { ...this.state.sobremiData, heroImageUrl: result.url, imageMeta: { ...(this.state.sobremiData.imageMeta || {}), heroImageUrl: this.compactImageMeta(result) }, imageAdjustments }, uploading: null, saved: false });
+    } catch (error) { this.setState({ uploading: null, error: error.message || 'No se pudo optimizar la imagen.' }); }
   }
   handleHeroVideoUpload(file) {
     if (!file) return;
@@ -1322,14 +1353,16 @@ class Component extends DCLogic {
   ];
   INICIO_WORKSHOP_GROUP = { label: 'Taller destacado', aspect: '4/3', fields: [{ key: 'cursoSpotlightUrl', label: 'Taller destacado' }] };
   INICIO_PHOTO_FIELDS = [].concat(...this.INICIO_PHOTO_GROUPS.map(g => g.fields), this.INICIO_WORKSHOP_GROUP.fields);
-  handleInicioPhotoUpload(key, file) {
+  async handleInicioPhotoUpload(key, file) {
     if (!file) return;
     this.setState({ uploading: 'inicioPhoto_' + key });
-    this.state.cms.uploadImage('content-files/inicio', file).then((url) => {
+    try {
+      const result = await this.uploadOptimizedImage('content-files/inicio', file);
       const adjustments = { ...((this.state.content && this.state.content.imageAdjustments) || {}) };
+      const imageMeta = { ...((this.state.content && this.state.content.imageMeta) || {}), [key]: this.compactImageMeta(result) };
       delete adjustments[key];
-      this.setState({ content: { ...this.state.content, [key]: url, imageAdjustments: adjustments }, uploading: null, saved: false });
-    }).catch(() => { this.setState({ uploading: null }); });
+      this.setState({ content: { ...this.state.content, [key]: result.url, imageMeta, imageAdjustments: adjustments }, uploading: null, saved: false });
+    } catch (_) { this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }); }
   }
   normalizeImageAdjustment(value) {
     const detail = value || {};
@@ -1490,15 +1523,16 @@ class Component extends DCLogic {
   normalizeGallery(product) {
     return ((product && product.gallery) || []).filter(Boolean).map((entry, index) => typeof entry === 'string' ? { id: 'gallery' + index, url: entry, adjustment: null } : { ...entry, id: entry.id || ('gallery' + index) });
   }
-  uploadProductGallery(productId, file) {
+  async uploadProductGallery(productId, file) {
     if (!file) return;
     this.setState({ uploading: 'gallery:' + productId });
-    this.state.cms.uploadImage('content-images/products', file).then((url) => {
+    try {
+      const result = await this.uploadOptimizedImage('content-images/products', file);
       const product = this.state.tiendaData.products.find((p) => p.id === productId);
-      const gallery = [...this.normalizeGallery(product), { id: 'gallery' + Date.now(), url, adjustment: null }];
+      const gallery = [...this.normalizeGallery(product), { id: 'gallery' + Date.now(), url: result.url, alt: '', adjustment: null, ...this.compactImageMeta(result) }];
       this.updateProductCollection(productId, 'gallery', gallery);
       this.setState({ uploading: null });
-    }).catch(() => this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }));
+    } catch (_) { this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }); }
   }
   moveProductGallery(productId, galleryId, direction) {
     const product = this.state.tiendaData.products.find((p) => p.id === productId), gallery = this.normalizeGallery(product);
@@ -1522,6 +1556,10 @@ class Component extends DCLogic {
       this.updateProductCollection(productId, 'gallery', gallery);
     });
   }
+  updateProductGalleryEntry(productId, galleryId, key, value) {
+    const product = this.state.tiendaData.products.find((p) => p.id === productId);
+    this.updateProductCollection(productId, 'gallery', this.normalizeGallery(product).map((entry) => entry.id === galleryId ? { ...entry, [key]: value } : entry));
+  }
 
   updateItemCollectionEntry(listKey, itemId, fieldKey, entryId, key, value) {
     const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
@@ -1541,14 +1579,15 @@ class Component extends DCLogic {
     const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || [])];
     this.updateItem(listKey, itemId, fieldKey, this.orderByIds(entries, orderedIds, (entry, index) => entry.id || (fieldKey + index)));
   }
-  uploadItemCollectionImage(listKey, itemId, fieldKey, file) {
+  async uploadItemCollectionImage(listKey, itemId, fieldKey, file) {
     if (!file) return;
     const uploadKey = listKey + ':' + itemId + ':' + fieldKey;
     this.setState({ uploading: uploadKey });
-    this.state.cms.uploadImage('content-images/' + listKey, file).then((url) => {
-      const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || []), { id: fieldKey + Date.now(), url, adjustment: null }];
+    try {
+      const result = await this.uploadOptimizedImage('content-images/' + listKey, file);
+      const item = this.getListArray(listKey).find((entry) => entry.id === itemId), entries = [...((item && item[fieldKey]) || []), { id: fieldKey + Date.now(), url: result.url, alt: '', adjustment: null, ...this.compactImageMeta(result) }];
       this.updateItem(listKey, itemId, fieldKey, entries); this.setState({ uploading: null });
-    }).catch(() => this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }));
+    } catch (_) { this.setState({ uploading: null, error: 'No se pudo subir la imagen.' }); }
   }
   openItemCollectionImageEditor(listKey, itemId, fieldKey, entryId, slotId) {
     this.openFrameEditor(listKey + ':' + itemId + ':' + fieldKey + ':' + entryId, slotId, (adjustment) => {
@@ -1596,7 +1635,7 @@ class Component extends DCLogic {
       }
       if (d.type === 'imageCollection') {
         const entries = Array.isArray(item[d.key]) ? item[d.key] : [], dragGroup = listKey + ':' + item.id + ':' + d.key;
-        return { key: d.key, label: d.label, aspect: d.aspect || '1', isImageCollection: true, uploading: this.state.uploading === dragGroup, onUpload: (e) => this.uploadItemCollectionImage(listKey, item.id, d.key, e.target.files[0]), items: entries.map((entry, index) => { const normalized = typeof entry === 'string' ? { id: d.key + index, url: entry } : entry, entryId = normalized.id || (d.key + index), adjustment = this.normalizeImageAdjustment(normalized.adjustment), slotId = 'cms-' + listKey + '-' + item.id + '-' + d.key + '-' + entryId; return { ...normalized, id: entryId, slotId, dragGroup, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, onAdjust: () => this.openItemCollectionImageEditor(listKey, item.id, d.key, entryId, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entryId, e, (ids) => this.commitItemCollectionOrder(listKey, item.id, d.key, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeItemCollectionImage(listKey, item.id, d.key, entryId) }; }) };
+        return { key: d.key, label: d.label, aspect: d.aspect || '1', isImageCollection: true, uploading: this.state.uploading === dragGroup, onUpload: (e) => this.uploadItemCollectionImage(listKey, item.id, d.key, e.target.files[0]), items: entries.map((entry, index) => { const normalized = typeof entry === 'string' ? { id: d.key + index, url: entry } : entry, entryId = normalized.id || (d.key + index), adjustment = this.normalizeImageAdjustment(normalized.adjustment), slotId = 'cms-' + listKey + '-' + item.id + '-' + d.key + '-' + entryId; return { ...normalized, alt: normalized.alt || '', id: entryId, slotId, dragGroup, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, onAltChange: (e) => this.updateItemCollectionEntry(listKey, item.id, d.key, entryId, 'alt', e.target.value), onAdjust: () => this.openItemCollectionImageEditor(listKey, item.id, d.key, entryId, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entryId, e, (ids) => this.commitItemCollectionOrder(listKey, item.id, d.key, ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeItemCollectionImage(listKey, item.id, d.key, entryId) }; }) };
       }
       if (d.type === 'relation') {
         const courseOptions = (this.state.aprendeData.cursos || []).filter((entry) => entry.id !== item.id).map((entry) => ({ id: 'curso:' + entry.id, label: 'Curso: ' + (entry.name || 'Sin nombre') }));
@@ -1628,7 +1667,7 @@ class Component extends DCLogic {
         const slotId = 'cms-field-' + listKey + '-' + item.id + '-' + d.key;
         const editorId = listKey + ':' + item.id + ':' + d.key;
         const adjustment = (item.imageAdjustments && item.imageAdjustments[d.key]) || { zoom: 100, x: 0, y: 0 };
-        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: this.state.adjustingImage === editorId, maxWidth: '180px', onAdjust: () => this.openItemFrameEditor(listKey, item.id, d.key, slotId), onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
+        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], altValue: (item.imageAlts && item.imageAlts[d.key]) || '', slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: this.state.adjustingImage === editorId, maxWidth: '180px', onAltChange: (e) => this.updateItem(listKey, item.id, 'imageAlts', { ...(item.imageAlts || {}), [d.key]: e.target.value }), onAdjust: () => this.openItemFrameEditor(listKey, item.id, d.key, slotId), onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
       }
       if (d.type === 'file') {
         const url = item[d.key] || '';
@@ -1726,7 +1765,7 @@ class Component extends DCLogic {
           isSelected, onSelect: () => this.openProductEditor(p.id),
           colors: ((p.colors || []).map((color, index) => { const colorId = color.id || ('color' + index), dragGroup = 'product-colors:' + p.id; return { id: colorId, name: color.name || '', hex: color.hex || '#F3EEE4', dragGroup, onDragStart: (e) => this.beginPointerReorder(dragGroup, colorId, e, (ids) => this.commitProductCollectionOrder(p.id, 'colors', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onNameChange: (e) => this.updateProductColor(p.id, colorId, 'name', e.target.value), onHexChange: (e) => this.updateProductColor(p.id, colorId, 'hex', e.target.value), onRemove: () => this.removeProductColor(p.id, colorId) }; })),
           onAddColor: () => this.addProductColor(p.id),
-          gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment), slotId = 'cms-product-gallery-' + p.id + '-' + entry.id, dragGroup = 'product-gallery:' + p.id; return { ...entry, dragGroup, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: '150px', onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entry.id, e, (ids) => this.commitProductCollectionOrder(p.id, 'gallery', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
+          gallery: gallery.map((entry, index) => { const adjustment = this.normalizeImageAdjustment(entry.adjustment), slotId = 'cms-product-gallery-' + p.id + '-' + entry.id, dragGroup = 'product-gallery:' + p.id; return { ...entry, alt: entry.alt || '', dragGroup, slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: s.adjustingImage === ('gallery:' + p.id + ':' + entry.id), maxWidth: '150px', onAltChange: (e) => this.updateProductGalleryEntry(p.id, entry.id, 'alt', e.target.value), onAdjust: () => this.openProductGalleryFrameEditor(p.id, entry.id, slotId), onDragStart: (e) => this.beginPointerReorder(dragGroup, entry.id, e, (ids) => this.commitProductCollectionOrder(p.id, 'gallery', ids)), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e), onRemove: () => this.removeProductGallery(p.id, entry.id), position: index + 1 }; }),
           galleryPlaceholders: Array.from({ length: Math.max(0, 4 - gallery.length) }, (_, index) => ({ position: gallery.length + index + 1, onUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]) })),
           onGalleryUpload: (e) => this.uploadProductGallery(p.id, e.target.files[0]), galleryUploading: s.uploading === ('gallery:' + p.id),
           colorsDisplay: s.productTab === 'content' ? 'block' : 'none', galleryDisplay: s.productTab === 'gallery' ? 'block' : 'none',
@@ -1836,6 +1875,8 @@ class Component extends DCLogic {
       onEmailChange: (e) => this.setState({ email: e.target.value }),
       onPasswordChange: (e) => this.setState({ password: e.target.value }),
       hasError: !!s.loginError, hasLoadError: !!s.error && s.authChecked, error: s.loginError || s.error,
+      hasImageNotice: !!s.imageNotice, imageNotice: s.imageNotice,
+      hasImageNotice: !!s.imageNotice, imageNotice: s.imageNotice,
       passwordFieldType: s.showPassword ? 'text' : 'password',
       showPasswordLabel: s.showPassword ? 'Ocultar' : 'Mostrar',
       toggleShowPassword: () => this.setState({ showPassword: !s.showPassword }),

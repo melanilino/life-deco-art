@@ -129,7 +129,7 @@ body{margin:0;background:#fff}
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};display:grid;grid-template-columns:{{ heroCols }};gap:48px;align-items:start;opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;position:{{ heroSticky }};top:88px;overflow:hidden;">
-      <image-slot id="sobremi-hero" shape="rect" fit="cover" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImageUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+      <image-slot id="sobremi-hero" shape="rect" fit="cover" priority="high" srcset="{{ heroSrcset }}" sizes="50vw" alt="{{ heroAlt }}" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImageUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
     <div>
       <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Sobre mí</div>
@@ -156,7 +156,7 @@ body{margin:0;background:#fff}
     <p data-cms-text="introText" style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:32px 0 0;">Mis manos nunca aprendieron a estar quietas. De niña dibujaba, reciclaba, transformaba, construía. Aprendí a escribir corrido, luego en molde. Y en algún punto entre todo eso, sin manual ni permiso, empecé a mezclarlo. A hacerlo mío.</p>
     <p data-cms-text="discoveryText" style="font-size:{{ bodySize }};line-height:1.85;color:#8B795E;font-weight:300;margin:24px 0 0;">Mucho después descubrí que eso tenía nombre: lettering. Pero para entonces ya no importaba elegirlo, me había elegido a mí.</p>
     <div style="aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;overflow:hidden;margin:28px 0 0;">
-      <image-slot id="sobremi-hero-m" shape="rect" fit="cover" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImageUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+      <image-slot id="sobremi-hero-m" shape="rect" fit="cover" priority="high" srcset="{{ heroSrcset }}" sizes="100vw" alt="{{ heroAlt }}" view-scale="{{ heroView.scale }}" view-x="{{ heroView.x }}" view-y="{{ heroView.y }}" style="width:100%;height:100%;" src="{{ heroImageUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
     <p data-cms-text="storyText" style="font-size:20px;line-height:1.85;color:#000000;font-weight:300;margin:24px 0 0;">En 2019 le puse nombre a ese llamado. Nació torpe y honesto, como todo lo que empieza desde cero: Life Decoraciones. Con el tiempo, fue encontrando su voz y forma. Hoy, desde el Caribe dominicano, ese proyecto se llama Life Deco Art.</p>
     <div style="display:flex;gap:16px;align-items:flex-start;margin:32px 0 0;">
@@ -285,6 +285,8 @@ class Component extends DCLogic {
     return {
       featuredImageUrl,
       heroImageUrl,
+      heroSrcset: (this.state.content && this.state.content.imageMeta && this.state.content.imageMeta.heroImageUrl && this.state.content.imageMeta.heroImageUrl.srcset) || '',
+      heroAlt: (this.state.content && this.state.content.imageAlts && this.state.content.imageAlts.heroImageUrl) || 'Melani trabajando en su estudio',
       featuredView: view('featuredImageUrl'),
       heroView: view('heroImageUrl'),
       isDesktop: !m,

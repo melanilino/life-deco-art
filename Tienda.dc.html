@@ -197,7 +197,7 @@ body{margin:0;background:#fff}
       <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
         <div id="producto-{{ p.id }}" style="min-width:0;transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease;" style-hover="transform:translateY(-6px);">
           <a href="{{ p.detailHref }}" aria-label="Ver detalle de {{ p.displayName }}" style="display:block;aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:18px;position:relative;overflow:hidden;text-decoration:none;cursor:pointer;">
-            <image-slot id="tienda-{{ p.id }}" shape="rect" fit="cover" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
+            <image-slot id="tienda-{{ p.id }}" shape="rect" fit="cover" srcset="{{ p.imageSrcset }}" sizes="(max-width:859px) 50vw, 360px" alt="{{ p.imageAlt }}" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
             <sc-if value="{{ p.tag }}" hint-placeholder-val="{{ false }}">
               <span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;">{{ p.tag }}</span>
             </sc-if>
@@ -481,7 +481,7 @@ class Component extends DCLogic {
         'Vinera Personalizada': 'Vinera de Madera con Nombre',
         'Cartel de Propuesta': 'Cartel para Propuesta de Matrimonio',
       };
-      return { ...p, imageView: view(p.imageAdjustments && p.imageAdjustments.imageUrl), displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, detailHref: `/tienda/producto?id=${encodeURIComponent(p.id)}`, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
+      return { ...p, imageSrcset: (p.imageMeta && p.imageMeta.imageUrl && p.imageMeta.imageUrl.srcset) || '', imageAlt: (p.imageAlts && p.imageAlts.imageUrl) || p.name || 'Producto artesanal', imageView: view(p.imageAdjustments && p.imageAdjustments.imageUrl), displayName: titleUpgrades[p.name] || p.name, displayPrice: /^pr[oó]ximamente$/i.test(String(p.price || '').trim()) ? 'Próx.' : p.price, detailHref: `/tienda/producto?id=${encodeURIComponent(p.id)}`, whatsappUrl: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}` };
     });
 
     const openCustomOrder = (e) => {
