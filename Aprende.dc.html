@@ -366,7 +366,7 @@ body{margin:0;background:#fff}
       <div style="display:flex;flex-direction:column;gap:10px;">
         <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
           <div style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
-            <button type="button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;width:100%;min-height:44px;padding:0;border:0;background:transparent;text-align:left;font-family:'Montserrat',sans-serif;">
+            <button type="button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;width:100%;min-height:{{ faqToggleMinHeight }};padding:0;border:0;background:transparent;text-align:left;font-family:'Montserrat',sans-serif;">
               <span style="font-size:14px;color:#2B2420;font-weight:400;">{{ f.q }}</span>
               <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0CC0DF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ f.arrow }};transition:transform 0.3s cubic-bezier(.16,1,.3,1);"><path d="M6 9l6 6 6-6"></path></svg>
@@ -762,13 +762,14 @@ class Component extends DCLogic {
       esencialGap: m ? '12px' : '24px',
       esencialNameSize: m ? '14px' : '16px',
       esencialDescSize: m ? '12px' : '13px',
-      faqPad: m ? (category === 'Esenciales' ? '20px 24px 0' : '60px 24px 0') : '72px 48px',
+      faqPad: m ? (category === 'Esenciales' ? '20px 24px 0' : '60px 24px 0') : '72px 48px 0',
       faqGap: m ? '15px' : '48px',
       faqCols: m ? '1fr' : '0.8fr 1.2fr',
+      faqToggleMinHeight: m ? '44px' : '26px',
       h2Size: m ? '22px' : '32px',
       ctaPad: m ? '36px 24px' : '96px 48px',
       ctaRegionHeight: m ? '432px' : 'auto',
-      ctaTopPad: m ? '60px' : '0',
+      ctaTopPad: m ? '60px' : '72px',
       ctaBottomPad: m ? '60px' : '80px',
       ctaBoxHeight: m ? '312px' : 'auto',
       ctaRadius: m ? '16px' : '24px',
