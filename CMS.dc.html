@@ -148,7 +148,7 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiHeroUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ sobremiHeroAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-          <input type="text" value="{{ sobremiHeroAlt }}" onChange="{{ onSobremiHeroAlt }}" placeholder="Texto alternativo: describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía principal" style="width:100%;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
+          <details style="margin-top:10px;"><summary style="font-size:12px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ sobremiHeroAltStatus }}</summary><input type="text" value="{{ sobremiHeroAlt }}" onChange="{{ onSobremiHeroAlt }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía principal" style="width:100%;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></details>
         </div>
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Fotografía destacada</div>
@@ -164,7 +164,7 @@ x-dc{display:none!important}
           <sc-if value="{{ sobremiFeaturedUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ sobremiFeaturedAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-          <input type="text" value="{{ sobremiFeaturedAlt }}" onChange="{{ onSobremiFeaturedAlt }}" placeholder="Texto alternativo: describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía destacada" style="width:100%;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
+          <details style="margin-top:10px;"><summary style="font-size:12px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ sobremiFeaturedAltStatus }}</summary><input type="text" value="{{ sobremiFeaturedAlt }}" onChange="{{ onSobremiFeaturedAlt }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía destacada" style="width:100%;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></details>
         </div>
       </div>
     </sc-if>
@@ -237,7 +237,7 @@ x-dc{display:none!important}
                     <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                     <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                     <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-                    <input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:8px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
+                    <details style="margin-top:8px;"><summary style="font-size:11px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ ph.altStatus }}</summary><input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:7px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;"></details>
                   </div>
                 </div>
               </sc-for>
@@ -271,7 +271,7 @@ x-dc{display:none!important}
                 <sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ ph.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;box-sizing:border-box;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;vertical-align:middle;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                 <sc-if value="{{ ph.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:11px;color:#8B795E;margin-left:8px;">Subiendo…</span></sc-if>
                 <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-                <input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:8px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
+                <details style="margin-top:8px;"><summary style="font-size:11px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ ph.altStatus }}</summary><input type="text" value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin-top:7px;padding:8px 9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;"></details>
               </div>
             </div>
           </sc-for>
@@ -394,7 +394,7 @@ x-dc{display:none!important}
                 <div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:{{ photo.maxWidth }};">
                   <div style="position:relative;width:100%;aspect-ratio:1;overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="{{ photo.slotId }}" shape="rect" fit="cover" view-scale="{{ photo.viewScale }}" view-x="{{ photo.viewX }}" view-y="{{ photo.viewY }}" style="width:100%;height:100%;" src="{{ photo.url }}" placeholder="imagen de galería"></image-slot><span onClick="{{ photo.onAdjust }}" title="Ajustar encuadre" aria-label="Ajustar encuadre" style="position:absolute;top:8px;right:8px;z-index:4;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:4px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);">⌗</span></div>
                   <div style="display:flex;align-items:center;gap:6px;margin-top:7px;"><span onPointerDown="{{ photo.onDragStart }}" onPointerMove="{{ photo.onDragMove }}" onPointerUp="{{ photo.onDragEnd }}" onPointerCancel="{{ photo.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:28px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span><span style="font-size:11px;color:#8B795E;">{{ photo.position }}</span><span onClick="{{ photo.onRemove }}" title="Eliminar imagen" style="margin-left:auto;color:#C0392B;cursor:pointer;font-size:12px;">Eliminar</span></div>
-                  <input type="text" value="{{ photo.alt }}" onChange="{{ photo.onAltChange }}" placeholder="Texto alternativo" aria-label="Texto alternativo de la imagen" style="width:100%;box-sizing:border-box;margin-top:6px;padding:7px 8px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;">
+                  <details style="margin-top:6px;"><summary style="font-size:11px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ photo.altStatus }}</summary><input type="text" value="{{ photo.alt }}" onChange="{{ photo.onAltChange }}" placeholder="Describe la imagen" aria-label="Texto alternativo de la imagen" style="width:100%;box-sizing:border-box;margin-top:6px;padding:7px 8px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;"></details>
                   <sc-if value="{{ photo.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                 </div>
               </sc-for>
@@ -426,7 +426,7 @@ x-dc{display:none!important}
             <sc-if value="{{ tiendaBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
           </div>
           <sc-if value="{{ tiendaBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-          <input type="text" value="{{ tiendaBannerAlt }}" onChange="{{ onTiendaBannerAlt }}" placeholder="Texto alternativo del banner" aria-label="Texto alternativo del banner de Tienda" style="width:100%;max-width:520px;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
+          <details style="margin-top:10px;max-width:520px;"><summary style="font-size:12px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ tiendaBannerAltStatus }}</summary><input type="text" value="{{ tiendaBannerAlt }}" onChange="{{ onTiendaBannerAlt }}" placeholder="Describe brevemente el banner" aria-label="Texto alternativo del banner de Tienda" style="width:100%;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></details>
         </div>
 
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Preguntas frecuentes</div>
@@ -477,7 +477,7 @@ x-dc{display:none!important}
           <sc-if value="{{ aprendeBannerUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
         </div>
         <sc-if value="{{ aprendeBannerAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
-        <input type="text" value="{{ aprendeBannerAlt }}" onChange="{{ onAprendeBannerAlt }}" placeholder="Texto alternativo del banner" aria-label="Texto alternativo del banner de Aprende" style="width:100%;max-width:520px;box-sizing:border-box;margin-top:10px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
+        <details style="margin-top:10px;max-width:520px;"><summary style="font-size:12px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ aprendeBannerAltStatus }}</summary><input type="text" value="{{ aprendeBannerAlt }}" onChange="{{ onAprendeBannerAlt }}" placeholder="Describe brevemente el banner" aria-label="Texto alternativo del banner de Aprende" style="width:100%;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></details>
       </div>
       <sc-if value="{{ showCommunityOverviewCards }}" hint-placeholder-val="{{ false }}">
         <div class="cms-community-overview" style="margin-bottom:24px;">
@@ -558,7 +558,7 @@ x-dc{display:none!important}
                         <sc-if value="{{ f.hasImage }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onRemove }}" title="Eliminar imagen" aria-label="Eliminar imagen" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;flex-shrink:0;" style-hover="background:#FDECEC;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v5M14 11v5"></path></svg></span></sc-if>
                         <sc-if value="{{ f.uploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#8B795E;">Subiendo…</span></sc-if>
                       </div>
-                      <input type="text" value="{{ f.altValue }}" onChange="{{ f.onAltChange }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía" style="width:100%;max-width:420px;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;">
+                      <details style="margin-top:8px;max-width:420px;"><summary style="font-size:12px;color:#8B795E;cursor:pointer;user-select:none;">Texto alternativo {{ f.altStatus }}</summary><input type="text" value="{{ f.altValue }}" onChange="{{ f.onAltChange }}" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de la fotografía" style="width:100%;box-sizing:border-box;margin-top:8px;padding:9px 10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></details>
                       <sc-if value="{{ f.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
                     </sc-if>
                     <sc-if value="{{ f.isFile }}" hint-placeholder-val="{{ false }}">
@@ -854,6 +854,21 @@ class Component extends DCLogic {
     } else if (!editorOpen && this._pageScrollLocked) {
       this.releasePageScrollLock();
     }
+    queueMicrotask(() => this.compactUnwrappedAltFields());
+  }
+
+  compactUnwrappedAltFields() {
+    document.querySelectorAll('input[aria-label="Texto alternativo de la imagen"]').forEach((input) => {
+      if (input.closest('details')) return;
+      const details = document.createElement('details');
+      details.style.marginTop = '6px';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Texto alternativo' + (input.value ? ' ✓ Agregado' : '');
+      summary.style.cssText = 'font-size:11px;color:#8B795E;cursor:pointer;user-select:none;';
+      input.parentNode.insertBefore(details, input);
+      details.append(summary, input);
+      input.style.marginTop = '6px';
+    });
   }
 
   componentWillUnmount() { this.releasePageScrollLock(); }
@@ -1682,7 +1697,7 @@ class Component extends DCLogic {
         const slotId = 'cms-field-' + listKey + '-' + item.id + '-' + d.key;
         const editorId = listKey + ':' + item.id + ':' + d.key;
         const adjustment = (item.imageAdjustments && item.imageAdjustments[d.key]) || { zoom: 100, x: 0, y: 0 };
-        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], altValue: (item.imageAlts && item.imageAlts[d.key]) || '', slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: this.state.adjustingImage === editorId, maxWidth: '180px', onAltChange: (e) => this.updateItem(listKey, item.id, 'imageAlts', { ...(item.imageAlts || {}), [d.key]: e.target.value }), onAdjust: () => this.openItemFrameEditor(listKey, item.id, d.key, slotId), onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
+        return { key: d.key, label: d.label, isImage: true, aspect: d.aspect || '1/1', value: item[d.key] || '', hasImage: !!item[d.key], altValue: (item.imageAlts && item.imageAlts[d.key]) || '', altStatus: (item.imageAlts && item.imageAlts[d.key]) ? '✓ Agregado' : '', slotId, viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y, isAdjusting: this.state.adjustingImage === editorId, maxWidth: '180px', onAltChange: (e) => this.updateItem(listKey, item.id, 'imageAlts', { ...(item.imageAlts || {}), [d.key]: e.target.value }), onAdjust: () => this.openItemFrameEditor(listKey, item.id, d.key, slotId), onUpload: (e) => this.handleImageUpload(listKey, item.id, d.key, e.target.files[0]), onRemove: () => this.removeItemImage(listKey, item.id, d.key), uploading: this.state.uploading === (listKey + item.id + d.key) };
       }
       if (d.type === 'file') {
         const url = item[d.key] || '';
@@ -1716,6 +1731,7 @@ class Component extends DCLogic {
         key: p.key, label: p.label,
         url: (s.content && s.content[p.key]) || '',
         alt: (s.content && s.content.imageAlts && s.content.imageAlts[p.key]) || '',
+        altStatus: (s.content && s.content.imageAlts && s.content.imageAlts[p.key]) ? '✓ Agregado' : '',
         hasImage: !!(s.content && s.content[p.key]),
         uploading: s.uploading === ('inicioPhoto_' + p.key),
         viewScale: adjustment.zoom / 100, viewX: adjustment.x, viewY: adjustment.y,
@@ -1936,6 +1952,7 @@ class Component extends DCLogic {
       isSobremiPage: s.page === 'sobremi' && !!s.sobremiData,
       sobremiFeaturedUrl: (s.sobremiData && s.sobremiData.featuredImageUrl) || '',
       sobremiFeaturedAlt: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.featuredImageUrl) || '',
+      sobremiFeaturedAltStatus: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.featuredImageUrl) ? '✓ Agregado' : '',
       onSobremiFeaturedAlt: (e) => this.updateSobremiImageAlt('featuredImageUrl', e.target.value),
       sobremiFeaturedView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.featuredImageUrl),
       sobremiFeaturedAdjusting: s.adjustingImage === 'sobremi:featuredImageUrl',
@@ -1946,6 +1963,7 @@ class Component extends DCLogic {
       sobremiFeaturedUploading: s.uploading === 'sobremiFeatured',
       sobremiHeroUrl: (s.sobremiData && s.sobremiData.heroImageUrl) || '',
       sobremiHeroAlt: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.heroImageUrl) || '',
+      sobremiHeroAltStatus: (s.sobremiData && s.sobremiData.imageAlts && s.sobremiData.imageAlts.heroImageUrl) ? '✓ Agregado' : '',
       onSobremiHeroAlt: (e) => this.updateSobremiImageAlt('heroImageUrl', e.target.value),
       sobremiHeroView: imageView(s.sobremiData && s.sobremiData.imageAdjustments && s.sobremiData.imageAdjustments.heroImageUrl),
       sobremiHeroAdjusting: s.adjustingImage === 'sobremi:heroImageUrl',
@@ -1956,6 +1974,7 @@ class Component extends DCLogic {
       sobremiHeroUploading: s.uploading === 'sobremiHero',
       tiendaBannerUrl: (s.tiendaData && s.tiendaData.bannerImageUrl) || '',
       tiendaBannerAlt: (s.tiendaData && s.tiendaData.bannerImageAlt) || '',
+      tiendaBannerAltStatus: (s.tiendaData && s.tiendaData.bannerImageAlt) ? '✓ Agregado' : '',
       onTiendaBannerAlt: (e) => this.updateTiendaBannerAlt(e.target.value),
       tiendaBannerView: imageView(s.tiendaData && s.tiendaData.bannerImageAdjustment),
       tiendaBannerAdjusting: s.adjustingImage === 'tienda:banner',
@@ -1966,6 +1985,7 @@ class Component extends DCLogic {
       tiendaBannerUploading: s.uploading === 'tiendaBanner',
       aprendeBannerUrl: (s.aprendeData && s.aprendeData.banners && s.aprendeData.banners[s.aprendeTab]) || '',
       aprendeBannerAlt: (s.aprendeData && s.aprendeData.bannerImageAlts && s.aprendeData.bannerImageAlts[s.aprendeTab]) || '',
+      aprendeBannerAltStatus: (s.aprendeData && s.aprendeData.bannerImageAlts && s.aprendeData.bannerImageAlts[s.aprendeTab]) ? '✓ Agregado' : '',
       onAprendeBannerAlt: (e) => this.updateAprendeBannerAlt(s.aprendeTab, e.target.value),
       aprendeBannerView: imageView(s.aprendeData && s.aprendeData.bannerImageAdjustments && s.aprendeData.bannerImageAdjustments[s.aprendeTab]),
       aprendeBannerAdjusting: s.adjustingImage === ('aprende:banner:' + s.aprendeTab),
