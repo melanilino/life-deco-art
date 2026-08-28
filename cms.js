@@ -171,8 +171,8 @@ export async function optimizeHeroVideo(file, options = {}) {
     if (!Number.isFinite(video.duration) || video.duration <= 0) throw new Error('Duración de video no válida.');
     if (video.duration > 90) throw new Error('Para el hero usa un video de 90 segundos o menos.');
 
-    const maxW = Number(options.maxWidth || 1280);
-    const maxH = Number(options.maxHeight || 720);
+    const maxW = Number(options.maxWidth || 1920);
+    const maxH = Number(options.maxHeight || 1080);
     const scale = Math.min(1, maxW / video.videoWidth, maxH / video.videoHeight);
     const width = Math.max(2, Math.round(video.videoWidth * scale / 2) * 2);
     const height = Math.max(2, Math.round(video.videoHeight * scale / 2) * 2);
@@ -180,10 +180,10 @@ export async function optimizeHeroVideo(file, options = {}) {
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext('2d', { alpha: false });
-    const stream = canvas.captureStream(24);
+    const stream = canvas.captureStream(Number(options.frameRate || 30));
     const recorder = new MediaRecorder(stream, {
       mimeType,
-      videoBitsPerSecond: Number(options.videoBitsPerSecond || 2400000)
+      videoBitsPerSecond: Number(options.videoBitsPerSecond || 5000000)
     });
     const chunks = [];
     recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
@@ -241,7 +241,7 @@ async function createVideoPosterFile(file, options = {}) {
       video.onseeked = resolve;
       video.onerror = () => reject(new Error('No se pudo leer el primer fotograma.'));
     });
-    const maxWidth = Number(options.maxWidth || 1280);
+    const maxWidth = Number(options.maxWidth || 1920);
     const scale = Math.min(1, maxWidth / Math.max(1, video.videoWidth));
     const canvas = document.createElement('canvas');
     canvas.width = Math.max(2, Math.round(video.videoWidth * scale));
@@ -352,7 +352,7 @@ export async function uploadHeroVideoBundle(pathPrefix, file, options = {}) {
       cacheControl: 'public,max-age=31536000,immutable',
       customMetadata: { optimizedBy: 'life-deco-art-cms' },
     }),
-    uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1280, variantEdges: [640, 1280] }),
+    uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1920, variantEdges: [640, 1280, 1920] }),
   ]);
   return { videoUrl, posterUrl: poster.url, posterMeta: poster };
 }
@@ -364,7 +364,7 @@ export async function createVideoPosterFromUrl(pathPrefix, videoUrl) {
   const extension = blob.type === 'video/mp4' ? 'mp4' : 'webm';
   const file = new File([blob], `hero-actual.${extension}`, { type: blob.type || `video/${extension}` });
   const posterFile = await createVideoPosterFile(file);
-  const poster = await uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1280, variantEdges: [640, 1280] });
+  const poster = await uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1920, variantEdges: [640, 1280, 1920] });
   return { posterUrl: poster.url, posterMeta: poster };
 }
 
