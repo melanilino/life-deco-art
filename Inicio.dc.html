@@ -6,6 +6,7 @@
 <link rel="canonical" href="https://lifedecoart.com/">
 <meta property="og:url" content="https://lifedecoart.com/">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://firebasestorage.googleapis.com" crossorigin>
 <link rel="preload" as="image" href="/hero-video-cover.webp" type="image/webp" fetchpriority="high">
 <style id="dc-critical-boot">
 x-dc{display:none!important}
@@ -152,7 +153,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-home-hero="" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
     <sc-if value="{{ heroVideoPosterSrc }}" hint-placeholder-val="{{ false }}"><img src="{{ heroVideoPosterSrc }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></sc-if>
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .35s ease;"></video>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .18s ease;"></video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.26) 0%,rgba(0,0,0,.23) 40%,rgba(0,0,0,.54) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
@@ -167,7 +168,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-home-hero="" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
     <sc-if value="{{ heroVideoPosterSrc }}" hint-placeholder-val="{{ false }}"><img src="{{ heroVideoPosterSrc }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></sc-if>
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="metadata" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .35s ease;"></video>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .18s ease;"></video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.31) 0%,rgba(0,0,0,.25) 40%,rgba(0,0,0,.58) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
@@ -506,6 +507,7 @@ class Component extends DCLogic {
     this.releaseBootBackdrop();
     this.loadContent();
     this.checkMobile();
+    this.scheduleHeroVideo();
     window.addEventListener('resize', this.checkMobile, { passive: true });
     window.addEventListener('scroll', this.syncHomeNav, { passive: true });
     window.addEventListener('resize', this.syncHomeNav, { passive: true });
@@ -521,10 +523,6 @@ class Component extends DCLogic {
       item.addEventListener('mouseleave', () => { if (!locked) doClose(); });
       item.addEventListener('click', () => { locked = !locked; if (locked) doOpen(); else doClose(); });
     });
-    // Start the hero as soon as its CMS URL is available. Desktop preloads the
-    // full clip; mobile keeps the lighter metadata preload.
-    if (document.readyState === 'complete') this.scheduleHeroVideo();
-    else window.addEventListener('load', this.scheduleHeroVideo, { once: true });
     const reveal = (el) => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; el.setAttribute('data-revealed', '1'); };
     const els = Array.from(document.querySelectorAll('[data-reveal]'));
     let io;
@@ -600,7 +598,7 @@ class Component extends DCLogic {
   };
   scheduleHeroVideo = () => {
     clearTimeout(this.heroVideoTimer);
-    this.heroVideoTimer = setTimeout(this.startHeroVideo, this.state.isMobile ? 250 : 0);
+    this.heroVideoTimer = setTimeout(this.startHeroVideo, 0);
   };
   PASOS = [
     { n: '01', title: 'Cuéntame tu idea', desc: 'Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.', imgKey: 'cwCuentameUrl', imgId: 'cw-cuentame', placeholder: 'foto: mensaje/nota inicial' },
@@ -692,7 +690,7 @@ class Component extends DCLogic {
       testimonialQuote: c.testimonialQuote ?? '"La bandeja quedó preciosa, mi mamá lloró al verla."',
       testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
       closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
-      heroVideoSrc: c.heroVideoUrl || '',
+      heroVideoSrc: '/api/hero-video',
       heroVideoPosterSrc: '/hero-video-cover.webp',
       heroVideoPosterSrcset: '',
       heroVideoOpacity: this.state.heroVideoReady ? '1' : '0',
