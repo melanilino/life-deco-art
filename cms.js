@@ -223,6 +223,43 @@ export async function optimizeHeroVideo(file, options = {}) {
   }
 }
 
+async function createVideoPosterFile(file, options = {}) {
+  if (!file || !file.type || !file.type.startsWith('video/')) throw new Error('Selecciona un video válido.');
+  const url = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.src = url;
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = 'auto';
+  try {
+    await new Promise((resolve, reject) => {
+      video.onloadedmetadata = resolve;
+      video.onerror = () => reject(new Error('No se pudo generar la vista inicial del video.'));
+    });
+    video.currentTime = Math.min(0.12, Math.max(0, Number(video.duration || 0) / 2));
+    await new Promise((resolve, reject) => {
+      video.onseeked = resolve;
+      video.onerror = () => reject(new Error('No se pudo leer el primer fotograma.'));
+    });
+    const maxWidth = Number(options.maxWidth || 1280);
+    const scale = Math.min(1, maxWidth / Math.max(1, video.videoWidth));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(2, Math.round(video.videoWidth * scale));
+    canvas.height = Math.max(2, Math.round(video.videoHeight * scale));
+    const ctx = canvas.getContext('2d', { alpha: false });
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise((resolve, reject) => canvas.toBlob(
+      (value) => value ? resolve(value) : reject(new Error('No se pudo crear la vista inicial.')),
+      'image/webp', Number(options.quality || 0.82)
+    ));
+    return blobToFile(blob, `${safeBaseName(file.name)}-poster.webp`, 'image/webp');
+  } finally {
+    video.removeAttribute('src');
+    video.load();
+    URL.revokeObjectURL(url);
+  }
+}
+
 async function uploadPrepared(pathPrefix, file, metadata = {}) {
   const path = `${pathPrefix}/${Date.now()}_${file.name}`;
   const r = ref(storage, path);
@@ -305,6 +342,30 @@ export async function uploadVideo(pathPrefix, file, options = {}) {
     cacheControl: 'public,max-age=31536000,immutable',
     customMetadata: { optimizedBy: 'life-deco-art-cms' },
   });
+}
+
+export async function uploadHeroVideoBundle(pathPrefix, file, options = {}) {
+  const posterFile = await createVideoPosterFile(file, options);
+  const preparedVideo = await optimizeHeroVideo(file, options);
+  const [videoUrl, poster] = await Promise.all([
+    uploadPrepared(pathPrefix, preparedVideo, {
+      cacheControl: 'public,max-age=31536000,immutable',
+      customMetadata: { optimizedBy: 'life-deco-art-cms' },
+    }),
+    uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1280, variantEdges: [640, 1280] }),
+  ]);
+  return { videoUrl, posterUrl: poster.url, posterMeta: poster };
+}
+
+export async function createVideoPosterFromUrl(pathPrefix, videoUrl) {
+  const response = await fetch(videoUrl, { mode: 'cors' });
+  if (!response.ok) throw new Error('No se pudo preparar el video actual.');
+  const blob = await response.blob();
+  const extension = blob.type === 'video/mp4' ? 'mp4' : 'webm';
+  const file = new File([blob], `hero-actual.${extension}`, { type: blob.type || `video/${extension}` });
+  const posterFile = await createVideoPosterFile(file);
+  const poster = await uploadResponsiveImage(`${pathPrefix}/posters`, posterFile, { maxEdge: 1280, variantEdges: [640, 1280] });
+  return { posterUrl: poster.url, posterMeta: poster };
 }
 
 export async function ensurePublicMediaCache(url) {

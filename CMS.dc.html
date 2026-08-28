@@ -872,6 +872,13 @@ class Component extends DCLogic {
         [data, tienda] = await Promise.all([this.state.cms.getPageContent('inicio'), this.state.cms.getPageContent('tienda')]);
       } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       if (data.heroVideoUrl) this.state.cms.ensurePublicMediaCache(data.heroVideoUrl).catch(() => {});
+      if (data.heroVideoUrl && !data.heroVideoPosterUrl) {
+        this.state.cms.createVideoPosterFromUrl('content-files/inicio', data.heroVideoUrl).then(async (poster) => {
+          const next = { ...data, heroVideoPosterUrl: poster.posterUrl, heroVideoPosterMeta: poster.posterMeta };
+          await this.state.cms.savePageContent('inicio', next);
+          this.setState({ content: { ...this.state.content, heroVideoPosterUrl: poster.posterUrl, heroVideoPosterMeta: poster.posterMeta } });
+        }).catch(() => {});
+      }
       const products = (tienda.products && tienda.products.length) ? tienda.products : this.DEFAULT_TIENDA.products;
       this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products });
     } else if (pageId === 'tienda' && !this.state.tiendaLoaded) {
@@ -1193,8 +1200,9 @@ class Component extends DCLogic {
   }
   async removeHeroVideo(){
     const url=this.state.content&&this.state.content.heroVideoUrl; if(!url||!await this.askConfirmation('¿Confirmas que deseas eliminar este video?', 'Eliminar video')) return;
-    const next={...this.state.content,heroVideoUrl:''};
-    try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); this.setState({content:next,saved:true});}
+    const posterUrl=this.state.content&&this.state.content.heroVideoPosterUrl;
+    const next={...this.state.content,heroVideoUrl:'',heroVideoPosterUrl:'',heroVideoPosterMeta:null};
+    try{await this.state.cms.savePageContent('inicio',next); await this.state.cms.deleteMediaUrl(url); if(posterUrl) await this.state.cms.deleteMediaUrl(posterUrl); this.setState({content:next,saved:true});}
     catch(e){this.setState({error:'No se pudo eliminar el video.'});}
   }
   async removeTiendaBanner(){
@@ -1313,10 +1321,9 @@ class Component extends DCLogic {
   handleHeroVideoUpload(file) {
     if (!file) return;
     this.setState({ uploading: 'heroVideo' });
-    this.state.cms.uploadVideo('content-files/inicio', file).then((url) => {
-      this.updateField('heroVideoUrl', url);
-      this.setState({ uploading: null });
-    }).catch(() => { this.setState({ uploading: null }); });
+    this.state.cms.uploadHeroVideoBundle('content-files/inicio', file).then((result) => {
+      this.setState({ content: { ...this.state.content, heroVideoUrl: result.videoUrl, heroVideoPosterUrl: result.posterUrl, heroVideoPosterMeta: result.posterMeta }, uploading: null, saved: false });
+    }).catch((error) => { this.setState({ uploading: null, error: error.message || 'No se pudo preparar el video.' }); });
   }
   INICIO_PHOTO_GROUPS = [
     { label: 'Conóceme', aspect: '4/5', columns: 'minmax(0,280px)', fields: [{ key: 'melaniPhotoUrl', label: 'Melani en su estudio' }] },
