@@ -6,10 +6,10 @@
 <link rel="canonical" href="https://lifedecoart.com/">
 <meta property="og:url" content="https://lifedecoart.com/">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
-<link rel="preload" as="image" href="/api/hero-poster" fetchpriority="high">
+<link rel="preload" as="image" href="/hero-video-cover.webp" type="image/webp" fetchpriority="high">
 <style id="dc-critical-boot">
 x-dc{display:none!important}
-#dc-boot-fallback{position:fixed;inset:0;z-index:2147481000;background-color:#1a1a1a;background-image:linear-gradient(180deg,rgba(0,0,0,.26),rgba(0,0,0,.54)),url('/api/hero-poster');background-position:center;background-size:cover;pointer-events:none;opacity:1;transition:opacity .28s ease}
+#dc-boot-fallback{position:fixed;inset:0;z-index:2147481000;background-color:#1a1a1a;background-image:linear-gradient(180deg,rgba(0,0,0,.26),rgba(0,0,0,.54)),url('/hero-video-cover.webp');background-position:center;background-size:cover;pointer-events:none;opacity:1;transition:opacity .28s ease}
 #dc-boot-fallback .dc-fb-nav{height:80px;display:flex;align-items:center;padding:0 48px;box-sizing:border-box;background:#fff}
 #dc-boot-fallback .dc-fb-brand{font-size:20px;font-weight:400;letter-spacing:.13px;white-space:nowrap}
 #dc-boot-fallback .dc-fb-hero{height:calc(100vh - 80px);min-height:560px;background:#1a1a1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 48px 0;box-sizing:border-box}
@@ -498,7 +498,7 @@ class Component extends DCLogic {
     const posterProbe = new Image();
     posterProbe.onload = () => requestAnimationFrame(finish);
     posterProbe.onerror = finish;
-    posterProbe.src = '/api/hero-poster';
+    posterProbe.src = '/hero-video-cover.webp';
     if (posterProbe.complete && posterProbe.naturalWidth) finish();
     this.bootBackdropTimer = setTimeout(finish, 3000);
   };
@@ -693,9 +693,9 @@ class Component extends DCLogic {
       testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
       closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
       heroVideoSrc: c.heroVideoUrl || '',
-      heroVideoPosterSrc: c.heroVideoPosterUrl || '',
-      heroVideoPosterSrcset: (c.heroVideoPosterMeta && c.heroVideoPosterMeta.srcset) || '',
-      heroVideoOpacity: !c.heroVideoPosterUrl || this.state.heroVideoReady ? '1' : '0',
+      heroVideoPosterSrc: '/hero-video-cover.webp',
+      heroVideoPosterSrcset: '',
+      heroVideoOpacity: this.state.heroVideoReady ? '1' : '0',
       onHeroVideoReady: () => { if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true }); },
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
