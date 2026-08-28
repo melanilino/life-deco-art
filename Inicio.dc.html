@@ -6,9 +6,10 @@
 <link rel="canonical" href="https://lifedecoart.com/">
 <meta property="og:url" content="https://lifedecoart.com/">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preload" as="image" href="/api/hero-poster" fetchpriority="high">
 <style id="dc-critical-boot">
 x-dc{display:none!important}
-#dc-boot-fallback{position:fixed;inset:0;z-index:2147481000;background:#1a1a1a;pointer-events:none}
+#dc-boot-fallback{position:fixed;inset:0;z-index:2147481000;background-color:#1a1a1a;background-image:linear-gradient(180deg,rgba(0,0,0,.26),rgba(0,0,0,.54)),url('/api/hero-poster');background-position:center;background-size:cover;pointer-events:none;opacity:1;transition:opacity .28s ease}
 #dc-boot-fallback .dc-fb-nav{height:80px;display:flex;align-items:center;padding:0 48px;box-sizing:border-box;background:#fff}
 #dc-boot-fallback .dc-fb-brand{font-size:20px;font-weight:400;letter-spacing:.13px;white-space:nowrap}
 #dc-boot-fallback .dc-fb-hero{height:calc(100vh - 80px);min-height:560px;background:#1a1a1a;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:56px 48px 0;box-sizing:border-box}
@@ -484,9 +485,25 @@ class Component extends DCLogic {
       }
     } catch (e) {}
   }
+  releaseBootBackdrop = () => {
+    const backdrop = document.getElementById('dc-boot-fallback');
+    if (!backdrop) return;
+    let released = false;
+    const finish = () => {
+      if (released) return;
+      released = true;
+      backdrop.style.opacity = '0';
+      setTimeout(() => backdrop.remove(), 300);
+    };
+    const posterProbe = new Image();
+    posterProbe.onload = () => requestAnimationFrame(finish);
+    posterProbe.onerror = finish;
+    posterProbe.src = '/api/hero-poster';
+    if (posterProbe.complete && posterProbe.naturalWidth) finish();
+    this.bootBackdropTimer = setTimeout(finish, 3000);
+  };
   componentDidMount() {
-    const bootBackdrop = document.getElementById('dc-boot-fallback');
-    if (bootBackdrop) bootBackdrop.remove();
+    this.releaseBootBackdrop();
     this.loadContent();
     this.checkMobile();
     window.addEventListener('resize', this.checkMobile, { passive: true });
@@ -597,6 +614,7 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.syncHomeNav);
     window.removeEventListener('load', this.scheduleHeroVideo);
     clearTimeout(this.heroVideoTimer);
+    clearTimeout(this.bootBackdropTimer);
   }
   renderVals() {
     const gap = this.props.sectionGap ?? 96;
