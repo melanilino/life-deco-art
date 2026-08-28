@@ -572,6 +572,12 @@ class Component extends DCLogic {
     if (!v) return;
     const src = v.getAttribute('data-video-src');
     if (!src) return;
+    const revealVideo = () => {
+      v.style.opacity = '1';
+      if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true });
+    };
+    if (v.readyState >= 3) revealVideo();
+    else v.addEventListener('canplay', revealVideo, { once: true });
     if (!v.getAttribute('src')) v.setAttribute('src', src);
     v.muted = true; v.loop = true; v.playsInline = true;
     v.play().catch(() => {});
@@ -672,7 +678,7 @@ class Component extends DCLogic {
       heroVideoSrc: c.heroVideoUrl || '',
       heroVideoPosterSrc: c.heroVideoPosterUrl || '',
       heroVideoPosterSrcset: (c.heroVideoPosterMeta && c.heroVideoPosterMeta.srcset) || '',
-      heroVideoOpacity: this.state.heroVideoReady ? '1' : '0',
+      heroVideoOpacity: !c.heroVideoPosterUrl || this.state.heroVideoReady ? '1' : '0',
       onHeroVideoReady: () => { if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true }); },
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
