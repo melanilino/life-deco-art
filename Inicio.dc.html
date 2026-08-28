@@ -668,7 +668,7 @@ class Component extends DCLogic {
       gapPx: gap + 'px',
       heroTitlePre: c.heroTitlePre ?? 'La evolución de una',
       heroTitleCursive: c.heroTitleCursive ?? 'idea',
-      heroSubtitle: c.heroSubtitle ?? 'Convierto momentos importantes: una boda, un cumpleaños, un "gracias", en piezas atemporales.',
+      heroSubtitle: String(c.heroSubtitle ?? 'Convierto momentos importantes: una boda, un cumpleaños, un "gracias", en piezas atemporales.').replace(/un (["“]gracias["”])/i, 'un\u00A0$1'),
       testimonialQuote: c.testimonialQuote ?? '"La bandeja quedó preciosa, mi mamá lloró al verla."',
       testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
       closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
