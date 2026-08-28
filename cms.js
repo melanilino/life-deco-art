@@ -183,7 +183,7 @@ export async function optimizeHeroVideo(file, options = {}) {
     const stream = canvas.captureStream(Number(options.frameRate || 30));
     const recorder = new MediaRecorder(stream, {
       mimeType,
-      videoBitsPerSecond: Number(options.videoBitsPerSecond || 5000000)
+      videoBitsPerSecond: Number(options.videoBitsPerSecond || 4000000)
     });
     const chunks = [];
     recorder.ondataavailable = (e) => { if (e.data && e.data.size) chunks.push(e.data); };
@@ -214,6 +214,9 @@ export async function optimizeHeroVideo(file, options = {}) {
     if (!blob.size) throw new Error('El video optimizado quedó vacío.');
     const ext = outType === 'video/mp4' ? 'mp4' : 'webm';
     const optimized = await blobToFile(blob, `${safeBaseName(file.name)}.${ext}`, outType);
+    // Para el hero priorizamos el contenedor generado por el navegador porque
+    // permite comenzar la reproducción progresiva sin esperar el MP4 completo.
+    if (optimized.size <= VIDEO_FALLBACK_LIMIT) return optimized;
     return optimized.size < file.size ? optimized : file;
   } finally {
     video.pause();
