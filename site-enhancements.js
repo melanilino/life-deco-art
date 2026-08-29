@@ -39,6 +39,16 @@
         outline: 3px solid #8B795E !important;
         outline-offset: 3px !important;
       }
+      [data-reveal] {
+        transition-duration: .62s !important;
+        transition-timing-function: cubic-bezier(.16, 1, .3, 1) !important;
+      }
+      [data-reveal]:not([data-revealed]) {
+        transform: translateY(10px) !important;
+      }
+      [data-reveal][data-revealed] {
+        transform: translateY(0) !important;
+      }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto !important; }
         *, *::before, *::after {
