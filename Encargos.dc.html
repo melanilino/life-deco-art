@@ -119,7 +119,7 @@
   </div>
 
   <div style="max-width:640px;margin:0 auto;padding:{{ processPad }};">
-    <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:16px;">Así funciona después de enviar tu solicitud</div>
+    <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:8px;">Así funciona después de enviar tu solicitud:</div>
     <div style="display:flex;flex-direction:column;gap:4px;">
       <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
         <div style="display:flex;gap:14px;align-items:flex-start;">
@@ -131,7 +131,7 @@
   </div>
 
   <div style="max-width:640px;margin:0 auto;padding:{{ previewPad }};">
-    <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:10px;">Así llegará tu mensaje</div>
+    <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:10px;">Así llegará tu mensaje:</div>
     <div style="background:#F3EEE4;border-radius:10px;padding:18px 20px;font-size:13px;color:#2B2420;font-weight:300;line-height:1.7;white-space:pre-wrap;">{{ preview }}</div>
   </div>
 
@@ -208,7 +208,7 @@ class Component extends DCLogic {
     const message = (content.whatsappMessage || 'Hola! Quiero hacer un encargo personalizado.') + '\n' + parts.join('\n');
     return {
       preview: message,
-      previewPad: m ? '14px 24px 0' : '14px 48px 0',
+      previewPad: m ? '22px 24px 0' : '22px 48px 0',
       navGap: m ? '64px' : '88px',
       heroPad: m ? '36px 24px 0' : '64px 48px 0',
       h1Size: m ? '26px' : '42px',
