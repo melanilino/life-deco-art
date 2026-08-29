@@ -120,7 +120,7 @@
 
   <div style="max-width:640px;margin:0 auto;padding:{{ processPad }};">
     <div style="font-size:14px;color:#2B2420;font-weight:400;margin-bottom:16px;">Así funciona después de enviar tu solicitud</div>
-    <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;flex-direction:column;gap:10px;">
       <sc-for list="{{ steps }}" as="s" hint-placeholder-count="3">
         <div style="display:flex;gap:14px;align-items:flex-start;">
           <div style="width:26px;height:26px;border-radius:999px;background:#F65091;color:#FFFFFF;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;">{{ s.n }}</div>
@@ -163,8 +163,8 @@ class Component extends DCLogic {
   PRESUPUESTOS = ['Menos de RD$2,000', 'RD$2,000 – RD$5,000', 'RD$5,000 – RD$10,000', 'Más de RD$10,000', 'Otro'];
   STEPS = [
     { n: 1, text: 'Reviso tu solicitud y te respondo con una propuesta de precio y tiempo de entrega.' },
-    { n: 2, text: 'Te comparto un boceto digital de la pieza para tu aprobación.' },
-    { n: 3, text: 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.' },
+    { n: 2, text: 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.' },
+    { n: 3, text: 'Te comparto un boceto digital de la pieza para tu aprobación.' },
   ];
   renderVals() {
     const m = this.state.isMobile;
