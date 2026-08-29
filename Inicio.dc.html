@@ -148,6 +148,51 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     .lda-eyebrow-servicios{margin-bottom:0!important;}
   }
 </style>
+
+<style id="lda-home-motion-system">
+  @keyframes lda-hero-settle {
+    from { transform: translateY(10px); opacity: .86; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes lda-script-settle {
+    from { transform: translateY(5px) rotate(-1.5deg) scale(.95); }
+    to { transform: translateY(0) rotate(0) scale(1); }
+  }
+  @keyframes lda-scroll-pulse {
+    0% { transform: translateY(-105%); }
+    48%, 100% { transform: translateY(105%); }
+  }
+  .lda-hero-kicker,.lda-hero-title,.lda-hero-subtitle,.lda-hero-actions {
+    animation: lda-hero-settle .72s cubic-bezier(.16,1,.3,1) both;
+  }
+  .lda-hero-title{animation-delay:.06s}
+  .lda-hero-subtitle{animation-delay:.12s}
+  .lda-hero-actions{animation-delay:.18s}
+  .lda-hero-script{display:inline-block;animation:lda-script-settle .8s cubic-bezier(.16,1,.3,1) .16s both}
+  .lda-scroll-line{overflow:hidden;background:transparent!important}
+  .lda-scroll-line::after{content:"";position:absolute;inset:0;background:rgba(255,255,255,.62);animation:lda-scroll-pulse 2.4s cubic-bezier(.65,0,.35,1) infinite}
+  [data-lda-motion="left"]:not([data-revealed]){transform:translateX(-18px)!important}
+  [data-lda-motion="right"]:not([data-revealed]){transform:translateX(18px)!important}
+  [data-lda-motion="scale"]:not([data-revealed]){transform:scale(.975)!important}
+  [data-lda-motion="left"][data-revealed],
+  [data-lda-motion="right"][data-revealed],
+  [data-lda-motion="scale"][data-revealed]{transform:none!important}
+  [data-lda-motion="mask"]{clip-path:inset(0 0 100% 0);transform:none!important;transition-property:opacity,clip-path,box-shadow!important;transition-duration:.72s,.82s,.35s!important}
+  [data-lda-motion="mask"][data-revealed]{clip-path:inset(0 0 0 0)}
+  .lda-service-card image-slot,.lda-product-card image-slot,.lda-spotlight-image image-slot{transition:transform .85s cubic-bezier(.16,1,.3,1)}
+  .lda-service-card:hover image-slot,.lda-product-card:hover image-slot,.lda-spotlight-image:hover image-slot{transform:scale(1.025)}
+  .lda-product-card{transition:transform .42s cubic-bezier(.16,1,.3,1)!important}
+  .lda-product-card:hover{transform:translateY(-4px)!important}
+  @media(max-width:859px){
+    .lda-hero-kicker,.lda-hero-title,.lda-hero-subtitle,.lda-hero-actions{animation-duration:.58s}
+    [data-lda-motion="left"]:not([data-revealed]),[data-lda-motion="right"]:not([data-revealed]){transform:translateY(10px)!important}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .lda-hero-kicker,.lda-hero-title,.lda-hero-subtitle,.lda-hero-actions,.lda-hero-script,.lda-scroll-line::after{animation:none!important}
+    [data-lda-motion]{clip-path:none!important;transform:none!important}
+    .lda-service-card image-slot,.lda-product-card image-slot,.lda-spotlight-image image-slot{transition:none!important}
+  }
+</style>
 </helmet>
 
 <div class="lda-nav-spacer" aria-hidden="true"></div>
@@ -159,24 +204,24 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div data-home-hero="" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.18) 0%,rgba(0,0,0,.24) 48%,rgba(0,0,0,.30) 100%);z-index:1;pointer-events:none;"></div>
-    <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
-    <p style="position:relative;z-index:2;font-size:18px;line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:0 0 22px;">{{ heroSubtitle }}</p>
-    <div style="position:relative;z-index:2;display:flex;gap:14px;flex-direction:row;width:auto;">
+    <div class="lda-hero-kicker" style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
+    <h1 class="lda-hero-title" style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span class="lda-hero-script" style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
+    <p class="lda-hero-subtitle" style="position:relative;z-index:2;font-size:18px;line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:0 0 22px;">{{ heroSubtitle }}</p>
+    <div class="lda-hero-actions" style="position:relative;z-index:2;display:flex;gap:14px;flex-direction:row;width:auto;">
       <a href="/tienda" style="text-decoration:none;background:#F65091;color:#fff;font-size:15px;font-weight:500;padding:17px 60px;border-radius:4px;text-align:center;flex:0 0 auto;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Comprar</a>
       <a href="/aprende" style="text-decoration:none;background:transparent;border:1px solid #fff;color:#fff;font-size:15px;font-weight:500;padding:16px 60px;border-radius:4px;text-align:center;flex:0 0 auto;transition:background .25s ease,border-color .25s ease;" style-hover="background:#0CC0DF;border-color:#0CC0DF;">Aprender</a>
     </div>
-    <div style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:2;width:1px;height:44px;background:rgba(255,255,255,0.5);"></div>
+    <div class="lda-scroll-line" style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:2;width:1px;height:44px;background:rgba(255,255,255,0.5);"></div>
   </div>
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-home-hero="" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.23) 0%,rgba(0,0,0,.29) 48%,rgba(0,0,0,.36) 100%);z-index:1;pointer-events:none;"></div>
-    <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
-    <p style="position:relative;z-index:2;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:300;margin:0 0 20px;">{{ heroSubtitle }}</p>
-    <div style="position:relative;z-index:2;display:flex;gap:12px;">
+    <div class="lda-hero-kicker" style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
+    <h1 class="lda-hero-title" style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span class="lda-hero-script" style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
+    <p class="lda-hero-subtitle" style="position:relative;z-index:2;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:300;margin:0 0 20px;">{{ heroSubtitle }}</p>
+    <div class="lda-hero-actions" style="position:relative;z-index:2;display:flex;gap:12px;">
       <a href="/tienda" style="text-decoration:none;flex:1;background:#F65091;border-radius:8px;padding:16px 0;color:#FFFFFF;text-align:center;font-size:14px;font-weight:500;transition:transform .2s ease;" style-active="transform:scale(0.96);">Comprar</a>
       <a href="/aprende" style="text-decoration:none;flex:1;background:transparent;border:1px solid #fff;border-radius:8px;padding:15px 0;color:#fff;text-align:center;font-size:14px;font-weight:500;transition:transform .2s ease;" style-active="transform:scale(0.96);">Aprender</a>
     </div>
@@ -225,7 +270,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 
   <!-- 2. CONÓCEME -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-  <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:96px 48px 72px;margin-top:0;display:grid;grid-template-columns:0.85fr 1.15fr;gap:32px;align-items:center;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div data-reveal="" data-lda-motion="left" style="max-width:1240px;margin:0 auto;padding:96px 48px 72px;margin-top:0;display:grid;grid-template-columns:0.85fr 1.15fr;gap:32px;align-items:center;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="aspect-ratio:4/5;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
       <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;height:100%;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
@@ -250,28 +295,28 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <!-- 4. SERVICIOS — qué hago -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div style="margin-top: 0; padding: 72px 48px 72px;">
-  <div data-reveal="" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div data-reveal="" data-lda-motion="scale" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:20px;text-align:center;">Servicios</div>
     <div style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center">En qué puedo <span style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">ayudarte</span></div>
   </div>
 
   <div style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1),transform 0.95s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-service-card" data-reveal="" data-lda-motion="mask" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1),transform 0.95s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
       <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .08s,transform 0.95s cubic-bezier(.22,1,.36,1) .08s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-service-card" data-reveal="" data-lda-motion="mask" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .08s,transform 0.95s cubic-bezier(.22,1,.36,1) .08s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
       <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .16s,transform 0.95s cubic-bezier(.22,1,.36,1) .16s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-service-card" data-reveal="" data-lda-motion="mask" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .16s,transform 0.95s cubic-bezier(.22,1,.36,1) .16s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
       <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .24s,transform 0.95s cubic-bezier(.22,1,.36,1) .24s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-service-card" data-reveal="" data-lda-motion="mask" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .24s,transform 0.95s cubic-bezier(.22,1,.36,1) .24s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
       <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
@@ -380,7 +425,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 
 <!-- 6. LA PRUEBA — CITA -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-  <div data-reveal="" style="padding:{{ gapPx }} 48px 12px;text-align:center;opacity:0;transform:translateY(12px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div data-reveal="" data-lda-motion="scale" style="padding:{{ gapPx }} 48px 12px;text-align:center;opacity:0;transform:translateY(12px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="font-size:64px;line-height:1;color:#E4DCCB;font-weight:700;font-family:Georgia,serif;margin-bottom:8px;">"</div>
     <div style="font-size: 26px; line-height: 1.5; color: #000000; font-weight: 300; max-width: 640px; margin: 0 auto 20px; white-space: nowrap;">{{ testimonialQuote }}</div>
     <div style="font-size:13px;color:#8B795E;font-weight:300;">{{ testimonialAuthor }}</div>
@@ -395,7 +440,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </sc-if>
 
 <!-- 6. EL RESULTADO — PIEZAS RECIENTES -->
-  <div data-reveal="" style="max-width:1240px;margin:{{ gapPx }} auto 0;padding:0 {{ sidePad }};opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div data-reveal="" data-lda-motion="right" style="max-width:1240px;margin:{{ gapPx }} auto 0;padding:0 {{ sidePad }};opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div class="lda-section-eyebrow lda-eyebrow-del-estudio" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>
     <div class="lda-del-estudio-title-row" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
       <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000">Piezas <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">recientes</span></div>
@@ -403,7 +448,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     </div>
     <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};min-width:0;">
       <sc-for list="{{ recentProducts }}" as="piece" hint-placeholder-count="4">
-      <a href="{{ piece.href }}" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+      <a class="lda-product-card" href="{{ piece.href }}" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
         <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
           <sc-if value="{{ piece.hasTag }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">{{ piece.tag }}</span></sc-if>
           <image-slot id="{{ piece.imageId }}" shape="rect" fit="cover" view-scale="{{ piece.imageView.scale }}" view-x="{{ piece.imageView.x }}" view-y="{{ piece.imageView.y }}" style="width:100%;height:100%;" src="{{ piece.imageUrl }}" placeholder="{{ piece.placeholder }}"></image-slot>
@@ -441,14 +486,14 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
         </div>
         <a href="/aprende" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">Reservar mi plaza</a>
       </div>
-      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">
+      <div class="lda-spotlight-image" style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};overflow:hidden;">
         <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ cursoSpotlightAlt }}" view-scale="{{ cursoSpotlightScale }}" view-x="{{ cursoSpotlightX }}" view-y="{{ cursoSpotlightY }}" style="width:100%;height:100%;" src="{{ cursoSpotlightUrl }}" placeholder="foto: taller de lettering en vivo, alumnas trabajando"></image-slot>
       </div>
     </div>
   </div>
 
 <!-- 9. CIERRE -->
-  <div data-reveal="" style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;opacity:0;transform:translateY(13px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div data-reveal="" data-lda-motion="scale" style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;opacity:0;transform:translateY(13px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="max-width:760px;margin:0 auto;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;text-align:center;">
       <h2 style="font-size: {{ h2Size }}; color: #000000; font-weight: 300; margin: 0 0 {{ closingTitleGap }}; white-space: {{ closingH2Wrap }};">¿Hacemos algo <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">increíble&nbsp;</span>juntos?</h2>
       <p style="font-size:{{ closingTextSize }};color:#8B795E;font-weight:300;margin:0 0 {{ closingTextActionGap }};line-height:1.7;">{{ closingText }}</p>
