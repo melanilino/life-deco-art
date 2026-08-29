@@ -181,6 +181,10 @@ class Component extends DCLogic {
       onPresupuestoOtro = onField('presupuestoOtro'), onTipoOtro = onField('tipoOtro'), onReferencia = onField('referencia');
     const tipoFinal = s.tipo === 'Otro' ? (s.tipoOtro || 'Otro') : s.tipo;
     const presupuestoFinal = s.presupuesto === 'Otro' ? s.presupuestoOtro : s.presupuesto;
+    const contentSteps = Array.isArray(content.steps) && content.steps.length ? [...content.steps] : null;
+    if (contentSteps && contentSteps.length >= 3 && /boceto/i.test(contentSteps[1]) && /anticipo/i.test(contentSteps[2])) {
+      [contentSteps[1], contentSteps[2]] = [contentSteps[2], contentSteps[1]];
+    }
     const presupuestoOpciones = presupuestos.map(p => ({
       label: p,
       bg: s.presupuesto === p ? '#F3EEE4' : '#FFFFFF',
@@ -220,7 +224,7 @@ class Component extends DCLogic {
       presupuestoDisplayColor: s.presupuesto ? '#2B2420' : '#8B795E',
       presupuestoArrow: s.presupuestoOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       introText: content.introText || 'Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.',
-      tipos, steps: Array.isArray(content.steps) && content.steps.length ? content.steps.map((text, index) => ({ n: index + 1, text })) : this.STEPS,
+      tipos, steps: contentSteps ? contentSteps.map((text, index) => ({ n: index + 1, text })) : this.STEPS,
       onTipo, onTipoOtro, onOcasion, onFecha, onCantidad, onTamano, onTexto, onColores, onPresupuesto, onCiudad, onPresupuestoOtro, onReferencia,
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(message),
     };

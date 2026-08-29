@@ -980,7 +980,11 @@ class Component extends DCLogic {
         steps: ['Reviso tu solicitud y te respondo con una propuesta de precio y tiempo de entrega.', 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.', 'Te comparto un boceto digital de la pieza para tu aprobación.'],
         whatsappMessage: 'Hola! Quiero hacer un encargo personalizado.'
       };
-      this.setState({ encargosData: { ...defaults, ...(data || {}) }, encargosLoaded: true, encargosLoading: false });
+      const merged = { ...defaults, ...(data || {}) };
+      if (Array.isArray(merged.steps) && merged.steps.length >= 3 && /boceto/i.test(merged.steps[1]) && /anticipo/i.test(merged.steps[2])) {
+        merged.steps = [merged.steps[0], merged.steps[2], merged.steps[1], ...merged.steps.slice(3)];
+      }
+      this.setState({ encargosData: merged, encargosLoaded: true, encargosLoading: false });
     }
   }
 
