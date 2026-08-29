@@ -381,7 +381,7 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;">
     <div style="background:#0CC0DF;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;">¿No encuentras eso que tenías en <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;">mente</span>?</div>
+      <div style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;">¿No encuentras eso que tenías en <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;position:relative;top:{{ ctaScriptOffset }};">mente</span>?</div>
       <p style="font-size:{{ ctaTextSize }};color:#E3F9FC;font-weight:300;margin:{{ ctaTextGap }} 0 0;text-align:center;">Hagamos una pieza 100% a medida, creada desde cero para ti.</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
         <a href="/encargo-personalizado" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">Crear encargo</a>
@@ -770,14 +770,15 @@ class Component extends DCLogic {
       faqToggleMinHeight: m ? '44px' : '26px',
       h2Size: m ? '22px' : '32px',
       ctaPad: m ? '36px 24px' : '96px 48px',
-      ctaRegionHeight: m ? '432px' : 'auto',
+      ctaRegionHeight: m ? '432px' : '508px',
       ctaTopPad: m ? '60px' : '72px',
       ctaBottomPad: m ? '60px' : '80px',
-      ctaBoxHeight: m ? '312px' : 'auto',
+      ctaBoxHeight: m ? '312px' : '356px',
       ctaRadius: m ? '16px' : '24px',
       ctaTextSize: m ? '13.5px' : '16px',
-      ctaTextGap: m ? '4px' : '4px',
-      ctaBtnMarginTop: m ? '18px' : '20px',
+      ctaTextGap: m ? '6px' : '8px',
+      ctaBtnMarginTop: m ? '32px' : '48px',
+      ctaScriptOffset: m ? '2px' : '4px',
       ctaWaPad: m ? '13px 26px' : '15px 30px',
       ctaWaSize: m ? '13.5px' : '14px',
       comunidadName,
@@ -807,7 +808,7 @@ class Component extends DCLogic {
       ctaAfter: ctaInfo.after,
       ctaSubtitle: ctaInfo.subtitle,
       ctaWhatsappHref: `https://wa.me/${live.whatsappNumber || '18495390410'}`,
-      closingBtnGap: m ? '12px' : '14px',
+      closingBtnGap: m ? '14px' : '18px',
       closingBtnDir: m ? 'column' : 'row',
       tabs,
       bannerUrl, bannerAlt, bannerSrcset,
