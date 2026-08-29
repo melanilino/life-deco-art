@@ -68,11 +68,9 @@ body{margin:0;background:#fff}
 .lda-nav-spacer{height:80px}
 #lda-whatsapp-fab-static{position:fixed;bottom:40px;right:24px;z-index:2147483000;width:56px;height:56px;border-radius:999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:transform .25s ease}
 #lda-whatsapp-fab-static:hover{transform:scale(1.08)}
-.lda-service-link{display:flex;align-items:center;justify-content:flex-start;gap:12px;text-decoration:none;color:#000;padding:var(--lda-service-pad);font-size:var(--lda-service-size);font-weight:400;-webkit-tap-highlight-color:transparent}
-.lda-service-link .lda-service-arrow{display:inline-block;color:#B9905A;font-size:.9em;font-weight:300;line-height:1;opacity:.55;transition:transform .28s cubic-bezier(.16,1,.3,1),opacity .25s ease}
-.lda-service-link .lda-service-label{display:inline-block;transition:transform .28s cubic-bezier(.16,1,.3,1),color .25s ease}
-.lda-service-link:hover .lda-service-arrow,.lda-service-link:focus-visible .lda-service-arrow{opacity:1;transform:translateX(2px)}
-.lda-service-link:hover .lda-service-label,.lda-service-link:focus-visible .lda-service-label{color:#B9905A;transform:translateY(-2px)}
+.lda-service-link{display:flex;align-items:center;justify-content:space-between;gap:20px;text-decoration:none;color:#000;padding:var(--lda-service-pad);font-size:var(--lda-service-size);font-weight:400;-webkit-tap-highlight-color:transparent}
+.lda-service-link .lda-service-label{display:inline-block;transition:transform .28s cubic-bezier(.16,1,.3,1)}
+.lda-service-link:hover .lda-service-label,.lda-service-link:focus-visible .lda-service-label{transform:translateY(-2px)}
 .lda-service-link:focus-visible{outline:1px solid #8B795E;outline-offset:4px}
 @media(max-width:859px){#lda-static-nav{height:64px;padding:0 20px}#lda-static-nav .lda-desktop{display:none}#lda-static-nav .lda-mobile{display:block}.lda-nav-spacer{height:64px}#lda-whatsapp-fab-static{bottom:24px;right:18px}}
 </style>
@@ -175,10 +173,10 @@ body{margin:0;background:#fff}
       <div>
         <div data-cms-text="servicesTitle" class="lda-section-eyebrow lda-eyebrow-que-hago" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Qué hago</div>
         <div style="display:flex;flex-direction:column;gap:0;--lda-service-pad:{{ queHagoPad }};--lda-service-size:{{ queHagoSize }};">
-          <a class="lda-service-link" href="/servicios/personalizados" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-arrow" aria-hidden="true">→</span><span class="lda-service-label">Personalizados</span></a>
-          <a class="lda-service-link" href="/servicios/rotulacion" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-arrow" aria-hidden="true">→</span><span class="lda-service-label">Rotulación</span></a>
-          <a class="lda-service-link" href="/servicios/packaging" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-arrow" aria-hidden="true">→</span><span class="lda-service-label">Packaging</span></a>
-          <a class="lda-service-link" href="/servicios/souvenirs"><span class="lda-service-arrow" aria-hidden="true">→</span><span class="lda-service-label">Souvenirs</span></a>
+          <a class="lda-service-link" href="/servicios/personalizados" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-label">Personalizados</span></a>
+          <a class="lda-service-link" href="/servicios/rotulacion" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-label">Rotulación</span></a>
+          <a class="lda-service-link" href="/servicios/packaging" style="border-bottom:1px solid #D8CDB7;"><span class="lda-service-label">Packaging</span></a>
+          <a class="lda-service-link" href="/servicios/souvenirs"><span class="lda-service-label">Souvenirs</span></a>
         </div>
       </div>
       <div>
