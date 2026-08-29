@@ -493,7 +493,7 @@ class Component extends DCLogic {
       window.location.assign('/encargo-personalizado');
     };
     const m = this.state.isMobile;
-    const productPageSize = m ? 6 : 8;
+    const productPageSize = m ? 6 : 9;
     const visibleProductLimit = productPageSize * (this.state.visiblePage || 1);
     const showLoadMore = products.length > visibleProductLimit;
     return {
@@ -507,7 +507,7 @@ class Component extends DCLogic {
       shopPad: m ? '24px 24px 40px' : '72px 48px 96px',
       shopCols: m ? '1fr' : '200px 1fr',
       shopGap: m ? '32px' : '72px',
-      productCols: m ? 'repeat(2,1fr)' : 'repeat(2,1fr)',
+      productCols: m ? 'repeat(2,1fr)' : 'repeat(3,minmax(0,1fr))',
       productGap: m ? '28px 16px' : '40px 36px',
       faqPad: m ? '60px 24px 0' : '72px 48px 0',
       faqGap: m ? '15px' : '48px',
