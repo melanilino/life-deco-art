@@ -159,7 +159,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-home-hero="" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
     <sc-if value="{{ heroVideoPosterSrc }}" hint-placeholder-val="{{ false }}"><img src="{{ heroVideoPosterSrc }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></sc-if>
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .18s ease;"></video>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.26) 0%,rgba(0,0,0,.23) 40%,rgba(0,0,0,.54) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
@@ -174,7 +174,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-home-hero="" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
     <sc-if value="{{ heroVideoPosterSrc }}" hint-placeholder-val="{{ false }}"><img src="{{ heroVideoPosterSrc }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" loading="eager" fetchpriority="high" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;"></sc-if>
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onCanPlay="{{ onHeroVideoReady }}" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .18s ease;"></video>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.31) 0%,rgba(0,0,0,.25) 40%,rgba(0,0,0,.58) 100%);z-index:1;"></div>
     <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
@@ -483,7 +483,6 @@ class Component extends DCLogic {
         content: data,
         heroVideoReady: cached && cached.heroVideoUrl === data.heroVideoUrl ? this.state.heroVideoReady : false
       });
-      this.scheduleHeroVideo();
       const tiendaData = await cms.getPageContent('tienda');
       if (tiendaData && tiendaData.products) {
         const map = {};
@@ -592,15 +591,50 @@ class Component extends DCLogic {
     if (!v) return;
     const src = v.getAttribute('data-video-src');
     if (!src) return;
-    const revealVideo = () => {
-      v.style.opacity = '1';
-      if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true });
+    if (this.heroVideoElement === v && v.getAttribute('src') === src) return;
+    this.heroVideoElement = v;
+    let started = false;
+    const bufferedAhead = () => {
+      try {
+        for (let i = 0; i < v.buffered.length; i += 1) {
+          if (v.buffered.start(i) <= 0.1) return v.buffered.end(i);
+        }
+      } catch (e) {}
+      return 0;
     };
-    if (v.readyState >= 3) revealVideo();
-    else v.addEventListener('canplay', revealVideo, { once: true });
+    const beginSmoothPlayback = () => {
+      if (started) return;
+      if (v.readyState < 4 && bufferedAhead() < 3) return;
+      started = true;
+      clearInterval(this.heroBufferTimer);
+      clearTimeout(this.heroBufferFallbackTimer);
+      try { v.currentTime = 0; } catch (e) {}
+      const playback = v.play();
+      const revealVideo = () => requestAnimationFrame(() => {
+        v.style.opacity = '1';
+        if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true });
+      });
+      if (playback && playback.then) playback.then(revealVideo).catch(() => {});
+      else revealVideo();
+    };
     if (!v.getAttribute('src')) v.setAttribute('src', src);
     v.muted = true; v.loop = true; v.playsInline = true;
-    v.play().catch(() => {});
+    v.preload = 'auto';
+    v.load();
+    v.addEventListener('progress', beginSmoothPlayback);
+    v.addEventListener('canplaythrough', beginSmoothPlayback, { once: true });
+    this.heroBufferTimer = setInterval(beginSmoothPlayback, 100);
+    this.heroBufferFallbackTimer = setTimeout(() => {
+      if (!started && v.readyState >= 3) {
+        started = true;
+        clearInterval(this.heroBufferTimer);
+        try { v.currentTime = 0; } catch (e) {}
+        v.play().then(() => requestAnimationFrame(() => {
+          v.style.opacity = '1';
+          if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true });
+        })).catch(() => {});
+      }
+    }, 6000);
   };
   scheduleHeroVideo = () => {
     clearTimeout(this.heroVideoTimer);
@@ -619,6 +653,8 @@ class Component extends DCLogic {
     window.removeEventListener('load', this.scheduleHeroVideo);
     clearTimeout(this.heroVideoTimer);
     clearTimeout(this.bootBackdropTimer);
+    clearInterval(this.heroBufferTimer);
+    clearTimeout(this.heroBufferFallbackTimer);
   }
   renderVals() {
     const gap = this.props.sectionGap ?? 96;
@@ -700,7 +736,6 @@ class Component extends DCLogic {
       heroVideoPosterSrc: '/hero-video-cover.webp',
       heroVideoPosterSrcset: '',
       heroVideoOpacity: this.state.heroVideoReady ? '1' : '0',
-      onHeroVideoReady: () => { if (!this.state.heroVideoReady) this.setState({ heroVideoReady: true }); },
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
       melaniPhotoUrl: c.melaniPhotoUrl || '',
