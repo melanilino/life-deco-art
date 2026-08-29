@@ -219,6 +219,11 @@ body{margin:0;background:#fff}
         <div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Todavía no hay piezas en esta categoría — muy pronto.</div>
       </sc-if>
       </div>
+      <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:center;padding:32px 0 0;">
+          <button type="button" onClick="{{ onLoadMore }}" style="border:0;border-bottom:1px solid transparent;background:transparent;color:#B79A6B;padding:8px 2px 6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;letter-spacing:.03em;cursor:pointer;transition:transform .25s ease,border-color .25s ease;" style-hover="transform:translateY(-2px);border-bottom-color:#B79A6B;">Cargar más <span aria-hidden="true" style="font-size:12px;margin-left:5px;">↓</span></button>
+        </div>
+      </sc-if>
     </div>
 
   </div>
@@ -292,7 +297,7 @@ class Component extends DCLogic {
     setTimeout(sweep, 400);
     setTimeout(sweep, 1200);
   }
-  state = { category: null, subcategory: null, expanded: null, sortBy: 'entrega', sortOpen: false, faqOpen: null, tiendaData: null, loading: false, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { category: null, subcategory: null, expanded: null, sortBy: 'entrega', sortOpen: false, faqOpen: null, visiblePage: 1, tiendaData: null, loading: false, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
 
   async componentDidMount() {
     this.setupReveal();
@@ -413,10 +418,10 @@ class Component extends DCLogic {
       label: o.label,
       color: sortBy === o.value ? '#F65091' : '#000000',
       weight: sortBy === o.value ? 500 : 400,
-      onClick: () => this.setState({ sortBy: o.value, sortOpen: false }),
+      onClick: () => this.setState({ sortBy: o.value, sortOpen: false, visiblePage: 1 }),
     }));
 
-    const onSelectAll = () => this.setState({ category: null, subcategory: null, expanded: null, sortOpen: false, faqOpen: null });
+    const onSelectAll = () => this.setState({ category: null, subcategory: null, expanded: null, sortOpen: false, faqOpen: null, visiblePage: 1 });
     const allActive = !category;
 
     const categories = data.categories.map(cat => {
@@ -428,6 +433,7 @@ class Component extends DCLogic {
         expanded: isExpanded ? null : cat.name,
         sortOpen: false,
         faqOpen: null,
+        visiblePage: 1,
       });
       const subcategories = cat.subcategories.map(sub => {
         const subActive = isActive && subcategory === sub.name;
@@ -436,7 +442,7 @@ class Component extends DCLogic {
           weight: subActive ? 500 : 400,
           color: '#8B795E',
           borderLeft: subActive ? '2px solid #F65091' : '2px solid transparent',
-          onClick: () => this.setState({ category: cat.name, subcategory: sub.name, expanded: cat.name, sortOpen: false, faqOpen: null }),
+          onClick: () => this.setState({ category: cat.name, subcategory: sub.name, expanded: cat.name, sortOpen: false, faqOpen: null, visiblePage: 1 }),
         };
       });
       return {
@@ -486,6 +492,9 @@ class Component extends DCLogic {
       window.location.assign('/encargo-personalizado');
     };
     const m = this.state.isMobile;
+    const productPageSize = m ? 6 : 8;
+    const visibleProductLimit = productPageSize * (this.state.visiblePage || 1);
+    const showLoadMore = products.length > visibleProductLimit;
     return {
       navGap: m ? '64px' : '88px',
       eyebrowGap: m ? '12px' : '16px',
@@ -532,8 +541,10 @@ class Component extends DCLogic {
       allColor: allActive ? '#F65091' : '#000000',
       allWeight: allActive ? 600 : 400,
       categories,
-      products,
+      products: products.slice(0, visibleProductLimit),
       noProducts: products.length === 0,
+      showLoadMore,
+      onLoadMore: () => this.setState({ visiblePage: (this.state.visiblePage || 1) + 1 }),
       bannerImageUrl,
       bannerImageSrcset: (data.bannerImageMeta && data.bannerImageMeta.srcset) || '',
       bannerImageAlt: data.bannerImageAlt || 'Pieza personalizada de Life Deco Art en un espacio real',
