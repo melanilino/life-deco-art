@@ -230,7 +230,7 @@ body{margin:0;background:#fff}
   </div>
   </sc-if>
 
-  <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin:{{ bannerMargin }};">
+  <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin:{{ bannerMargin }};">
     <image-slot id="tienda-banner-espacio" shape="rect" fit="cover" srcset="{{ bannerImageSrcset }}" sizes="100vw" alt="{{ bannerImageAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerImageUrl }}" placeholder="foto: pieza terminada en un espacio real (mesa, pared, evento)"></image-slot>
   </div>
 
@@ -504,7 +504,7 @@ class Component extends DCLogic {
       bodySize: m ? '14px' : '13px',
       heroPad: m ? '40px 24px 24px' : '72px 48px 24px',
       h1Size: m ? '26px' : '44px',
-      shopPad: m ? '24px 24px 40px' : '72px 48px 96px',
+      shopPad: m ? '24px 24px 40px' : '72px 48px 48px',
       shopCols: m ? '1fr' : '200px 1fr',
       shopGap: m ? '32px' : '72px',
       productCols: m ? 'repeat(2,1fr)' : 'repeat(3,minmax(0,1fr))',
@@ -530,6 +530,7 @@ class Component extends DCLogic {
       ctaWaRadius: m ? '6px' : '4px',
       ctaWaSize: m ? '13.5px' : '14px',
       bannerMargin: m ? '32px 0 0' : '0',
+      bannerHeight: m ? 'clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px)' : 'clamp(560px, 36vw, 680px)',
       isLoading: loading,
       isLoaded: !loading,
       onSelectAll,
