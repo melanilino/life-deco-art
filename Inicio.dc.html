@@ -584,7 +584,6 @@ class Component extends DCLogic {
     requestAnimationFrame(sweep);
     setTimeout(sweep, 400);
     setTimeout(sweep, 1200);
-    window.addEventListener('scroll', sweep, { passive: true });
     requestAnimationFrame(() => this.syncResponsiveImages());
   }
   componentDidUpdate() { requestAnimationFrame(() => this.syncResponsiveImages()); }
