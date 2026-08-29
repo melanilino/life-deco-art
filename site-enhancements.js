@@ -36,8 +36,12 @@
       }
       .lda-skip-link:focus { transform: translateY(0); }
       :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-        outline: 3px solid #8B795E !important;
-        outline-offset: 3px !important;
+        outline: none !important;
+        outline-offset: 0 !important;
+        box-shadow: none !important;
+      }
+      :where(a, button, summary, [tabindex]):focus-visible {
+        filter: brightness(.9);
       }
       [data-reveal] {
         transition-duration: .62s !important;
