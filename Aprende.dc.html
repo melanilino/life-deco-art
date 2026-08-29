@@ -330,32 +330,32 @@ body{margin:0;background:#fff}
   </div>
 
   <sc-if value="{{ isGratis }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-gratis" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumnos practicando lettering en un taller"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isCursos }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-cursos" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: alumna practicando lettering en un curso"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isTalleres }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-talleres" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: grupo en un taller presencial"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isBlog }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-blog" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: escritorio de trabajo con contenido del blog"></image-slot>
     </div>
   </sc-if>
   <sc-if value="{{ isComunidad }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-comunidad" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto: comunidad compartiendo su trabajo"></image-slot>
     </div>
   </sc-if>
-  <sc-if value="{{ hasEssentialsBanner }}" hint-placeholder-val="{{ false }}">
-    <div style="height:clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px);background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
+  <sc-if value="{{ isRecomendados }}" hint-placeholder-val="{{ false }}">
+    <div style="height:{{ bannerHeight }};background:#F3EEE4;overflow:hidden;margin-bottom:{{ bannerBottomGap }};">
       <image-slot id="aprende-banner-esenciales" shape="rect" fit="cover" srcset="{{ bannerSrcset }}" sizes="100vw" alt="{{ bannerAlt }}" view-scale="{{ bannerView.scale }}" view-x="{{ bannerView.x }}" view-y="{{ bannerView.y }}" style="width:100%;height:100%;" src="{{ bannerUrl }}" placeholder="foto de materiales y herramientas recomendadas"></image-slot>
     </div>
   </sc-if>
@@ -762,8 +762,9 @@ class Component extends DCLogic {
       tabsOverflow: m ? 'visible' : 'auto',
       recBarGap: m ? '10px' : '16px',
       recSortMinW: m ? '116px' : '180px',
-      mainPad: m ? '24px 24px 40px' : '96px 48px 48px',
+      mainPad: m ? '24px 24px 40px' : '96px 48px 36px',
       bannerBottomGap: '0px',
+      bannerHeight: m ? 'clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px)' : 'clamp(560px, 36vw, 680px)',
       courseCols: m ? '1fr' : '0.8fr 1.2fr',
       coursePad: m ? '16px' : '32px',
       courseLevelSize: m ? '10.5px' : '11px',
@@ -790,7 +791,7 @@ class Component extends DCLogic {
       esencialDescSize: m ? '12px' : '13px',
       faqPad: m
         ? (category === 'Esenciales' ? '20px 24px 0' : '60px 24px 0')
-        : (category === 'Esenciales' && !bannerUrl ? '24px 48px 0' : '72px 48px 0'),
+        : '72px 48px 0',
       faqGap: m ? '15px' : '48px',
       faqCols: m ? '1fr' : '0.8fr 1.2fr',
       faqToggleMinHeight: m ? '44px' : '26px',
