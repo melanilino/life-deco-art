@@ -170,7 +170,13 @@ x-dc{display:none!important}
       </div>
     </sc-if>
 
-    <sc-if value="{{ isEncargosPage }}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{ isEncargosEditorOpen }}" hint-placeholder-val="{{ false }}">
+      <div class="cms-contained-editor" style="position:fixed;inset:0 0 0 250px;background:#F9F6EF;z-index:50;overflow-y:scroll;scrollbar-gutter:stable;padding:26px 56px 48px;box-sizing:border-box;">
+      <div style="width:100%;margin:0;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px;">
+        <div><span onClick="{{ onCloseEncargosEditor }}" style="display:inline-flex;align-items:center;min-height:38px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 6px;padding:0 8px 0 0;">← Volver a Tienda</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">Encargo personalizado</div></div>
+        <span onClick="{{ onCloseEncargosEditor }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span>
+      </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Presentación</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;max-width:760px;">
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Texto introductorio</label>
@@ -192,6 +198,8 @@ x-dc{display:none!important}
         <textarea value="{{ encargosStepsText }}" onChange="{{ onEncargosSteps }}" rows="5" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.7;resize:vertical;margin-bottom:16px;"></textarea>
         <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Inicio del mensaje de WhatsApp</label>
         <textarea value="{{ encargosWhatsappMessage }}" onChange="{{ onEncargosWhatsappMessage }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
+      </div>
+      </div>
       </div>
     </sc-if>
 
@@ -308,6 +316,14 @@ x-dc{display:none!important}
           </sc-for>
         </div>
         <span onClick="{{ onAddCategory }}" style="display:block;text-align:right;font-size:13px;color:#8B795E;cursor:pointer;margin-bottom:28px;">+ Agregar categoría</span>
+
+        <div onClick="{{ onOpenEncargosEditor }}" style="display:flex;align-items:center;justify-content:space-between;background:#FFFFFF;border:1px solid #FFFFFF;border-radius:6px;padding:17px 18px;margin-bottom:28px;cursor:pointer;">
+          <div>
+            <div style="font-size:13px;color:#000;margin-bottom:5px;">Encargo personalizado</div>
+            <div style="font-size:12px;color:#8B795E;line-height:1.5;">Opciones, proceso y mensaje del formulario de encargos.</div>
+          </div>
+          <span aria-hidden="true" style="font-size:15px;color:#8B795E;margin-left:18px;">✎</span>
+        </div>
 
         <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:28px 0 10px;">Productos</div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;">
@@ -793,7 +809,6 @@ class Component extends DCLogic {
     { id: 'sobremi', label: 'Sobre Mí', desc: 'Historia, foto y presentación de la marca.' },
     { id: 'tienda', label: 'Tienda', desc: 'Categorías, subcategorías y productos del catálogo.' },
     { id: 'aprende', label: 'Aprende', desc: 'Esenciales, cursos, talleres, gratis, blog y comunidad.' },
-    { id: 'encargos', label: 'Encargo personalizado', desc: 'Opciones, proceso y mensaje del formulario de encargos.' },
     { id: 'contacto', label: 'Contacto', desc: 'Tipos de proyecto disponibles en el formulario.' },
     { id: 'privacidad', label: 'Política de Privacidad', desc: 'Estado e información de la página legal.' },
     { id: 'terminos', label: 'Términos y Condiciones', desc: 'Estado e información de la página legal.' },
@@ -812,7 +827,7 @@ class Component extends DCLogic {
 
   componentDidUpdate() {
     const s = this.state;
-    const editorOpen = !!(s.user && ((s.page === 'tienda' && s.expanded.products) || (s.page === 'aprende' && s.aprendeSectionOpen && s.expanded[s.aprendeTab])));
+    const editorOpen = !!(s.user && ((s.page === 'tienda' && (s.expanded.products || s.expanded.encargos)) || (s.page === 'aprende' && s.aprendeSectionOpen && s.expanded[s.aprendeTab])));
     if (editorOpen && !this._pageScrollLocked) {
       this._pageScrollLocked = true;
       this._previousPageOverflow = { html: document.documentElement.style.overflow, body: document.body.style.overflow };
@@ -908,10 +923,10 @@ class Component extends DCLogic {
       }
       const products = (tienda.products && tienda.products.length) ? tienda.products : this.DEFAULT_TIENDA.products;
       this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products });
-    } else if (pageId === 'tienda' && !this.state.tiendaLoaded) {
-      this.setState({ tiendaLoading: true });
-      let data = {};
-      try { data = await this.state.cms.getPageContent('tienda'); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
+    } else if (pageId === 'tienda' && (!this.state.tiendaLoaded || !this.state.encargosLoaded)) {
+      this.setState({ tiendaLoading: true, encargosLoading: true });
+      let data = {}, encargos = {};
+      try { [data, encargos] = await Promise.all([this.state.cms.getPageContent('tienda'), this.state.cms.getPageContent('encargos')]); } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       const merged = {
         categories: (data.categories && data.categories.length) ? data.categories : this.DEFAULT_TIENDA.categories,
         products: ((data.products && data.products.length) ? data.products : this.DEFAULT_TIENDA.products).map((product) => ({
@@ -927,7 +942,18 @@ class Component extends DCLogic {
         bannerImageAdjustment: data.bannerImageAdjustment || null,
         faqs: (Array.isArray(data.faqs) ? data.faqs : this.DEFAULT_TIENDA.faqs).map((faq, index) => ({ ...faq, id: faq.id || ('faq' + index) }))
       };
-      this.setState({ tiendaData: merged, tiendaLoaded: true, tiendaLoading: false });
+      const encargosDefaults = {
+        introText: 'Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.',
+        pieceTypes: ['Cuadro personalizado', 'Bandeja', 'Caja sorpresa', 'Letrero', 'Llavero', 'Vinera', 'Otro'],
+        budgetOptions: ['Menos de RD$2,000', 'RD$2,000 – RD$5,000', 'RD$5,000 – RD$10,000', 'Más de RD$10,000', 'Otro'],
+        steps: ['Reviso tu solicitud y te respondo con una propuesta de precio y tiempo de entrega.', 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.', 'Te comparto un boceto digital de la pieza para tu aprobación.'],
+        whatsappMessage: 'Hola! Quiero hacer un encargo personalizado.'
+      };
+      const encargosMerged = { ...encargosDefaults, ...(encargos || {}) };
+      if (Array.isArray(encargosMerged.steps) && encargosMerged.steps.length >= 3 && /boceto/i.test(encargosMerged.steps[1]) && /anticipo/i.test(encargosMerged.steps[2])) {
+        encargosMerged.steps = [encargosMerged.steps[0], encargosMerged.steps[2], encargosMerged.steps[1], ...encargosMerged.steps.slice(3)];
+      }
+      this.setState({ tiendaData: merged, tiendaLoaded: true, tiendaLoading: false, encargosData: encargosMerged, encargosLoaded: true, encargosLoading: false });
     } else if (pageId === 'aprende' && !this.state.aprendeLoaded) {
       this.setState({ aprendeLoading: true });
       let data = {};
@@ -969,22 +995,6 @@ class Component extends DCLogic {
       data = data || {};
       const defaults = ['Cartel / decoración', 'Papelería de boda', 'Regalo personalizado', 'Taller o clase', 'Otro'];
       this.setState({ contactData: { ...data, projectTypes: (data.projectTypes && data.projectTypes.length) ? data.projectTypes : defaults }, contactLoaded: true, contactLoading: false });
-    } else if (pageId === 'encargos' && !this.state.encargosLoaded) {
-      this.setState({ encargosLoading: true });
-      let data = {};
-      try { data = await this.state.cms.getPageContent('encargos'); } catch (e) { this.setState({ error: 'No se pudo cargar la configuración de Encargo personalizado.' }); }
-      const defaults = {
-        introText: 'Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.',
-        pieceTypes: ['Cuadro personalizado', 'Bandeja', 'Caja sorpresa', 'Letrero', 'Llavero', 'Vinera', 'Otro'],
-        budgetOptions: ['Menos de RD$2,000', 'RD$2,000 – RD$5,000', 'RD$5,000 – RD$10,000', 'Más de RD$10,000', 'Otro'],
-        steps: ['Reviso tu solicitud y te respondo con una propuesta de precio y tiempo de entrega.', 'Confirmas con un anticipo del 50% y comienzo a producir tu pieza.', 'Te comparto un boceto digital de la pieza para tu aprobación.'],
-        whatsappMessage: 'Hola! Quiero hacer un encargo personalizado.'
-      };
-      const merged = { ...defaults, ...(data || {}) };
-      if (Array.isArray(merged.steps) && merged.steps.length >= 3 && /boceto/i.test(merged.steps[1]) && /anticipo/i.test(merged.steps[2])) {
-        merged.steps = [merged.steps[0], merged.steps[2], merged.steps[1], ...merged.steps.slice(3)];
-      }
-      this.setState({ encargosData: merged, encargosLoaded: true, encargosLoading: false });
     }
   }
 
@@ -1003,6 +1013,12 @@ class Component extends DCLogic {
   }
   updateEncargosField(key, value) {
     this.setState({ encargosData: { ...(this.state.encargosData || {}), [key]: value }, saved: false });
+  }
+  openEncargosEditor() {
+    this.setState({ expanded: { ...this.state.expanded, products: null, encargos: true } });
+  }
+  closeEncargosEditor() {
+    this.setState({ expanded: { ...this.state.expanded, encargos: false } });
   }
   updateContactType(index, value) {
     const projectTypes = [...((this.state.contactData && this.state.contactData.projectTypes) || [])];
@@ -1643,16 +1659,7 @@ class Component extends DCLogic {
     try {
       if (s.page === 'inicio') await s.cms.savePageContent('inicio', s.content);
       if (s.page === 'config') await s.cms.savePageContent('global', s.configData || {});
-      if (s.page === 'tienda') await s.cms.savePageContent('tienda', s.tiendaData);
-      if (s.page === 'aprende') await s.cms.savePageContent('aprende', s.aprendeData);
-      if (s.page === 'sobremi') await s.cms.savePageContent('sobremi', s.sobremiData);
-      if (s.page === 'contacto') {
-        const projectTypes = ((s.contactData && s.contactData.projectTypes) || []).map((value) => value.trim()).filter(Boolean);
-        if (!projectTypes.length) throw new Error('Contacto necesita al menos un tipo de proyecto.');
-        await s.cms.savePageContent('contacto', { ...s.contactData, projectTypes });
-        this.setState({ contactData: { ...s.contactData, projectTypes } });
-      }
-      if (s.page === 'encargos') {
+      if (s.page === 'tienda') {
         const cleanLines = (values) => (Array.isArray(values) ? values : []).map((value) => String(value || '').trim()).filter(Boolean);
         let pieceTypes = cleanLines(s.encargosData && s.encargosData.pieceTypes);
         let budgetOptions = cleanLines(s.encargosData && s.encargosData.budgetOptions);
@@ -1660,9 +1667,17 @@ class Component extends DCLogic {
         if (!pieceTypes.some((value) => value.toLowerCase() === 'otro')) pieceTypes.push('Otro');
         if (!budgetOptions.some((value) => value.toLowerCase() === 'otro')) budgetOptions.push('Otro');
         if (!pieceTypes.length || !budgetOptions.length || !steps.length) throw new Error('Encargo personalizado necesita opciones y pasos.');
-        const next = { ...s.encargosData, pieceTypes, budgetOptions, steps };
-        await s.cms.savePageContent('encargos', next);
-        this.setState({ encargosData: next });
+        const nextEncargos = { ...s.encargosData, pieceTypes, budgetOptions, steps };
+        await Promise.all([s.cms.savePageContent('tienda', s.tiendaData), s.cms.savePageContent('encargos', nextEncargos)]);
+        this.setState({ encargosData: nextEncargos });
+      }
+      if (s.page === 'aprende') await s.cms.savePageContent('aprende', s.aprendeData);
+      if (s.page === 'sobremi') await s.cms.savePageContent('sobremi', s.sobremiData);
+      if (s.page === 'contacto') {
+        const projectTypes = ((s.contactData && s.contactData.projectTypes) || []).map((value) => value.trim()).filter(Boolean);
+        if (!projectTypes.length) throw new Error('Contacto necesita al menos un tipo de proyecto.');
+        await s.cms.savePageContent('contacto', { ...s.contactData, projectTypes });
+        this.setState({ contactData: { ...s.contactData, projectTypes } });
       }
       this.setState({ saved: true });
     } catch (e) {
@@ -1972,7 +1987,9 @@ class Component extends DCLogic {
         onRemove: () => this.removeContactType(index)
       })),
       onAddContactType: () => this.addContactType(),
-      isEncargosPage: s.page === 'encargos' && !!s.encargosData,
+      isEncargosEditorOpen: s.page === 'tienda' && !!s.expanded.encargos && !!s.encargosData,
+      onOpenEncargosEditor: () => this.openEncargosEditor(),
+      onCloseEncargosEditor: () => this.closeEncargosEditor(),
       encargosIntroText: (s.encargosData && s.encargosData.introText) || '',
       encargosPieceTypesText: ((s.encargosData && s.encargosData.pieceTypes) || []).join('\n'),
       encargosBudgetOptionsText: ((s.encargosData && s.encargosData.budgetOptions) || []).join('\n'),
@@ -2084,7 +2101,7 @@ class Component extends DCLogic {
           onChange: (e) => this.updateRecentProduct(position, e.target.value)
         };
       }),
-      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && s.tiendaLoading) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading) || (s.page === 'encargos' && s.encargosLoading),
+      isPageLoading: (s.page === 'config' && s.configLoading) || (s.page === 'tienda' && (s.tiendaLoading || s.encargosLoading)) || (s.page === 'aprende' && s.aprendeLoading) || (s.page === 'contacto' && s.contactLoading),
       isTiendaPage: s.page === 'tienda' && !s.tiendaLoading, tiendaCategories, tiendaProducts, tiendaFaqs, selectedProduct,
       onDeselectProduct: () => this.closeProductEditor(), stopPropagation: (e) => e.stopPropagation(),
       onAddCategory: () => this.addCategory(),
@@ -2109,7 +2126,7 @@ class Component extends DCLogic {
       onConfirmStop: (e) => e.stopPropagation(),
       saveBtnText: s.saving ? 'Guardando...' : 'Publicar',
       showSaved: s.saved,
-      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto' || s.page === 'encargos'
+      hasSaveAction: s.page === 'config' || s.page === 'tienda' || s.page === 'aprende' || s.page === 'inicio' || s.page === 'sobremi' || s.page === 'contacto'
     };
   }
 }
