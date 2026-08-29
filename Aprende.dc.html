@@ -316,6 +316,12 @@ body{margin:0;background:#fff}
       </sc-if>
     </sc-if>
 
+    <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;justify-content:center;padding:16px 0 4px;">
+        <button type="button" onClick="{{ onLoadMore }}" style="border:1px solid #0CC0DF;background:#FFFFFF;color:#0CC0DF;border-radius:4px;padding:12px 28px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:transform .25s ease,background-color .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);background:#EAFBFE;">Cargar más</button>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ noCourses }}" hint-placeholder-val="{{ false }}">
       <div style="padding:64px 0;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Todavía no hay contenido en esta categoría — muy pronto.</div>
     </sc-if>
@@ -453,7 +459,7 @@ class Component extends DCLogic {
     this._popstateHandler = () => {
       const params = new URLSearchParams(window.location.search);
       const tab = this.TABS.find(t => t.toLowerCase() === (params.get('tab') || '').toLowerCase()) || 'Esenciales';
-      this.setState({ category: tab, faqOpen: null, previewItem: null });
+      this.setState({ category: tab, faqOpen: null, previewItem: null, visiblePages: {} });
     };
     window.addEventListener('popstate', this._popstateHandler);
   }
@@ -467,7 +473,7 @@ class Component extends DCLogic {
     else url.searchParams.set('tab', category);
     url.hash = '';
     window.history.pushState({}, '', `${url.pathname}${url.search}`);
-    this.setState({ category, faqOpen: null, previewItem: null });
+    this.setState({ category, faqOpen: null, previewItem: null, visiblePages: {} });
   }
   async loadLive() {
     try {
@@ -520,7 +526,7 @@ class Component extends DCLogic {
       setTimeout(() => { if (this.state.copiedSlug === slug) this.setState({ copiedSlug: null }); }, 1600);
     });
   }
-  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', visiblePages: {}, copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
   TABS = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'];
   ALL_COURSES = [
     { id: 'cu1', name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
@@ -719,6 +725,25 @@ class Component extends DCLogic {
     const ctaInfo = this.CTA_BY_CATEGORY[category];
 
     const m = this.state.isMobile;
+    const pageSizes = {
+      Esenciales: m ? 5 : 6,
+      Cursos: m ? 3 : 4,
+      Talleres: 4,
+      Gratis: 6,
+      Blog: m ? 4 : 6,
+    };
+    const pageSize = pageSizes[category] || Number.MAX_SAFE_INTEGER;
+    const currentPage = (this.state.visiblePages && this.state.visiblePages[category]) || 1;
+    const visibleLimit = pageSize * currentPage;
+    const essentialsSource = publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado');
+    const filteredEssentials = essentialsSource.filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
+    const activeListTotal = isCursos ? courses.length
+      : isTalleres ? publishedOrPlaceholders(live.talleres, this.WORKSHOPS).length
+      : isGratis ? publishedOrPlaceholders(live.gratis, this.FREEBIES).length
+      : isBlog ? publishedOrPlaceholders(live.blog, this.BLOG_POSTS).length
+      : isRecomendados ? filteredEssentials.length
+      : 0;
+    const showLoadMore = activeListTotal > visibleLimit;
     return {
       isDesktop: !m,
       isMobile: m,
@@ -814,7 +839,7 @@ class Component extends DCLogic {
       bannerUrl, bannerAlt, bannerSrcset,
       bannerView,
       hasEssentialsBanner: isRecomendados && !!bannerUrl,
-      courses,
+      courses: courses.slice(0, visibleLimit),
       isComunidad,
       showCommunityContent,
       isBlog,
@@ -824,17 +849,16 @@ class Component extends DCLogic {
       isRecomendados,
       tabsRow1,
       tabsRow2,
-      recommendedProducts: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado'),
+      recommendedProducts: essentialsSource,
       recSearch: this.state.recSearch,
       recSort: this.state.recSort,
-      onRecSearch: (e) => this.setState({ recSearch: e.target.value }),
-      onRecSort: (e) => this.setState({ recSort: e.target.value }),
+      onRecSearch: (e) => this.setState({ recSearch: e.target.value, visiblePages: { ...this.state.visiblePages, Esenciales: 1 } }),
+      onRecSort: (e) => this.setState({ recSort: e.target.value, visiblePages: { ...this.state.visiblePages, Esenciales: 1 } }),
       recommendedProductsView: (() => {
-        const source = publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado');
-        let list = source.filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase()));
+        let list = [...filteredEssentials];
         if (this.state.recSort === 'az') list = [...list].sort((a, b) => a.name.localeCompare(b.name));
         if (this.state.recSort === 'za') list = [...list].sort((a, b) => b.name.localeCompare(a.name));
-        return list.map(p => {
+        return list.slice(0, visibleLimit).map(p => {
           const slug = this.slugify(p.name);
           const copied = this.state.copiedSlug === slug;
           const href = String(p.href || '').trim();
@@ -842,10 +866,10 @@ class Component extends DCLogic {
           return { ...p, ...imageProps(p, 'Material recomendado'), imageView: imageView(p), slug, safeHref: externalHref ? href : '#', linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', onOpen: externalHref ? undefined : (e) => e.preventDefault(), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
         });
       })(),
-      recEmpty: publishedOrPlaceholders(live.esenciales, this.RECOMMENDED_PRODUCTS, p => !p.status || p.status === 'Activo' || p.status === 'Publicado').filter(p => p.name.toLowerCase().includes(this.state.recSearch.toLowerCase())).length === 0,
-      workshops: publishedOrPlaceholders(live.talleres, this.WORKSHOPS).map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, ...imageProps(w, 'Taller de lettering'), dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
-      posts: publishedOrPlaceholders(live.blog, this.BLOG_POSTS).map(post => ({ placeholder: 'foto del artículo', ...post, ...imageProps(post, 'Artículo del blog'), meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
-      freebies: publishedOrPlaceholders(live.gratis, this.FREEBIES).map((item,i) => {
+      recEmpty: filteredEssentials.length === 0,
+      workshops: publishedOrPlaceholders(live.talleres, this.WORKSHOPS).slice(0, visibleLimit).map((w,i) => { const rawLevel = String(w.level || ''), levelLabel = rawLevel && !/^nivel\s/i.test(rawLevel) ? `Nivel ${rawLevel.toLowerCase()}` : rawLevel, dateLevel = w.dateLevel || [w.date, levelLabel, w.modality].filter(Boolean).join(' · '), reservationStatus = w.reservationStatus || w.badge || 'Disponible', unavailable = reservationStatus === 'Agotado' || reservationStatus === 'Cerrado'; return { detailHref:`/aprende/taller?id=${encodeURIComponent(w.id || ('w'+(i+1)))}`, placeholder: 'foto del taller', badgeBg: unavailable ? '#8B795E' : '#0CC0DF', ctaLabel: w.ctaLabel || (reservationStatus === 'Lista de espera' || reservationStatus === 'Agotado' ? 'Lista de espera' : 'Reservar'), ctaBg: unavailable ? '#F3EEE4' : '#0CC0DF', ctaColor: unavailable ? '#8B795E' : '#FFFFFF', ...w, ...imageProps(w, 'Taller de lettering'), dateLevel, imageView: imageView(w), whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el taller: ' + w.name + ' (' + dateLevel + ').')}` }; }),
+      posts: publishedOrPlaceholders(live.blog, this.BLOG_POSTS).slice(0, visibleLimit).map(post => ({ placeholder: 'foto del artículo', ...post, ...imageProps(post, 'Artículo del blog'), meta: [post.publishedAt, post.readingTime].filter(Boolean).join(' · ') || post.meta || '', imageView: imageView(post) })),
+      freebies: publishedOrPlaceholders(live.gratis, this.FREEBIES).slice(0, visibleLimit).map((item,i) => {
         const hasFile = !!(item.fileUrl && String(item.fileUrl).trim());
         const hasImage = !!(item.imageUrl && String(item.imageUrl).trim());
         const viewItem = { ...item, ...imageProps(item, 'Recurso descargable'), imageView: imageView(item), hasImage, noImage: !hasImage };
@@ -859,6 +883,8 @@ class Component extends DCLogic {
           onPreview: (e) => { e.preventDefault(); this.setState({ previewItem: viewItem }); },
         };
       }),
+      showLoadMore,
+      onLoadMore: () => this.setState({ visiblePages: { ...this.state.visiblePages, [category]: currentPage + 1 } }),
       previewItem,
       closePreview: () => this.setState({ previewItem: null }),
       stopPropagation: (e) => e.stopPropagation(),
