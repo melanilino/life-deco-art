@@ -129,7 +129,7 @@ body{margin:0;background:#fff}
 
     <div>
       <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Contacto</div>
-      <h1 style="font-size: {{ h1Size }}; line-height: 1.15; color: #000000; font-weight: 300; margin: 0">{{ heroTitle }}</h1>
+      <h1 style="font-size: {{ h1Size }}; line-height: 1.15; color: #000000; font-weight: 300; margin: 0">{{ heroTitlePrefix }}<span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:.92em;">{{ heroTitleAccent }}</span>{{ heroTitleSuffix }}</h1>
       <p style="font-size: 14px; color: #8B795E; font-weight: 300; line-height: 1.8; margin-top: 20px; max-width: 380px">{{ introText }}</p>
     </div>
 
@@ -239,7 +239,7 @@ class Component extends DCLogic {
       notSubmitted: !this.state.submitted,
       submitting: this.state.submitting,
       submitError: this.state.submitError,
-      heroTitle: content.heroTitle || 'Grandes historias inician con un hola.',
+      heroTitlePrefix: 'Grandes historias inician con un ', heroTitleAccent: 'hola', heroTitleSuffix: '.',
       introText: content.introText || 'Cuéntame qué tienes en mente y te responderé en menos de 48 horas.',
       nameLabel: content.nameLabel || 'Nombre', emailLabel: content.emailLabel || 'Email',
       projectLabel: content.projectLabel || 'Tipo de proyecto', messageLabel: content.messageLabel || 'Cuéntame tu idea',

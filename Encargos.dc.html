@@ -47,6 +47,9 @@
             <option value="{{ t }}">{{ t }}</option>
           </sc-for>
         </select>
+        <sc-if value="{{ tipoEsOtro }}" hint-placeholder-val="{{ false }}">
+          <input class="lda-enc-input" type="text" value="{{ tipoOtro }}" onChange="{{ onTipoOtro }}" placeholder="Escribe el tipo de pieza" style="width:100%;margin-top:8px;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
+        </sc-if>
       </div>
 
       <div style="display:grid;grid-template-columns:{{ twoCol }};gap:16px;">
@@ -108,8 +111,8 @@
       </div>
 
       <div>
-        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Referencias o inspiración <span style="color:#8B795E;font-weight:300;">(opcional)</span></label>
-        <div style="border:1.5px dashed #E5DDD0;border-radius:8px;padding:24px;text-align:center;color:#8B795E;font-size:13px;font-weight:300;">Comparte tus fotos de referencia directamente por WhatsApp al enviar la solicitud.</div>
+        <label style="font-size:13px;color:#2B2420;font-weight:400;display:block;margin-bottom:8px;">Enlace de referencia <span style="color:#8B795E;font-weight:300;">(opcional)</span></label>
+        <input class="lda-enc-input" type="url" value="{{ referencia }}" onChange="{{ onReferencia }}" placeholder="Pega un enlace de Pinterest, Instagram u otra referencia" style="width:100%;padding:12px 14px;border-radius:6px;border:1px solid #E5DDD0;font-family:'Montserrat',sans-serif;font-size:14px;color:#2B2420;outline:none;box-sizing:border-box;">
       </div>
 
     </div>
@@ -133,7 +136,7 @@
   </div>
 
   <div style="max-width:640px;margin:0 auto;padding:{{ ctaPad }};text-align:center;">
-    <a href="{{ whatsappUrl }}" target="_blank" style="display:inline-block;text-decoration:none;background:#F65091;color:#FFFFFF;padding:16px 36px;border-radius:6px;font-size:15px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Enviar solicitud por WhatsApp</a>
+    <a href="{{ whatsappUrl }}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;background:#F65091;color:#FFFFFF;padding:16px 36px;border-radius:6px;font-size:15px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Enviar</a>
     <p style="font-size:12px;color:#8B795E;font-weight:300;margin-top:14px;">Se abrirá WhatsApp con tu información precargada, lista para enviar.</p>
   </div>
 
@@ -147,8 +150,8 @@
 class Component extends DCLogic {
   state = {
     isMobile: typeof window !== 'undefined' && window.innerWidth < 860,
-    tipo: 'Cuadro personalizado', ocasion: '', fecha: '', cantidad: 1, tamano: '',
-    texto: '', colores: '', presupuesto: '', presupuestoOtro: '', ciudad: '', presupuestoOpen: false, content: {},
+    tipo: 'Cuadro personalizado', tipoOtro: '', ocasion: '', fecha: '', cantidad: 1, tamano: '',
+    texto: '', colores: '', presupuesto: '', presupuestoOtro: '', ciudad: '', referencia: '', presupuestoOpen: false, content: {},
   };
   async componentDidMount() {
     const check = () => this.setState({ isMobile: window.innerWidth < 860 });
@@ -167,13 +170,16 @@ class Component extends DCLogic {
     const m = this.state.isMobile;
     const s = this.state;
     const content = s.content || {};
-    const tipos = Array.isArray(content.pieceTypes) && content.pieceTypes.length ? content.pieceTypes : this.TIPOS;
-    const presupuestos = Array.isArray(content.budgetOptions) && content.budgetOptions.length ? content.budgetOptions : this.PRESUPUESTOS;
+    const tiposBase = Array.isArray(content.pieceTypes) && content.pieceTypes.length ? content.pieceTypes : this.TIPOS;
+    const tipos = tiposBase.includes('Otro') ? tiposBase : [...tiposBase, 'Otro'];
+    const presupuestosBase = Array.isArray(content.budgetOptions) && content.budgetOptions.length ? content.budgetOptions : this.PRESUPUESTOS;
+    const presupuestos = presupuestosBase.includes('Otro') ? presupuestosBase : [...presupuestosBase, 'Otro'];
     const onField = (key) => (e) => this.setState({ [key]: e.target.value });
     const onTipo = onField('tipo'), onOcasion = onField('ocasion'), onFecha = onField('fecha'),
       onCantidad = onField('cantidad'), onTamano = onField('tamano'), onTexto = onField('texto'),
       onColores = onField('colores'), onPresupuesto = onField('presupuesto'), onCiudad = onField('ciudad'),
-      onPresupuestoOtro = onField('presupuestoOtro');
+      onPresupuestoOtro = onField('presupuestoOtro'), onTipoOtro = onField('tipoOtro'), onReferencia = onField('referencia');
+    const tipoFinal = s.tipo === 'Otro' ? (s.tipoOtro || 'Otro') : s.tipo;
     const presupuestoFinal = s.presupuesto === 'Otro' ? s.presupuestoOtro : s.presupuesto;
     const presupuestoOpciones = presupuestos.map(p => ({
       label: p,
@@ -184,7 +190,7 @@ class Component extends DCLogic {
     }));
     const onTogglePresupuesto = () => this.setState({ presupuestoOpen: !s.presupuestoOpen });
     const parts = [
-      `Tipo de pieza: ${s.tipo}`,
+      `Tipo de pieza: ${tipoFinal}`,
       s.ocasion && `Ocasión: ${s.ocasion}`,
       s.fecha && `Fecha necesaria: ${s.fecha}`,
       `Cantidad: ${s.cantidad}`,
@@ -193,28 +199,29 @@ class Component extends DCLogic {
       s.colores && `Colores/estilo: ${s.colores}`,
       presupuestoFinal && `Presupuesto: ${presupuestoFinal}`,
       s.ciudad && `Ciudad: ${s.ciudad}`,
+      s.referencia && `Referencia: ${s.referencia}`,
     ].filter(Boolean);
     const message = (content.whatsappMessage || 'Hola! Quiero hacer un encargo personalizado.') + '\n' + parts.join('\n');
     return {
       preview: message,
-      previewPad: m ? '10px 24px 0' : '10px 48px 0',
+      previewPad: m ? '14px 24px 0' : '14px 48px 0',
       navGap: m ? '64px' : '88px',
       heroPad: m ? '36px 24px 0' : '64px 48px 0',
       h1Size: m ? '26px' : '42px',
-      formPad: m ? '32px 24px' : '48px 48px',
+      formPad: m ? '32px 24px 18px' : '48px 48px 18px',
       twoCol: m ? '1fr' : '1fr 1fr',
-      processPad: m ? '10px 24px 0' : '10px 48px 0',
+      processPad: m ? '0 24px' : '0 48px',
       ctaPad: m ? '40px 24px 60px' : '48px 48px 90px',
-      tipo: s.tipo, ocasion: s.ocasion, fecha: s.fecha, cantidad: s.cantidad, tamano: s.tamano,
-      texto: s.texto, colores: s.colores, presupuesto: s.presupuesto, presupuestoOtro: s.presupuestoOtro, ciudad: s.ciudad,
+      tipo: s.tipo, tipoOtro: s.tipoOtro, tipoEsOtro: s.tipo === 'Otro', ocasion: s.ocasion, fecha: s.fecha, cantidad: s.cantidad, tamano: s.tamano,
+      texto: s.texto, colores: s.colores, presupuesto: s.presupuesto, presupuestoOtro: s.presupuestoOtro, ciudad: s.ciudad, referencia: s.referencia,
       presupuestoOpciones, presupuestoEsOtro: s.presupuesto === 'Otro',
       presupuestoOpen: s.presupuestoOpen, onTogglePresupuesto,
       presupuestoDisplay: s.presupuesto || 'Selecciona un rango',
       presupuestoDisplayColor: s.presupuesto ? '#2B2420' : '#8B795E',
       presupuestoArrow: s.presupuestoOpen ? 'rotate(180deg)' : 'rotate(0deg)',
       introText: content.introText || 'Completa estos datos y te escribo por WhatsApp con una propuesta y precio para tu pieza.',
-      tipos, steps: this.STEPS,
-      onTipo, onOcasion, onFecha, onCantidad, onTamano, onTexto, onColores, onPresupuesto, onCiudad, onPresupuestoOtro,
+      tipos, steps: Array.isArray(content.steps) && content.steps.length ? content.steps.map((text, index) => ({ n: index + 1, text })) : this.STEPS,
+      onTipo, onTipoOtro, onOcasion, onFecha, onCantidad, onTamano, onTexto, onColores, onPresupuesto, onCiudad, onPresupuestoOtro, onReferencia,
       whatsappUrl: 'https://wa.me/18495390410?text=' + encodeURIComponent(message),
     };
   }
