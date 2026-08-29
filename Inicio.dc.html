@@ -477,12 +477,9 @@ class Component extends DCLogic {
     try {
       const cms = await import('./cms.js');
       const cached = cms.getCachedPageContent('inicio');
-      if (cached) this.setState({ content: cached, heroVideoReady: false });
+      if (cached) this.setState({ content: cached });
       const data = await cms.getPageContent('inicio');
-      this.setState({
-        content: data,
-        heroVideoReady: cached && cached.heroVideoUrl === data.heroVideoUrl ? this.state.heroVideoReady : false
-      });
+      this.setState({ content: data });
       const tiendaData = await cms.getPageContent('tienda');
       if (tiendaData && tiendaData.products) {
         const map = {};
