@@ -268,8 +268,16 @@ x-dc{display:none!important}
             </sc-for>
           </div>
         </div>
-        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">{{ inicioWorkshopGroup.label }}</div>
-        <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
+        <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Anuncio de Aprende</div>
+        <div onClick="{{ onOpenInicioSpotlight }}" style="background:#FFFFFF;border-radius:8px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:18px;cursor:pointer;">
+          <div style="min-width:0;"><div style="font-size:14px;color:#000;margin-bottom:6px;">{{ inicioSpotlightCardTitle }}</div><div style="font-size:12px;color:#8B795E;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ inicioSpotlightCardSummary }}</div></div><span style="font-size:15px;color:#8B795E;flex:0 0 auto;">✎</span>
+        </div>
+        <sc-if value="{{ isInicioSpotlightEditorOpen }}" hint-placeholder-val="false">
+        <div class="cms-contained-editor" style="position:fixed;inset:0 0 0 250px;background:#F9F6EF;z-index:50;overflow-y:scroll;scrollbar-gutter:stable;padding:26px 56px 48px;box-sizing:border-box;">
+        <div style="width:100%;margin:0;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:22px;"><div><span onClick="{{ onCloseInicioSpotlight }}" style="display:inline-flex;align-items:center;min-height:38px;font-size:13px;color:#8B795E;cursor:pointer;margin:-8px 0 6px;padding:0 8px 0 0;">← Volver a Inicio</span><div style="font-size:28px;font-weight:300;color:#000;line-height:1.25;">Anuncio de Aprende</div></div><span onClick="{{ onCloseInicioSpotlight }}" aria-label="Cerrar editor" style="font-size:18px;color:#8B795E;cursor:pointer;padding:6px;">✕</span></div>
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Imagen</div>
+          <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;max-width:760px;">
           <sc-for list="{{ inicioWorkshopGroup.photos }}" as="ph" hint-placeholder-count="1">
             <div style="max-width:{{ ph.maxWidth }};">
               <div style="position:relative;width:100%;aspect-ratio:{{ inicioWorkshopGroup.aspect }};overflow:hidden;border-radius:6px;background:#F3EEE4;"><image-slot id="cms-inicio-{{ ph.key }}" shape="rect" fit="cover" view-scale="{{ ph.viewScale }}" view-x="{{ ph.viewX }}" view-y="{{ ph.viewY }}" style="width:100%;height:100%;" src="{{ ph.url }}" placeholder="{{ ph.label }}"></image-slot><span onClick="{{ ph.onMenuToggle }}" title="Opciones de imagen" aria-label="Opciones de imagen" style="position:absolute;top:8px;right:8px;z-index:6;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;background:#FFFFFF;border:1px solid #E4DCCB;border-radius:6px;color:#5C5142;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12);font-size:22px;line-height:1;">⋯</span><sc-if value="{{ ph.menuOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:52px;right:8px;z-index:7;width:280px;max-width:calc(100% - 16px);background:#FFFFFF;border:1px solid #E4DCCB;border-radius:7px;padding:7px;box-shadow:0 10px 28px rgba(43,36,32,.16);"><label style="display:block;padding:9px 10px;border-radius:4px;font-size:12px;color:#2B2420;cursor:pointer;" style-hover="background:#F8F5EF;">{{ ph.uploadLabel }} imagen<input type="file" accept="image/*" onChange="{{ ph.onUpload }}" style="display:none;"></label><sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><div onClick="{{ ph.onAdjust }}" style="padding:9px 10px;border-radius:4px;font-size:12px;color:#2B2420;cursor:pointer;" style-hover="background:#F8F5EF;">Ajustar encuadre</div></sc-if><div onClick="{{ ph.onAltToggle }}" style="padding:9px 10px;border-radius:4px;font-size:12px;color:#2B2420;cursor:pointer;" style-hover="background:#F8F5EF;">Texto alternativo {{ ph.altStatus }}</div><sc-if value="{{ ph.altOpen }}" hint-placeholder-val="{{ false }}"><textarea value="{{ ph.alt }}" onChange="{{ ph.onAltChange }}" onInput="{{ ph.onAltInput }}" onClick="{{ stopPropagation }}" rows="2" placeholder="Describe brevemente la fotografía" aria-label="Texto alternativo de {{ ph.label }}" style="width:100%;box-sizing:border-box;margin:4px 0 2px;padding:8px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:11px;line-height:1.45;resize:none;overflow:hidden;min-height:52px;"></textarea><div style="text-align:right;font-size:10px;color:{{ ph.altCountColor }};padding:0 2px 5px;">{{ ph.altCount }} / 160</div></sc-if><sc-if value="{{ ph.hasImage }}" hint-placeholder-val="{{ false }}"><div onClick="{{ ph.onRemove }}" style="padding:9px 10px;border-radius:4px;font-size:12px;color:#C0392B;cursor:pointer;" style-hover="background:#FDECEC;">Eliminar imagen</div></sc-if></div></sc-if></div>
@@ -277,8 +285,9 @@ x-dc{display:none!important}
               <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
             </div>
           </sc-for>
-          <div style="border-top:1px solid #E4DCCB;margin-top:24px;padding-top:22px;max-width:760px;">
-            <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:18px;">Elige qué promociona este banner. Los cursos, talleres, recursos y artículos toman automáticamente sus datos publicados en Aprende.</div>
+          </div>
+          <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Contenido y destino</div>
+          <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;max-width:760px;">
             <div class="cms-spotlight-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px;">
               <div>
                 <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Tipo de anuncio</label>
@@ -301,11 +310,13 @@ x-dc{display:none!important}
               <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Texto del botón</label><input type="text" value="{{ inicioSpotlightButtonLabel }}" onChange="{{ onInicioSpotlightButtonLabel }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
               <div style="grid-column:1/-1;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Título manual</label><input type="text" value="{{ inicioSpotlightTitle }}" onChange="{{ onInicioSpotlightTitle }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
               <div style="grid-column:1/-1;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Descripción manual</label><textarea value="{{ inicioSpotlightDescription }}" onChange="{{ onInicioSpotlightDescription }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Primera línea informativa</label><input type="text" value="{{ inicioSpotlightMetaPrimary }}" onChange="{{ onInicioSpotlightMetaPrimary }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Segunda línea informativa</label><input type="text" value="{{ inicioSpotlightMetaSecondary }}" onChange="{{ onInicioSpotlightMetaSecondary }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Fecha <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><input type="date" value="{{ inicioSpotlightDate }}" onChange="{{ onInicioSpotlightDate }}" style="width:100%;box-sizing:border-box;padding:10px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Modalidad <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><select value="{{ inicioSpotlightModality }}" onChange="{{ onInicioSpotlightModality }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;"><option value="">Sin modalidad</option><option value="Online">Online</option><option value="Presencial">Presencial</option><option value="Online y presencial">Online y presencial</option></select></div>
             </div>
           </div>
         </div>
+        </div>
+        </sc-if>
       </div>
     </sc-if>
 
@@ -662,7 +673,7 @@ class Component extends DCLogic {
     configData: null, configLoaded: false, configLoading: false,
     contactData: null, contactLoaded: false, contactLoading: false,
     encargosData: null, encargosLoaded: false, encargosLoading: false,
-    inicioProductOptions: [], inicioAprendeData: {},
+    inicioProductOptions: [], inicioAprendeData: {}, inicioSpotlightEditorOpen: false,
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
     adjustingImage: null, productTab: 'info', courseTab: 'info', resourceTab: 'info', communityContentCard: null,
     confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
@@ -688,6 +699,8 @@ class Component extends DCLogic {
   }
   openProductEditor(id) { this.setState({ expanded: { products: id }, productTab: 'info' }); }
   closeProductEditor() { this.setState({ expanded: {}, productTab: 'info' }); }
+  openInicioSpotlightEditor() { this.setState({ inicioSpotlightEditorOpen: true, expanded: {} }); }
+  closeInicioSpotlightEditor() { this.setState({ inicioSpotlightEditorOpen: false, expanded: {}, adjustingImage: null }); }
 
   INICIO_SCHEMA = [
     { key: 'heroTitlePre', label: 'Título hero (antes de la palabra cursiva)', type: 'text', default: 'La evolución de una' },
@@ -919,7 +932,7 @@ class Component extends DCLogic {
   }
 
   async loadPage(pageId) {
-    this.setState({ page: pageId, saved: false, error: '', expanded: {}, adjustingImage: null, productTab: 'info', courseTab: 'info', resourceTab: 'info', ...(pageId === 'aprende' ? { aprendeSectionOpen: false } : {}) });
+    this.setState({ page: pageId, saved: false, error: '', expanded: {}, adjustingImage: null, inicioSpotlightEditorOpen: false, productTab: 'info', courseTab: 'info', resourceTab: 'info', ...(pageId === 'aprende' ? { aprendeSectionOpen: false } : {}) });
     if (pageId === 'config') {
       this.setState({ configLoading: true });
       let data = {};
@@ -1437,7 +1450,7 @@ class Component extends DCLogic {
       { key: 'cwFinalUrl', label: 'Entrega final' },
     ] },
   ];
-  INICIO_WORKSHOP_GROUP = { label: 'Taller destacado', aspect: '4/3', fields: [{ key: 'cursoSpotlightUrl', label: 'Taller destacado' }] };
+  INICIO_WORKSHOP_GROUP = { label: 'Anuncio de Aprende', aspect: '4/3', fields: [{ key: 'cursoSpotlightUrl', label: 'Anuncio de Aprende' }] };
   INICIO_PHOTO_FIELDS = [].concat(...this.INICIO_PHOTO_GROUPS.map(g => g.fields), this.INICIO_WORKSHOP_GROUP.fields);
   async handleInicioPhotoUpload(key, file) {
     if (!file) return;
@@ -1836,6 +1849,8 @@ class Component extends DCLogic {
     const spotlightItems = (((s.inicioAprendeData || {})[spotlightLists[inicioSpotlightType]]) || []).filter((item) => (item.status || 'Activo') !== 'Borrador');
     const itemOptions = spotlightItems.map((item) => ({ value: String(item.id || ''), label: (spotlightLabels[inicioSpotlightType] || 'Contenido') + ': ' + (item.name || item.title || 'Sin título') }));
     const inicioSpotlightDestinationOptions = inicioSpotlightType === 'section' ? sectionOptions : itemOptions;
+    const selectedSpotlightItem = spotlightItems.find((item) => String(item.id || '') === String(inicioContent.spotlightDestinationId || ''));
+    const selectedSpotlightLabel = selectedSpotlightItem ? (selectedSpotlightItem.name || selectedSpotlightItem.title || '') : (inicioContent.spotlightDestinationId || '');
     const usesAutomaticSpotlight = ['course', 'workshop', 'free', 'blog', 'community'].includes(inicioSpotlightType);
     const pages = this.pageList.map((p) => ({
       label: p.label, onSelect: () => this.loadPage(p.id),
@@ -2138,6 +2153,11 @@ class Component extends DCLogic {
         label: this.INICIO_WORKSHOP_GROUP.label, aspect: this.INICIO_WORKSHOP_GROUP.aspect,
         photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({ ...buildInicioPhoto(p), maxWidth: '560px' }))
       },
+      isInicioSpotlightEditorOpen: s.inicioSpotlightEditorOpen,
+      onOpenInicioSpotlight: () => this.openInicioSpotlightEditor(),
+      onCloseInicioSpotlight: () => this.closeInicioSpotlightEditor(),
+      inicioSpotlightCardTitle: selectedSpotlightItem ? (selectedSpotlightItem.name || selectedSpotlightItem.title || 'Anuncio de Aprende') : (inicioContent.spotlightTitle || 'Lettering desde cero'),
+      inicioSpotlightCardSummary: ((spotlightTypeOptions.find((option) => option.value === inicioSpotlightType) || {}).label || 'Anuncio de Aprende') + (selectedSpotlightLabel ? ' · ' + selectedSpotlightLabel : ''),
       inicioSpotlightType,
       inicioSpotlightTypeOptions: spotlightTypeOptions,
       inicioSpotlightShowsDestination: inicioSpotlightType === 'section' || ['course', 'workshop', 'free', 'blog'].includes(inicioSpotlightType),
@@ -2148,16 +2168,16 @@ class Component extends DCLogic {
       inicioSpotlightButtonLabel: inicioContent.spotlightButtonLabel || 'Reservar mi plaza',
       inicioSpotlightTitle: inicioContent.spotlightTitle || 'Lettering desde cero',
       inicioSpotlightDescription: inicioContent.spotlightDescription || 'Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.',
-      inicioSpotlightMetaPrimary: inicioContent.spotlightMetaPrimary || 'Inicio: 3 de agosto, 2026',
-      inicioSpotlightMetaSecondary: inicioContent.spotlightMetaSecondary || 'Modalidad: Online / Presencial',
+      inicioSpotlightDate: inicioContent.spotlightDate || '',
+      inicioSpotlightModality: inicioContent.spotlightModality || '',
       onInicioSpotlightType: (e) => this.updateSpotlightType(e.target.value),
       onInicioSpotlightDestination: (e) => this.updateField('spotlightDestinationId', e.target.value),
       onInicioSpotlightEyebrow: (e) => this.updateField('spotlightEyebrow', e.target.value),
       onInicioSpotlightButtonLabel: (e) => this.updateField('spotlightButtonLabel', e.target.value),
       onInicioSpotlightTitle: (e) => this.updateField('spotlightTitle', e.target.value),
       onInicioSpotlightDescription: (e) => this.updateField('spotlightDescription', e.target.value),
-      onInicioSpotlightMetaPrimary: (e) => this.updateField('spotlightMetaPrimary', e.target.value),
-      onInicioSpotlightMetaSecondary: (e) => this.updateField('spotlightMetaSecondary', e.target.value),
+      onInicioSpotlightDate: (e) => this.updateField('spotlightDate', e.target.value),
+      onInicioSpotlightModality: (e) => this.updateField('spotlightModality', e.target.value),
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),

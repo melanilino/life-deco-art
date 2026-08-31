@@ -432,12 +432,12 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
         <div style="font-size:{{ h2Size }};font-weight:400;line-height:1.2;margin-bottom:24px;">{{ spotlightTitle }}</div>
         <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:300;line-height:1.7;margin:0 0 28px;">{{ spotlightDescription }}</p>
         <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
-          <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
+          <sc-if value="{{ spotlightHasMetaPrimary }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
             <span>📅</span> {{ spotlightMetaPrimary }}
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
+          </div></sc-if>
+          <sc-if value="{{ spotlightHasMetaSecondary }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
             <span>📍</span> {{ spotlightMetaSecondary }}
-          </div>
+          </div></sc-if>
         </div>
         <a href="{{ spotlightHref }}" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">{{ spotlightButtonLabel }}</a>
       </div>
@@ -692,30 +692,29 @@ class Component extends DCLogic {
     const spotlightDefaults = {
       eyebrow: 'Inscripciones abiertas',
       title: 'Lettering desde cero',
-      description: 'Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.',
-      primary: 'Inicio: 3 de agosto, 2026',
-      secondary: 'Modalidad: Online / Presencial'
+      description: 'Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.'
     };
     const spotlightTypeEyebrow = { course: 'Curso destacado', workshop: 'Taller destacado', free: 'Recurso destacado', blog: 'Artículo destacado', community: 'Comunidad' };
     const spotlightTitle = spotlightItem ? (spotlightItem.name || spotlightItem.title || spotlightDefaults.title) : (c.spotlightTitle || spotlightDefaults.title);
     const spotlightDescription = spotlightItem ? (spotlightItem.summary || spotlightItem.description || spotlightItem.desc || spotlightItem.excerpt || spotlightDefaults.description) : (c.spotlightDescription || spotlightDefaults.description);
-    let spotlightMetaPrimary = c.spotlightMetaPrimary || spotlightDefaults.primary;
-    let spotlightMetaSecondary = c.spotlightMetaSecondary || spotlightDefaults.secondary;
+    const formatSpotlightDate = (value) => { const parts = String(value || '').split('-'); if (parts.length !== 3) return ''; const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre']; return Number(parts[2]) + ' de ' + months[Number(parts[1]) - 1] + ', ' + parts[0]; };
+    let spotlightMetaPrimary = c.spotlightDate ? 'Fecha: ' + formatSpotlightDate(c.spotlightDate) : '';
+    let spotlightMetaSecondary = c.spotlightModality ? 'Modalidad: ' + c.spotlightModality : '';
     if (spotlightItem && spotlightType === 'course') {
-      spotlightMetaPrimary = spotlightItem.duration ? 'Duración: ' + spotlightItem.duration : (spotlightItem.availability || spotlightMetaPrimary);
-      spotlightMetaSecondary = spotlightItem.modality ? 'Modalidad: ' + spotlightItem.modality : spotlightMetaSecondary;
+      spotlightMetaPrimary = spotlightItem.duration ? 'Duración: ' + spotlightItem.duration : (spotlightItem.availability || '');
+      spotlightMetaSecondary = spotlightItem.modality ? 'Modalidad: ' + spotlightItem.modality : '';
     }
     if (spotlightItem && spotlightType === 'workshop') {
-      spotlightMetaPrimary = spotlightItem.date ? 'Fecha: ' + spotlightItem.date : (spotlightItem.dateLevel || spotlightMetaPrimary);
-      spotlightMetaSecondary = [spotlightItem.modality, spotlightItem.location].filter(Boolean).join(' · ') || spotlightMetaSecondary;
+      spotlightMetaPrimary = spotlightItem.date ? 'Fecha: ' + spotlightItem.date : (spotlightItem.dateLevel || '');
+      spotlightMetaSecondary = [spotlightItem.modality, spotlightItem.location].filter(Boolean).join(' · ');
     }
     if (spotlightItem && spotlightType === 'free') {
-      spotlightMetaPrimary = spotlightItem.format ? 'Formato: ' + spotlightItem.format : spotlightMetaPrimary;
-      spotlightMetaSecondary = spotlightItem.pageCount ? spotlightItem.pageCount + ' páginas' : spotlightMetaSecondary;
+      spotlightMetaPrimary = spotlightItem.format ? 'Formato: ' + spotlightItem.format : '';
+      spotlightMetaSecondary = spotlightItem.pageCount ? spotlightItem.pageCount + ' páginas' : '';
     }
     if (spotlightItem && spotlightType === 'blog') {
-      spotlightMetaPrimary = spotlightItem.publishedAt ? 'Publicado: ' + spotlightItem.publishedAt : spotlightMetaPrimary;
-      spotlightMetaSecondary = spotlightItem.readingTime ? 'Lectura: ' + spotlightItem.readingTime : spotlightMetaSecondary;
+      spotlightMetaPrimary = spotlightItem.publishedAt ? 'Publicado: ' + spotlightItem.publishedAt : '';
+      spotlightMetaSecondary = spotlightItem.readingTime ? 'Lectura: ' + spotlightItem.readingTime : '';
     }
     const spotlightItemView = itemImageView(spotlightItem && spotlightItem.imageAdjustments && spotlightItem.imageAdjustments.imageUrl);
     const spotlightManualView = imageAdjustment('cursoSpotlightUrl');
@@ -817,6 +816,8 @@ class Component extends DCLogic {
       spotlightDescription,
       spotlightMetaPrimary,
       spotlightMetaSecondary,
+      spotlightHasMetaPrimary: !!spotlightMetaPrimary,
+      spotlightHasMetaSecondary: !!spotlightMetaSecondary,
       spotlightButtonLabel: c.spotlightButtonLabel || (spotlightItem && (spotlightItem.ctaLabel || spotlightItem.downloadLabel)) || 'Reservar mi plaza',
       spotlightImageUrl: spotlightUsesItemImage ? spotlightItem.imageUrl : (c.cursoSpotlightUrl || ''),
       spotlightImageAlt: spotlightUsesItemImage ? (((spotlightItem.imageAlts || {}).imageUrl) || spotlightTitle) : ((c.imageAlts && c.imageAlts.cursoSpotlightUrl) || 'Anuncio destacado de Aprende'),
