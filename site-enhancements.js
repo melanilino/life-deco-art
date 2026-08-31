@@ -101,7 +101,8 @@
       }
       @media (min-width: 860px) {
         @supports (animation-timeline: view()) {
-          .lda-scroll-depth {
+          .lda-scroll-depth,
+          [classname~="lda-scroll-depth"] {
             animation: lda-scroll-depth linear both;
             animation-timeline: view();
             animation-range: entry 0% exit 100%;
@@ -129,7 +130,8 @@
           scroll-behavior: auto !important;
         }
         .lda-motion-card { transition-delay: 0s !important; }
-        .lda-scroll-depth { animation: none !important; transform: none !important; }
+        .lda-scroll-depth,
+        [classname~="lda-scroll-depth"] { animation: none !important; transform: none !important; }
       }
     `;
     document.head.appendChild(style);
