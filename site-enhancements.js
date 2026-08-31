@@ -84,25 +84,39 @@
         transform: translateY(0) !important;
       }
       .lda-motion-card {
-        transition: opacity .68s cubic-bezier(.16, 1, .3, 1), transform .3s cubic-bezier(.16, 1, .3, 1) !important;
+        transition: opacity .82s cubic-bezier(.16, 1, .3, 1), transform .48s cubic-bezier(.16, 1, .3, 1) !important;
         box-shadow: none !important;
       }
       .lda-motion-card[data-reveal]:not([data-revealed]) {
         opacity: 0 !important;
-        transform: translateY(12px) !important;
+        transform: translateY(24px) scale(.985) !important;
       }
-      .lda-motion-card[data-reveal][data-revealed] { opacity: 1 !important; }
-      .lda-card-grid > .lda-motion-card:nth-child(2) { transition-delay: .05s !important; }
-      .lda-card-grid > .lda-motion-card:nth-child(3) { transition-delay: .1s !important; }
-      .lda-card-grid > .lda-motion-card:nth-child(4) { transition-delay: .15s !important; }
+      .lda-motion-card[data-reveal][data-revealed] { opacity: 1 !important; transform: translateY(0) scale(1) !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(2) { transition-delay: .08s !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(3) { transition-delay: .16s !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(4) { transition-delay: .24s !important; }
+      @keyframes lda-scroll-depth {
+        from { transform: translate3d(0, -18px, 0) scale(1.045); }
+        to { transform: translate3d(0, 18px, 0) scale(1.045); }
+      }
+      @media (min-width: 860px) {
+        @supports (animation-timeline: view()) {
+          .lda-scroll-depth {
+            animation: lda-scroll-depth linear both;
+            animation-timeline: view();
+            animation-range: entry 0% exit 100%;
+            will-change: transform;
+          }
+        }
+      }
       @media (max-width: 859px) {
-        .lda-motion-card[data-reveal]:not([data-revealed]) { transform: translateY(6px) !important; }
+        .lda-motion-card[data-reveal]:not([data-revealed]) { transform: translateY(10px) !important; }
         .lda-motion-card { transition-delay: 0s !important; }
       }
       @media (min-width: 860px) and (hover: hover) {
         .lda-motion-card[data-revealed]:hover,
         .lda-motion-card:not([data-reveal]):hover {
-          transform: translateY(-4px) !important;
+          transform: translateY(-6px) scale(1.005) !important;
           box-shadow: none !important;
         }
       }
@@ -115,6 +129,7 @@
           scroll-behavior: auto !important;
         }
         .lda-motion-card { transition-delay: 0s !important; }
+        .lda-scroll-depth { animation: none !important; transform: none !important; }
       }
     `;
     document.head.appendChild(style);
