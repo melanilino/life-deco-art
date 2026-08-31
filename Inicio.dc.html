@@ -21,7 +21,7 @@ x-dc{display:none!important}
 @media(max-width:859px){#dc-boot-fallback{padding:88px 26px 44px}#dc-boot-fallback .dc-fb-content{width:100%}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:12px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 10px}#dc-boot-fallback .dc-fb-script{font-size:1.2em}#dc-boot-fallback .dc-fb-sub{font-size:14px;color:rgba(255,255,255,.85);margin:0 0 20px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0;border-radius:8px;font-size:14px}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
-<script src="./site-enhancements.js?v=20260831font1" defer></script>
+<script src="./site-enhancements.js?v=20260829a1" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Inicio</title>
@@ -43,6 +43,28 @@ x-dc{display:none!important}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&family=Homemade+Apple&display=swap" rel="stylesheet">
+<style id="lda-hero-font-stability">
+@media(min-width:860px){
+  html:not(.lda-hero-fonts-ready) #dc-boot-fallback .lda-hero-font-sensitive{visibility:hidden}
+  html:not(.lda-hero-fonts-ready) [data-home-hero].lda-hero-font-sensitive > :not(video):not([aria-hidden="true"]){visibility:hidden}
+}
+</style>
+<script>
+(function(){
+  function revealHeroTypography(){
+    document.documentElement.classList.add('lda-hero-fonts-ready');
+  }
+  if(!document.fonts || !document.fonts.load){
+    revealHeroTypography();
+    return;
+  }
+  Promise.all([
+    document.fonts.load('200 70px Montserrat'),
+    document.fonts.load('400 70px "Homemade Apple"')
+  ]).then(revealHeroTypography, revealHeroTypography);
+  setTimeout(revealHeroTypography, 2500);
+})();
+</script>
 <style id="lda-static-nav-css">
 html{margin:0;overflow-y:scroll;scrollbar-gutter:stable;background:#1a1a1a}
 body{margin:0;background:#1a1a1a}
@@ -80,7 +102,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 </head>
 <body class="lda-home-nav-overlay lda-home-at-top">
 <div id="dc-boot-fallback" aria-hidden="true">
-  <div class="dc-fb-content">
+  <div class="dc-fb-content lda-hero-font-sensitive">
     <div class="dc-fb-kicker">Lettering · Diseño · Manualidades</div>
     <div class="dc-fb-title">La evolución de una <span class="dc-fb-script">idea</span>.</div>
     <div class="dc-fb-sub">Convierto momentos importantes: una boda, un cumpleaños,<br class="lda-desktop"> un&nbsp;"gracias", en piezas atemporales.</div>
@@ -156,7 +178,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 
   <!-- 1. LA EMOCIÓN — HERO (versión 1f) -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-  <div data-home-hero="" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
+  <div data-home-hero="" class="lda-hero-font-sensitive" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>

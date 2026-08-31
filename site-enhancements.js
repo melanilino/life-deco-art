@@ -6,34 +6,6 @@
   let cmsPageContent = null;
   let cmsGlobalContent = null;
 
-  function stabilizeDesktopTypography() {
-    const style = document.createElement("style");
-    style.id = "lda-font-stability-css";
-    style.textContent = `
-      @media (min-width: 860px) {
-        html:not(.lda-site-fonts-ready) #dc-root,
-        html:not(.lda-site-fonts-ready) #lda-static-nav > *,
-        html:not(.lda-site-fonts-ready) #dc-boot-fallback > * {
-          visibility: hidden !important;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    const reveal = () => document.documentElement.classList.add("lda-site-fonts-ready");
-    if (!document.fonts || !document.fonts.load) {
-      reveal();
-      return;
-    }
-    Promise.all([
-      document.fonts.load('200 70px Montserrat'),
-      document.fonts.load('400 70px "Homemade Apple"'),
-    ]).then(reveal, reveal);
-    window.setTimeout(reveal, 2500);
-  }
-
-  stabilizeDesktopTypography();
-
   function ensureFavicon() {
     if (document.querySelector('link[rel="icon"]')) return;
     const icon = document.createElement("link");
