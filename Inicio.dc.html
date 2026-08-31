@@ -21,7 +21,7 @@ x-dc{display:none!important}
 @media(max-width:859px){#dc-boot-fallback{padding:88px 26px 44px}#dc-boot-fallback .dc-fb-content{width:100%}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:12px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 10px}#dc-boot-fallback .dc-fb-script{font-size:1.2em}#dc-boot-fallback .dc-fb-sub{font-size:14px;color:rgba(255,255,255,.85);margin:0 0 20px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0;border-radius:8px;font-size:14px}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
-<script src="./site-enhancements.js?v=20260831motion3" defer></script>
+<script src="./site-enhancements.js?v=20260831motion1" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Inicio</title>
@@ -179,7 +179,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <!-- 1. LA EMOCIÓN — HERO (versión 1f) -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-home-hero="" class="lda-hero-font-sensitive" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
-    <video class="lda-scroll-depth" loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
