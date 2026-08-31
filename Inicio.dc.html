@@ -21,7 +21,7 @@ x-dc{display:none!important}
 @media(max-width:859px){#dc-boot-fallback{padding:88px 26px 44px}#dc-boot-fallback .dc-fb-content{width:100%}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:12px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 10px}#dc-boot-fallback .dc-fb-script{font-size:1.2em}#dc-boot-fallback .dc-fb-sub{font-size:14px;color:rgba(255,255,255,.85);margin:0 0 20px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0;border-radius:8px;font-size:14px}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
-<script src="./site-enhancements.js?v=20260829a1" defer></script>
+<script src="./site-enhancements.js?v=20260831motion1" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Inicio</title>
@@ -277,23 +277,23 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <div style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center">En qué puedo <span style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">ayudarte</span></div>
   </div>
 
-  <div style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1),transform 0.95s cubic-bezier(.22,1,.36,1),box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+  <div class="lda-card-grid" style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);">
       <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .08s,transform 0.95s cubic-bezier(.22,1,.36,1) .08s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.05s;">
       <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .16s,transform 0.95s cubic-bezier(.22,1,.36,1) .16s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.1s;">
       <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
     </div>
-    <div data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(14px);transition:opacity 0.95s cubic-bezier(.22,1,.36,1) .24s,transform 0.95s cubic-bezier(.22,1,.36,1) .24s,box-shadow .35s ease;" style-hover="box-shadow:0 16px 32px rgba(0,0,0,.18);">
+    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.15s;">
       <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
@@ -425,7 +425,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     </div>
     <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};min-width:0;">
       <sc-for list="{{ recentProducts }}" as="piece" hint-placeholder-count="4">
-      <a href="{{ piece.href }}" style="text-decoration:none;color:inherit;display:block;min-width:0;transition:transform .35s cubic-bezier(.22,1,.36,1);" style-hover="transform:translateY(-6px);">
+      <a href="{{ piece.href }}" class="lda-motion-card" style="text-decoration:none;color:inherit;display:block;min-width:0;">
         <div style="aspect-ratio:{{ piezaAspect }};border-radius:6px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;margin-bottom:18px;position:relative;overflow:hidden;">
           <sc-if value="{{ piece.hasTag }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:14px;left:14px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:#F65091;color:#FFFFFF;padding:4px 10px;border-radius:3px;z-index:1;">{{ piece.tag }}</span></sc-if>
           <image-slot id="{{ piece.imageId }}" shape="rect" fit="cover" view-scale="{{ piece.imageView.scale }}" view-x="{{ piece.imageView.x }}" view-y="{{ piece.imageView.y }}" style="width:100%;height:100%;" src="{{ piece.imageUrl }}" placeholder="{{ piece.placeholder }}"></image-slot>

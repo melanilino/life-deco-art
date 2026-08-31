@@ -6,7 +6,7 @@
 <link rel="canonical" href="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
 <meta property="og:url" content="https://lifedecoart.com/tienda/bandeja-te-elijo-hoy">
 <script src="/support.js?v=20260814-product-cache1"></script>
-<script src="/site-enhancements.js?v=20260829a1" defer></script>
+<script src="/site-enhancements.js?v=20260831motion1" defer></script>
 <title>Bandeja "Te Elijo Hoy" | Life Deco Art</title>
 <meta name="description" content="Bandeja de madera lacada en negro con lettering blanco pintado a mano. Personalizable en frase, color y tamaño. Entrega 5-7 días.">
 <meta property="og:type" content="product">
@@ -151,9 +151,9 @@
 
   <div style="max-width:1240px;margin:0 auto;padding:{{ relatedPad }};">
     <div style="font-size:{{ h2Size }};line-height:1.25;color:#000;font-weight:400;margin-bottom:{{ h2Gap }};">También te puede <span style="font-family:'Homemade Apple',cursive;font-weight:400;font-size:1.2em;">gustar</span></div>
-    <div style="display:grid;grid-template-columns:{{ relatedCols }};gap:{{ relatedGap }};min-width:0;">
+    <div class="lda-card-grid" style="display:grid;grid-template-columns:{{ relatedCols }};gap:{{ relatedGap }};min-width:0;">
       <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
-        <div style="min-width:0;">
+        <div class="lda-motion-card" style="min-width:0;">
           <a href="{{ p.detailHref }}" style="display:block;aspect-ratio:4/5;border-radius:6px;background:#F3EEE4;margin-bottom:14px;overflow:hidden;text-decoration:none;">
             <image-slot id="pd-related-{{ p.id }}" shape="rect" fit="cover" srcset="{{ p.imageSrcset }}" sizes="(max-width:859px) 50vw, 300px" alt="{{ p.imageAlt }}" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="width:100%;height:100%;" src="{{ p.imageUrl }}" placeholder="foto del producto"></image-slot>
           </a>

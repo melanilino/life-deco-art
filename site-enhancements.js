@@ -5,6 +5,35 @@
   const MAIN_ID = "contenido-principal";
   let cmsPageContent = null;
   let cmsGlobalContent = null;
+  let revealObserver = null;
+
+  function revealElement(el) {
+    el.style.opacity = "1";
+    el.style.transform = "translateY(0)";
+    el.setAttribute("data-revealed", "1");
+  }
+
+  function observeRevealElements() {
+    const elements = document.querySelectorAll("[data-reveal]:not([data-revealed]):not([data-reveal-observed])");
+    if (!elements.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      elements.forEach(revealElement);
+      return;
+    }
+    if (!revealObserver) {
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          revealElement(entry.target);
+          revealObserver.unobserve(entry.target);
+        });
+      }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+    }
+    elements.forEach((el) => {
+      el.setAttribute("data-reveal-observed", "1");
+      revealObserver.observe(el);
+    });
+  }
 
   function ensureFavicon() {
     if (document.querySelector('link[rel="icon"]')) return;
@@ -20,6 +49,7 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
+      html { scroll-behavior: smooth; }
       .lda-skip-link {
         position: fixed;
         top: 8px;
@@ -53,6 +83,29 @@
       [data-reveal][data-revealed] {
         transform: translateY(0) !important;
       }
+      .lda-motion-card {
+        transition: opacity .68s cubic-bezier(.16, 1, .3, 1), transform .3s cubic-bezier(.16, 1, .3, 1) !important;
+        box-shadow: none !important;
+      }
+      .lda-motion-card[data-reveal]:not([data-revealed]) {
+        opacity: 0 !important;
+        transform: translateY(12px) !important;
+      }
+      .lda-motion-card[data-reveal][data-revealed] { opacity: 1 !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(2) { transition-delay: .05s !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(3) { transition-delay: .1s !important; }
+      .lda-card-grid > .lda-motion-card:nth-child(4) { transition-delay: .15s !important; }
+      @media (max-width: 859px) {
+        .lda-motion-card[data-reveal]:not([data-revealed]) { transform: translateY(6px) !important; }
+        .lda-motion-card { transition-delay: 0s !important; }
+      }
+      @media (min-width: 860px) and (hover: hover) {
+        .lda-motion-card[data-revealed]:hover,
+        .lda-motion-card:not([data-reveal]):hover {
+          transform: translateY(-4px) !important;
+          box-shadow: none !important;
+        }
+      }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto !important; }
         *, *::before, *::after {
@@ -61,6 +114,7 @@
           transition-duration: .01ms !important;
           scroll-behavior: auto !important;
         }
+        .lda-motion-card { transition-delay: 0s !important; }
       }
     `;
     document.head.appendChild(style);
@@ -291,10 +345,12 @@
     addSkipLink();
     addPageUrlMetadata();
     enhanceContent();
+    observeRevealElements();
     updateDynamicMetadata();
     loadCmsDomContent();
     const observer = new MutationObserver(() => {
       enhanceContent();
+      observeRevealElements();
       updateDynamicMetadata();
       applyCmsDomContent();
     });

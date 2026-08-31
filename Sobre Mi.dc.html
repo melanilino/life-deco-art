@@ -21,7 +21,7 @@ x-dc{display:none!important}
 @media(max-width:859px){#dc-boot-fallback .dc-fb-nav{height:64px;padding:0 20px}#dc-boot-fallback .dc-fb-hero{height:400px;min-height:400px;padding:72px 26px 16px}#dc-boot-fallback .dc-fb-kicker{font-size:11px;letter-spacing:.18em;margin-bottom:18px}#dc-boot-fallback .dc-fb-title{font-size:26px;font-weight:300;margin:0 0 14px}#dc-boot-fallback .dc-fb-sub{font-size:14px;margin:0 0 28px}#dc-boot-fallback .dc-fb-actions{gap:12px;width:100%}#dc-boot-fallback .dc-fb-actions span{flex:1;padding:16px 0}#dc-boot-fallback .dc-fb-learn{padding:15px 0!important}}
 </style>
 <script src="./support.js?v=20260810p1" defer></script>
-<script src="./site-enhancements.js?v=20260829a1" defer></script>
+<script src="./site-enhancements.js?v=20260831motion1" defer></script>
 
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">
 <title>Life Deco Art | Sobre Mí</title>
@@ -210,16 +210,16 @@ body{margin:0;background:#fff}
 
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ testimonialSectionPad }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div data-cms-text="testimonialsTitle" class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Lo que dicen</div>
-    <div style="display:grid;grid-template-columns:{{ testimonialCols }};gap:{{ testimonialGap }};min-width:0;">
-      <div style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};transition:transform .3s ease;" style-hover="transform:translateY(-5px);">
+    <div class="lda-card-grid" style="display:grid;grid-template-columns:{{ testimonialCols }};gap:{{ testimonialGap }};min-width:0;">
+      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial1Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"Melani capturó exactamente lo que quería sin que yo supiera cómo explicarlo. La bandeja quedó preciosa y mi mamá lloró cuando la vio."</p>
         <div data-cms-text="testimonial1Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Carolina Reyes</div>
       </div>
-      <div style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};transition:transform .3s ease;" style-hover="transform:translateY(-5px);">
+      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial2Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"Pedí souvenirs para el lanzamiento de mi negocio y superaron todas mis expectativas. El detalle y el cuidado en cada pieza se nota desde el primer vistazo."</p>
         <div data-cms-text="testimonial2Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Yamil Ortega</div>
       </div>
-      <div style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};transition:transform .3s ease;" style-hover="transform:translateY(-5px);">
+      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial3Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"No sabía que algo tan sencillo como un sombrero con mi nombre podría hacerme sentir tan especial. Es un arte de verdad."</p>
         <div data-cms-text="testimonial3Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Fernanda Peña</div>
       </div>
