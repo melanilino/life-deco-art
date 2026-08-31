@@ -43,7 +43,7 @@ x-dc{display:none!important}
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto; }
-  @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview { grid-template-columns:1fr; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
+  @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview, .cms-spotlight-grid { grid-template-columns:1fr!important; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
 </helmet>
 
@@ -277,6 +277,34 @@ x-dc{display:none!important}
               <sc-if value="{{ ph.isAdjusting }}" hint-placeholder-val="{{ false }}"><div class="cms-frame-hint">Arrastra la imagen o sus esquinas. Haz clic fuera para terminar.</div></sc-if>
             </div>
           </sc-for>
+          <div style="border-top:1px solid #E4DCCB;margin-top:24px;padding-top:22px;max-width:760px;">
+            <div style="font-size:13px;color:#5C5142;line-height:1.6;margin-bottom:18px;">Elige qué promociona este banner. Los cursos, talleres, recursos y artículos toman automáticamente sus datos publicados en Aprende.</div>
+            <div class="cms-spotlight-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px;">
+              <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Tipo de anuncio</label>
+                <select value="{{ inicioSpotlightType }}" onChange="{{ onInicioSpotlightType }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;">
+                  <sc-for list="{{ inicioSpotlightTypeOptions }}" as="opt" hint-placeholder-count="7"><option value="{{ opt.value }}">{{ opt.label }}</option></sc-for>
+                </select>
+              </div>
+              <sc-if value="{{ inicioSpotlightShowsDestination }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Destino</label>
+                  <select value="{{ inicioSpotlightDestination }}" onChange="{{ onInicioSpotlightDestination }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;">
+                    <sc-for list="{{ inicioSpotlightDestinationOptions }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.value }}">{{ opt.label }}</option></sc-for>
+                  </select>
+                </div>
+              </sc-if>
+            </div>
+            <div style="font-size:12px;color:#8B795E;line-height:1.5;margin-bottom:18px;">{{ inicioSpotlightSourceNote }}</div>
+            <div class="cms-spotlight-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;">
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Encabezado</label><input type="text" value="{{ inicioSpotlightEyebrow }}" onChange="{{ onInicioSpotlightEyebrow }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Texto del botón</label><input type="text" value="{{ inicioSpotlightButtonLabel }}" onChange="{{ onInicioSpotlightButtonLabel }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div style="grid-column:1/-1;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Título manual</label><input type="text" value="{{ inicioSpotlightTitle }}" onChange="{{ onInicioSpotlightTitle }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div style="grid-column:1/-1;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Descripción manual</label><textarea value="{{ inicioSpotlightDescription }}" onChange="{{ onInicioSpotlightDescription }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Primera línea informativa</label><input type="text" value="{{ inicioSpotlightMetaPrimary }}" onChange="{{ onInicioSpotlightMetaPrimary }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Segunda línea informativa</label><input type="text" value="{{ inicioSpotlightMetaSecondary }}" onChange="{{ onInicioSpotlightMetaSecondary }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+            </div>
+          </div>
         </div>
       </div>
     </sc-if>
@@ -634,7 +662,7 @@ class Component extends DCLogic {
     configData: null, configLoaded: false, configLoading: false,
     contactData: null, contactLoaded: false, contactLoading: false,
     encargosData: null, encargosLoaded: false, encargosLoading: false,
-    inicioProductOptions: [],
+    inicioProductOptions: [], inicioAprendeData: {},
     legalUpdatedDates: { privacidad: 'Julio de 2026', terminos: 'Julio de 2026' },
     adjustingImage: null, productTab: 'info', courseTab: 'info', resourceTab: 'info', communityContentCard: null,
     confirmOpen: false, confirmTitle: 'Eliminar', confirmMessage: ''
@@ -909,9 +937,9 @@ class Component extends DCLogic {
       };
       this.setState({ configData: { ...defaults, ...data }, configLoaded: true, configLoading: false });
     } else if (pageId === 'inicio') {
-      let data = {}, tienda = {};
+      let data = {}, tienda = {}, aprende = {};
       try {
-        [data, tienda] = await Promise.all([this.state.cms.getPageContent('inicio'), this.state.cms.getPageContent('tienda')]);
+        [data, tienda, aprende] = await Promise.all([this.state.cms.getPageContent('inicio'), this.state.cms.getPageContent('tienda'), this.state.cms.getPageContent('aprende')]);
       } catch (e) { this.setState({ error: 'No se pudo conectar a la base de datos — revisa las reglas de Firestore.' }); }
       if (data.heroVideoUrl) this.state.cms.ensurePublicMediaCache(data.heroVideoUrl).catch(() => {});
       if (data.heroVideoUrl && !data.heroVideoPosterUrl) {
@@ -922,7 +950,7 @@ class Component extends DCLogic {
         }).catch(() => {});
       }
       const products = (tienda.products && tienda.products.length) ? tienda.products : this.DEFAULT_TIENDA.products;
-      this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products });
+      this.setState({ content: { ...data, recentProductIds: (data.recentProductIds && data.recentProductIds.length === 4) ? data.recentProductIds : ['p1', 'p11', 'p9', 'p3'] }, inicioProductOptions: products, inicioAprendeData: aprende || {} });
     } else if (pageId === 'tienda' && (!this.state.tiendaLoaded || !this.state.encargosLoaded)) {
       this.setState({ tiendaLoading: true, encargosLoading: true });
       let data = {}, encargos = {};
@@ -1065,6 +1093,13 @@ class Component extends DCLogic {
   }
 
   updateField = (key, value) => { this.setState({ content: { ...this.state.content, [key]: value }, saved: false }); };
+  updateSpotlightType(type) {
+    const defaults = { aprende: '', section: 'Talleres', course: '', workshop: '', free: '', blog: '', community: '' };
+    const listKeys = { course: 'cursos', workshop: 'talleres', free: 'gratis', blog: 'blog', community: 'comunidad' };
+    const list = ((this.state.inicioAprendeData || {})[listKeys[type]] || []).filter((item) => (item.status || 'Activo') !== 'Borrador');
+    const destinationId = list.length ? String(list[0].id || '') : (defaults[type] || '');
+    this.setState({ content: { ...this.state.content, spotlightDestinationType: type, spotlightDestinationId: destinationId }, saved: false });
+  }
 
   updateItem(listKey, id, key, value) {
     const arr = this.getListArray(listKey).map((it) => (it.id === id ? { ...it, [key]: value, ...(listKey === 'products' && key === 'category' ? { subcategory: '' } : {}) } : it));
@@ -1784,6 +1819,24 @@ class Component extends DCLogic {
         onAdjust: () => this.openInicioFrameEditor(p.key)
       };
     };
+    const inicioContent = s.content || {};
+    const inicioSpotlightType = inicioContent.spotlightDestinationType || 'section';
+    const spotlightTypeOptions = [
+      { value: 'aprende', label: 'Página general de Aprende' },
+      { value: 'section', label: 'Sección de Aprende' },
+      { value: 'course', label: 'Curso específico' },
+      { value: 'workshop', label: 'Taller específico' },
+      { value: 'free', label: 'Recurso gratuito' },
+      { value: 'blog', label: 'Artículo del blog' },
+      { value: 'community', label: 'Comunidad' }
+    ];
+    const spotlightLists = { course: 'cursos', workshop: 'talleres', free: 'gratis', blog: 'blog', community: 'comunidad' };
+    const spotlightLabels = { course: 'Curso', workshop: 'Taller', free: 'Recurso', blog: 'Artículo', community: 'Comunidad' };
+    const sectionOptions = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'].map((label) => ({ value: label, label }));
+    const spotlightItems = (((s.inicioAprendeData || {})[spotlightLists[inicioSpotlightType]]) || []).filter((item) => (item.status || 'Activo') !== 'Borrador');
+    const itemOptions = spotlightItems.map((item) => ({ value: String(item.id || ''), label: (spotlightLabels[inicioSpotlightType] || 'Contenido') + ': ' + (item.name || item.title || 'Sin título') }));
+    const inicioSpotlightDestinationOptions = inicioSpotlightType === 'section' ? sectionOptions : itemOptions;
+    const usesAutomaticSpotlight = ['course', 'workshop', 'free', 'blog', 'community'].includes(inicioSpotlightType);
     const pages = this.pageList.map((p) => ({
       label: p.label, onSelect: () => this.loadPage(p.id),
       bg: p.id === s.page ? '#F65091' : 'transparent',
@@ -2085,6 +2138,26 @@ class Component extends DCLogic {
         label: this.INICIO_WORKSHOP_GROUP.label, aspect: this.INICIO_WORKSHOP_GROUP.aspect,
         photos: this.INICIO_WORKSHOP_GROUP.fields.map((p) => ({ ...buildInicioPhoto(p), maxWidth: '560px' }))
       },
+      inicioSpotlightType,
+      inicioSpotlightTypeOptions: spotlightTypeOptions,
+      inicioSpotlightShowsDestination: inicioSpotlightType === 'section' || ['course', 'workshop', 'free', 'blog'].includes(inicioSpotlightType),
+      inicioSpotlightDestination: inicioContent.spotlightDestinationId || (inicioSpotlightType === 'section' ? 'Talleres' : ''),
+      inicioSpotlightDestinationOptions,
+      inicioSpotlightSourceNote: usesAutomaticSpotlight ? 'El título, la descripción, los datos y la imagen se tomarán del contenido seleccionado. Los campos manuales quedan como respaldo.' : 'Este destino utiliza los textos y la imagen manuales configurados debajo.',
+      inicioSpotlightEyebrow: inicioContent.spotlightEyebrow || 'Inscripciones abiertas',
+      inicioSpotlightButtonLabel: inicioContent.spotlightButtonLabel || 'Reservar mi plaza',
+      inicioSpotlightTitle: inicioContent.spotlightTitle || 'Lettering desde cero',
+      inicioSpotlightDescription: inicioContent.spotlightDescription || 'Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.',
+      inicioSpotlightMetaPrimary: inicioContent.spotlightMetaPrimary || 'Inicio: 3 de agosto, 2026',
+      inicioSpotlightMetaSecondary: inicioContent.spotlightMetaSecondary || 'Modalidad: Online / Presencial',
+      onInicioSpotlightType: (e) => this.updateSpotlightType(e.target.value),
+      onInicioSpotlightDestination: (e) => this.updateField('spotlightDestinationId', e.target.value),
+      onInicioSpotlightEyebrow: (e) => this.updateField('spotlightEyebrow', e.target.value),
+      onInicioSpotlightButtonLabel: (e) => this.updateField('spotlightButtonLabel', e.target.value),
+      onInicioSpotlightTitle: (e) => this.updateField('spotlightTitle', e.target.value),
+      onInicioSpotlightDescription: (e) => this.updateField('spotlightDescription', e.target.value),
+      onInicioSpotlightMetaPrimary: (e) => this.updateField('spotlightMetaPrimary', e.target.value),
+      onInicioSpotlightMetaSecondary: (e) => this.updateField('spotlightMetaSecondary', e.target.value),
       videoValue: (s.content && s.content.heroVideoUrl) || '',
       videoFileName: (s.content && s.content.heroVideoUrl) ? decodeURIComponent(s.content.heroVideoUrl.split('/').pop().split('?')[0].replace(/^\d+_/, '')) : '',
       onVideoUpload: (e) => this.handleHeroVideoUpload(e.target.files[0]),

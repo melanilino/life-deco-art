@@ -428,21 +428,21 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div style="max-width:1240px;margin:{{ spotlightNegMargin }} auto 0;padding:0 {{ sidePad }};position:relative;">
     <div style="border-radius:8px;overflow:hidden;display:flex;align-items:stretch;flex-direction:{{ spotlightDir }};">
       <div style="background:#000000;color:#FFFFFF;padding:{{ spotlightCardPad }};display:flex;flex-direction:column;justify-content:center;flex:0.75;min-width:0;order:{{ spotlightCardOrder }};">
-        <div class="lda-section-eyebrow" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:600;margin-bottom:20px;">Inscripciones abiertas</div>
-        <div style="font-size:{{ h2Size }};font-weight:400;line-height:1.2;margin-bottom:24px;">Lettering desde cero</div>
-        <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:300;line-height:1.7;margin:0 0 28px;">Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.</p>
+        <div class="lda-section-eyebrow" style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#0CC0DF;font-weight:600;margin-bottom:20px;">{{ spotlightEyebrow }}</div>
+        <div style="font-size:{{ h2Size }};font-weight:400;line-height:1.2;margin-bottom:24px;">{{ spotlightTitle }}</div>
+        <p style="font-size:14px;color:rgba(255,255,255,0.65);font-weight:300;line-height:1.7;margin:0 0 28px;">{{ spotlightDescription }}</p>
         <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
           <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
-            <span>📅</span> Inicio: 3 de agosto, 2026
+            <span>📅</span> {{ spotlightMetaPrimary }}
           </div>
           <div style="display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.8);font-weight:600;">
-            <span>📍</span> Modalidad: Online / Presencial
+            <span>📍</span> {{ spotlightMetaSecondary }}
           </div>
         </div>
-        <a href="/aprende" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">Reservar mi plaza</a>
+        <a href="{{ spotlightHref }}" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">{{ spotlightButtonLabel }}</a>
       </div>
       <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">
-        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ cursoSpotlightAlt }}" view-scale="{{ cursoSpotlightScale }}" view-x="{{ cursoSpotlightX }}" view-y="{{ cursoSpotlightY }}" style="width:100%;height:100%;" src="{{ cursoSpotlightUrl }}" placeholder="foto: taller de lettering en vivo, alumnas trabajando"></image-slot>
+        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ spotlightImageAlt }}" view-scale="{{ spotlightImageScale }}" view-x="{{ spotlightImageX }}" view-y="{{ spotlightImageY }}" style="width:100%;height:100%;" src="{{ spotlightImageUrl }}" placeholder="foto: anuncio destacado de Aprende"></image-slot>
       </div>
     </div>
   </div>
@@ -465,7 +465,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;sectionGap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:96,&quot;min&quot;:40,&quot;max&quot;:200,&quot;step&quot;:8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Espaciado&quot;}}">
 class Component extends DCLogic {
-  state = { content: {}, tiendaProducts: {}, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, cwOpen: null, heroVideoReady: false };
+  state = { content: {}, tiendaProducts: {}, aprendeContent: {}, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, cwOpen: null, heroVideoReady: false };
   checkMobile = () => this.setState({ isMobile: window.innerWidth < 860 });
   syncHomeNav = () => {
     document.body.classList.toggle('lda-home-at-top', window.scrollY <= 4);
@@ -475,9 +475,12 @@ class Component extends DCLogic {
       const cms = await import('./cms.js');
       const cached = cms.getCachedPageContent('inicio');
       if (cached) this.setState({ content: cached });
-      const data = await cms.getPageContent('inicio');
-      this.setState({ content: data });
-      const tiendaData = await cms.getPageContent('tienda');
+      const [data, tiendaData, aprendeData] = await Promise.all([
+        cms.getPageContent('inicio'),
+        cms.getPageContent('tienda'),
+        cms.getPageContent('aprende')
+      ]);
+      this.setState({ content: data, aprendeContent: aprendeData || {} });
       if (tiendaData && tiendaData.products) {
         const map = {};
         tiendaData.products.forEach((p) => { map[p.id] = p; });
@@ -670,6 +673,53 @@ class Component extends DCLogic {
       const product = this.state.tiendaProducts[id] || fallbackProducts[id] || fallbackProducts[defaultIds[index]];
       return { ...product, imageView: itemImageView(product.imageAdjustments && product.imageAdjustments.imageUrl), href: '/tienda/producto?id=' + encodeURIComponent(product.id), imageId: 'inicio-pieza-' + (index + 1), placeholder: 'foto: ' + product.name, hasTag: !!product.tag };
     });
+    const aprende = this.state.aprendeContent || {};
+    const spotlightType = c.spotlightDestinationType || 'section';
+    const spotlightTarget = c.spotlightDestinationId || 'Talleres';
+    const published = (items) => (Array.isArray(items) ? items : []).filter((item) => (item.status || 'Activo') !== 'Borrador');
+    const listByType = { course: aprende.cursos, workshop: aprende.talleres, free: aprende.gratis, blog: aprende.blog, community: aprende.comunidad };
+    const spotlightItem = published(listByType[spotlightType]).find((item) => String(item.id) === String(spotlightTarget)) || null;
+    const sectionNames = { Esenciales: 'Esenciales', Cursos: 'Cursos', Talleres: 'Talleres', Gratis: 'Gratis', Blog: 'Blog', Comunidad: 'Comunidad' };
+    let spotlightHref = '/aprende';
+    if (spotlightType === 'section') spotlightHref = '/aprende?tab=' + encodeURIComponent(sectionNames[spotlightTarget] || 'Talleres');
+    const spotlightFallbackSections = { course: 'Cursos', workshop: 'Talleres', free: 'Gratis', blog: 'Blog' };
+    if (spotlightFallbackSections[spotlightType]) spotlightHref = '/aprende?tab=' + encodeURIComponent(spotlightFallbackSections[spotlightType]);
+    if (spotlightType === 'course' && spotlightItem) spotlightHref = '/aprende/curso?id=' + encodeURIComponent(spotlightItem.id);
+    if (spotlightType === 'workshop' && spotlightItem) spotlightHref = '/aprende/taller?id=' + encodeURIComponent(spotlightItem.id);
+    if (spotlightType === 'free' && spotlightItem) spotlightHref = '/aprende/recurso?id=' + encodeURIComponent(spotlightItem.id);
+    if (spotlightType === 'blog' && spotlightItem) spotlightHref = '/blog?id=' + encodeURIComponent(spotlightItem.id);
+    if (spotlightType === 'community') spotlightHref = '/aprende?tab=Comunidad';
+    const spotlightDefaults = {
+      eyebrow: 'Inscripciones abiertas',
+      title: 'Lettering desde cero',
+      description: 'Descubre el poder de tu propio trazo. En este workshop intensivo aprenderás las bases estructurales y el manejo de herramientas profesionales.',
+      primary: 'Inicio: 3 de agosto, 2026',
+      secondary: 'Modalidad: Online / Presencial'
+    };
+    const spotlightTypeEyebrow = { course: 'Curso destacado', workshop: 'Taller destacado', free: 'Recurso destacado', blog: 'Artículo destacado', community: 'Comunidad' };
+    const spotlightTitle = spotlightItem ? (spotlightItem.name || spotlightItem.title || spotlightDefaults.title) : (c.spotlightTitle || spotlightDefaults.title);
+    const spotlightDescription = spotlightItem ? (spotlightItem.summary || spotlightItem.description || spotlightItem.desc || spotlightItem.excerpt || spotlightDefaults.description) : (c.spotlightDescription || spotlightDefaults.description);
+    let spotlightMetaPrimary = c.spotlightMetaPrimary || spotlightDefaults.primary;
+    let spotlightMetaSecondary = c.spotlightMetaSecondary || spotlightDefaults.secondary;
+    if (spotlightItem && spotlightType === 'course') {
+      spotlightMetaPrimary = spotlightItem.duration ? 'Duración: ' + spotlightItem.duration : (spotlightItem.availability || spotlightMetaPrimary);
+      spotlightMetaSecondary = spotlightItem.modality ? 'Modalidad: ' + spotlightItem.modality : spotlightMetaSecondary;
+    }
+    if (spotlightItem && spotlightType === 'workshop') {
+      spotlightMetaPrimary = spotlightItem.date ? 'Fecha: ' + spotlightItem.date : (spotlightItem.dateLevel || spotlightMetaPrimary);
+      spotlightMetaSecondary = [spotlightItem.modality, spotlightItem.location].filter(Boolean).join(' · ') || spotlightMetaSecondary;
+    }
+    if (spotlightItem && spotlightType === 'free') {
+      spotlightMetaPrimary = spotlightItem.format ? 'Formato: ' + spotlightItem.format : spotlightMetaPrimary;
+      spotlightMetaSecondary = spotlightItem.pageCount ? spotlightItem.pageCount + ' páginas' : spotlightMetaSecondary;
+    }
+    if (spotlightItem && spotlightType === 'blog') {
+      spotlightMetaPrimary = spotlightItem.publishedAt ? 'Publicado: ' + spotlightItem.publishedAt : spotlightMetaPrimary;
+      spotlightMetaSecondary = spotlightItem.readingTime ? 'Lectura: ' + spotlightItem.readingTime : spotlightMetaSecondary;
+    }
+    const spotlightItemView = itemImageView(spotlightItem && spotlightItem.imageAdjustments && spotlightItem.imageAdjustments.imageUrl);
+    const spotlightManualView = imageAdjustment('cursoSpotlightUrl');
+    const spotlightUsesItemImage = !!(spotlightItem && spotlightItem.imageUrl);
     return {
       isDesktop: !m,
       isMobile: m,
@@ -761,9 +811,18 @@ class Component extends DCLogic {
         icon: this.state.cwOpen === i ? '−' : '+',
         onToggle: () => this.setState({ cwOpen: this.state.cwOpen === i ? null : i }),
       })),
-      cursoSpotlightUrl: c.cursoSpotlightUrl || '',
-      cursoSpotlightAlt: (c.imageAlts && c.imageAlts.cursoSpotlightUrl) || 'Alumnas practicando lettering en un taller',
-      cursoSpotlightScale: imageAdjustment('cursoSpotlightUrl').scale, cursoSpotlightX: imageAdjustment('cursoSpotlightUrl').x, cursoSpotlightY: imageAdjustment('cursoSpotlightUrl').y,
+      spotlightHref,
+      spotlightEyebrow: spotlightItem ? (spotlightTypeEyebrow[spotlightType] || c.spotlightEyebrow || spotlightDefaults.eyebrow) : (c.spotlightEyebrow || spotlightDefaults.eyebrow),
+      spotlightTitle,
+      spotlightDescription,
+      spotlightMetaPrimary,
+      spotlightMetaSecondary,
+      spotlightButtonLabel: c.spotlightButtonLabel || (spotlightItem && (spotlightItem.ctaLabel || spotlightItem.downloadLabel)) || 'Reservar mi plaza',
+      spotlightImageUrl: spotlightUsesItemImage ? spotlightItem.imageUrl : (c.cursoSpotlightUrl || ''),
+      spotlightImageAlt: spotlightUsesItemImage ? (((spotlightItem.imageAlts || {}).imageUrl) || spotlightTitle) : ((c.imageAlts && c.imageAlts.cursoSpotlightUrl) || 'Anuncio destacado de Aprende'),
+      spotlightImageScale: spotlightUsesItemImage ? spotlightItemView.scale : spotlightManualView.scale,
+      spotlightImageX: spotlightUsesItemImage ? spotlightItemView.x : spotlightManualView.x,
+      spotlightImageY: spotlightUsesItemImage ? spotlightItemView.y : spotlightManualView.y,
       recentProducts,
     };
   }
