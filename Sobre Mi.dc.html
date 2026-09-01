@@ -124,6 +124,26 @@ body{margin:0;background:#fff}
     .lda-eyebrow-que-hago + div > div:first-child{padding-top:12px!important;}
   }
 </style>
+
+<style id="lda-testimonial-motion">
+  @media(min-width:860px){
+    .lda-testimonial-stage.lda-testimonial-ready .lda-testimonial-card{
+      opacity:.56!important;
+      transform:translateY(7px) scale(.985)!important;
+      filter:saturate(.82);
+      transition:opacity .65s ease,transform .78s cubic-bezier(.16,1,.3,1),filter .65s ease!important;
+      box-shadow:none!important;
+    }
+    .lda-testimonial-stage.lda-testimonial-ready .lda-testimonial-card.lda-testimonial-active{
+      opacity:1!important;
+      transform:translateY(-7px) scale(1)!important;
+      filter:saturate(1);
+    }
+  }
+  @media(prefers-reduced-motion:reduce){
+    .lda-testimonial-stage .lda-testimonial-card{opacity:1!important;transform:none!important;filter:none!important;transition:none!important;}
+  }
+</style>
 </helmet>
 <div class="lda-nav-spacer" aria-hidden="true"></div>
 
@@ -210,16 +230,16 @@ body{margin:0;background:#fff}
 
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ testimonialSectionPad }};opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div data-cms-text="testimonialsTitle" class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Lo que dicen</div>
-    <div class="lda-card-grid" style="display:grid;grid-template-columns:{{ testimonialCols }};gap:{{ testimonialGap }};min-width:0;">
-      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
+    <div class="lda-card-grid lda-testimonial-stage" data-testimonial-stage="" style="display:grid;grid-template-columns:{{ testimonialCols }};gap:{{ testimonialGap }};min-width:0;">
+      <div class="lda-motion-card lda-testimonial-card" data-testimonial-card="0" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial1Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"Melani capturó exactamente lo que quería sin que yo supiera cómo explicarlo. La bandeja quedó preciosa y mi mamá lloró cuando la vio."</p>
         <div data-cms-text="testimonial1Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Carolina Reyes</div>
       </div>
-      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
+      <div class="lda-motion-card lda-testimonial-card" data-testimonial-card="1" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial2Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"Pedí souvenirs para el lanzamiento de mi negocio y superaron todas mis expectativas. El detalle y el cuidado en cada pieza se nota desde el primer vistazo."</p>
         <div data-cms-text="testimonial2Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Yamil Ortega</div>
       </div>
-      <div class="lda-motion-card" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
+      <div class="lda-motion-card lda-testimonial-card" data-testimonial-card="2" data-reveal="" style="background:#F3EEE4;border-radius:12px;padding:{{ testimonialPad }};display:flex;flex-direction:column;height:{{ testimonialCardHeight }};opacity:0;transform:translateY(12px);">
         <p data-cms-text="testimonial3Quote" style="font-size:{{ testimonialTextSize }};line-height:1.7;color:#8B795E;font-weight:300;margin:0 0 14px;">"No sabía que algo tan sencillo como un sombrero con mi nombre podría hacerme sentir tan especial. Es un arte de verdad."</p>
         <div data-cms-text="testimonial3Author" style="font-size:13px;font-weight:500;color:#000000;white-space:nowrap;margin-top:auto;">— Fernanda Peña</div>
       </div>
@@ -249,7 +269,31 @@ class Component extends DCLogic {
       const cms = await import('./cms.js');
       const data = await cms.getPageContent('sobremi');
       this.setState({ content: data });
+      setTimeout(() => this.setupTestimonialMotion(), 80);
     } catch (e) {}
+  }
+  setupTestimonialMotion() {
+    if (typeof window === 'undefined' || window.innerWidth < 860 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const stage = document.querySelector('[data-testimonial-stage]');
+    const cards = Array.from(document.querySelectorAll('[data-testimonial-card]'));
+    if (!stage || cards.length < 2) return;
+    if (this._testimonialTimer) clearInterval(this._testimonialTimer);
+    let active = 0;
+    const activate = (index) => {
+      active = index;
+      cards.forEach((card, cardIndex) => card.classList.toggle('lda-testimonial-active', cardIndex === active));
+    };
+    const stop = () => { if (this._testimonialTimer) { clearInterval(this._testimonialTimer); this._testimonialTimer = null; } };
+    const start = () => {
+      stop();
+      this._testimonialTimer = setInterval(() => activate((active + 1) % cards.length), 4200);
+    };
+    cards.forEach((card, index) => { card.onmouseenter = () => activate(index); });
+    stage.onmouseenter = stop;
+    stage.onmouseleave = start;
+    stage.classList.add('lda-testimonial-ready');
+    activate(0);
+    start();
   }
   componentDidMount() {
     this.loadContent();
@@ -276,9 +320,11 @@ class Component extends DCLogic {
     requestAnimationFrame(sweep);
     setTimeout(sweep, 400);
     setTimeout(sweep, 1200);
+    setTimeout(() => this.setupTestimonialMotion(), 250);
   }
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
+    if (this._testimonialTimer) clearInterval(this._testimonialTimer);
   }
   renderVals() {
     const m = this.state.isMobile;
