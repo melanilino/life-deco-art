@@ -170,6 +170,29 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     .lda-eyebrow-servicios{margin-bottom:0!important;}
   }
 </style>
+
+<style id="lda-servicios-editorial-motion">
+  @media(min-width:860px){
+    .lda-editorial-services-heading .lda-editorial-script{display:inline-block;position:relative;}
+    .lda-editorial-services-heading .lda-editorial-script::after{content:"";position:absolute;left:2%;right:-4%;bottom:-5px;height:1px;background:#8B795E;transform:scaleX(0);transform-origin:left center;transition:transform .85s cubic-bezier(.16,1,.3,1) .18s;}
+    .lda-editorial-services-heading[data-revealed] .lda-editorial-script::after{transform:scaleX(1);}
+    .lda-editorial-services-card{clip-path:inset(0 0 100% 0 round 8px);opacity:0;transform:translateY(18px)!important;transition:clip-path 1s cubic-bezier(.16,1,.3,1),opacity .7s ease,transform .8s cubic-bezier(.16,1,.3,1)!important;box-shadow:none!important;}
+    .lda-editorial-services-card:nth-child(2){transition-delay:.08s!important;}
+    .lda-editorial-services-card:nth-child(3){transition-delay:.16s!important;}
+    .lda-editorial-services-card:nth-child(4){transition-delay:.24s!important;}
+    .lda-editorial-services-card[data-revealed]{clip-path:inset(0 0 0 0 round 8px);opacity:1;transform:translateY(0)!important;}
+    .lda-editorial-services-card image-slot{display:block;transform:scale(1.06);transition:transform 1.15s cubic-bezier(.16,1,.3,1);}
+    .lda-editorial-services-card[data-revealed] image-slot{transform:scale(1);}
+    .lda-editorial-services-copy{opacity:0;transform:translateY(14px);transition:opacity .55s ease .45s,transform .7s cubic-bezier(.16,1,.3,1) .45s;}
+    .lda-editorial-services-card[data-revealed] .lda-editorial-services-copy{opacity:1;transform:translateY(0);}
+    .lda-editorial-services-card[data-revealed]:hover{transform:translateY(-4px)!important;box-shadow:none!important;}
+    .lda-editorial-services-card[data-revealed]:hover image-slot{transform:scale(1.025);}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .lda-editorial-services-card{clip-path:none!important;opacity:1!important;transform:none!important;}
+    .lda-editorial-services-card image-slot,.lda-editorial-services-copy,.lda-editorial-script::after{transition:none!important;transform:none!important;opacity:1!important;}
+  }
+</style>
 </helmet>
 
 <div class="lda-nav-spacer" aria-hidden="true"></div>
@@ -272,31 +295,31 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <!-- 4. SERVICIOS — qué hago -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div style="margin-top: 0; padding: 72px 48px 72px;">
-  <div data-reveal="" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
+  <div class="lda-editorial-services-heading" data-reveal="" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:20px;text-align:center;">Servicios</div>
-    <div style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center">En qué puedo <span style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">ayudarte</span></div>
+    <div style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center">En qué puedo <span class="lda-editorial-script" style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: #8B795E; position: relative; top: 2px">ayudarte</span></div>
   </div>
 
   <div class="lda-card-grid" style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
-    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);">
+    <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
       <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
-      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
+      <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
     </div>
-    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.05s;">
+    <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
       <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
-      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
+      <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
     </div>
-    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.1s;">
+    <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
       <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
-      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
+      <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
     </div>
-    <div class="lda-motion-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(12px);transition-delay:.15s;">
+    <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
       <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
-      <div style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
+      <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
     </div>
   </div>
   </div>
