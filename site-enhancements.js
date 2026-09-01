@@ -211,7 +211,7 @@
       if (element.querySelector("image-slot")) element.classList.add("lda-editorial-media");
     });
 
-    document.querySelectorAll(":is(main, [role=main]) h1 span, :is(main, [role=main]) h2 span, :is(main, [role=main]) h3 span, :is(main, [role=main]) [data-reveal] span").forEach((accent) => {
+    document.querySelectorAll("main h1 span, main h2 span, main h3 span, main [data-reveal] span").forEach((accent) => {
       const family = accent.style.fontFamily || "";
       if (!family.toLowerCase().includes("homemade apple")) return;
       const parentSize = parseFloat(window.getComputedStyle(accent.parentElement || accent).fontSize) || 0;
