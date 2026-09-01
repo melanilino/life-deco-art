@@ -66,12 +66,15 @@
       }
       .lda-skip-link:focus { transform: translateY(0); }
       :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
-        outline: none !important;
-        outline-offset: 0 !important;
-        box-shadow: none !important;
+        outline: 2px solid var(--lda-focus-ring, #F65091) !important;
+        outline-offset: 3px !important;
+        box-shadow: 0 0 0 2px #FFFFFF !important;
       }
-      :where(a, button, summary, [tabindex]):focus-visible {
-        filter: brightness(.9);
+      @media (forced-colors: active) {
+        :where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+          outline-color: CanvasText !important;
+          box-shadow: none !important;
+        }
       }
       [data-reveal] {
         transition-duration: .62s !important;
@@ -108,13 +111,12 @@
       }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto !important; }
-        *, *::before, *::after {
-          animation-duration: .01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: .01ms !important;
-          scroll-behavior: auto !important;
+        [data-reveal], .lda-motion-card {
+          opacity: 1 !important;
+          transform: none !important;
+          transition-duration: .2s !important;
+          transition-delay: 0s !important;
         }
-        .lda-motion-card { transition-delay: 0s !important; }
       }
     `;
     document.head.appendChild(style);

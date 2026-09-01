@@ -26,6 +26,11 @@ x-dc{display:none!important}
 <helmet>
 <style>
 .lda-footer-email:-webkit-autofill, .lda-footer-email:-webkit-autofill:hover, .lda-footer-email:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #141414 inset; -webkit-text-fill-color: #FFFFFF; transition: background-color 9999s ease-in-out 0s; }
+@media (max-width:859px), (pointer:coarse) {
+  .lda-footer-social a{width:44px!important;height:44px!important;}
+  .lda-footer-email,.lda-footer-submit{min-height:44px;box-sizing:border-box;}
+  .lda-footer-email{font-size:16px!important;}
+}
 </style>
 </helmet>
 <footer style="background:#000000;color:#FFFFFF;font-family:'Montserrat',sans-serif;padding:{{ padding }};">
@@ -47,7 +52,7 @@ x-dc{display:none!important}
     </sc-if>
     <div>
       <div style="font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: #FFFFFF; font-weight: 500; margin-bottom: 16px">Sígueme</div>
-      <div style="display:flex;gap:12px;margin-bottom:20px;">
+      <div class="lda-footer-social" style="display:flex;gap:12px;margin-bottom:20px;">
         <a href="{{ facebookUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">FB</a>
         <a href="{{ instagramUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">IG</a>
         <a href="{{ tiktokUrl }}" target="_blank" style="width:36px;height:36px;border-radius:4px;background:#262626;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:#FFFFFF;text-decoration:none;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#3a3a3a;">TT</a>
@@ -62,7 +67,7 @@ x-dc{display:none!important}
       <sc-if value="{{ notSubscribed }}" hint-placeholder-val="{{ true }}">
         <form onSubmit="{{ onSubmit }}" style="display:flex;gap:8px;">
           <input type="email" class="lda-footer-email" value="{{ email }}" onChange="{{ onEmailChange }}" required="required" placeholder="Tu email" style="flex:1;min-width:0;padding:10px 12px;border-radius:4px;border:1px solid #262626;background:#141414;color:#FFFFFF;font-family:'Montserrat',sans-serif;font-size:12px;outline:none;" style-focus="outline:none;border-color:#262626;box-shadow:none;">
-          <button type="submit" disabled="{{ subscribing }}" style="background: #FFFFFF; color: #000000; border: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: Montserrat; transition: background .25s ease,transform .25s ease;" style-hover="background:#e8e8e8;transform:translateY(-2px);">{{ subscribeLabel }}</button>
+          <button type="submit" class="lda-footer-submit" disabled="{{ subscribing }}" style="background: #FFFFFF; color: #000000; border: none; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: Montserrat; transition: background .25s ease,transform .25s ease;" style-hover="background:#e8e8e8;transform:translateY(-2px);">{{ subscribeLabel }}</button>
         </form>
         <sc-if value="{{ subscribeError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:11px;font-weight:400;color:#FF9A9A;line-height:1.5;margin:8px 0 0;">{{ subscribeError }}</p></sc-if>
       </sc-if>

@@ -22,6 +22,11 @@
   --lda-beige: #F3EEE4;
   --lda-brown: #8B795E;
 
+  /* Accessible semantic roles. Brand primitives above remain unchanged. */
+  --lda-text-secondary: #756348;
+  --lda-action-primary: #C52A66;
+  --lda-focus-ring: #F65091;
+
   /* Navigation */
   --lda-nav-height: 80px;
   --lda-nav-height-mobile: 64px;
