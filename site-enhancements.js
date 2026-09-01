@@ -6,7 +6,6 @@
   let cmsPageContent = null;
   let cmsGlobalContent = null;
   let revealObserver = null;
-  let pageIntroFontsReady = false;
 
   function revealElement(el) {
     el.style.opacity = "1";
@@ -88,20 +87,6 @@
         transition: opacity .68s cubic-bezier(.16, 1, .3, 1), transform .3s cubic-bezier(.16, 1, .3, 1) !important;
         box-shadow: none !important;
       }
-      .lda-page-intro-enter {
-        opacity: 0;
-      }
-      html.lda-page-intro-ready .lda-page-intro-enter {
-        animation: lda-page-intro-enter .65s cubic-bezier(.23, 1, .32, 1) var(--lda-page-intro-delay, 0s) both;
-      }
-      @keyframes lda-page-intro-enter {
-        from { opacity: 0; transform: translateY(14px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes lda-page-intro-fade {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
       .lda-motion-card[data-reveal]:not([data-revealed]) {
         opacity: 0 !important;
         transform: translateY(12px) !important;
@@ -130,48 +115,9 @@
           scroll-behavior: auto !important;
         }
         .lda-motion-card { transition-delay: 0s !important; }
-        html.lda-page-intro-ready .lda-page-intro-enter {
-          animation: lda-page-intro-fade .2s ease both;
-          transform: none;
-        }
       }
     `;
     document.head.appendChild(style);
-  }
-
-  function markPageIntroElement(el, delay) {
-    if (!el || el.classList.contains("lda-page-intro-enter")) return;
-    el.classList.add("lda-page-intro-enter");
-    el.style.setProperty("--lda-page-intro-delay", delay);
-  }
-
-  function enhancePageIntro() {
-    if (location.pathname === "/cms") return;
-    const title = document.querySelector("h1");
-    if (!title || title.classList.contains("lda-hero-enter") || title.dataset.ldaPageIntro === "1") return;
-
-    title.dataset.ldaPageIntro = "1";
-    const introReveal = title.closest("[data-reveal]");
-    if (introReveal) revealElement(introReveal);
-    const eyebrow = title.previousElementSibling;
-    const summary = title.nextElementSibling;
-    markPageIntroElement(eyebrow, "0s");
-    markPageIntroElement(title, ".08s");
-    markPageIntroElement(summary, ".16s");
-  }
-
-  function preparePageIntro() {
-    if (pageIntroFontsReady) return;
-    pageIntroFontsReady = true;
-    const show = () => document.documentElement.classList.add("lda-page-intro-ready");
-    if (!document.fonts || !document.fonts.ready) {
-      show();
-      return;
-    }
-    Promise.race([
-      document.fonts.ready,
-      new Promise((resolve) => window.setTimeout(resolve, 1200)),
-    ]).then(show);
   }
 
   function addSkipLink() {
@@ -399,14 +345,11 @@
     addSkipLink();
     addPageUrlMetadata();
     enhanceContent();
-    enhancePageIntro();
-    preparePageIntro();
     observeRevealElements();
     updateDynamicMetadata();
     loadCmsDomContent();
     const observer = new MutationObserver(() => {
       enhanceContent();
-      enhancePageIntro();
       observeRevealElements();
       updateDynamicMetadata();
       applyCmsDomContent();
