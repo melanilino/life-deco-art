@@ -48,6 +48,17 @@ x-dc{display:none!important}
   html:not(.lda-hero-fonts-ready) #dc-boot-fallback .lda-hero-font-sensitive{visibility:hidden}
   html:not(.lda-hero-fonts-ready) [data-home-hero].lda-hero-font-sensitive > :not(video):not([aria-hidden="true"]){visibility:hidden}
 }
+.lda-hero-enter{opacity:0;}
+.lda-hero-line-enter{opacity:0;transform:translateX(-50%) scaleY(0);transform-origin:top center;}
+html.lda-hero-fonts-ready .lda-hero-enter{animation:lda-hero-enter .65s cubic-bezier(.23,1,.32,1) var(--lda-hero-delay,0s) both;}
+html.lda-hero-fonts-ready .lda-hero-line-enter{animation:lda-hero-line-enter .55s cubic-bezier(.23,1,.32,1) .42s both;}
+@keyframes lda-hero-enter{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lda-hero-line-enter{from{opacity:0;transform:translateX(-50%) scaleY(0)}to{opacity:1;transform:translateX(-50%) scaleY(1)}}
+@keyframes lda-hero-fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){
+  html.lda-hero-fonts-ready .lda-hero-enter,html.lda-hero-fonts-ready .lda-hero-line-enter{animation:lda-hero-fade .2s ease both;transform:none;}
+  html.lda-hero-fonts-ready .lda-hero-line-enter{transform:translateX(-50%);}
+}
 </style>
 <script>
 (function(){
@@ -201,24 +212,24 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div data-home-hero="" class="lda-hero-font-sensitive" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
-    <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
-    <p style="position:relative;z-index:2;font-size:18px;line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:0 0 22px;">{{ heroSubtitle }}</p>
-    <div style="position:relative;z-index:2;display:flex;gap:14px;flex-direction:row;width:auto;">
+    <div class="lda-hero-enter" style="--lda-hero-delay:0s;position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
+    <h1 class="lda-hero-enter" style="--lda-hero-delay:.08s;position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
+    <p class="lda-hero-enter" style="--lda-hero-delay:.16s;position:relative;z-index:2;font-size:18px;line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:0 0 22px;">{{ heroSubtitle }}</p>
+    <div class="lda-hero-enter" style="--lda-hero-delay:.24s;position:relative;z-index:2;display:flex;gap:14px;flex-direction:row;width:auto;">
       <a href="/tienda" style="text-decoration:none;background:#F65091;color:#fff;font-size:15px;font-weight:500;padding:17px 60px;border-radius:4px;text-align:center;flex:0 0 auto;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Comprar</a>
       <a href="/aprende" style="text-decoration:none;background:transparent;border:1px solid #fff;color:#fff;font-size:15px;font-weight:500;padding:16px 60px;border-radius:4px;text-align:center;flex:0 0 auto;transition:background .25s ease,border-color .25s ease;" style-hover="background:#0CC0DF;border-color:#0CC0DF;">Aprender</a>
     </div>
-    <div style="position:absolute;left:50%;bottom:32px;transform:translateX(-50%);z-index:2;width:1px;height:44px;background:rgba(255,255,255,0.5);"></div>
+    <div class="lda-hero-line-enter" style="position:absolute;left:50%;bottom:32px;z-index:2;width:1px;height:44px;background:rgba(255,255,255,0.5);"></div>
   </div>
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-  <div data-home-hero="" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
+  <div data-home-hero="" class="lda-hero-font-sensitive" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
-    <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
-    <p style="position:relative;z-index:2;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:300;margin:0 0 20px;">{{ heroSubtitle }}</p>
-    <div style="position:relative;z-index:2;display:flex;gap:12px;">
+    <div class="lda-hero-enter" style="--lda-hero-delay:0s;position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
+    <h1 class="lda-hero-enter" style="--lda-hero-delay:.08s;position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
+    <p class="lda-hero-enter" style="--lda-hero-delay:.16s;position:relative;z-index:2;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:300;margin:0 0 20px;">{{ heroSubtitle }}</p>
+    <div class="lda-hero-enter" style="--lda-hero-delay:.24s;position:relative;z-index:2;display:flex;gap:12px;">
       <a href="/tienda" style="text-decoration:none;flex:1;background:#F65091;border-radius:8px;padding:16px 0;color:#FFFFFF;text-align:center;font-size:14px;font-weight:500;transition:transform .2s ease;" style-active="transform:scale(0.96);">Comprar</a>
       <a href="/aprende" style="text-decoration:none;flex:1;background:transparent;border:1px solid #fff;border-radius:8px;padding:15px 0;color:#fff;text-align:center;font-size:14px;font-weight:500;transition:transform .2s ease;" style-active="transform:scale(0.96);">Aprender</a>
     </div>
