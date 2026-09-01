@@ -6,30 +6,11 @@
   let cmsPageContent = null;
   let cmsGlobalContent = null;
   let revealObserver = null;
-  let revealSweepScheduled = false;
 
   function revealElement(el) {
     el.style.opacity = "1";
     el.style.transform = "translateY(0)";
     el.setAttribute("data-revealed", "1");
-  }
-
-  function revealVisibleElements() {
-    revealSweepScheduled = false;
-    const viewportBuffer = Math.max(100, window.innerHeight * 0.16);
-    document.querySelectorAll("[data-reveal]:not([data-revealed])").forEach((el) => {
-      const rect = el.getBoundingClientRect();
-      if (rect.top <= window.innerHeight + viewportBuffer && rect.bottom >= -viewportBuffer) {
-        revealElement(el);
-        if (revealObserver) revealObserver.unobserve(el);
-      }
-    });
-  }
-
-  function scheduleRevealSweep() {
-    if (revealSweepScheduled) return;
-    revealSweepScheduled = true;
-    requestAnimationFrame(revealVisibleElements);
   }
 
   function observeRevealElements() {
@@ -46,13 +27,12 @@
           revealElement(entry.target);
           revealObserver.unobserve(entry.target);
         });
-      }, { threshold: 0.01, rootMargin: "0px 0px 14% 0px" });
+      }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
     }
     elements.forEach((el) => {
       el.setAttribute("data-reveal-observed", "1");
       revealObserver.observe(el);
     });
-    scheduleRevealSweep();
   }
 
   function ensureFavicon() {
@@ -94,13 +74,11 @@
         filter: brightness(.9);
       }
       [data-reveal] {
-        transition-duration: .72s !important;
+        transition-duration: .62s !important;
         transition-timing-function: cubic-bezier(.16, 1, .3, 1) !important;
-        will-change: transform;
       }
       [data-reveal]:not([data-revealed]) {
-        opacity: .72 !important;
-        transform: translateY(14px) !important;
+        transform: translateY(10px) !important;
       }
       [data-reveal][data-revealed] {
         transform: translateY(0) !important;
@@ -110,50 +88,16 @@
         box-shadow: none !important;
       }
       .lda-motion-card[data-reveal]:not([data-revealed]) {
-        opacity: .78 !important;
+        opacity: 0 !important;
         transform: translateY(12px) !important;
       }
       .lda-motion-card[data-reveal][data-revealed] { opacity: 1 !important; }
       .lda-card-grid > .lda-motion-card:nth-child(2) { transition-delay: .05s !important; }
       .lda-card-grid > .lda-motion-card:nth-child(3) { transition-delay: .1s !important; }
       .lda-card-grid > .lda-motion-card:nth-child(4) { transition-delay: .15s !important; }
-      .lda-editorial-media image-slot {
-        display: block;
-        clip-path: inset(0 0 7% 0 round 8px);
-        transform: scale(1.035);
-        transform-origin: center center;
-        transition: clip-path .9s cubic-bezier(.16, 1, .3, 1), transform 1.05s cubic-bezier(.16, 1, .3, 1) !important;
-      }
-      .lda-editorial-media[data-revealed] image-slot,
-      [data-revealed] .lda-editorial-media image-slot {
-        clip-path: inset(0 0 0 0 round 8px);
-        transform: scale(1);
-      }
-      .lda-script-accent {
-        display: inline-block;
-        position: relative;
-        font-family: 'Homemade Apple', cursive !important;
-      }
-      .lda-script-accent::after {
-        content: "";
-        position: absolute;
-        left: 3%;
-        right: -3%;
-        bottom: -.12em;
-        height: 1px;
-        background: currentColor;
-        opacity: .48;
-        transform: scaleX(0);
-        transform-origin: left center;
-        transition: transform .8s cubic-bezier(.16, 1, .3, 1) .12s;
-      }
-      [data-revealed] .lda-script-accent::after,
-      .lda-script-accent.lda-script-ready::after { transform: scaleX(1); }
       @media (max-width: 859px) {
-        [data-reveal]:not([data-revealed]) { opacity: .88 !important; transform: translateY(7px) !important; }
         .lda-motion-card[data-reveal]:not([data-revealed]) { transform: translateY(6px) !important; }
         .lda-motion-card { transition-delay: 0s !important; }
-        .lda-editorial-media image-slot { clip-path: inset(0 0 4% 0 round 8px); transform: scale(1.018); }
       }
       @media (min-width: 860px) and (hover: hover) {
         .lda-motion-card[data-revealed]:hover,
@@ -171,9 +115,6 @@
           scroll-behavior: auto !important;
         }
         .lda-motion-card { transition-delay: 0s !important; }
-        [data-reveal] { opacity: 1 !important; transform: none !important; }
-        .lda-editorial-media image-slot { clip-path: none !important; transform: none !important; }
-        .lda-script-accent::after { transform: scaleX(1) !important; }
       }
     `;
     document.head.appendChild(style);
@@ -196,30 +137,6 @@
       main.tabIndex = -1;
       if (main.tagName !== "MAIN") main.setAttribute("role", "main");
     }
-
-    if (main) {
-      Array.from(main.children).forEach((section) => {
-        if (!section.matches("div, section, article") || section.hasAttribute("data-reveal")) return;
-        if (section.closest("nav, footer") || window.getComputedStyle(section).position === "fixed") return;
-        if (!section.querySelector("h1, h2, h3, image-slot, .lda-motion-card")) return;
-        section.setAttribute("data-reveal", "");
-      });
-      main.querySelectorAll(".lda-motion-card:not([data-reveal])").forEach((card) => card.setAttribute("data-reveal", ""));
-    }
-
-    document.querySelectorAll("main [data-reveal], [role=main] [data-reveal]").forEach((element) => {
-      if (element.querySelector("image-slot")) element.classList.add("lda-editorial-media");
-    });
-
-    document.querySelectorAll("main h1 span, main h2 span, main h3 span, main [data-reveal] span").forEach((accent) => {
-      const family = accent.style.fontFamily || "";
-      if (!family.toLowerCase().includes("homemade apple")) return;
-      const parentSize = parseFloat(window.getComputedStyle(accent.parentElement || accent).fontSize) || 0;
-      if (parentSize < 22) return;
-      accent.classList.add("lda-script-accent");
-      const revealParent = accent.closest("[data-reveal]");
-      if (!revealParent) requestAnimationFrame(() => accent.classList.add("lda-script-ready"));
-    });
 
     const canonicalPath = document.querySelector('link[rel="canonical"]')?.href;
     const currentPath = new URL(canonicalPath || window.location.href).pathname.replace(/\/$/, "") || "/";
@@ -431,10 +348,6 @@
     observeRevealElements();
     updateDynamicMetadata();
     loadCmsDomContent();
-    window.addEventListener("scroll", scheduleRevealSweep, { passive: true });
-    window.addEventListener("resize", scheduleRevealSweep, { passive: true });
-    setTimeout(scheduleRevealSweep, 250);
-    setTimeout(scheduleRevealSweep, 900);
     const observer = new MutationObserver(() => {
       enhanceContent();
       observeRevealElements();
