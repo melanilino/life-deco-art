@@ -545,12 +545,20 @@ class Component extends DCLogic {
     };
     requestAnimationFrame(finish);
   };
+  startMobileHeroVideo = () => {
+    window.removeEventListener('pointerdown', this.startMobileHeroVideo);
+    window.removeEventListener('scroll', this.startMobileHeroVideo);
+    this.startHeroVideo();
+  };
   componentDidMount() {
     this.releaseBootBackdrop();
     this.loadContent();
     this.checkMobile();
-    if (this.state.isMobile && document.readyState !== 'complete') {
-      window.addEventListener('load', this.scheduleHeroVideo, { once: true });
+    if (this.state.isMobile) {
+      // El póster preserva el aspecto del hero. El video pesado solo se pide
+      // cuando la visitante realmente interactúa con la página.
+      window.addEventListener('pointerdown', this.startMobileHeroVideo, { once: true, passive: true });
+      window.addEventListener('scroll', this.startMobileHeroVideo, { once: true, passive: true });
     } else {
       this.scheduleHeroVideo();
     }
@@ -679,9 +687,7 @@ class Component extends DCLogic {
   };
   scheduleHeroVideo = () => {
     clearTimeout(this.heroVideoTimer);
-    // En móvil la portada ligera pinta primero; el video se incorpora cuando
-    // la página ya es utilizable para que sus megabytes no compitan con el LCP.
-    this.heroVideoTimer = setTimeout(this.startHeroVideo, this.state.isMobile ? 1200 : 0);
+    this.heroVideoTimer = setTimeout(this.startHeroVideo, 0);
   };
   PASOS = [
     { n: '01', title: 'Cuéntame tu idea', desc: 'Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.', imgKey: 'cwCuentameUrl', imgId: 'cw-cuentame', placeholder: 'foto: mensaje/nota inicial' },
@@ -693,7 +699,8 @@ class Component extends DCLogic {
     window.removeEventListener('resize', this.checkMobile);
     window.removeEventListener('scroll', this.syncHomeNav);
     window.removeEventListener('resize', this.syncHomeNav);
-    window.removeEventListener('load', this.scheduleHeroVideo);
+    window.removeEventListener('pointerdown', this.startMobileHeroVideo);
+    window.removeEventListener('scroll', this.startMobileHeroVideo);
     clearTimeout(this.heroVideoTimer);
     clearTimeout(this.bootBackdropTimer);
     clearInterval(this.heroBufferTimer);
