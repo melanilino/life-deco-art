@@ -144,6 +144,13 @@ body{margin:0;background:#fff}
     transform:translateY(0);
   }
   .lda-shop-faq-answer-inner{min-height:0;overflow:hidden;}
+  @media(min-width:860px){
+    .lda-shop-faq-answer{display:none;}
+    .lda-shop-faq-answer[data-open="true"]{
+      display:block;
+      animation:lda-fade-in .35s ease;
+    }
+  }
   @media(prefers-reduced-motion:reduce){
     .lda-shop-faq-answer{transition:none;}
   }
@@ -248,7 +255,7 @@ body{margin:0;background:#fff}
       </div>
       <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;justify-content:center;padding:44px 0 24px;">
-          <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:400;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
+          <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
         </div>
       </sc-if>
     </div>
@@ -270,7 +277,7 @@ body{margin:0;background:#fff}
       <div style="display:flex;flex-direction:column;gap:10px;">
         <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
           <div style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
-            <button id="{{ f.triggerId }}" type="button" class="lda-ui-button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" aria-controls="{{ f.answerId }}" style="width:100%;min-height:44px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
+            <button id="{{ f.triggerId }}" type="button" class="lda-ui-button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" aria-controls="{{ f.answerId }}" style="width:100%;min-height:{{ faqToggleMinHeight }};display:flex;justify-content:space-between;align-items:center;gap:16px;">
               <span style="font-size:14px;color:#2B2420;font-weight:400;">{{ f.q }}</span>
               <span aria-hidden="true" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F65091" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ f.arrow }};transition:transform 0.3s cubic-bezier(.16,1,.3,1);"><path d="M6 9l6 6 6-6"></path></svg>
@@ -546,6 +553,7 @@ class Component extends DCLogic {
       faqPad: m ? '60px 24px 0' : '72px 48px 0',
       faqGap: m ? '15px' : '48px',
       faqCols: m ? '1fr' : '0.8fr 1.2fr',
+      faqToggleMinHeight: m ? '44px' : '26px',
       h2Size: m ? '22px' : '32px',
       sidePad: m ? '24px' : '48px',
       ctaPad: m ? '64px 24px' : '96px 48px',
