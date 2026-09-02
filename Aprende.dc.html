@@ -6,6 +6,7 @@
 <link rel="canonical" href="https://lifedecoart.com/aprende">
 <meta property="og:url" content="https://lifedecoart.com/aprende">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="stylesheet" href="/design-system.css?v=20260901pink1">
 <style id="dc-critical-boot">
 x-dc{display:none!important}
 #dc-boot-fallback{position:fixed;inset:0;z-index:2147482999;background:#fff;font-family:Montserrat,Arial,sans-serif;color:#000}
@@ -60,7 +61,7 @@ body{margin:0;background:#fff}
 #lda-static-nav .lda-link:hover{background-size:100% 1px}
 #lda-static-nav .lda-link.lda-active{background-size:100% 1px}
 #lda-static-nav .lda-mobile{display:none}
-#lda-static-nav summary{list-style:none;cursor:pointer;padding:10px;display:flex;flex-direction:column;gap:5px}
+#lda-static-nav summary{list-style:none;cursor:pointer;padding:10px;min-width:44px;min-height:44px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px}
 #lda-static-nav summary::-webkit-details-marker{display:none}
 #lda-static-nav .lda-burger{display:block;height:2px;background:#000}.lda-b1,.lda-b2{width:22px}.lda-b3{width:15px}
 #lda-static-nav .lda-mobile-panel{position:fixed;top:64px;left:0;right:0;bottom:0;background:#fff;padding:24px;overflow:auto;box-sizing:border-box}
@@ -92,6 +93,12 @@ body{margin:0;background:#fff}
   .lda-prod-card:hover .lda-ver::after { width: 100%; }
   .lda-copy { transition: transform .2s ease; }
   .lda-copy:hover { transform: translateX(3px); }
+  .lda-sr-only { position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important; }
+  .lda-essential-card { position:relative; }
+  .lda-essential-link { position:absolute;inset:0;z-index:1;border-radius:8px; }
+  .lda-essential-link:focus-visible { outline:2px solid var(--lda-focus-ring,#F65091);outline-offset:3px; }
+  .lda-copy { position:relative;z-index:2;min-width:44px;height:44px;margin:-15px;align-items:center;justify-content:center; }
+  .lda-essential-field:focus { border-color:#0CC0DF!important; }
   body { background: #FFFFFF; }
   @keyframes lda-fade-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes lda-modal-in { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
@@ -112,6 +119,7 @@ body{margin:0;background:#fff}
     text-transform:uppercase!important;
     color:#8B795E!important;
     font-weight:500!important;
+    margin-top:0!important;
     margin-bottom:16px!important;
   }
   .lda-section-eyebrow + h1,.lda-section-eyebrow + h2,.lda-section-eyebrow + p{margin-top:0!important;}
@@ -140,7 +148,7 @@ body{margin:0;background:#fff}
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};text-align:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div class="lda-section-eyebrow lda-eyebrow-school" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;font-weight:500;margin-bottom:{{ eyebrowGap }};">{{ heroEyebrow }}</div>
     <h1 style="font-size: {{ h1Size }}; line-height: 1.2; color: #000000; font-weight: 300; margin: 0">{{ heroBefore }}<span style="font-family: 'Homemade Apple', cursive; font-weight: 400; font-size: 1.22em; position: relative; top: 0px">{{ heroHighlight }}</span>{{ heroAfter }}</h1>
-    <p style="font-size:{{ subtitleSize }};color:#8B795E;font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;white-space:pre-line;">{{ heroSubtitle }}</p>
+    <p style="font-size:{{ subtitleSize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;white-space:pre-line;">{{ heroSubtitle }}</p>
   </div>
 
   <div style="max-width:1240px;margin:0 auto;padding:0 {{ sidePad }};">
@@ -155,12 +163,12 @@ body{margin:0;background:#fff}
     <div style="display:flex;flex-direction:column;gap:0;align-items:center;">
       <div style="display:flex;gap:12px;justify-content:center;">
         <sc-for list="{{ tabsRow1 }}" as="tab" hint-placeholder-count="4">
-          <button type="button" onClick="{{ tab.onClick }}" aria-pressed="{{ tab.active }}" style="cursor:pointer;font-size:14px;font-weight:{{ tab.weight }};letter-spacing:0.01em;color:{{ tab.color }};white-space:nowrap;transition:color .25s ease;border:0;background:transparent;padding:4px 3px;min-height:40px;font-family:'Montserrat',sans-serif;">{{ tab.label }}</button>
+          <button type="button" onClick="{{ tab.onClick }}" aria-pressed="{{ tab.active }}" style="cursor:pointer;font-size:14px;font-weight:{{ tab.weight }};letter-spacing:0.01em;color:{{ tab.color }};white-space:nowrap;transition:color .25s ease;border:0;background:transparent;padding:4px 3px;min-height:44px;font-family:'Montserrat',sans-serif;">{{ tab.label }}</button>
         </sc-for>
       </div>
       <div style="display:flex;gap:12px;justify-content:center;">
         <sc-for list="{{ tabsRow2 }}" as="tab" hint-placeholder-count="2">
-          <button type="button" onClick="{{ tab.onClick }}" aria-pressed="{{ tab.active }}" style="cursor:pointer;font-size:14px;font-weight:{{ tab.weight }};letter-spacing:0.01em;color:{{ tab.color }};white-space:nowrap;transition:color .25s ease;border:0;background:transparent;padding:4px 3px;min-height:40px;font-family:'Montserrat',sans-serif;">{{ tab.label }}</button>
+          <button type="button" onClick="{{ tab.onClick }}" aria-pressed="{{ tab.active }}" style="cursor:pointer;font-size:14px;font-weight:{{ tab.weight }};letter-spacing:0.01em;color:{{ tab.color }};white-space:nowrap;transition:color .25s ease;border:0;background:transparent;padding:4px 3px;min-height:44px;font-family:'Montserrat',sans-serif;">{{ tab.label }}</button>
         </sc-for>
       </div>
     </div>
@@ -177,10 +185,10 @@ body{margin:0;background:#fff}
         <div style="padding:{{ coursePad }};display:flex;flex-direction:column;">
           <span style="font-size:{{ courseLevelSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ c.level }}</span>
           <a href="{{ c.detailHref }}" style="display:block;font-size:{{ courseNameSize }};font-weight:400;color:#000000;margin-top:10px;text-decoration:none;">{{ c.name }}</a>
-          <p style="font-size:{{ courseDescSize }};color:#8B795E;font-weight:300;line-height:1.7;margin-top:10px;flex:1;">{{ c.desc }}</p>
+          <p style="font-size:{{ courseDescSize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.7;margin-top:10px;flex:1;">{{ c.desc }}</p>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
             <span style="font-size:14px;font-weight:500;color:#000000;">{{ c.price }}</span>
-            <a href="{{ c.whatsappUrl }}" target="_blank" style="text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:{{ courseBtnPad }};border-radius:4px;font-size:{{ courseBtnSize }};font-weight:500;">Reservar plaza</a>
+            <a href="{{ c.whatsappUrl }}" target="_blank" rel="noopener" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:{{ courseBtnPad }};border-radius:4px;font-size:{{ courseBtnSize }};font-weight:500;">Reservar plaza</a>
           </div>
         </div>
       </div>
@@ -197,10 +205,10 @@ body{margin:0;background:#fff}
             <div style="padding:{{ workshopPad }};">
               <span style="font-size:{{ workshopDateSize }};font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ w.dateLevel }}</span>
               <a href="{{ w.detailHref }}" style="display:block;font-size:{{ workshopNameSize }};font-weight:400;color:#000;margin-top:8px;text-decoration:none;">{{ w.name }}</a>
-              <div style="font-size:{{ workshopLocSize }};color:#8B795E;margin-top:6px;">{{ w.location }}</div>
+              <div style="font-size:{{ workshopLocSize }};color:var(--lda-text-secondary,#756348);margin-top:6px;">{{ w.location }}</div>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;">
                 <span style="font-size:14px;font-weight:500;color:#000;">{{ w.price }}</span>
-                <a href="{{ w.whatsappUrl }}" target="_blank" style="text-decoration:none;background:{{ w.ctaBg }};color:{{ w.ctaColor }};padding:{{ courseBtnPad }};border-radius:4px;font-size:{{ courseBtnSize }};font-weight:500;">{{ w.ctaLabel }}</a>
+                <a href="{{ w.whatsappUrl }}" target="_blank" rel="noopener" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;text-decoration:none;background:{{ w.ctaBg }};color:{{ w.ctaColor }};padding:{{ courseBtnPad }};border-radius:4px;font-size:{{ courseBtnSize }};font-weight:500;">{{ w.ctaLabel }}</a>
               </div>
             </div>
           </div>
@@ -217,8 +225,8 @@ body{margin:0;background:#fff}
               <a href="{{ item.detailHref }}" style="display:block;font-size:{{ freebieTitleSize }};color:#000;font-weight:400;margin-top:6px;text-decoration:none;">{{ item.title }}</a>
             </div>
             <div style="display:flex;align-items:center;gap:16px;flex-shrink:0;margin-top:19px;">
-              <a href="{{ item.detailHref }}" style="text-decoration:none;color:#8B795E;font-size:12px;font-weight:400">Ver detalle</a>
-              <a href="{{ item.downloadHref }}" onClick="{{ item.onDownload }}" target="{{ item.downloadTarget }}" rel="{{ item.downloadRel }}" style="text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:500;">Descargar</a>
+              <a href="{{ item.detailHref }}" style="min-height:44px;display:inline-flex;align-items:center;text-decoration:none;color:var(--lda-text-secondary,#756348);font-size:12px;font-weight:400">Ver detalle</a>
+              <a href="{{ item.downloadHref }}" onClick="{{ item.onDownload }}" target="{{ item.downloadTarget }}" rel="{{ item.downloadRel }}" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;text-decoration:none;background:#0CC0DF;color:#FFFFFF;padding:9px 18px;border-radius:4px;font-size:12px;font-weight:500;">Descargar</a>
             </div>
           </div>
         </sc-for>
@@ -233,10 +241,10 @@ body{margin:0;background:#fff}
             <div style="background:#F3EEE4;padding:{{ blogPad }};display:flex;flex-direction:column;flex:1;">
               <span style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ post.category }}</span>
               <div style="font-size:{{ blogTitleSize }};font-weight:400;color:#000;margin-top:10px;line-height:1.35;min-height:49px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ post.title }}</div>
-              <p style="font-size:{{ blogExcerptSize }};color:#8B795E;font-weight:300;line-height:1.6;margin-top:10px;min-height:42px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ post.excerpt }}</p>
+              <p style="font-size:{{ blogExcerptSize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin-top:10px;min-height:42px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ post.excerpt }}</p>
               <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:16px;border-top:1px solid #E4DDCC;">
-                <span style="font-size:12px;color:#8B795E;">{{ post.meta }}</span>
-                <a href="/blog?id={{ post.id }}" style="text-decoration:none;font-size:12px;font-weight:600;color:#0CC0DF;">LEER →</a>
+                <span style="font-size:12px;color:var(--lda-text-secondary,#756348);">{{ post.meta }}</span>
+                <a href="/blog?id={{ post.id }}" style="min-height:44px;display:inline-flex;align-items:center;text-decoration:none;font-size:12px;font-weight:600;color:#0CC0DF;">LEER →</a>
               </div>
             </div>
           </div>
@@ -250,42 +258,45 @@ body{margin:0;background:#fff}
           <div style="background:#F3EEE4;border-radius:8px;padding:28px;">
             <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ community.challengeEyebrow }}</div>
             <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">{{ community.challengeTitle }}</div>
-            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">{{ community.challengeDescription }}</p>
+            <p style="font-size:13px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin-top:8px;">{{ community.challengeDescription }}</p>
           </div>
           <div style="border:1px solid #F0EBE0;border-radius:8px;padding:28px;">
             <div class="lda-section-eyebrow" style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#0CC0DF;">{{ community.eventEyebrow }}</div>
             <div style="font-size:17px;color:#000;font-weight:400;margin-top:10px;">{{ community.eventTitle }}</div>
-            <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin-top:8px;">{{ community.eventDescription }}</p>
+            <p style="font-size:13px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin-top:8px;">{{ community.eventDescription }}</p>
           </div>
         </div>
 
         <div style="background: #0CC0DF; border-radius: 13px; padding: 36px; display: flex; flex-direction: column; justify-content: center">
           <sc-if value="{{ comunidadNotSubscribed }}" hint-placeholder-val="{{ true }}">
             <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FFFFFF; text-align: center">{{ community.signupEyebrow }}</div>
-            <input type="text" name="name" autocomplete="name" class="comunidad-input" value="{{ comunidadName }}" onChange="{{ onComunidadNameChange }}" placeholder="Tu nombre" style="margin-top:26px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
-            <input type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
+            <label for="comunidad-name" class="lda-sr-only">Tu nombre</label>
+            <input id="comunidad-name" type="text" name="name" autocomplete="name" class="comunidad-input" value="{{ comunidadName }}" onChange="{{ onComunidadNameChange }}" placeholder="Tu nombre" style="min-height:44px;box-sizing:border-box;margin-top:26px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
+            <label for="comunidad-email" class="lda-sr-only">Tu correo</label>
+            <input id="comunidad-email" type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="min-height:44px;box-sizing:border-box;margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
             <button type="button" onClick="{{ onComunidadSubmit }}" disabled="{{ comunidadSubscribing }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border:0;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">{{ comunidadSubmitLabel }}</button>
             <sc-if value="{{ comunidadError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#FFFFFF;font-weight:500;margin:12px 0 0;">{{ comunidadError }}</p></sc-if>
             <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">{{ community.signupPrivacy }}</p>
           </sc-if>
           <sc-if value="{{ comunidadSubscribed }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">{{ community.successMessage }}</p>
+            <p role="status" aria-live="polite" style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">{{ community.successMessage }}</p>
           </sc-if>
         </div>
       </div>
 
       <div style="max-width:600px;margin:40px auto 0;text-align:center;transform:translateY({{ communityTestimonialOffset }});">
         <p style="font-size:15px;color:#000;font-weight:300;line-height:1.7;font-style:italic;">{{ community.testimonial }}</p>
-        <div style="font-size:12px;color:#8B795E;margin-top:10px;">{{ community.testimonialAuthor }}</div>
+        <div style="font-size:12px;color:var(--lda-text-secondary,#756348);margin-top:10px;">{{ community.testimonialAuthor }}</div>
       </div>
 
     </sc-if>
 
     <sc-if value="{{ isRecomendados }}" hint-placeholder-val="{{ false }}">
       <div style="display:flex;gap:{{ recBarGap }};align-items:center;margin-bottom:24px;flex-wrap:nowrap;">
-        <input value="{{ recSearch }}" onInput="{{ onRecSearch }}" type="text" placeholder="Buscar producto..." style="flex:1;min-width:0;padding:12px 16px;border:1px solid #E4DDCC;border-radius:6px;font-size:14px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;">
+        <label for="essential-search" class="lda-sr-only">Buscar producto recomendado</label>
+        <input id="essential-search" class="lda-essential-field" value="{{ recSearch }}" onInput="{{ onRecSearch }}" type="search" placeholder="Buscar producto..." style="flex:1;min-width:0;min-height:44px;box-sizing:border-box;padding:12px 16px;border:1px solid #E4DDCC;border-radius:6px;font-size:14px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;">
         <div style="position:relative;display:inline-block;flex-shrink:0;">
-          <select value="{{ recSort }}" onChange="{{ onRecSort }}" aria-label="Ordenar productos" style="appearance:none;-webkit-appearance:none;-moz-appearance:none;padding:12px 40px 12px 14px;border:1px solid #E4DDCC;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;cursor:pointer;min-width:{{ recSortMinW }};">
+          <select class="lda-essential-field" value="{{ recSort }}" onChange="{{ onRecSort }}" aria-label="Ordenar productos" style="appearance:none;-webkit-appearance:none;-moz-appearance:none;min-height:44px;box-sizing:border-box;padding:12px 40px 12px 14px;border:1px solid #E4DDCC;border-radius:6px;font-size:13px;font-family:'Montserrat',sans-serif;color:#000;background:#FFFFFF;outline:none;cursor:pointer;min-width:{{ recSortMinW }};">
             <option value="manual">Orden predeterminado</option>
             <option value="az">Orden: A-Z</option>
             <option value="za">Orden: Z-A</option>
@@ -296,13 +307,14 @@ body{margin:0;background:#fff}
         </div>
       </div>
       <sc-for list="{{ recommendedProductsView }}" as="p" hint-placeholder-count="3">
-        <a href="{{ p.safeHref }}" target="{{ p.linkTarget }}" rel="{{ p.linkRel }}" onClick="{{ p.onOpen }}" class="lda-prod-card lda-motion-card" data-reveal="" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; text-decoration: none; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC;opacity:0;transform:translateY(12px);">
+        <div class="lda-prod-card lda-essential-card lda-motion-card" data-reveal="" style="display: grid; grid-template-columns: {{ esencialCols }}; gap: {{ esencialGap }}; align-items: start; border: 1px solid #F0EBE0; border-radius: 8px; padding: 20px 24px; color: inherit; margin-bottom: 1px; background-color: #FFFFFF; border-color: #E4DDCC;opacity:0;transform:translateY(12px);">
+          <a href="{{ p.safeHref }}" target="{{ p.linkTarget }}" rel="{{ p.linkRel }}" onClick="{{ p.onOpen }}" class="lda-essential-link" aria-label="Ver {{ p.name }}"></a>
           <image-slot id="esencial-{{ p.slug }}" shape="rect" fit="cover" srcset="{{ p.imageSrcset }}" sizes="(max-width:859px) 50vw, 260px" alt="{{ p.imageAlt }}" view-scale="{{ p.imageView.scale }}" view-x="{{ p.imageView.x }}" view-y="{{ p.imageView.y }}" style="aspect-ratio:1;border-radius:6px;" src="{{ p.imageUrl }}" placeholder="{{ p.name }}"></image-slot>
           <div>
             <div style="font-size:{{ esencialNameSize }};color:#000;font-weight:400;">{{ p.name }}</div>
-            <p style="font-size:{{ esencialDescSize }};color:#8B795E;font-weight:300;line-height:1.6;margin-top:6px;">{{ p.desc }}</p>
+            <p style="font-size:{{ esencialDescSize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin-top:6px;">{{ p.desc }}</p>
           </div>
-          <button onClick="{{ p.onCopy }}" title="Copiar link de este producto" class="lda-copy" style="display:flex;align-items:center;gap:5px;background:none;border:none;padding:0;cursor:pointer;color:#8B795E;font-family:'Montserrat',sans-serif;font-size:13px;white-space:nowrap;justify-self:end;">
+          <button type="button" onClick="{{ p.onCopy }}" title="Copiar link de este producto" aria-label="{{ p.copyLabel }}" aria-live="polite" class="lda-copy" style="display:flex;gap:5px;background:none;border:none;padding:0;cursor:pointer;color:var(--lda-text-secondary,#756348);font-family:'Montserrat',sans-serif;font-size:13px;white-space:nowrap;justify-self:end;">
             <sc-if value="{{ p.copied }}" hint-placeholder-val="{{ false }}">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0CC0DF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </sc-if>
@@ -310,21 +322,21 @@ body{margin:0;background:#fff}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B795E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             </sc-if>
           </button>
-        </a>
+        </div>
       </sc-for>
       <sc-if value="{{ recEmpty }}" hint-placeholder-val="{{ false }}">
-        <p style="font-size:14px;color:#8B795E;padding:24px 0;text-align:center;">No encontramos productos que coincidan con tu búsqueda.</p>
+        <p role="status" style="font-size:14px;color:var(--lda-text-secondary,#756348);padding:24px 0;text-align:center;">No encontramos productos que coincidan con tu búsqueda.</p>
       </sc-if>
     </sc-if>
 
     <div style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
       <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
-        <button type="button" onClick="{{ onLoadMore }}" style="border:0;background:transparent;color:#8B795E;padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
+        <button type="button" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
       </sc-if>
     </div>
 
     <sc-if value="{{ noCourses }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:64px 0;text-align:center;color:#8B795E;font-size:14px;font-weight:300;">Todavía no hay contenido en esta categoría — muy pronto.</div>
+      <div role="status" style="padding:64px 0;text-align:center;color:var(--lda-text-secondary,#756348);font-size:14px;font-weight:300;">Todavía no hay contenido en esta categoría — muy pronto.</div>
     </sc-if>
 
   </div>
@@ -364,20 +376,20 @@ body{margin:0;background:#fff}
     <div style="display:grid;grid-template-columns:{{ faqCols }};gap:{{ faqGap }};align-items:center;min-width:0;">
       <div>
         <div class="lda-section-eyebrow lda-faq-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">Preguntas frecuentes</div>
-        <div style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400">{{ faqBefore }}<span style="font-family:'Homemade Apple', cursive;font-weight:400;font-size:1.2em;">{{ faqHighlight }}</span>{{ faqAfter }}</div>
-        <p style="font-size:{{ bodySize }};color:#8B795E;font-weight:300;line-height:1.6;margin:16px 0 0;">{{ faqSubtitle }}</p>
+        <h2 style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400; margin: 0">{{ faqBefore }}<span style="font-family:'Homemade Apple', cursive;font-weight:400;font-size:1.2em;">{{ faqHighlight }}</span>{{ faqAfter }}</h2>
+        <p style="font-size:{{ bodySize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:16px 0 0;">{{ faqSubtitle }}</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
           <div style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
-            <button type="button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;width:100%;min-height:{{ faqToggleMinHeight }};padding:0;border:0;background:transparent;text-align:left;font-family:'Montserrat',sans-serif;">
+            <button id="{{ f.triggerId }}" type="button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" aria-controls="{{ f.answerId }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;width:100%;min-height:{{ faqToggleMinHeight }};padding:0;border:0;background:transparent;text-align:left;font-family:'Montserrat',sans-serif;">
               <span style="font-size:14px;color:#2B2420;font-weight:400;">{{ f.q }}</span>
-              <span style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <span aria-hidden="true" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0CC0DF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform:{{ f.arrow }};transition:transform 0.3s cubic-bezier(.16,1,.3,1);"><path d="M6 9l6 6 6-6"></path></svg>
               </span>
             </button>
             <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
-              <p style="font-size:13px;color:#8B795E;font-weight:300;line-height:1.6;margin:12px 0 0;animation:lda-fade-in .35s ease;">{{ f.a }}</p>
+              <p id="{{ f.answerId }}" aria-labelledby="{{ f.triggerId }}" style="font-size:13px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:12px 0 0;animation:lda-fade-in .35s ease;">{{ f.a }}</p>
             </sc-if>
           </div>
         </sc-for>
@@ -388,11 +400,11 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;">
     <div style="background:#0CC0DF;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-      <div style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;">¿No diste con lo que <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</div>
+      <h2 style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;margin:0;">¿No diste con lo que <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</h2>
       <p style="font-size:{{ ctaTextSize }};color:#E3F9FC;font-weight:300;margin:{{ ctaTextGap }} 0 0;text-align:center;">Hagamos una pieza 100% a medida,<br>creada desde cero para ti.</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
-        <a href="/encargo-personalizado" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">Crear encargo</a>
-        <a href="/contacto" style="text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Correo</a>
+        <a href="/encargo-personalizado" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">Crear encargo</a>
+        <a href="/contacto" style="min-height:44px;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Correo</a>
       </div>
     </div>
   </div>
@@ -403,7 +415,7 @@ body{margin:0;background:#fff}
 
 <sc-if value="{{ previewItem }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closePreview }}" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px;font-family:'Montserrat',sans-serif;animation:lda-fade-in .25s ease;">
-      <div onClick="{{ stopPropagation }}" role="dialog" aria-modal="true" aria-label="Vista previa del recurso" style="background:#FFFFFF;border-radius:12px;max-width:560px;width:100%;overflow:hidden;animation:lda-modal-in .3s cubic-bezier(.16,1,.3,1);">
+      <div onClick="{{ stopPropagation }}" role="dialog" aria-modal="true" aria-labelledby="aprende-preview-title" style="background:#FFFFFF;border-radius:12px;max-width:560px;width:100%;overflow:hidden;animation:lda-modal-in .3s cubic-bezier(.16,1,.3,1);">
       <div style="aspect-ratio:4/3;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
         <sc-if value="{{ previewItem.hasImage }}" hint-placeholder-val="{{ false }}">
           <image-slot id="aprende-freebie-preview" shape="rect" fit="cover" srcset="{{ previewItem.imageSrcset }}" sizes="(max-width:859px) 100vw, 50vw" alt="{{ previewItem.imageAlt }}" view-scale="{{ previewItem.imageView.scale }}" view-x="{{ previewItem.imageView.x }}" view-y="{{ previewItem.imageView.y }}" style="width:100%;height:100%;" src="{{ previewItem.imageUrl }}" placeholder="vista previa del descargable"></image-slot>
@@ -415,9 +427,9 @@ body{margin:0;background:#fff}
       <div style="padding:24px 28px;display:flex;justify-content:space-between;align-items:center;gap:16px;">
         <div>
           <span style="font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#0CC0DF;">{{ previewItem.format }}</span>
-          <div style="font-size:15px;color:#000;font-weight:400;margin-top:6px;">{{ previewItem.title }}</div>
+          <div id="aprende-preview-title" style="font-size:15px;color:#000;font-weight:400;margin-top:6px;">{{ previewItem.title }}</div>
         </div>
-          <button type="button" onClick="{{ closePreview }}" style="border:0;background:#0CC0DF;color:#FFFFFF;padding:11px 18px;min-height:44px;border-radius:4px;font-size:12px;font-weight:500;flex-shrink:0;transition:background .25s ease;font-family:'Montserrat',sans-serif;cursor:pointer;" style-hover="background:#0aa8c4;">Cerrar</button>
+          <button type="button" autofocus onClick="{{ closePreview }}" style="border:0;background:#0CC0DF;color:#FFFFFF;padding:11px 18px;min-height:44px;border-radius:4px;font-size:12px;font-weight:500;flex-shrink:0;transition:background .25s ease;font-family:'Montserrat',sans-serif;cursor:pointer;" style-hover="background:#0aa8c4;">Cerrar</button>
       </div>
     </div>
   </div>
@@ -463,10 +475,13 @@ class Component extends DCLogic {
       this.setState({ category: tab, faqOpen: null, previewItem: null, visiblePages: {} });
     };
     window.addEventListener('popstate', this._popstateHandler);
+    this._keyHandler = (e) => { if (e.key === 'Escape' && this.state.previewItem) this.setState({ previewItem: null }); };
+    window.addEventListener('keydown', this._keyHandler);
   }
   componentWillUnmount() {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
     if (this._popstateHandler) window.removeEventListener('popstate', this._popstateHandler);
+    if (this._keyHandler) window.removeEventListener('keydown', this._keyHandler);
   }
   selectCategory(category) {
     const url = new URL(window.location.href);
@@ -717,6 +732,8 @@ class Component extends DCLogic {
     const faqSet = ((live.faqs || {})[category.toLowerCase()] || this.FAQS_BY_CATEGORY[category] || []);
     const faqs = faqSet.map((f, i) => ({
       ...f,
+      triggerId: `learn-faq-trigger-${i}`,
+      answerId: `learn-faq-answer-${i}`,
       open: faqOpen === i,
       arrow: faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',
       onClick: () => this.setState({ faqOpen: faqOpen === i ? null : i }),
@@ -866,7 +883,7 @@ class Component extends DCLogic {
           const copied = this.state.copiedSlug === slug;
           const href = String(p.href || '').trim();
           const externalHref = href && href !== '#';
-          return { ...p, ...imageProps(p, 'Material recomendado'), imageView: imageView(p), slug, safeHref: externalHref ? href : '#', linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', onOpen: externalHref ? undefined : (e) => e.preventDefault(), copied, notCopied: !copied, onCopy: (e) => this.copyProductLink(slug, e) };
+          return { ...p, ...imageProps(p, 'Material recomendado'), imageView: imageView(p), slug, safeHref: externalHref ? href : '#', linkTarget: externalHref ? '_blank' : '', linkRel: externalHref ? 'noopener sponsored' : '', onOpen: externalHref ? undefined : (e) => e.preventDefault(), copied, notCopied: !copied, copyLabel: copied ? `Enlace de ${p.name} copiado` : `Copiar enlace de ${p.name}`, onCopy: (e) => this.copyProductLink(slug, e) };
         });
       })(),
       recEmpty: filteredEssentials.length === 0,
