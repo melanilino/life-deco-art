@@ -17,7 +17,7 @@ x-dc{display:none!important}
 #dc-boot-fallback .dc-fb-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;max-width:100%}
 #dc-boot-fallback .dc-fb-kicker{font-size:13px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;margin-bottom:16px}
 #dc-boot-fallback .dc-fb-title{font-size:clamp(28px,5.2vw,70px);line-height:1.25;font-weight:200;margin:0 0 10px}
-#dc-boot-fallback .dc-fb-script{font-family:'Pinyon Script',cursive;font-size:1.42em;line-height:.8}
+#dc-boot-fallback .dc-fb-script{font-family:'Homemade Apple',cursive;font-size:1.15em}
 #dc-boot-fallback .dc-fb-sub{font-size:18px;line-height:1.6;color:rgba(255,255,255,.82);font-weight:300;max-width:600px;margin:0 0 22px}
 #dc-boot-fallback .dc-fb-actions{display:flex;gap:14px}
 #dc-boot-fallback .dc-fb-actions span{display:block;padding:17px 60px;border-radius:4px;font-size:15px;font-weight:500}
@@ -46,7 +46,7 @@ x-dc{display:none!important}
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&family=Homemade+Apple&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,300&family=Homemade+Apple&display=swap" rel="stylesheet">
 <style id="lda-hero-font-stability">
 @media(min-width:860px){
   html:not(.lda-hero-fonts-ready) #dc-boot-fallback .lda-hero-font-sensitive{visibility:hidden}
@@ -64,7 +64,7 @@ x-dc{display:none!important}
   }
   Promise.all([
     document.fonts.load('200 70px Montserrat'),
-    document.fonts.load('400 70px "Pinyon Script"')
+    document.fonts.load('400 70px "Homemade Apple"')
   ]).then(revealHeroTypography, revealHeroTypography);
   setTimeout(revealHeroTypography, 2500);
 })();
@@ -209,7 +209,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="metadata" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Pinyon Script',cursive;font-size:1.42em;line-height:.75;position:relative;top:.04em;">{{ heroTitleCursive }}</span>.</h1>
+    <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
     <p style="position:relative;z-index:2;font-size:18px;line-height:1.6;color:rgba(255,255,255,0.82);font-weight:300;max-width:600px;margin:0 0 22px;">{{ heroSubtitle }}</p>
     <div style="position:relative;z-index:2;display:flex;gap:14px;flex-direction:row;width:auto;">
       <a href="/tienda" style="text-decoration:none;background:var(--lda-action-primary,#F65091);color:#fff;font-size:15px;font-weight:500;padding:17px 60px;border-radius:4px;text-align:center;flex:0 0 auto;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Comprar</a>
@@ -224,7 +224,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="none" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
-    <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;position:relative;top:.04em;">{{ heroTitleCursive }}</span>.</h1>
+    <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
     <p style="position:relative;z-index:2;font-size:14px;line-height:1.6;color:rgba(255,255,255,0.85);font-weight:300;margin:0 0 20px;">{{ heroSubtitle }}</p>
     <div style="position:relative;z-index:2;display:flex;gap:12px;">
       <a href="/tienda" style="text-decoration:none;flex:1;background:var(--lda-action-primary,#F65091);border-radius:8px;padding:16px 0;color:#FFFFFF;text-align:center;font-size:14px;font-weight:500;transition:transform .2s ease;" style-active="transform:scale(0.96);">Comprar</a>
@@ -281,7 +281,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     </div>
     <div style="padding-top:48px;">
       <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Conóceme</div>
-      <h2 style="font-size: 32px; font-weight: 300; color: #000000; line-height: 1.35; margin: 0 0 20px">Soy Melani, me apasionan<br>los&nbsp;<span style="font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;">detalles</span>.</h2>
+      <h2 style="font-size: 32px; font-weight: 300; color: #000000; line-height: 1.35; margin: 0 0 20px">Soy Melani, me apasionan<br>los&nbsp;<span style="font-family: &quot;Homemade Apple&quot;, cursive; font-size: 1.2em;">detalles</span>.</h2>
       <p style="font-size:15px;line-height:1.7;color:var(--lda-text-secondary,#756348);font-weight:300;margin:0 0 28px;"><span style="font-size: 16px;">Trabajo con personas, marcas y espacios que tienen algo importante que decir y quieren decirlo con belleza.&nbsp;</span></p>
       <a href="/sobre-mi" style="text-decoration:none;display:inline-flex;align-items:center;gap:8px;background:#000000;color:#FFFFFF;font-size:14px;font-weight:500;padding:15px 30px;border-radius:4px;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">Ver mi historia<br><span></span></a>
     </div>
@@ -291,7 +291,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div style="padding:44px 26px 0;">
     <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" srcset="{{ melaniPhotoSrcset }}" sizes="100vw" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;aspect-ratio:4/5;border-radius:8px;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin:22px 0 12px;">Conóceme</div>
-    <h2 style="font-size:22px;font-weight:300;color:#000000;line-height:1.4;margin:0 0 14px;">Soy Melani, me apasionan <br>los <span style="font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;color:#000000;">detalles</span>.</h2>
+    <h2 style="font-size:22px;font-weight:300;color:#000000;line-height:1.4;margin:0 0 14px;">Soy Melani, me apasionan <br>los <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;color:#000000;">detalles</span>.</h2>
     <p style="font-size: 14px; line-height: 1.7; color: var(--lda-text-secondary,#756348); font-weight: 300; margin: 0 0 20px">Trabajo con personas, marcas y espacios que tienen algo importante que decir y quieren decirlo con belleza.</p>
     <a href="/sobre-mi" style="text-decoration: none; display: inline-block; background: #000000; color: #FFFFFF; font-size: 13px; font-weight: 500; padding: 14px 24px; border-radius: 6px; font-family: Montserrat; transition: transform .2s ease;" style-active="transform:scale(0.96);">Ver mi historia</a>
   </div>
@@ -302,7 +302,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div style="margin-top: 0; padding: 72px 48px 72px;">
   <div class="lda-editorial-services-heading" data-reveal="" style="max-width:1240px;margin:0 auto;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:20px;text-align:center;">Servicios</div>
-    <h2 style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center; margin: 0">En qué puedo <span class="lda-editorial-script" style="font-weight:400;font-size:1.45em;font-family:'Pinyon Script',cursive;line-height:.75;color:var(--lda-text-secondary,#756348);position:relative;top:2px;">ayudarte</span></h2>
+    <h2 style="font-size: 32px; line-height: 1.2; color: #000000; font-weight: 300; text-align: center; margin: 0">En qué puedo <span class="lda-editorial-script" style="font-weight: 400; font-size: 1.2em; font-family: 'Homemade Apple', cursive; color: var(--lda-text-secondary,#756348); position: relative; top: 2px">ayudarte</span></h2>
   </div>
 
   <div class="lda-card-grid" style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
@@ -332,7 +332,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-reveal="" style="padding:80px 26px 0;opacity:0;transform:translateY(16px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);">
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;text-align:center;margin-bottom:12px;">Servicios</div>
-    <h2 style="font-size:24px;color:#000000;font-weight:300;text-align:center;margin:0 0 8px;">En qué puedo <span style="font-family:'Pinyon Script',cursive;font-size:35px;line-height:.75;color:var(--lda-text-secondary,#756348);">ayudarte</span></h2>
+    <h2 style="font-size:24px;color:#000000;font-weight:300;text-align:center;margin:0 0 8px;">En qué puedo <span style="font-family:'Homemade Apple',cursive;font-size:28px;color:var(--lda-text-secondary,#756348);">ayudarte</span></h2>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
       <image-slot id="serv-personalizados" shape="rect" fit="cover" alt="{{ servPersonalizadosAlt }}" srcset="{{ servPersonalizadosSrcset }}" sizes="100vw" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:260px;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
@@ -375,7 +375,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <div>
     <div style="position:sticky;top:150px;">
       <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Cómo trabajamos</div>
-      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; max-width: 426px; margin: 0;">Un proceso artesanal, respaldado por <span style="font-weight:400;font-family:'Pinyon Script',cursive;font-size:1.42em;line-height:.75;">garantías reales</span>.</h2>
+      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; max-width: 426px; margin: 0;">Un proceso artesanal, respaldado por <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em">garantías reales</span>.</h2>
     </div>
     </div>
     <div style="padding-left:40px;">
@@ -411,7 +411,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div style="background:#F3EEE4;margin-top:56px;padding:56px 26px;">
     <div style="max-width: 1240px; margin: 0 auto; padding: 0;">
       <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Cómo trabajamos</div>
-      <h2 style="font-size:22px;line-height:1.35;color:#000000;font-weight:300;margin:0 0 24px;">Un proceso artesanal, respaldado por <span style="font-weight:400;font-family:'Pinyon Script',cursive;font-size:31px;line-height:.75;">garantías reales</span>.</h2>
+      <h2 style="font-size:22px;line-height:1.35;color:#000000;font-weight:300;margin:0 0 24px;">Un proceso artesanal, respaldado por <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size:26px;">garantías reales</span>.</h2>
       <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
         <div style="padding:18px 0;border-top:1px solid #E4DCCB;">
           <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="display:flex;gap:16px;cursor:pointer;width:100%;min-height:44px;border:0;background:transparent;padding:0;text-align:left;font-family:'Montserrat',sans-serif;color:inherit;">
@@ -448,7 +448,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <div data-reveal="" style="max-width:1240px;margin:{{ gapPx }} auto 0;padding:0 {{ sidePad }};opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div class="lda-section-eyebrow lda-eyebrow-del-estudio" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>
     <div class="lda-del-estudio-title-row" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
-      <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000">Piezas <span style="font-weight:400;font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;position:relative;top:0;">recientes</span></div>
+      <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000">Piezas <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: 0px">recientes</span></div>
       <a href="/tienda" style="text-decoration:none;font-size:13px;font-weight:500;color:#F65091;border-bottom:1px solid #F65091;padding-bottom:2px;">Ver la tienda</a>
     </div>
     <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};min-width:0;">
@@ -469,10 +469,10 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 <!-- 7. SI ELIGES APRENDER — SPOTLIGHT DE CURSO -->
   <div data-reveal="" style="padding: {{ spotlightTopPad }} {{ sidePad }} 130px; text-align: center; margin-top: {{ gapPx }}; opacity: 0; transform: translateY(12px); transition: opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1); background-color: #0CC0DF">
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-    <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y si también&nbsp;<span style="font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;">aprendes</span>&nbsp;a hacerlo?</div>
+    <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y si también&nbsp;<span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em;">aprendes</span>&nbsp;a hacerlo?</div>
     </sc-if>
     <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-    <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y si también&nbsp;<span style="font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;">aprendes</span><br>a hacerlo?</div>
+    <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y si también&nbsp;<span style="font-family: 'Homemade Apple', cursive; font-size: 1.2em;">aprendes</span><br>a hacerlo?</div>
     </sc-if>
   </div>
   <div style="max-width:1240px;margin:{{ spotlightNegMargin }} auto 0;padding:0 {{ sidePad }};position:relative;">
@@ -500,7 +500,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 <!-- 9. CIERRE -->
   <div data-reveal="" style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;opacity:0;transform:translateY(13px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="max-width:760px;margin:0 auto;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;text-align:center;">
-      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; margin: 0 0 {{ closingTitleGap }}; white-space: {{ closingH2Wrap }};">¿No diste con lo que <span style="font-weight:400;font-family:'Pinyon Script',cursive;font-size:1.45em;line-height:.75;position:relative;top:{{ closingScriptOffset }};">querías</span>?</h2>
+      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; margin: 0 0 {{ closingTitleGap }}; white-space: {{ closingH2Wrap }};">¿No diste con lo que <span style="font-weight: 400; font-family: 'Homemade Apple', cursive; font-size: 1.2em; position: relative; top: {{ closingScriptOffset }}">querías</span>?</h2>
       <p style="font-size:{{ closingTextSize }};color:var(--lda-text-secondary,#756348);font-weight:300;margin:0 0 {{ closingTextActionGap }};line-height:1.7;">Hagamos una pieza 100% a medida,<br>creada desde cero para ti.</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;">
         <a href="/encargo-personalizado" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ closingBtnPad }};border-radius:4px;font-size:{{ closingBtnSize }};font-weight:500;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">Crear encargo</a>
