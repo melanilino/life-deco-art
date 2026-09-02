@@ -1877,13 +1877,16 @@
     if (w.React && w.ReactDOM) return Promise.resolve();
     const react = cdnScriptFor(REACT_URL, REACT_SRI);
     const reactDom = cdnScriptFor(REACT_DOM_URL, REACT_DOM_SRI);
+    const localReact = "/vendor/react-18.3.1.production.min.js";
+    const localReactDom = "/vendor/react-dom-18.3.1.production.min.js";
     const reactFallback = "https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js";
     const reactDomFallback = "https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js";
-    // ReactDOM depends on React, so load them sequentially. If UNPKG is
-    // unavailable, retry from jsDelivr instead of leaving the page blank.
-    const ensureReact = w.React ? Promise.resolve() : loadWithFallback(react.src, reactFallback, react.integrity);
+    // ReactDOM depends on React, so load them sequentially. Same-origin files
+    // avoid a variable third-party connection; the existing CDNs remain as
+    // recovery paths in case a local asset is ever unavailable.
+    const ensureReact = w.React ? Promise.resolve() : loadScript(localReact, null, 3000).catch(() => loadWithFallback(react.src, reactFallback, react.integrity));
     return ensureReact.then(() =>
-      w.ReactDOM ? void 0 : loadWithFallback(reactDom.src, reactDomFallback, reactDom.integrity)
+      w.ReactDOM ? void 0 : loadScript(localReactDom, null, 3000).catch(() => loadWithFallback(reactDom.src, reactDomFallback, reactDom.integrity))
     );
   }
   function init() {
