@@ -200,7 +200,8 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <!-- 1. LA EMOCIÓN — HERO (versión 1f) -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-home-hero="" class="lda-hero-font-sensitive" style="position:relative;height:100vh;min-height:560px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:80px 48px 0;background:#1a1a1a;">
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
+    <sc-if value="{{ hasHeroPoster }}" hint-placeholder-val="{{ false }}"><image-slot id="inicio-hero-poster" shape="rect" fit="cover" priority="high" src="{{ heroVideoPosterUrl }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;"></image-slot></sc-if>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="metadata" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:13px;letter-spacing:0.22em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:16px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position: relative; z-index: 2; font-size: clamp(28px, 5.2vw, 70px); line-height: 1.25; color: #FFFFFF; font-weight: 200; max-width: none; margin: 0 0 10px;">{{ heroTitlePre }} <span style="font-family: 'Homemade Apple',cursive; font-size: 1.15em">{{ heroTitleCursive }}</span>.</h1>
@@ -214,7 +215,8 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div data-home-hero="" style="position:relative;height:100svh;min-height:520px;box-sizing:border-box;padding:88px 26px 44px;text-align:center;overflow:hidden;display:flex;flex-direction:column;justify-content:center;background:#1a1a1a;">
-    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="auto" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
+    <sc-if value="{{ hasHeroPoster }}" hint-placeholder-val="{{ false }}"><image-slot id="inicio-hero-poster" shape="rect" fit="cover" priority="high" src="{{ heroVideoPosterUrl }}" srcset="{{ heroVideoPosterSrcset }}" sizes="100vw" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;"></image-slot></sc-if>
+    <video loop="{{ true }}" muted="{{ true }}" playsinline="{{ true }}" webkit-playsinline="{{ true }}" preload="none" data-video-src="{{ heroVideoSrc }}" aria-hidden="true" onEnded="{{ onVideoEnded }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:{{ heroVideoOpacity }};transition:opacity .22s ease;"></video>
     <div aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.22) 0%,rgba(0,0,0,.28) 48%,rgba(0,0,0,.34) 100%);z-index:1;pointer-events:none;"></div>
     <div style="position:relative;z-index:2;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:#FFFFFF;font-weight:500;margin-bottom:12px;">Lettering · Diseño · Manualidades</div>
     <h1 style="position:relative;z-index:2;font-size:26px;line-height:1.25;color:#FFFFFF;font-weight:300;margin:0 0 10px;">{{ heroTitlePre }} <span style="font-family:'Homemade Apple',cursive;font-size:1.2em">{{ heroTitleCursive }}</span>.</h1>
@@ -270,7 +272,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:96px 48px 72px;margin-top:0;display:grid;grid-template-columns:0.85fr 1.15fr;gap:32px;align-items:center;opacity:0;transform:translateY(14px);transition:opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1);">
     <div style="aspect-ratio:4/5;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-      <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;height:100%;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+      <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" srcset="{{ melaniPhotoSrcset }}" sizes="50vw" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;height:100%;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     </div>
     <div style="padding-top:48px;">
       <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Conóceme</div>
@@ -282,7 +284,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
   <div style="padding:44px 26px 0;">
-    <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;aspect-ratio:4/5;border-radius:8px;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
+    <image-slot id="inicio-melani" shape="rect" fit="cover" alt="{{ melaniPhotoAlt }}" srcset="{{ melaniPhotoSrcset }}" sizes="100vw" view-scale="{{ melaniPhotoScale }}" view-x="{{ melaniPhotoX }}" view-y="{{ melaniPhotoY }}" style="width:100%;aspect-ratio:4/5;border-radius:8px;" src="{{ melaniPhotoUrl }}" placeholder="foto: Melani en su estudio, trabajando"></image-slot>
     <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin:22px 0 12px;">Conóceme</div>
     <h2 style="font-size:22px;font-weight:300;color:#000000;line-height:1.4;margin:0 0 14px;">Soy Melani, me apasionan <br>los <span style="font-family:'Homemade Apple',cursive;font-size:1.2em;color:#000000;">detalles</span>.</h2>
     <p style="font-size: 14px; line-height: 1.7; color: var(--lda-text-secondary,#756348); font-weight: 300; margin: 0 0 20px">Trabajo con personas, marcas y espacios que tienen algo importante que decir y quieren decirlo con belleza.</p>
@@ -300,22 +302,22 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 
   <div class="lda-card-grid" style="max-width:1240px;margin:0 auto;padding:48px 0 0;display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
     <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
-      <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-personalizados" shape="rect" alt="{{ servPersonalizadosAlt }}" srcset="{{ servPersonalizadosSrcset }}" sizes="50vw" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:100%;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Personalizados</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Cuadros, bandejas y regalos con tu nombre, frase o fecha especial.</p></div>
     </div>
     <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
-      <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-rotulacion" shape="rect" alt="{{ servRotulacionAlt }}" srcset="{{ servRotulacionSrcset }}" sizes="50vw" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:100%;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Rotulación</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Letras y señalización a mano para vitrinas y oficinas.</p></div>
     </div>
     <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
-      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" srcset="{{ servPackagingSrcset }}" sizes="50vw" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:100%;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Packaging</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Empaques y etiquetas con lettering personalizado para tu marca.</p></div>
     </div>
     <div class="lda-editorial-services-card" data-reveal="" style="position:relative;border-radius:8px;overflow:hidden;height:560px;opacity:0;transform:translateY(18px);">
-      <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-souvenirs" shape="rect" alt="{{ servSouvenirsAlt }}" srcset="{{ servSouvenirsSrcset }}" sizes="50vw" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:100%;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.48) 0%,rgba(0,0,0,0) 42%);pointer-events:none;"></div>
       <div class="lda-editorial-services-copy" style="position:absolute;left:18px;bottom:16px;right:18px;pointer-events:none;"><div style="font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:6px;">Souvenirs</div><p style="font-size:12.5px;color:rgba(255,255,255,.88);font-weight:300;line-height:1.5;margin:0;">Detalles personalizados para bodas y celebraciones.</p></div>
     </div>
@@ -327,7 +329,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <div class="lda-section-eyebrow lda-eyebrow-servicios" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;text-align:center;margin-bottom:12px;">Servicios</div>
     <h2 style="font-size:24px;color:#000000;font-weight:300;text-align:center;margin:0 0 8px;">En qué puedo <span style="font-family:'Homemade Apple',cursive;font-size:28px;color:var(--lda-text-secondary,#756348);">ayudarte</span></h2>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-personalizados" shape="rect" fit="cover" alt="{{ servPersonalizadosAlt }}" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:260px;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-personalizados" shape="rect" fit="cover" alt="{{ servPersonalizadosAlt }}" srcset="{{ servPersonalizadosSrcset }}" sizes="100vw" view-scale="{{ servPersonalizadosScale }}" view-x="{{ servPersonalizadosX }}" view-y="{{ servPersonalizadosY }}" style="width:100%;height:260px;" src="{{ servPersonalizadosUrl }}" placeholder="Personalizados"></image-slot><a href="/servicios/personalizados" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Personalizados</div>
@@ -335,7 +337,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-rotulacion" shape="rect" fit="cover" alt="{{ servRotulacionAlt }}" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:260px;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-rotulacion" shape="rect" fit="cover" alt="{{ servRotulacionAlt }}" srcset="{{ servRotulacionSrcset }}" sizes="100vw" view-scale="{{ servRotulacionScale }}" view-x="{{ servRotulacionX }}" view-y="{{ servRotulacionY }}" style="width:100%;height:260px;" src="{{ servRotulacionUrl }}" placeholder="Rotulación"></image-slot><a href="/servicios/rotulacion" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Rotulación</div>
@@ -343,7 +345,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:260px;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-packaging" shape="rect" fit="cover" alt="{{ servPackagingAlt }}" srcset="{{ servPackagingSrcset }}" sizes="100vw" view-scale="{{ servPackagingScale }}" view-x="{{ servPackagingX }}" view-y="{{ servPackagingY }}" style="width:100%;height:260px;" src="{{ servPackagingUrl }}" placeholder="Packaging"></image-slot><a href="/servicios/packaging" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Packaging</div>
@@ -351,7 +353,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
       </div>
     </div>
     <div style="position:relative;border-radius:8px;overflow:hidden;height:260px;margin-bottom:14px;">
-      <image-slot id="serv-souvenirs" shape="rect" fit="cover" alt="{{ servSouvenirsAlt }}" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:260px;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
+      <image-slot id="serv-souvenirs" shape="rect" fit="cover" alt="{{ servSouvenirsAlt }}" srcset="{{ servSouvenirsSrcset }}" sizes="100vw" view-scale="{{ servSouvenirsScale }}" view-x="{{ servSouvenirsX }}" view-y="{{ servSouvenirsY }}" style="width:100%;height:260px;" src="{{ servSouvenirsUrl }}" placeholder="Souvenirs"></image-slot><a href="/servicios/souvenirs" aria-label="Ver servicio" style="position:absolute;inset:0;z-index:3;"></a>
       <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.1) 60%);pointer-events:none;"></div>
       <div style="position:absolute;left:16px;bottom:14px;right:16px;pointer-events:none;">
         <div style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:#FFFFFF;margin-bottom:4px;">Souvenirs</div>
@@ -547,7 +549,11 @@ class Component extends DCLogic {
     this.releaseBootBackdrop();
     this.loadContent();
     this.checkMobile();
-    this.scheduleHeroVideo();
+    if (this.state.isMobile && document.readyState !== 'complete') {
+      window.addEventListener('load', this.scheduleHeroVideo, { once: true });
+    } else {
+      this.scheduleHeroVideo();
+    }
     window.addEventListener('resize', this.checkMobile, { passive: true });
     window.addEventListener('scroll', this.syncHomeNav, { passive: true });
     window.addEventListener('resize', this.syncHomeNav, { passive: true });
@@ -673,7 +679,9 @@ class Component extends DCLogic {
   };
   scheduleHeroVideo = () => {
     clearTimeout(this.heroVideoTimer);
-    this.heroVideoTimer = setTimeout(this.startHeroVideo, 0);
+    // En móvil la portada ligera pinta primero; el video se incorpora cuando
+    // la página ya es utilizable para que sus megabytes no compitan con el LCP.
+    this.heroVideoTimer = setTimeout(this.startHeroVideo, this.state.isMobile ? 1200 : 0);
   };
   PASOS = [
     { n: '01', title: 'Cuéntame tu idea', desc: 'Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.', imgKey: 'cwCuentameUrl', imgId: 'cw-cuentame', placeholder: 'foto: mensaje/nota inicial' },
@@ -695,6 +703,7 @@ class Component extends DCLogic {
     const gap = this.props.sectionGap ?? 96;
     const c = this.state.content || {};
     const m = this.state.isMobile;
+    const imageSrcset = (key) => (c.imageMeta && c.imageMeta[key] && c.imageMeta[key].srcset) || '';
     const imageAdjustment = (key) => {
       const value = (c.imageAdjustments && c.imageAdjustments[key]) || {};
       return {
@@ -815,22 +824,30 @@ class Component extends DCLogic {
       testimonialAuthor: c.testimonialAuthor ?? 'Carolina Reyes · pieza personalizada',
       closingText: c.closingText ?? 'Ya sea para una marca, un rincón especial o una gran celebración; encontremos la forma de contar tu historia con belleza.',
       heroVideoSrc: '/api/hero-video',
+      hasHeroPoster: !!c.heroVideoPosterUrl,
+      heroVideoPosterUrl: c.heroVideoPosterUrl || '',
+      heroVideoPosterSrcset: (c.heroVideoPosterMeta && c.heroVideoPosterMeta.srcset) || '',
       heroVideoOpacity: this.state.heroVideoReady ? '1' : '0',
       onVideoEnded: (e) => { e.target.currentTime = 0; e.target.play().catch(() => {}); },
       whatsappLink: c.whatsappLink ?? 'https://wa.me/18495390410',
       melaniPhotoUrl: c.melaniPhotoUrl || '',
+      melaniPhotoSrcset: imageSrcset('melaniPhotoUrl'),
       melaniPhotoAlt: (c.imageAlts && c.imageAlts.melaniPhotoUrl) || 'Melani trabajando en su estudio',
       melaniPhotoScale: imageAdjustment('melaniPhotoUrl').scale, melaniPhotoX: imageAdjustment('melaniPhotoUrl').x, melaniPhotoY: imageAdjustment('melaniPhotoUrl').y,
       servPersonalizadosUrl: c.servPersonalizadosUrl || '',
+      servPersonalizadosSrcset: imageSrcset('servPersonalizadosUrl'),
       servPersonalizadosAlt: (c.imageAlts && c.imageAlts.servPersonalizadosUrl) || 'Servicio de piezas personalizadas',
       servPersonalizadosScale: imageAdjustment('servPersonalizadosUrl').scale, servPersonalizadosX: imageAdjustment('servPersonalizadosUrl').x, servPersonalizadosY: imageAdjustment('servPersonalizadosUrl').y,
       servRotulacionUrl: c.servRotulacionUrl || '',
+      servRotulacionSrcset: imageSrcset('servRotulacionUrl'),
       servRotulacionAlt: (c.imageAlts && c.imageAlts.servRotulacionUrl) || 'Servicio de rotulación artística',
       servRotulacionScale: imageAdjustment('servRotulacionUrl').scale, servRotulacionX: imageAdjustment('servRotulacionUrl').x, servRotulacionY: imageAdjustment('servRotulacionUrl').y,
       servPackagingUrl: c.servPackagingUrl || '',
+      servPackagingSrcset: imageSrcset('servPackagingUrl'),
       servPackagingAlt: (c.imageAlts && c.imageAlts.servPackagingUrl) || 'Packaging personalizado con lettering',
       servPackagingScale: imageAdjustment('servPackagingUrl').scale, servPackagingX: imageAdjustment('servPackagingUrl').x, servPackagingY: imageAdjustment('servPackagingUrl').y,
       servSouvenirsUrl: c.servSouvenirsUrl || '',
+      servSouvenirsSrcset: imageSrcset('servSouvenirsUrl'),
       servSouvenirsAlt: (c.imageAlts && c.imageAlts.servSouvenirsUrl) || 'Souvenirs personalizados',
       servSouvenirsScale: imageAdjustment('servSouvenirsUrl').scale, servSouvenirsX: imageAdjustment('servSouvenirsUrl').x, servSouvenirsY: imageAdjustment('servSouvenirsUrl').y,
       cwCuentameUrl: c.cwCuentameUrl || '',
