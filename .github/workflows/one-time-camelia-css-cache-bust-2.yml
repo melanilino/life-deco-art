@@ -1,0 +1,46 @@
+name: One-time Camelia CSS cache bust 2
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-html-version:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update stylesheet version in HTML files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          version = '20260903camelia4'
+          pattern = re.compile(r'(design-system\.css\?v=)[^\"\'<>\s]+')
+          changed = []
+          for path in Path('.').rglob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              new = pattern.sub(r'\g<1>' + version, text)
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+                  changed.append(str(path))
+          print('Updated:', *changed, sep='\n- ')
+          PY
+      - name: Remove one-time workflow
+        run: rm -f .github/workflows/one-time-camelia-css-cache-bust-2.yml
+      - name: Commit cache bust
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Bust Camelia stylesheet cache after optical resize"
+          git push
