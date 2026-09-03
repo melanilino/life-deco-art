@@ -79,10 +79,18 @@ html body #dc-boot-fallback .dc-fb-script {
 }
 
 @media (min-width: 860px) {
-  .lda-script-logo { font-size: 30px !important; }
+  #lda-static-nav .lda-brand,
+  .lda-script-logo {
+    font-size: 40px !important;
+  }
 }
 
 @media (max-width: 859px) {
+  #lda-static-nav .lda-brand,
+  .lda-script-logo {
+    font-size: 30px !important;
+  }
+
   :root {
     --lda-page-gutter: var(--lda-page-gutter-mobile);
   }
