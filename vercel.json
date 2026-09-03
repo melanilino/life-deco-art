@@ -15,24 +15,6 @@
       ]
     },
     {
-      "source": "/",
-      "headers": [
-        {
-          "key": "Clear-Site-Data",
-          "value": "\"cache\""
-        }
-      ]
-    },
-    {
-      "source": "/(sobre-mi|tienda|aprende|contacto)",
-      "headers": [
-        {
-          "key": "Clear-Site-Data",
-          "value": "\"cache\""
-        }
-      ]
-    },
-    {
       "source": "/(.*)\\.dc\\.html",
       "headers": [
         {
