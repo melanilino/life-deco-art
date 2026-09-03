@@ -83,6 +83,14 @@ html body #dc-boot-fallback .dc-fb-script {
   margin-left: 0.10em !important;
 }
 
+.lda-mobile-break {
+  display: none;
+}
+
+.lda-hero-idea-line {
+  white-space: nowrap;
+}
+
 @media (min-width: 860px) {
   #lda-static-nav .lda-brand,
   .lda-script-logo {
@@ -94,6 +102,10 @@ html body #dc-boot-fallback .dc-fb-script {
   #lda-static-nav .lda-brand,
   .lda-script-logo {
     font-size: 30px !important;
+  }
+
+  .lda-mobile-break {
+    display: initial;
   }
 
   /* Keep mobile navigation visually stable: brand left, menu right. */
