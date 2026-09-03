@@ -114,20 +114,44 @@ html body #dc-boot-fallback .dc-fb-script {
   }
   #lda-static-nav summary {
     align-items: flex-end !important;
+    -webkit-tap-highlight-color: transparent !important;
+    background: transparent !important;
+    color: inherit !important;
+    outline: none;
+  }
+  #lda-static-nav summary:active,
+  #lda-static-nav summary:focus {
+    background: transparent !important;
+  }
+  #lda-static-nav summary:focus-visible {
+    outline: 1px solid currentColor;
+    outline-offset: 2px;
   }
   #lda-static-nav .lda-burger {
+    width: 20px !important;
     height: 1px !important;
+    border-radius: 0 !important;
   }
   #lda-static-nav .lda-b1,
-  #lda-static-nav .lda-b2 {
-    width: 20px !important;
-  }
+  #lda-static-nav .lda-b2,
   #lda-static-nav .lda-b3 {
-    width: 14px !important;
+    width: 20px !important;
   }
   #lda-static-nav .lda-mobile-panel,
   #lda-static-nav .lda-mobile-panel a {
     text-align: left !important;
+  }
+
+  /* When the menu opens, the entire nav becomes white instead of showing hero video through it. */
+  #lda-static-nav:has(.lda-mobile[open]) {
+    background: #FFFFFF !important;
+    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
+  }
+  #lda-static-nav:has(.lda-mobile[open]) .lda-brand {
+    color: #000000 !important;
+  }
+  #lda-static-nav:has(.lda-mobile[open]) .lda-burger {
+    background: #000000 !important;
   }
 
   /* Give the Camelia descender in “ayudarte” room before the first card. */
@@ -135,7 +159,7 @@ html body #dc-boot-fallback .dc-fb-script {
     margin-bottom: 22px !important;
   }
 
-  /* Footer script should echo the 30px mobile wordmark instead of dominating it. */
+  /* Footer script size is intentionally held pending final visual tuning. */
   html body .lda-footer-script,
   html body footer b[style*="Camelia Beauty"] {
     font-size: 30px !important;
