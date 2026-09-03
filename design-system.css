@@ -159,10 +159,10 @@ html body #dc-boot-fallback .dc-fb-script {
     margin-bottom: 22px !important;
   }
 
-  /* Footer script size is intentionally held pending final visual tuning. */
+  /* Footer script balances the BONITAS line without overpowering it. */
   html body .lda-footer-script,
   html body footer b[style*="Camelia Beauty"] {
-    font-size: 30px !important;
+    font-size: 40px !important;
     line-height: 0.9 !important;
     top: 0 !important;
   }
