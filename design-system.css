@@ -40,7 +40,7 @@
   --lda-nav-height-mobile: 64px;
 
   /* Camelia mixed with Montserrat: optical scale, same baseline. */
-  --lda-camelia-inline-scale: 2em;
+  --lda-camelia-inline-scale: 1.70em;
   --lda-camelia-inline-leading: 1;
   --lda-camelia-inline-shift: 0em;
 }
