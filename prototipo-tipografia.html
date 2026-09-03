@@ -42,9 +42,9 @@
 <body>
   <main class="app">
     <aside class="panel" aria-label="Controles tipográficos">
-      <p class="eyebrow">Prototipo · Inicio</p>
-      <h1>Ajusta la fuente Camelia</h1>
-      <p class="intro">Selecciona un texto y muévelo visualmente. Este panel no cambia la web oficial.</p>
+      <p class="eyebrow">Sistema tipográfico</p>
+      <h1>Calibra Camelia por categorías</h1>
+      <p class="intro">Cada ajuste se aplica en vivo a todos los textos equivalentes de la vista. Este panel no cambia la web oficial.</p>
 
       <div class="field">
         <span class="field-title">Vista</span>
@@ -55,8 +55,8 @@
       </div>
 
       <div class="field">
-        <label for="target">Texto a ajustar</label>
-        <select id="target" disabled><option>Cargando textos…</option></select>
+        <label for="target">Categoría a ajustar</label>
+        <select id="target" disabled><option>Cargando categorías…</option></select>
       </div>
 
       <div class="field">
@@ -75,7 +75,7 @@
       </div>
 
       <div class="actions">
-        <button class="action secondary" id="reset-current" type="button" disabled>Restablecer este texto</button>
+        <button class="action secondary" id="reset-current" type="button" disabled>Restablecer esta categoría</button>
         <button class="action" id="copy" type="button" disabled>Copiar mis ajustes</button>
         <button class="action secondary" id="reset-all" type="button" disabled>Restablecer todo</button>
       </div>
@@ -91,15 +91,11 @@
 
   <script>
     const definitions = [
-      ['logo','Logo · Life Deco Art','Life Deco Art'],
-      ['idea','Hero · idea','idea'],
-      ['detalles','Conóceme · detalles','detalles'],
-      ['ayudarte','Servicios · ayudarte','ayudarte'],
-      ['garantias','Cómo trabajamos · garantías reales','garantías reales'],
-      ['recientes','Del estudio · recientes','recientes'],
-      ['aprendes','Aprende · aprendes','aprendes'],
-      ['querias','CTA final · querías','querías'],
-      ['proposito','Footer · propósito','propósito']
+      {id:'logo',label:'Logo',members:['logo']},
+      {id:'hero',label:'Destacado de hero',members:['idea']},
+      {id:'accent',label:'Destacado de sección',members:['detalles','ayudarte','recientes','aprendes','querias']},
+      {id:'long',label:'Frase cursiva larga',members:['garantias']},
+      {id:'footer',label:'Texto del footer',members:['proposito']}
     ];
     const state = {desktop:{},mobile:{}};
     let device = 'desktop';
@@ -117,11 +113,15 @@
     const controls = [targetSelect,size,vertical,horizontal,document.querySelector('#reset-current'),document.querySelector('#copy'),document.querySelector('#reset-all')];
 
     function scan(items){
-      targets=new Map(items.map(item=>[item.id,item]));
+      const detected=new Map(items.map(item=>[item.id,item]));
+      targets=new Map(definitions.map(group=>{
+        const members=group.members.map(id=>detected.get(id)).filter(Boolean);
+        return [group.id,{...group,members,size:members[0]?.size||42}];
+      }).filter(([,group])=>group.members.length));
       targetSelect.innerHTML=[...targets].map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');
       controls.forEach(control=>control.disabled=targets.size===0);
-      if(targets.size){syncControls();status.textContent='Selecciona un texto y mueve los controles.'}
-      else status.textContent='No pude detectar los textos. Recarga el prototipo.';
+      if(targets.size){Object.keys(state[device]).forEach(apply);syncControls();status.textContent='Selecciona una categoría y mueve los controles.'}
+      else status.textContent='No pude detectar las categorías. Recarga el prototipo.';
     }
     function current(){return targets.get(targetSelect.value)}
     function valuesFor(id){
@@ -134,14 +134,15 @@
     function apply(id){
       if(!targets.has(id))return;
       const values=valuesFor(id);
-      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'update',id,size:values.size,x:values.x,y:values.y},location.origin);
+      targets.get(id).members.forEach(member=>preview.contentWindow.postMessage({source:'lda-type-prototype',type:'update',id:member.id,size:values.size,x:values.x,y:values.y},location.origin));
     }
     function syncControls(){
       const item=current();if(!item)return;
       const values=valuesFor(targetSelect.value);
       size.value=values.size;vertical.value=values.y;horizontal.value=values.x;
       sizeValue.textContent=values.size+' px';verticalValue.textContent=values.y+' px';horizontalValue.textContent=values.x+' px';
-      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'focus',id:targetSelect.value},location.origin);
+      const group=targets.get(targetSelect.value);
+      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'focus',id:group.members[0].id},location.origin);
     }
     function update(){
       const values=valuesFor(targetSelect.value);
