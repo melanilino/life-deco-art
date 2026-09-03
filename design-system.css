@@ -78,6 +78,11 @@ html body #dc-boot-fallback .dc-fb-script {
   font-family: 'Camelia Beauty', cursive !important;
 }
 
+/* Give the editorial accent a little breathing room when it follows Montserrat. */
+.lda-del-estudio-title-row .lda-camelia-accent {
+  margin-left: 0.10em !important;
+}
+
 @media (min-width: 860px) {
   #lda-static-nav .lda-brand,
   .lda-script-logo {
@@ -89,6 +94,41 @@ html body #dc-boot-fallback .dc-fb-script {
   #lda-static-nav .lda-brand,
   .lda-script-logo {
     font-size: 30px !important;
+  }
+
+  /* Keep mobile navigation visually stable: brand left, menu right. */
+  #lda-static-nav .lda-mobile {
+    margin-left: auto !important;
+  }
+  #lda-static-nav summary {
+    align-items: flex-end !important;
+  }
+  #lda-static-nav .lda-burger {
+    height: 1px !important;
+  }
+  #lda-static-nav .lda-b1,
+  #lda-static-nav .lda-b2 {
+    width: 20px !important;
+  }
+  #lda-static-nav .lda-b3 {
+    width: 14px !important;
+  }
+  #lda-static-nav .lda-mobile-panel,
+  #lda-static-nav .lda-mobile-panel a {
+    text-align: left !important;
+  }
+
+  /* Give the Camelia descender in “ayudarte” room before the first card. */
+  html body .lda-eyebrow-servicios + h2 {
+    margin-bottom: 22px !important;
+  }
+
+  /* Footer script should echo the 30px mobile wordmark instead of dominating it. */
+  html body .lda-footer-script,
+  html body footer b[style*="Camelia Beauty"] {
+    font-size: 30px !important;
+    line-height: 0.9 !important;
+    top: 0 !important;
   }
 
   :root {
