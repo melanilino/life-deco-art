@@ -129,7 +129,7 @@ html body #dc-boot-fallback .dc-fb-script {
   }
   #lda-static-nav .lda-burger {
     width: 20px !important;
-    height: 1px !important;
+    height: 1.25px !important;
     border-radius: 0 !important;
   }
   #lda-static-nav .lda-b1,
@@ -152,6 +152,28 @@ html body #dc-boot-fallback .dc-fb-script {
   }
   #lda-static-nav:has(.lda-mobile[open]) .lda-burger {
     background: #000000 !important;
+  }
+
+  /* Mobile storefront / learning rhythm refinement. */
+  .lda-mobile-category-list {
+    gap: 6px !important;
+  }
+  .lda-mobile-category-list .lda-filter-control {
+    min-height: 40px !important;
+  }
+  .lda-load-more-wrap {
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 16px 0 12px !important;
+  }
+  .lda-load-more-wrap .lda-load-more {
+    min-height: 40px !important;
+  }
+  .lda-mobile-faq-card {
+    padding: 10px 16px !important;
+  }
+  .lda-mobile-faq-card > button {
+    min-height: 40px !important;
   }
 
   /* Give the Camelia descender in “ayudarte” room before the first card. */

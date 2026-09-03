@@ -329,9 +329,9 @@ body{margin:0;background:#fff}
       </sc-if>
     </sc-if>
 
-    <div style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
+    <div class="lda-load-more-wrap" style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
       <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
-        <button type="button" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
+        <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
       </sc-if>
     </div>
 
@@ -381,7 +381,7 @@ body{margin:0;background:#fff}
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
         <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="5">
-          <div style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
+          <div class="lda-mobile-faq-card" style="background:#F3EEE4;border-radius:10px;padding:16px 20px;transition:background .25s ease;">
             <button id="{{ f.triggerId }}" type="button" onClick="{{ f.onClick }}" aria-expanded="{{ f.open }}" aria-controls="{{ f.answerId }}" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;gap:16px;width:100%;min-height:{{ faqToggleMinHeight }};padding:0;border:0;background:transparent;text-align:left;font-family:'Montserrat',sans-serif;">
               <span style="font-size:14px;color:#2B2420;font-weight:400;">{{ f.q }}</span>
               <span aria-hidden="true" style="width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -400,7 +400,7 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;">
     <div style="background:#0CC0DF;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-      <h2 style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;margin:0;">¿No diste con lo que <span class="lda-script-section" style="font-family:'Camelia Beauty',cursive;font-size:1.55em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</h2>
+      <h2 style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;margin:0;">¿No diste con lo que<br class="lda-mobile-break"><span class="lda-script-section" style="font-family:'Camelia Beauty',cursive;font-size:1.55em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</h2>
       <p style="font-size:{{ ctaTextSize }};color:#E3F9FC;font-weight:300;margin:{{ ctaTextGap }} 0 0;text-align:center;">Hagamos una pieza 100% a medida,<br>creada desde cero para ti.</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
         <a href="/encargo-personalizado" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">Crear encargo</a>
