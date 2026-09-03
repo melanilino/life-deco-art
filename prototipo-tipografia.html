@@ -97,9 +97,17 @@
       {id:'long',label:'Frase cursiva larga',members:['garantias']},
       {id:'footer',label:'Texto del footer',members:['proposito']}
     ];
+    const sourceDefinitions = [
+      ['logo','Logo · Life Deco Art','Life Deco Art'],['idea','Hero · idea','idea'],
+      ['detalles','Conóceme · detalles','detalles'],['ayudarte','Servicios · ayudarte','ayudarte'],
+      ['garantias','Cómo trabajamos · garantías reales','garantías reales'],['recientes','Del estudio · recientes','recientes'],
+      ['aprendes','Aprende · aprendes','aprendes'],['querias','CTA final · querías','querías'],
+      ['proposito','Footer · propósito','propósito']
+    ];
     const state = {desktop:{},mobile:{}};
     let device = 'desktop';
     let targets = new Map();
+    let previewElements = new Map();
     const preview = document.querySelector('#preview');
     const viewport = document.querySelector('#viewport');
     const targetSelect = document.querySelector('#target');
@@ -124,6 +132,19 @@
       else status.textContent='No pude detectar las categorías. Recarga el prototipo.';
     }
     function current(){return targets.get(targetSelect.value)}
+    function scanPreview(){
+      try{
+        const doc=preview.contentDocument;if(!doc?.body)return;
+        const visible=element=>{const box=element.getBoundingClientRect();return box.width>0&&box.height>0&&getComputedStyle(element).visibility!=='hidden'};
+        const items=[];previewElements=new Map();
+        sourceDefinitions.forEach(([id,label,text])=>{
+          const element=[...doc.querySelectorAll('a,span,b')].find(node=>visible(node)&&node.textContent.trim()===text&&getComputedStyle(node).fontFamily.includes('Camelia Beauty'));
+          if(!element)return;
+          previewElements.set(id,element);items.push({id,label,size:Math.round(parseFloat(getComputedStyle(element).fontSize))});
+        });
+        if(items.length)scan(items);
+      }catch{status.textContent='Esperando que termine de cargar la vista previa…'}
+    }
     function valuesFor(id){
       if(!state[device][id]){
         const item=targets.get(id);
@@ -134,7 +155,11 @@
     function apply(id){
       if(!targets.has(id))return;
       const values=valuesFor(id);
-      targets.get(id).members.forEach(member=>preview.contentWindow.postMessage({source:'lda-type-prototype',type:'update',id:member.id,size:values.size,x:values.x,y:values.y},location.origin));
+      targets.get(id).members.forEach(member=>{
+        const element=previewElements.get(member.id);
+        if(element){element.style.fontSize=values.size+'px';element.style.position='relative';element.style.left=values.x+'px';element.style.top=values.y+'px'}
+        else preview.contentWindow.postMessage({source:'lda-type-prototype',type:'update',id:member.id,size:values.size,x:values.x,y:values.y},location.origin);
+      });
     }
     function syncControls(){
       const item=current();if(!item)return;
@@ -142,14 +167,19 @@
       size.value=values.size;vertical.value=values.y;horizontal.value=values.x;
       sizeValue.textContent=values.size+' px';verticalValue.textContent=values.y+' px';horizontalValue.textContent=values.x+' px';
       const group=targets.get(targetSelect.value);
-      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'focus',id:group.members[0].id},location.origin);
+      const element=previewElements.get(group.members[0].id);
+      if(element)element.scrollIntoView({behavior:'smooth',block:'center'});
+      else preview.contentWindow.postMessage({source:'lda-type-prototype',type:'focus',id:group.members[0].id},location.origin);
     }
     function update(){
       const values=valuesFor(targetSelect.value);
       values.size=Number(size.value);values.y=Number(vertical.value);values.x=Number(horizontal.value);
       apply(targetSelect.value);syncControls();
     }
-    preview.addEventListener('load',()=>setTimeout(()=>preview.contentWindow.postMessage({source:'lda-type-prototype',type:'scan'},location.origin),900));
+    preview.addEventListener('load',()=>{
+      [250,800,1600,3000].forEach(delay=>setTimeout(scanPreview,delay));
+      setTimeout(()=>preview.contentWindow.postMessage({source:'lda-type-prototype',type:'scan'},location.origin),900);
+    });
     addEventListener('message',event=>{if(event.origin===location.origin&&event.data?.source==='lda-type-prototype'&&event.data.type==='targets')scan(event.data.items)});
     targetSelect.addEventListener('change',syncControls);
     [size,vertical,horizontal].forEach(input=>input.addEventListener('input',update));
