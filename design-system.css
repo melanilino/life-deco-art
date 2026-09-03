@@ -41,14 +41,15 @@
 
   /* Camelia mixed with Montserrat: optical scale + vertical compensation. */
   --lda-camelia-inline-scale: 1.80em;
-  --lda-camelia-inline-leading: 1;
+  --lda-camelia-inline-leading: 0.68;
   --lda-camelia-inline-shift: 0.08em;
 }
 
 /*
- * Camelia's visible strokes sit high relative to Montserrat when both share
- * a baseline. Scale it optically, then lower it slightly so both typefaces
- * read as one centered typographic line rather than two stacked layers.
+ * Camelia is intentionally larger than Montserrat for equal optical presence.
+ * Its compact line-height prevents that larger font-size from expanding the
+ * surrounding line box and creating oversized gaps between wrapped lines.
+ * The small downward shift keeps both typefaces visually centered together.
  */
 html body .lda-camelia-hero,
 html body .lda-camelia-accent,
