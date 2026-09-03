@@ -39,16 +39,16 @@
   --lda-nav-height: 80px;
   --lda-nav-height-mobile: 64px;
 
-  /* Camelia mixed with Montserrat: optical scale, same baseline. */
-  --lda-camelia-inline-scale: 1.70em;
+  /* Camelia mixed with Montserrat: optical scale + vertical compensation. */
+  --lda-camelia-inline-scale: 1.80em;
   --lda-camelia-inline-leading: 1;
-  --lda-camelia-inline-shift: 0em;
+  --lda-camelia-inline-shift: 0.08em;
 }
 
 /*
- * Camelia has a smaller perceived body than Montserrat at the same numeric
- * font-size. Scale it optically while keeping the same baseline, so the
- * script feels equally important without floating above or below the line.
+ * Camelia's visible strokes sit high relative to Montserrat when both share
+ * a baseline. Scale it optically, then lower it slightly so both typefaces
+ * read as one centered typographic line rather than two stacked layers.
  */
 html body .lda-camelia-hero,
 html body .lda-camelia-accent,
