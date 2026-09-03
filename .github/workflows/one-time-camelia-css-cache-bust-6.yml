@@ -14,7 +14,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Update Camelia CSS version
         run: |
-          grep -rl "20260903camelia8" . --include='*.html' --include='*.dc.html' | xargs -r sed -i 's/20260903camelia8/20260903camelia9/g'
+          python - <<'PY'
+          from pathlib import Path
+          changed = 0
+          for path in Path('.').rglob('*.html'):
+              if '.git' in path.parts:
+                  continue
+              text = path.read_text(encoding='utf-8')
+              new = text.replace('20260903camelia8', '20260903camelia9')
+              if new != text:
+                  path.write_text(new, encoding='utf-8')
+                  changed += 1
+          print(f'Updated {changed} HTML files')
+          PY
       - name: Commit changes
         run: |
           if git diff --quiet; then
@@ -23,6 +35,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add '*.html' '*.dc.html' 2>/dev/null || git add -A
+          git add -A
           git commit -m "Bump Camelia CSS version to camelia9"
           git push
