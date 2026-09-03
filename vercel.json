@@ -15,6 +15,24 @@
       ]
     },
     {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Clear-Site-Data",
+          "value": "\"cache\""
+        }
+      ]
+    },
+    {
+      "source": "/(sobre-mi|tienda|aprende|contacto)",
+      "headers": [
+        {
+          "key": "Clear-Site-Data",
+          "value": "\"cache\""
+        }
+      ]
+    },
+    {
       "source": "/(.*)\\.dc\\.html",
       "headers": [
         {
@@ -55,7 +73,7 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=86400, stale-while-revalidate=604800"
+          "value": "public, max-age=0, must-revalidate"
         }
       ]
     },
