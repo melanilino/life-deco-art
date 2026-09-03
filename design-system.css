@@ -6,23 +6,6 @@
   font-display: swap;
 }
 
-@media (min-width: 860px) {
-  .lda-script-logo { font-size: 30px !important; }
-  .lda-script-hero { font-size: 70px !important; }
-  .lda-script-section { font-size: 60px !important; }
-  .lda-script-long { font-size: 60px !important; }
-  .lda-script-paragraph { font-size: 40px !important; }
-  .lda-footer-script { font-size: 40px !important; }
-}
-
-@font-face {
-  font-family: 'Camelia Beauty';
-  src: url('/fonts/camelia-beauty-latin.otf') format('opentype');
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
 :root {
   /* Layout */
   --lda-container-max: 1240px;
@@ -55,11 +38,55 @@
   /* Navigation */
   --lda-nav-height: 80px;
   --lda-nav-height-mobile: 64px;
+
+  /* Camelia optical alignment when mixed with Montserrat. */
+  --lda-camelia-inline-scale: 1.28em;
+  --lda-camelia-inline-leading: .82;
+  --lda-camelia-inline-shift: .06em;
+}
+
+/*
+ * Camelia Beauty has much taller ascenders/descenders than Montserrat.
+ * Keep inline script accents optically level with the surrounding text
+ * instead of sizing each occurrence independently in pixels.
+ */
+html body .lda-camelia-hero,
+html body .lda-camelia-accent,
+html body .lda-camelia-long,
+html body .lda-script-hero,
+html body .lda-script-section,
+html body .lda-script-long,
+html body .lda-script-paragraph,
+html body .lda-editorial-script,
+html body .lda-footer-script,
+html body span[style*="Camelia Beauty"],
+html body b[style*="Camelia Beauty"],
+html body #dc-boot-fallback .dc-fb-script {
+  font-family: 'Camelia Beauty', cursive !important;
+  font-size: var(--lda-camelia-inline-scale) !important;
+  line-height: var(--lda-camelia-inline-leading) !important;
+  font-weight: 400 !important;
+  position: relative !important;
+  left: 0 !important;
+  top: var(--lda-camelia-inline-shift) !important;
+  vertical-align: baseline !important;
+}
+
+/* Standalone brand script is not mixed with Montserrat, so it keeps its own scale. */
+.lda-script-logo {
+  font-family: 'Camelia Beauty', cursive !important;
+}
+
+@media (min-width: 860px) {
+  .lda-script-logo { font-size: 30px !important; }
 }
 
 @media (max-width: 859px) {
   :root {
     --lda-page-gutter: var(--lda-page-gutter-mobile);
+    --lda-camelia-inline-scale: 1.24em;
+    --lda-camelia-inline-leading: .84;
+    --lda-camelia-inline-shift: .04em;
   }
 }
 
@@ -70,11 +97,4 @@
   margin-inline: auto;
   padding-inline: var(--lda-page-gutter);
   box-sizing: border-box;
-}
-
-@media (max-width: 859px) {
-  .lda-footer-script {
-    font-size: 42px !important;
-    top: -7px !important;
-  }
 }
