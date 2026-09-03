@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Prototipo tipográfico | Life Deco Art</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:light;--ink:#171717;--muted:#756348;--paper:#f7f3eb;--line:#ded5c5;--pink:#f65091;--cyan:#0cc0df}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Montserrat,sans-serif;color:var(--ink);background:var(--paper)}
+    button,select,input{font:inherit}
+    button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+    .app{height:100%;display:grid;grid-template-columns:330px minmax(0,1fr)}
+    .panel{height:100%;overflow:auto;padding:28px 24px;background:#fff;border-right:1px solid var(--line);z-index:2}
+    .eyebrow{margin:0 0 9px;font-size:11px;line-height:1.3;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:600}
+    h1{font-size:25px;line-height:1.18;font-weight:400;margin:0 0 10px}
+    .intro{font-size:13px;line-height:1.55;color:var(--muted);margin:0 0 24px}
+    .field{margin-top:18px}
+    label,.field-title{display:block;font-size:12px;line-height:1.35;font-weight:600;margin-bottom:8px}
+    select{width:100%;height:44px;border:1px solid var(--line);border-radius:5px;background:#fff;padding:0 36px 0 12px;color:var(--ink)}
+    .range-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+    output{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+    input[type="range"]{width:100%;accent-color:var(--pink);cursor:pointer}
+    .devices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .device{height:40px;border:1px solid var(--line);border-radius:5px;background:#fff;cursor:pointer}
+    .device[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+    .actions{display:grid;gap:8px;margin-top:24px}
+    .action{min-height:43px;border-radius:5px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+    .action.secondary{background:#fff;color:var(--ink);border-color:var(--line)}
+    .status{min-height:36px;margin:12px 0 0;font-size:12px;line-height:1.45;color:var(--muted)}
+    .stage{min-width:0;height:100%;padding:18px;overflow:auto;background:#e9e6df;display:flex;justify-content:center;align-items:flex-start}
+    .viewport{width:100%;height:calc(100vh - 36px);background:#fff;box-shadow:0 12px 34px rgba(55,43,24,.12)}
+    .viewport.mobile{width:390px;min-width:390px}
+    iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+    @media(max-width:800px){.app{grid-template-columns:1fr;grid-template-rows:auto minmax(620px,1fr)}.panel{height:auto;border-right:0;border-bottom:1px solid var(--line)}.stage{height:760px}.viewport{height:724px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <aside class="panel" aria-label="Controles tipográficos">
+      <p class="eyebrow">Prototipo · Inicio</p>
+      <h1>Ajusta la fuente Camelia</h1>
+      <p class="intro">Selecciona un texto y muévelo visualmente. Este panel no cambia la web oficial.</p>
+
+      <div class="field">
+        <span class="field-title">Vista</span>
+        <div class="devices">
+          <button class="device" type="button" data-device="desktop" aria-pressed="true">Escritorio</button>
+          <button class="device" type="button" data-device="mobile" aria-pressed="false">Móvil</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="target">Texto a ajustar</label>
+        <select id="target" disabled><option>Cargando textos…</option></select>
+      </div>
+
+      <div class="field">
+        <div class="range-head"><label for="size">Tamaño</label><output id="size-value">—</output></div>
+        <input id="size" type="range" min="18" max="130" step="1" disabled>
+      </div>
+
+      <div class="field">
+        <div class="range-head"><label for="vertical">Subir o bajar</label><output id="vertical-value">0 px</output></div>
+        <input id="vertical" type="range" min="-40" max="40" step="1" value="0" disabled>
+      </div>
+
+      <div class="field">
+        <div class="range-head"><label for="horizontal">Izquierda o derecha</label><output id="horizontal-value">0 px</output></div>
+        <input id="horizontal" type="range" min="-40" max="40" step="1" value="0" disabled>
+      </div>
+
+      <div class="actions">
+        <button class="action secondary" id="reset-current" type="button" disabled>Restablecer este texto</button>
+        <button class="action" id="copy" type="button" disabled>Copiar mis ajustes</button>
+        <button class="action secondary" id="reset-all" type="button" disabled>Restablecer todo</button>
+      </div>
+      <p class="status" id="status" role="status">Preparando la vista…</p>
+    </aside>
+
+    <section class="stage" aria-label="Vista previa de Inicio">
+      <div class="viewport" id="viewport">
+        <iframe id="preview" title="Vista previa de Inicio" src="/Inicio.dc.html?prototipo=tipografia"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const definitions = [
+      ['logo','Logo · Life Deco Art','Life Deco Art'],
+      ['idea','Hero · idea','idea'],
+      ['detalles','Conóceme · detalles','detalles'],
+      ['ayudarte','Servicios · ayudarte','ayudarte'],
+      ['garantias','Cómo trabajamos · garantías reales','garantías reales'],
+      ['recientes','Del estudio · recientes','recientes'],
+      ['aprendes','Aprende · aprendes','aprendes'],
+      ['querias','CTA final · querías','querías'],
+      ['proposito','Footer · propósito','propósito']
+    ];
+    const state = {desktop:{},mobile:{}};
+    let device = 'desktop';
+    let targets = new Map();
+    const preview = document.querySelector('#preview');
+    const viewport = document.querySelector('#viewport');
+    const targetSelect = document.querySelector('#target');
+    const size = document.querySelector('#size');
+    const vertical = document.querySelector('#vertical');
+    const horizontal = document.querySelector('#horizontal');
+    const sizeValue = document.querySelector('#size-value');
+    const verticalValue = document.querySelector('#vertical-value');
+    const horizontalValue = document.querySelector('#horizontal-value');
+    const status = document.querySelector('#status');
+    const controls = [targetSelect,size,vertical,horizontal,document.querySelector('#reset-current'),document.querySelector('#copy'),document.querySelector('#reset-all')];
+
+    function scan(items){
+      targets=new Map(items.map(item=>[item.id,item]));
+      targetSelect.innerHTML=[...targets].map(([id,item])=>`<option value="${id}">${item.label}</option>`).join('');
+      controls.forEach(control=>control.disabled=targets.size===0);
+      if(targets.size){syncControls();status.textContent='Selecciona un texto y mueve los controles.'}
+      else status.textContent='No pude detectar los textos. Recarga el prototipo.';
+    }
+    function current(){return targets.get(targetSelect.value)}
+    function valuesFor(id){
+      if(!state[device][id]){
+        const item=targets.get(id);
+        state[device][id]={size:item.size,x:0,y:0,originalSize:item.size};
+      }
+      return state[device][id];
+    }
+    function apply(id){
+      if(!targets.has(id))return;
+      const values=valuesFor(id);
+      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'update',id,size:values.size,x:values.x,y:values.y},location.origin);
+    }
+    function syncControls(){
+      const item=current();if(!item)return;
+      const values=valuesFor(targetSelect.value);
+      size.value=values.size;vertical.value=values.y;horizontal.value=values.x;
+      sizeValue.textContent=values.size+' px';verticalValue.textContent=values.y+' px';horizontalValue.textContent=values.x+' px';
+      preview.contentWindow.postMessage({source:'lda-type-prototype',type:'focus',id:targetSelect.value},location.origin);
+    }
+    function update(){
+      const values=valuesFor(targetSelect.value);
+      values.size=Number(size.value);values.y=Number(vertical.value);values.x=Number(horizontal.value);
+      apply(targetSelect.value);syncControls();
+    }
+    preview.addEventListener('load',()=>setTimeout(()=>preview.contentWindow.postMessage({source:'lda-type-prototype',type:'scan'},location.origin),900));
+    addEventListener('message',event=>{if(event.origin===location.origin&&event.data?.source==='lda-type-prototype'&&event.data.type==='targets')scan(event.data.items)});
+    targetSelect.addEventListener('change',syncControls);
+    [size,vertical,horizontal].forEach(input=>input.addEventListener('input',update));
+    document.querySelectorAll('.device').forEach(button=>button.addEventListener('click',()=>{
+      device=button.dataset.device;
+      document.querySelectorAll('.device').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
+      viewport.classList.toggle('mobile',device==='mobile');
+      status.textContent='Cambiando a vista '+(device==='mobile'?'móvil':'de escritorio')+'…';
+      preview.src='/Inicio.dc.html?prototipo=tipografia&vista='+device+'&t='+Date.now();
+    }));
+    document.querySelector('#reset-current').addEventListener('click',()=>{
+      const values=valuesFor(targetSelect.value);values.size=values.originalSize;values.x=0;values.y=0;apply(targetSelect.value);syncControls();status.textContent='Texto restablecido.';
+    });
+    document.querySelector('#reset-all').addEventListener('click',()=>{
+      state[device]={};status.textContent='Restableciendo la vista…';preview.src='/Inicio.dc.html?prototipo=tipografia&vista='+device+'&t='+Date.now();
+    });
+    document.querySelector('#copy').addEventListener('click',async()=>{
+      const clean={};for(const mode of ['desktop','mobile']){clean[mode]={};for(const [id,v] of Object.entries(state[mode]))clean[mode][id]={size:v.size,x:v.x,y:v.y}}
+      const text=JSON.stringify(clean,null,2);
+      try{await navigator.clipboard.writeText(text);status.textContent='Ajustes copiados. Puedes pegarlos en el chat.'}
+      catch{status.textContent='No se pudo copiar automáticamente. Selecciona y copia desde la consola del navegador.'}
+    });
+  </script>
+</body>
+</html>

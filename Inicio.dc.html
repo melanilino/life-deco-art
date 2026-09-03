@@ -905,5 +905,41 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+(function(){
+  if (window.parent === window || new URLSearchParams(location.search).get('prototipo') !== 'tipografia') return;
+  const definitions = [
+    ['logo','Logo · Life Deco Art','Life Deco Art'],['idea','Hero · idea','idea'],
+    ['detalles','Conóceme · detalles','detalles'],['ayudarte','Servicios · ayudarte','ayudarte'],
+    ['garantias','Cómo trabajamos · garantías reales','garantías reales'],['recientes','Del estudio · recientes','recientes'],
+    ['aprendes','Aprende · aprendes','aprendes'],['querias','CTA final · querías','querías'],
+    ['proposito','Footer · propósito','propósito']
+  ];
+  const elements = new Map();
+  const visible = el => { const r=el.getBoundingClientRect(); return r.width>0 && r.height>0 && getComputedStyle(el).visibility!=='hidden'; };
+  function scan(){
+    elements.clear();
+    const items=[];
+    definitions.forEach(([id,label,text])=>{
+      const el=[...document.querySelectorAll('a,span,b')].find(node=>visible(node)&&node.textContent.trim()===text&&getComputedStyle(node).fontFamily.includes('Camelia Beauty'));
+      if(!el)return;
+      elements.set(id,el);
+      items.push({id,label,size:Math.round(parseFloat(getComputedStyle(el).fontSize))});
+    });
+    parent.postMessage({source:'lda-type-prototype',type:'targets',items},location.origin);
+  }
+  addEventListener('message',event=>{
+    if(event.origin!==location.origin||event.data?.source!=='lda-type-prototype')return;
+    const {type,id,size,x,y}=event.data;
+    if(type==='scan')scan();
+    if(type==='update'&&elements.has(id)){
+      const el=elements.get(id);el.style.fontSize=size+'px';el.style.position='relative';el.style.left=x+'px';el.style.top=y+'px';
+    }
+    if(type==='focus'&&elements.has(id))elements.get(id).scrollIntoView({behavior:'smooth',block:'center'});
+  });
+  addEventListener('load',()=>setTimeout(scan,700));
+  setTimeout(scan,1200);
+})();
+</script>
 </body>
 </html>
