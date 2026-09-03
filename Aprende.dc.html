@@ -147,7 +147,7 @@ body{margin:0;background:#fff}
 
   <div data-reveal="" style="max-width:1240px;margin:0 auto;padding:{{ heroPad }};text-align:center;opacity:0;transform:translateY(20px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);">
     <div class="lda-section-eyebrow lda-eyebrow-school" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;font-weight:500;margin-bottom:{{ eyebrowGap }};">{{ heroEyebrow }}</div>
-    <h1 style="font-size: {{ h1Size }}; line-height: 1.2; color: #000000; font-weight: 300; margin: 0">{{ heroBefore }}<span style="font-family: 'Camelia Beauty', cursive; font-weight: 400; font-size: 1.6em; position: relative; top: 0px">{{ heroHighlight }}</span>{{ heroAfter }}</h1>
+    <h1 style="font-size: {{ h1Size }}; line-height: 1.2; color: #000000; font-weight: 300; margin: 0">{{ heroBefore }}<span class="lda-script-hero" style="font-family: 'Camelia Beauty', cursive; font-weight: 400; font-size: 1.6em; position: relative; top: 0px">{{ heroHighlight }}</span>{{ heroAfter }}</h1>
     <p style="font-size:{{ subtitleSize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:20px auto 0;max-width:520px;min-height:48px;white-space:pre-line;">{{ heroSubtitle }}</p>
   </div>
 
@@ -376,7 +376,7 @@ body{margin:0;background:#fff}
     <div style="display:grid;grid-template-columns:{{ faqCols }};gap:{{ faqGap }};align-items:center;min-width:0;">
       <div>
         <div class="lda-section-eyebrow lda-faq-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:{{ eyebrowGap }};">Preguntas frecuentes</div>
-        <h2 style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400; margin: 0">{{ faqBefore }}<span style="font-family:'Camelia Beauty', cursive;font-weight:400;font-size:1.55em;">{{ faqHighlight }}</span>{{ faqAfter }}</h2>
+        <h2 style="font-size: {{ h2Size }}; line-height: 1.25; color: #000; font-weight: 400; margin: 0">{{ faqBefore }}<span class="lda-script-section" style="font-family:'Camelia Beauty', cursive;font-weight:400;font-size:1.55em;">{{ faqHighlight }}</span>{{ faqAfter }}</h2>
         <p style="font-size:{{ bodySize }};color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:16px 0 0;">{{ faqSubtitle }}</p>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;">
@@ -400,7 +400,7 @@ body{margin:0;background:#fff}
 
   <div style="max-width:1240px;margin:0 auto;height:{{ ctaRegionHeight }};padding:{{ ctaTopPad }} {{ sidePad }} {{ ctaBottomPad }};box-sizing:border-box;display:flex;align-items:flex-start;">
     <div style="background:#0CC0DF;border-radius:{{ ctaRadius }};padding:{{ ctaPad }};text-align:center;width:100%;height:{{ ctaBoxHeight }};box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-      <h2 style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;margin:0;">¿No diste con lo que <span style="font-family:'Camelia Beauty',cursive;font-size:1.55em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</h2>
+      <h2 style="font-size:{{ h2Size }};color:#FFFFFF;line-height:1.3;font-weight:300;margin:0;">¿No diste con lo que <span class="lda-script-section" style="font-family:'Camelia Beauty',cursive;font-size:1.55em;position:relative;top:{{ ctaScriptOffset }};">querías</span>?</h2>
       <p style="font-size:{{ ctaTextSize }};color:#E3F9FC;font-weight:300;margin:{{ ctaTextGap }} 0 0;text-align:center;">Hagamos una pieza 100% a medida,<br>creada desde cero para ti.</p>
       <div style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;margin-top:{{ ctaBtnMarginTop }};">
         <a href="/encargo-personalizado" style="min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ ctaWaPad }};border-radius:4px;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;">Crear encargo</a>

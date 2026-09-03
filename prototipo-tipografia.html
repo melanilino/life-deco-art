@@ -76,7 +76,7 @@
 
       <div class="actions">
         <button class="action secondary" id="reset-current" type="button" disabled>Restablecer esta categoría</button>
-        <button class="action" id="copy" type="button" disabled>Copiar mis ajustes</button>
+        <button class="action" id="save" type="button" disabled>Guardar ajustes</button>
         <button class="action secondary" id="reset-all" type="button" disabled>Restablecer todo</button>
       </div>
       <p class="status" id="status" role="status">Preparando la vista…</p>
@@ -110,7 +110,7 @@
     const verticalValue = document.querySelector('#vertical-value');
     const horizontalValue = document.querySelector('#horizontal-value');
     const status = document.querySelector('#status');
-    const controls = [targetSelect,size,vertical,horizontal,document.querySelector('#reset-current'),document.querySelector('#copy'),document.querySelector('#reset-all')];
+    const controls = [targetSelect,size,vertical,horizontal,document.querySelector('#reset-current'),document.querySelector('#save'),document.querySelector('#reset-all')];
 
     function scan(items){
       const detected=new Map(items.map(item=>[item.id,item]));
@@ -166,11 +166,15 @@
     document.querySelector('#reset-all').addEventListener('click',()=>{
       state[device]={};status.textContent='Restableciendo la vista…';preview.src='/Inicio.dc.html?prototipo=tipografia&vista='+device+'&t='+Date.now();
     });
-    document.querySelector('#copy').addEventListener('click',async()=>{
+    document.querySelector('#save').addEventListener('click',()=>{
       const clean={};for(const mode of ['desktop','mobile']){clean[mode]={};for(const [id,v] of Object.entries(state[mode]))clean[mode][id]={size:v.size,x:v.x,y:v.y}}
       const text=JSON.stringify(clean,null,2);
-      try{await navigator.clipboard.writeText(text);status.textContent='Ajustes copiados. Puedes pegarlos en el chat.'}
-      catch{status.textContent='No se pudo copiar automáticamente. Selecciona y copia desde la consola del navegador.'}
+      const blob=new Blob([text],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const link=document.createElement('a');
+      link.href=url;link.download='ajustes-camelia.json';document.body.appendChild(link);link.click();link.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),1000);
+      status.textContent='Archivo guardado. Adjunta “ajustes-camelia.json” en el chat.';
     });
   </script>
 </body>

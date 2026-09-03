@@ -94,7 +94,7 @@ x-dc{display:none!important}
 <div style="max-width:720px;margin:0 auto;" class="bp-wrap">
   <a href="/aprende?tab=Blog" style="font-size:13px;color:#8B795E;text-decoration:none;display:inline-block;margin-bottom:32px;">← Volver al blog</a>
   <div class="bp-kicker" style="letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:14px;">{{ post.category }}</div>
-  <h1 class="bp-title" style="line-height:1.25;color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span style="font-family:'Camelia Beauty',cursive;font-weight:400;font-size:1.55em;">{{ post.titleAccent }}</span></h1>
+  <h1 class="bp-title" style="line-height:1.25;color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span class="lda-script-hero" style="font-family:'Camelia Beauty',cursive;font-weight:400;font-size:1.55em;">{{ post.titleAccent }}</span></h1>
   <div class="bp-meta" style="color:#8B795E;margin-bottom:32px;">{{ post.meta }}</div>
   <div style="width:100%;aspect-ratio:16/9;background:#F3EEE4;border-radius:8px;margin-bottom:40px;overflow:hidden;">
     <image-slot id="blog-post-cover" shape="rect" fit="cover" priority="high" srcset="{{ post.imageSrcset }}" sizes="100vw" alt="{{ post.imageAlt }}" view-scale="{{ post.imageView.scale }}" view-x="{{ post.imageView.x }}" view-y="{{ post.imageView.y }}" style="width:100%;height:100%;" src="{{ post.imageUrl }}" placeholder="foto de portada del artículo"></image-slot>
