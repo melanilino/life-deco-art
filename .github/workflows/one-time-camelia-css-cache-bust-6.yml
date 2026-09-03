@@ -1,0 +1,28 @@
+name: One-time Camelia CSS cache bust 6
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  update-css-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Camelia CSS version
+        run: |
+          grep -rl "20260903camelia8" . --include='*.html' --include='*.dc.html' | xargs -r sed -i 's/20260903camelia8/20260903camelia9/g'
+      - name: Commit changes
+        run: |
+          if git diff --quiet; then
+            echo "No files needed updating"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '*.html' '*.dc.html' 2>/dev/null || git add -A
+          git commit -m "Bump Camelia CSS version to camelia9"
+          git push
