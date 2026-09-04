@@ -1,0 +1,78 @@
+name: Mobile final polish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/mobile-final-polish.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply final mobile polish
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new, count=None):
+              p = Path(path)
+              s = p.read_text()
+              n = s.count(old)
+              if n == 0:
+                  raise SystemExit(f'Pattern not found in {path}: {old[:140]!r}')
+              if count is not None and n != count:
+                  raise SystemExit(f'Expected {count} matches in {path}, found {n}: {old[:140]!r}')
+              p.write_text(s.replace(old, new))
+
+          # 1) Menu open over Home hero: white nav must win over transparent hero rule.
+          replace('design-system.css',
+          """  #lda-static-nav:has(.lda-mobile[open]) {\n    background: #FFFFFF !important;\n    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;\n  }""",
+          """  #lda-static-nav:has(.lda-mobile[open]),\n  body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) {\n    background: #FFFFFF !important;\n    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;\n  }""")
+
+          # 2) Truly symmetrical load-more spacing in both storefronts.
+          # Tienda: remove extra mobile bottom padding/margin outside the 72px centered load-more block.
+          replace('Tienda.dc.html',
+          "shopPad: m ? '24px 24px 12px' : '72px 48px 36px',",
+          "shopPad: m ? '24px 24px 0' : '72px 48px 36px',")
+          replace('Tienda.dc.html',
+          "bannerMargin: m ? '12px 0 0' : '0',",
+          "bannerMargin: m ? '0' : '0',")
+
+          # Aprende: the parent grid has a 28px gap before load-more; cancel only that gap and its bottom padding.
+          replace('Aprende.dc.html',
+          "mainPad: m ? '24px 24px 12px' : '96px 48px 36px',",
+          "mainPad: m ? '24px 24px 0' : '96px 48px 36px',")
+          replace('design-system.css',
+          """  .lda-load-more-wrap .lda-load-more {\n    min-height: 40px !important;\n  }""",
+          """  .lda-load-more-wrap .lda-load-more {\n    min-height: 40px !important;\n  }\n  .lda-card-grid > .lda-load-more-wrap {\n    margin-top: -28px !important;\n  }""")
+
+          # 3) Tienda: categories stay as-is; compact only expanded subcategories.
+          replace('Tienda.dc.html',
+          'id="{{ cat.panelId }}" style="display:flex;flex-direction:column;gap:4px;padding-top:6px;animation:lda-fade-in .25s ease;"',
+          'id="{{ cat.panelId }}" class="lda-subcategory-list" style="display:flex;flex-direction:column;gap:0;padding-top:4px;animation:lda-fade-in .25s ease;"')
+          replace('design-system.css',
+          """  .lda-mobile-category-list .lda-filter-control {\n    min-height: 32px !important;\n  }""",
+          """  .lda-mobile-category-list .lda-filter-control {\n    min-height: 32px !important;\n  }\n  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {\n    min-height: 27px !important;\n  }""")
+
+          # 4) Home Aprende spotlight: match supplied reference.
+          # Move the whole section slightly up, move text up inside blue, and restore image overlap upward.
+          replace('Inicio.dc.html',
+          "spotlightTopPad: m ? '52px' : '96px',\n      spotlightMarginTop: m ? '72px' : gap + 'px',\n      spotlightNegMargin: m ? '-70px' : '-100px',",
+          "spotlightTopPad: m ? '36px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-120px' : '-100px',")
+          PY
+      - name: Commit final mobile polish
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css Tienda.dc.html Aprende.dc.html Inicio.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Finish mobile alignment refinements"
+          git push origin main
