@@ -97,6 +97,11 @@ html body #dc-boot-fallback .dc-fb-script {
     font-size: 35px !important;
   }
 
+  /* Closing CTA: restore the natural word space hidden by the mobile-only line break. */
+  .lda-cta-script-word {
+    margin-left: 0.16em !important;
+  }
+
   /* Desktop interactions: match mobile by removing focus halos and keeping only the normal thin field border. */
   button,
   a,
@@ -235,6 +240,15 @@ html body #dc-boot-fallback .dc-fb-script {
   .lda-load-more-wrap .lda-load-more {
     min-height: 40px !important;
   }
+  /* Tienda needs slightly more real air than the generic wrapper because its product grid ends tighter. */
+  .lda-tienda-load-more {
+    height: 96px !important;
+    min-height: 96px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
+    transform: none !important;
+  }
+
   .lda-card-grid > .lda-load-more-wrap {
     margin-top: -28px !important;
     transform: none;
