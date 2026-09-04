@@ -32,7 +32,7 @@ jobs:
                   raise SystemExit(f'Expected {count} matches in {path}, found {n}: {old[:140]!r}')
               p.write_text(s.replace(old, new))
 
-          # 1) Revert only the last extra Home-specific nav selector.
+          # Final mobile cleanup pass.
           replace('design-system.css',
           """  #lda-static-nav:has(.lda-mobile[open]),
   body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) {
@@ -43,8 +43,6 @@ jobs:
     background: #FFFFFF !important;
     box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
   }""")
-
-          # 2) Compact only Tienda subcategories one more step.
           replace('design-system.css',
           """  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
     min-height: 27px !important;
@@ -52,18 +50,12 @@ jobs:
           """  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
     min-height: 24px !important;
   }""")
-
-          # 3) Match Aprende category row rhythm to Tienda's 32px mobile controls.
           replace('Aprende.dc.html',
           "padding:2px 3px;min-height:36px;font-family:'Montserrat',sans-serif;",
           "padding:0 3px;min-height:32px;font-family:'Montserrat',sans-serif;")
-
-          # 4) Home blue Aprende band: move text up while keeping image position stable.
           replace('Inicio.dc.html',
           "spotlightTopPad: m ? '36px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-120px' : '-100px',",
           "spotlightTopPad: m ? '23px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-107px' : '-100px',")
-
-          # 5) When Tienda has no more pages, preserve a clean gap before the banner.
           replace('Tienda.dc.html',
           "    <div>\n      <div style=\"display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;\">",
           "    <div style=\"padding-bottom:{{ shopEndPad }};\">\n      <div style=\"display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;\">",
