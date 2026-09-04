@@ -1,0 +1,61 @@
+name: Mobile visual pass 3
+on:
+  push:
+    paths:
+      - '.github/workflows/mobile-visual-pass-3.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply mobile spacing corrections
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def patch(path, replacements):
+              p = Path(path)
+              s = p.read_text(encoding='utf-8')
+              for old, new in replacements:
+                  if old not in s:
+                      raise SystemExit(f'Missing expected snippet in {path}: {old[:100]}')
+                  s = s.replace(old, new)
+              p.write_text(s, encoding='utf-8')
+
+          patch('design-system.css', [
+              ("  .lda-mobile-category-list {\n    gap: 6px !important;\n  }", "  .lda-mobile-category-list {\n    gap: 2px !important;\n  }"),
+              ("  .lda-mobile-category-list .lda-filter-control {\n    min-height: 40px !important;\n  }", "  .lda-mobile-category-list .lda-filter-control {\n    min-height: 36px !important;\n  }"),
+              ("  .lda-mobile-faq-card {\n    padding: 10px 16px !important;\n  }\n  .lda-mobile-faq-card > button {\n    min-height: 40px !important;\n  }", "  .lda-mobile-faq-card {\n    padding: 16px 20px !important;\n  }\n  .lda-mobile-faq-card > button {\n    min-height: 44px !important;\n  }"),
+          ])
+
+          patch('Footer.dc.html', [
+              ("  .lda-footer-email{font-size:16px!important;}", "  .lda-footer-email{font-size:13px!important;}")
+          ])
+
+          patch('Tienda.dc.html', [
+              ("      shopPad: m ? '24px 24px 40px' : '72px 48px 36px',", "      shopPad: m ? '24px 24px 12px' : '72px 48px 36px',"),
+              ("      bannerMargin: m ? '32px 0 0' : '0',", "      bannerMargin: m ? '12px 0 0' : '0',")
+          ])
+
+          patch('Aprende.dc.html', [
+              ("      mainPad: m ? '24px 24px 40px' : '96px 48px 36px',", "      mainPad: m ? '24px 24px 12px' : '96px 48px 36px',"),
+              ("      faqPad: m\n        ? (category === 'Esenciales' ? '20px 24px 0' : '60px 24px 0')\n        : '72px 48px 0',", "      faqPad: m ? '60px 24px 0' : '72px 48px 0',")
+          ])
+
+          patch('Inicio.dc.html', [
+              ("      spotlightTopPad: m ? '52px' : '96px',", "      spotlightTopPad: m ? '16px' : '96px',")
+          ])
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css Footer.dc.html Tienda.dc.html Aprende.dc.html Inicio.dc.html
+          git commit -m "Refine mobile FAQ and section spacing"
+          git push
+      - name: Remove one-time workflow
+        run: |
+          git rm .github/workflows/mobile-visual-pass-3.yml
+          git commit -m "Remove mobile spacing correction workflow"
+          git push
