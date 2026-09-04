@@ -293,6 +293,17 @@ html body #dc-boot-fallback .dc-fb-script {
   }
 }
 
+/* Aprende essentials: interaction must never recolor the neutral field border. */
+html body .lda-essential-field,
+html body .lda-essential-field:hover,
+html body .lda-essential-field:active,
+html body .lda-essential-field:focus,
+html body .lda-essential-field:focus-visible {
+  border-color: #E4DDCC !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
 /* Canonical centered content container for future page updates. */
 .lda-container {
   width: 100%;
