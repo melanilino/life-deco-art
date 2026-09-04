@@ -194,7 +194,7 @@ body{margin:0;background:#fff}
               </span>
             </button>
             <sc-if value="{{ cat.expanded }}" hint-placeholder-val="{{ false }}">
-              <div id="{{ cat.panelId }}" style="display:flex;flex-direction:column;gap:4px;padding-top:6px;animation:lda-fade-in .25s ease;">
+              <div id="{{ cat.panelId }}" class="lda-subcategory-list" style="display:flex;flex-direction:column;gap:0;padding-top:4px;animation:lda-fade-in .25s ease;">
                 <sc-for list="{{ cat.subcategories }}" as="sub" hint-placeholder-count="4">
                   <button type="button" class="lda-ui-button lda-filter-control" onClick="{{ sub.onClick }}" aria-pressed="{{ sub.active }}" style="font-size:13px;font-weight:{{ sub.weight }};color:{{ sub.color }};border-left:{{ sub.borderLeft }};padding-left:12px;">{{ sub.label }}</button>
                 </sc-for>
@@ -545,7 +545,7 @@ class Component extends DCLogic {
       bodySize: m ? '14px' : '13px',
       heroPad: m ? '40px 24px 24px' : '72px 48px 24px',
       h1Size: m ? '26px' : '44px',
-      shopPad: m ? '24px 24px 12px' : '72px 48px 36px',
+      shopPad: m ? '24px 24px 0' : '72px 48px 36px',
       shopCols: m ? '1fr' : '200px 1fr',
       shopGap: m ? '32px' : '72px',
       productCols: m ? 'repeat(2,1fr)' : 'repeat(3,minmax(0,1fr))',
@@ -571,7 +571,7 @@ class Component extends DCLogic {
       ctaWaPad: m ? '13px 26px' : '15px 30px',
       ctaWaRadius: m ? '6px' : '4px',
       ctaWaSize: m ? '13.5px' : '14px',
-      bannerMargin: m ? '12px 0 0' : '0',
+      bannerMargin: m ? '0' : '0',
       bannerHeight: m ? 'clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px)' : 'clamp(560px, 36vw, 680px)',
       isLoading: loading,
       isLoaded: !loading,

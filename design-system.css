@@ -143,7 +143,8 @@ html body #dc-boot-fallback .dc-fb-script {
   }
 
   /* When the menu opens, the entire nav becomes white instead of showing hero video through it. */
-  #lda-static-nav:has(.lda-mobile[open]) {
+  #lda-static-nav:has(.lda-mobile[open]),
+  body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) {
     background: #FFFFFF !important;
     box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
   }
@@ -161,6 +162,9 @@ html body #dc-boot-fallback .dc-fb-script {
   .lda-mobile-category-list .lda-filter-control {
     min-height: 32px !important;
   }
+  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
+    min-height: 27px !important;
+  }
   .lda-load-more-wrap {
     height: 72px !important;
     min-height: 72px !important;
@@ -172,6 +176,9 @@ html body #dc-boot-fallback .dc-fb-script {
   }
   .lda-load-more-wrap .lda-load-more {
     min-height: 40px !important;
+  }
+  .lda-card-grid > .lda-load-more-wrap {
+    margin-top: -28px !important;
   }
   .lda-mobile-faq-card {
     padding: 16px 20px !important;
