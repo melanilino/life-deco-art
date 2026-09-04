@@ -1,0 +1,67 @@
+name: Contact field borders
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/contact-field-borders.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Normalize contact field borders
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('Contacto.dc.html')
+          s = p.read_text()
+          old = '<section style="font-family:\'Montserrat\',sans-serif;background:#FFFFFF;">'
+          new = '<section class="lda-contact-page" style="font-family:\'Montserrat\',sans-serif;background:#FFFFFF;">'
+          if old not in s:
+              raise SystemExit('Contact section pattern not found')
+          p.write_text(s.replace(old, new, 1))
+
+          p = Path('design-system.css')
+          s = p.read_text()
+          block = '''\n/* Contact form: use the same neutral beige border as Aprende and keep it unchanged on interaction. */
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]),
+html body .lda-contact-page textarea,
+html body .lda-contact-page select,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):hover,
+html body .lda-contact-page textarea:hover,
+html body .lda-contact-page select:hover,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):active,
+html body .lda-contact-page textarea:active,
+html body .lda-contact-page select:active,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus,
+html body .lda-contact-page textarea:focus,
+html body .lda-contact-page select:focus,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus-visible,
+html body .lda-contact-page textarea:focus-visible,
+html body .lda-contact-page select:focus-visible {
+  border: 1px solid #E4DDCC !important;
+  border-color: #E4DDCC !important;
+  outline: none !important;
+  box-shadow: none !important;
+}\n'''
+          if '/* Contact form: use the same neutral beige border as Aprende' not in s:
+              anchor = '/* Canonical centered content container for future page updates. */'
+              if anchor not in s:
+                  raise SystemExit('CSS anchor not found')
+              s = s.replace(anchor, block + '\n' + anchor, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Contacto.dc.html design-system.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Match contact field borders to Aprende"
+          git push origin main
