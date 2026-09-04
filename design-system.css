@@ -248,6 +248,12 @@ html body #dc-boot-fallback .dc-fb-script {
     margin-bottom: 4px !important;
     transform: none !important;
   }
+  /* Aprende: a little more breathing room than the generic wrapper, while keeping Tienda unchanged. */
+  .lda-aprende-load-more {
+    height: 88px !important;
+    min-height: 88px !important;
+    transform: none !important;
+  }
 
   .lda-card-grid > .lda-load-more-wrap {
     margin-top: -28px !important;
