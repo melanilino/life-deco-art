@@ -21,48 +21,16 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
-
-          def replace(path, old, new, count=None):
-              p = Path(path)
-              s = p.read_text()
-              n = s.count(old)
-              if n == 0:
-                  raise SystemExit(f'Pattern not found in {path}: {old[:140]!r}')
-              if count is not None and n != count:
-                  raise SystemExit(f'Expected {count} matches in {path}, found {n}: {old[:140]!r}')
-              p.write_text(s.replace(old, new))
-
-          # Final mobile cleanup pass.
-          replace('design-system.css',
-          """  #lda-static-nav:has(.lda-mobile[open]),
-  body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) {
-    background: #FFFFFF !important;
-    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
-  }""",
-          """  #lda-static-nav:has(.lda-mobile[open]) {
-    background: #FFFFFF !important;
-    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
-  }""")
-          replace('design-system.css',
-          """  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
-    min-height: 27px !important;
-  }""",
-          """  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
-    min-height: 24px !important;
-  }""")
-          replace('Aprende.dc.html',
-          "padding:2px 3px;min-height:36px;font-family:'Montserrat',sans-serif;",
-          "padding:0 3px;min-height:32px;font-family:'Montserrat',sans-serif;")
-          replace('Inicio.dc.html',
-          "spotlightTopPad: m ? '36px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-120px' : '-100px',",
-          "spotlightTopPad: m ? '23px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-107px' : '-100px',")
-          replace('Tienda.dc.html',
-          "    <div>\n      <div style=\"display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;\">",
-          "    <div style=\"padding-bottom:{{ shopEndPad }};\">\n      <div style=\"display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;\">",
-          count=1)
-          replace('Tienda.dc.html',
-          "      shopPad: m ? '24px 24px 0' : '72px 48px 36px',",
-          "      shopPad: m ? '24px 24px 0' : '72px 48px 36px',\n      shopEndPad: m && !showLoadMore ? '32px' : '0',")
+          def rep(path, old, new):
+              p=Path(path); s=p.read_text()
+              if old not in s: raise SystemExit(f'Pattern not found in {path}: {old[:100]!r}')
+              p.write_text(s.replace(old,new))
+          rep('design-system.css', '  #lda-static-nav:has(.lda-mobile[open]),\n  body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) {\n    background: #FFFFFF !important;\n    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;\n  }', '  #lda-static-nav:has(.lda-mobile[open]) {\n    background: #FFFFFF !important;\n    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;\n  }')
+          rep('design-system.css', '  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {\n    min-height: 27px !important;\n  }', '  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {\n    min-height: 24px !important;\n  }')
+          rep('Aprende.dc.html', "padding:2px 3px;min-height:36px;font-family:'Montserrat',sans-serif;", "padding:0 3px;min-height:32px;font-family:'Montserrat',sans-serif;")
+          rep('Inicio.dc.html', "spotlightTopPad: m ? '36px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-120px' : '-100px',", "spotlightTopPad: m ? '23px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-107px' : '-100px',")
+          rep('Tienda.dc.html', '    <div>\n      <div style="display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;">', '    <div style="padding-bottom:{{ shopEndPad }};">\n      <div style="display:flex;justify-content:flex-end;align-items:center;height:20px;margin-bottom:24px;">')
+          rep('Tienda.dc.html', "      shopPad: m ? '24px 24px 0' : '72px 48px 36px',", "      shopPad: m ? '24px 24px 0' : '72px 48px 36px',\n      shopEndPad: m && !showLoadMore ? '32px' : '0',")
           PY
       - name: Commit final cleanup
         run: |
