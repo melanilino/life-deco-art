@@ -1,0 +1,72 @@
+name: Desktop focus cleanup
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/desktop-focus-cleanup.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply desktop interaction cleanup
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('design-system.css')
+          s = p.read_text()
+          marker = "@media (max-width: 859px) {"
+          if marker not in s:
+              raise SystemExit('mobile media marker not found')
+          block = '''
+
+/* Desktop interactions: match mobile by removing focus/tap halos and keeping only the normal thin field border. */
+@media (min-width: 860px) {
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  button:active,
+  button:focus,
+  a:active,
+  a:focus,
+  summary:active,
+  summary:focus,
+  [role="button"]:active,
+  [role="button"]:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: #E4DCCB !important;
+  }
+}
+'''
+          anchor = "@media (max-width: 859px) {"
+          if 'Desktop interactions: match mobile' in s:
+              raise SystemExit('desktop interaction block already present')
+          s = s.replace(anchor, block + '\n' + anchor, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Remove desktop focus halos"
+          git push origin main
