@@ -156,10 +156,10 @@ html body #dc-boot-fallback .dc-fb-script {
 
   /* Mobile storefront / learning rhythm refinement. */
   .lda-mobile-category-list {
-    gap: 6px !important;
+    gap: 2px !important;
   }
   .lda-mobile-category-list .lda-filter-control {
-    min-height: 40px !important;
+    min-height: 36px !important;
   }
   .lda-load-more-wrap {
     height: auto !important;
@@ -170,10 +170,10 @@ html body #dc-boot-fallback .dc-fb-script {
     min-height: 40px !important;
   }
   .lda-mobile-faq-card {
-    padding: 10px 16px !important;
+    padding: 16px 20px !important;
   }
   .lda-mobile-faq-card > button {
-    min-height: 40px !important;
+    min-height: 44px !important;
   }
 
   /* Give the Camelia descender in “ayudarte” room before the first card. */
