@@ -1,0 +1,36 @@
+name: Spotlight bottom gap 2
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/spotlight-bottom-gap-2.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Increase bottom gap slightly
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          old = "spotlightNegMargin: m ? '-119px' : '-100px',"
+          new = "spotlightNegMargin: m ? '-111px' : '-100px',"
+          if old not in s:
+              raise SystemExit('spotlightNegMargin pattern not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Inicio.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fine tune mobile spotlight bottom spacing"
+          git push origin main
