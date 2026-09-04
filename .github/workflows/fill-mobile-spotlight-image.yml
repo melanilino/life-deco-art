@@ -1,0 +1,42 @@
+name: Fill mobile spotlight image
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fill-mobile-spotlight-image.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Make mobile Aprende image fill its visual frame
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          old = '''      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">\n        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ spotlightImageAlt }}" view-scale="{{ spotlightImageScale }}" view-x="{{ spotlightImageX }}" view-y="{{ spotlightImageY }}" style="width:100%;height:100%;" src="{{ spotlightImageUrl }}" placeholder="foto: anuncio destacado de Aprende"></image-slot>\n      </div>'''
+          new = '''      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};aspect-ratio:{{ spotlightImgAspect }};overflow:hidden;">\n        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ spotlightImageAlt }}" view-scale="{{ spotlightImageScale }}" view-x="{{ spotlightImageX }}" view-y="{{ spotlightImageY }}" style="display:block;width:100%;height:100%;" src="{{ spotlightImageUrl }}" placeholder="foto: anuncio destacado de Aprende"></image-slot>\n      </div>'''
+          if old not in s:
+              raise SystemExit('Spotlight image wrapper pattern not found')
+          s = s.replace(old, new, 1)
+          old_var = "      spotlightImgMinH: m ? '260px' : '0',"
+          new_var = "      spotlightImgMinH: m ? '260px' : '0',\n      spotlightImgAspect: m ? '4/3' : 'auto',"
+          if old_var not in s:
+              raise SystemExit('Spotlight image min-height variable not found')
+          s = s.replace(old_var, new_var, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Inicio.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fill mobile Aprende spotlight image frame"
+          git push origin main
