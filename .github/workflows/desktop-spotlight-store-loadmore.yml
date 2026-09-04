@@ -1,0 +1,47 @@
+name: Desktop spotlight and store load more
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/desktop-spotlight-store-loadmore.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply requested visual adjustments
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # 1) Tienda: make load-more wrapper match Aprende exactly.
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          old = '<div class="lda-load-more-wrap lda-tienda-load-more" style="display:flex;justify-content:center;padding:44px 0 24px;transform:translateY(-20px);margin-bottom:-20px;">'
+          new = '<div class="lda-load-more-wrap" style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">'
+          if old not in s:
+              raise SystemExit('Tienda load-more pattern not found')
+          p.write_text(s.replace(old, new, 1))
+
+          # 2) Inicio desktop Aprende spotlight: +12px above and +12px below question.
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          old = "spotlightTopPad: m ? '35px' : '96px',\n      spotlightBottomPad: m ? '142px' : '130px',"
+          new = "spotlightTopPad: m ? '35px' : '108px',\n      spotlightBottomPad: m ? '142px' : '142px',"
+          if old not in s:
+              raise SystemExit('Inicio spotlight desktop pattern not found')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Inicio.dc.html Tienda.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Match store load more and refine desktop spotlight spacing"
+          git push origin main
