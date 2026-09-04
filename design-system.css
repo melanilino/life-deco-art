@@ -96,6 +96,35 @@ html body #dc-boot-fallback .dc-fb-script {
   .lda-script-logo {
     font-size: 35px !important;
   }
+
+  /* Desktop interactions: match mobile by removing focus halos and keeping only the normal thin field border. */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  button:active,
+  button:focus,
+  a:active,
+  a:focus,
+  summary:active,
+  summary:focus,
+  [role="button"]:active,
+  [role="button"]:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: #E4DCCB !important;
+  }
 }
 
 @media (max-width: 859px) {
