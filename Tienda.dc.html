@@ -194,7 +194,7 @@ body{margin:0;background:#fff}
               </span>
             </button>
             <sc-if value="{{ cat.expanded }}" hint-placeholder-val="{{ false }}">
-              <div id="{{ cat.panelId }}" style="display:flex;flex-direction:column;gap:10px;padding-top:12px;animation:lda-fade-in .25s ease;">
+              <div id="{{ cat.panelId }}" style="display:flex;flex-direction:column;gap:4px;padding-top:6px;animation:lda-fade-in .25s ease;">
                 <sc-for list="{{ cat.subcategories }}" as="sub" hint-placeholder-count="4">
                   <button type="button" class="lda-ui-button lda-filter-control" onClick="{{ sub.onClick }}" aria-pressed="{{ sub.active }}" style="font-size:13px;font-weight:{{ sub.weight }};color:{{ sub.color }};border-left:{{ sub.borderLeft }};padding-left:12px;">{{ sub.label }}</button>
                 </sc-for>

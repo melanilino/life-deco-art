@@ -478,7 +478,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </div>
 
 <!-- 7. SI ELIGES APRENDER — SPOTLIGHT DE CURSO -->
-  <div data-reveal="" style="padding: {{ spotlightTopPad }} {{ sidePad }} 130px; text-align: center; margin-top: {{ gapPx }}; opacity: 0; transform: translateY(12px); transition: opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1); background-color: #0CC0DF">
+  <div data-reveal="" style="padding: {{ spotlightTopPad }} {{ sidePad }} 130px; text-align: center; margin-top: {{ spotlightMarginTop }}; opacity: 0; transform: translateY(12px); transition: opacity 1.1s cubic-bezier(.22,1,.36,1),transform 1.1s cubic-bezier(.22,1,.36,1); background-color: #0CC0DF">
     <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
     <div style="font-size: {{ h2Size }}; line-height: 1.4; color: #FFFFFF; font-weight: 300; max-width: 900px; margin: 0 auto; font-family: Montserrat;">¿Y si también&nbsp;<span class="lda-camelia-accent" style="font-family: 'Camelia Beauty', cursive;">aprendes</span>&nbsp;a hacerlo?</div>
     </sc-if>
@@ -827,8 +827,9 @@ class Component extends DCLogic {
       piezasCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
       piezasGap: m ? '20px' : '28px',
       piezaAspect: '4/5',
-      spotlightTopPad: m ? '16px' : '96px',
-      spotlightNegMargin: m ? '-120px' : '-100px',
+      spotlightTopPad: m ? '52px' : '96px',
+      spotlightMarginTop: m ? '72px' : gap + 'px',
+      spotlightNegMargin: m ? '-70px' : '-100px',
       spotlightDir: m ? 'column' : 'row',
       spotlightCardPad: m ? '48px 28px' : '100px 56px',
       spotlightImgMinH: m ? '260px' : '0',

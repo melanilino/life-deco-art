@@ -156,15 +156,19 @@ html body #dc-boot-fallback .dc-fb-script {
 
   /* Mobile storefront / learning rhythm refinement. */
   .lda-mobile-category-list {
-    gap: 2px !important;
+    gap: 0 !important;
   }
   .lda-mobile-category-list .lda-filter-control {
-    min-height: 36px !important;
+    min-height: 32px !important;
   }
   .lda-load-more-wrap {
-    height: auto !important;
-    min-height: 0 !important;
-    padding: 16px 0 12px !important;
+    height: 72px !important;
+    min-height: 72px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
   }
   .lda-load-more-wrap .lda-load-more {
     min-height: 40px !important;
