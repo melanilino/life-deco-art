@@ -154,6 +154,35 @@ html body #dc-boot-fallback .dc-fb-script {
     background: #000000 !important;
   }
 
+  /* Mobile interactions: remove tap/focus halos and keep the normal thin field border. */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [role="button"] {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  button:active,
+  button:focus,
+  a:active,
+  a:focus,
+  summary:active,
+  summary:focus,
+  [role="button"]:active,
+  [role="button"]:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: #E4DCCB !important;
+  }
+
   /* Mobile storefront / learning rhythm refinement. */
   .lda-mobile-category-list {
     gap: 0 !important;
@@ -172,18 +201,29 @@ html body #dc-boot-fallback .dc-fb-script {
     align-items: center !important;
     justify-content: center !important;
     box-sizing: border-box !important;
+    transform: translateY(10px);
   }
   .lda-load-more-wrap .lda-load-more {
     min-height: 40px !important;
   }
   .lda-card-grid > .lda-load-more-wrap {
     margin-top: -28px !important;
+    transform: none;
   }
   .lda-mobile-faq-card {
     padding: 16px 20px !important;
   }
   .lda-mobile-faq-card > button {
     min-height: 44px !important;
+  }
+
+  /* Home Aprende spotlight: preserve approved layout, with slightly more air around the question. */
+  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] {
+    padding-top: 31px !important;
+    padding-bottom: 138px !important;
+  }
+  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] + div {
+    margin-top: -123px !important;
   }
 
   /* Give the Camelia descender in “ayudarte” room before the first card. */
