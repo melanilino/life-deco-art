@@ -1,0 +1,79 @@
+name: Final visual spacing pass
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/final-visual-spacing-pass.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply final spacing corrections
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          # 1) Desktop CTA: add a controlled optical gap before “querías” everywhere this closing CTA appears.
+          changed_cta = 0
+          needle = 'lo que<br class="lda-mobile-break"><span class="lda-script-section"'
+          repl = 'lo que<br class="lda-mobile-break"><span class="lda-script-section lda-cta-script-word"'
+          for p in Path('.').glob('*.dc.html'):
+              s = p.read_text()
+              if needle in s:
+                  s2 = s.replace(needle, repl)
+                  if s2 != s:
+                      p.write_text(s2)
+                      changed_cta += 1
+          if changed_cta == 0:
+              raise SystemExit('No closing CTA pattern found')
+
+          # 2) Tienda load-more: give it its own mobile rhythm instead of inheriting the generic translated wrapper.
+          p = Path('Tienda.dc.html')
+          s = p.read_text()
+          old = '<div class="lda-load-more-wrap" style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">'
+          new = '<div class="lda-load-more-wrap lda-tienda-load-more" style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">'
+          if old not in s:
+              raise SystemExit('Tienda load-more wrapper pattern not found')
+          p.write_text(s.replace(old, new, 1))
+
+          # 3) Inicio desktop Aprende spotlight: preserve the approved top spacing, but create actual visible distance before the image.
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          old = "spotlightNegMargin: m ? '-111px' : '-100px',"
+          new = "spotlightNegMargin: m ? '-111px' : '-88px',"
+          if old not in s:
+              raise SystemExit('Desktop spotlight negative margin pattern not found')
+          p.write_text(s.replace(old, new, 1))
+
+          # 4) Shared CSS: optical CTA word gap on desktop + dedicated Tienda load-more spacing on mobile.
+          p = Path('design-system.css')
+          s = p.read_text()
+          desktop_anchor = "  /* Desktop interactions: match mobile by removing focus halos and keeping only the normal thin field border. */"
+          desktop_block = "  /* Closing CTA: restore the natural word space hidden by the mobile-only line break. */\n  .lda-cta-script-word {\n    margin-left: 0.16em !important;\n  }\n\n"
+          if '.lda-cta-script-word {' not in s:
+              if desktop_anchor not in s:
+                  raise SystemExit('Desktop CSS anchor not found')
+              s = s.replace(desktop_anchor, desktop_block + desktop_anchor, 1)
+
+          mobile_anchor = "  .lda-load-more-wrap .lda-load-more {\n    min-height: 40px !important;\n  }"
+          mobile_block = "  /* Tienda needs slightly more real air than the generic wrapper because its product grid ends tighter. */\n  .lda-tienda-load-more {\n    height: 96px !important;\n    min-height: 96px !important;\n    margin-top: 4px !important;\n    margin-bottom: 4px !important;\n    transform: none !important;\n  }\n"
+          if '.lda-tienda-load-more {' not in s:
+              if mobile_anchor not in s:
+                  raise SystemExit('Mobile load-more CSS anchor not found')
+              s = s.replace(mobile_anchor, mobile_anchor + '\n' + mobile_block, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add '*.dc.html' design-system.css
+          git diff --cached --quiet && exit 0
+          git commit -m "Correct desktop CTA and visual spacing"
+          git push origin main
