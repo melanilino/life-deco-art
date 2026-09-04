@@ -306,6 +306,29 @@ html body .lda-essential-field:focus-visible {
   outline: none !important;
 }
 
+
+/* Contact form: use the same neutral beige border as Aprende and keep it unchanged on interaction. */
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]),
+html body .lda-contact-page textarea,
+html body .lda-contact-page select,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):hover,
+html body .lda-contact-page textarea:hover,
+html body .lda-contact-page select:hover,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):active,
+html body .lda-contact-page textarea:active,
+html body .lda-contact-page select:active,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus,
+html body .lda-contact-page textarea:focus,
+html body .lda-contact-page select:focus,
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus-visible,
+html body .lda-contact-page textarea:focus-visible,
+html body .lda-contact-page select:focus-visible {
+  border: 1px solid #E4DDCC !important;
+  border-color: #E4DDCC !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* Canonical centered content container for future page updates. */
 .lda-container {
   width: 100%;
