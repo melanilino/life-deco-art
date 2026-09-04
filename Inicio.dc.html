@@ -502,8 +502,8 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
         </div>
         <a href="{{ spotlightHref }}" style="text-decoration:none;display:inline-block;background:#FFFFFF;color:#000000;padding:15px 30px;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:fit-content;transition:transform .25s ease,box-shadow .25s ease;" style-hover="transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,0.35);">{{ spotlightButtonLabel }}</a>
       </div>
-      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};">
-        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ spotlightImageAlt }}" view-scale="{{ spotlightImageScale }}" view-x="{{ spotlightImageX }}" view-y="{{ spotlightImageY }}" style="width:100%;height:100%;" src="{{ spotlightImageUrl }}" placeholder="foto: anuncio destacado de Aprende"></image-slot>
+      <div style="background:#F3EEE4;flex:1;min-width:0;min-height:{{ spotlightImgMinH }};aspect-ratio:{{ spotlightImgAspect }};overflow:hidden;">
+        <image-slot id="inicio-curso-spotlight" shape="rect" fit="cover" alt="{{ spotlightImageAlt }}" view-scale="{{ spotlightImageScale }}" view-x="{{ spotlightImageX }}" view-y="{{ spotlightImageY }}" style="display:block;width:100%;height:100%;" src="{{ spotlightImageUrl }}" placeholder="foto: anuncio destacado de Aprende"></image-slot>
       </div>
     </div>
   </div>
@@ -834,6 +834,7 @@ class Component extends DCLogic {
       spotlightDir: m ? 'column' : 'row',
       spotlightCardPad: m ? '48px 28px' : '100px 56px',
       spotlightImgMinH: m ? '260px' : '0',
+      spotlightImgAspect: m ? '4/3' : 'auto',
       spotlightCardOrder: m ? '1' : '0',
       closingOuterPad: m ? '48px 24px 80px' : '72px 48px 80px',
       closingPad: m ? '64px 24px' : '96px 48px',
