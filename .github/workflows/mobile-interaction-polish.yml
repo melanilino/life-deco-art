@@ -1,0 +1,92 @@
+name: Mobile interaction polish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/mobile-interaction-polish.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply mobile interaction polish
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace(path, old, new, count=None):
+              p = Path(path)
+              s = p.read_text()
+              n = s.count(old)
+              if n == 0:
+                  raise SystemExit(f'Pattern not found in {path}: {old[:160]!r}')
+              if count is not None and n != count:
+                  raise SystemExit(f'Expected {count} matches in {path}, found {n}: {old[:160]!r}')
+              p.write_text(s.replace(old, new))
+
+          # 1) Remove mobile tap/focus halos and keep only the thin neutral field border.
+          replace('design-system.css',
+          """  /* Mobile storefront / learning rhythm refinement. */
+  .lda-mobile-category-list {""",
+          """  /* Mobile interactions: no dark/pink tap halo or extra focus ring. */
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary,
+  [role=\"button\"] {
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  button:active,
+  button:focus,
+  a:active,
+  a:focus,
+  summary:active,
+  summary:focus,
+  [role=\"button\"]:active,
+  [role=\"button\"]:focus {
+    box-shadow: none !important;
+    outline: none !important;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: #E4DCCB !important;
+  }
+
+  /* Mobile storefront / learning rhythm refinement. */
+  .lda-mobile-category-list {""")
+
+          # 2) Tienda load-more: small optical shift down to match Aprende's visual centering.
+          replace('Tienda.dc.html',
+          'class="lda-load-more-wrap" style="display:flex;justify-content:center;padding:44px 0 24px;"',
+          'class="lda-load-more-wrap lda-tienda-load-more" style="display:flex;justify-content:center;padding:44px 0 24px;transform:translateY(10px);"')
+
+          # 3) Home Aprende blue band: keep approved composition, add 8px breathing room above and below text while holding image position.
+          replace('Inicio.dc.html',
+          "spotlightTopPad: m ? '23px' : '96px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-107px' : '-100px',",
+          "spotlightTopPad: m ? '31px' : '96px',\n      spotlightBottomPad: m ? '138px' : '130px',\n      spotlightMarginTop: m ? '56px' : gap + 'px',\n      spotlightNegMargin: m ? '-123px' : '-100px',")
+          replace('Inicio.dc.html',
+          'style="padding: {{ spotlightTopPad }} {{ sidePad }} 130px; text-align: center;',
+          'style="padding: {{ spotlightTopPad }} {{ sidePad }} {{ spotlightBottomPad }}; text-align: center;',
+          count=1)
+          PY
+      - name: Commit mobile interaction polish
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css Tienda.dc.html Inicio.dc.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Polish mobile tap states and spacing"
+          git push origin main
