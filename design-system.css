@@ -248,10 +248,12 @@ html body #dc-boot-fallback .dc-fb-script {
     margin-bottom: 4px !important;
     transform: none !important;
   }
-  /* Aprende: a little more breathing room than the generic wrapper, while keeping Tienda unchanged. */
+  /* Aprende: match Tienda exactly for the same visual air around “Ver más”. */
   .lda-aprende-load-more {
-    height: 88px !important;
-    min-height: 88px !important;
+    height: 96px !important;
+    min-height: 96px !important;
+    margin-top: 4px !important;
+    margin-bottom: 4px !important;
     transform: none !important;
   }
 
