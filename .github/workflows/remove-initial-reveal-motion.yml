@@ -21,19 +21,23 @@ jobs:
           marker = '/* Sitewide: content is visible immediately; no initial reveal/lift animation. */'
           if marker in s:
               raise SystemExit('Reveal motion override already present')
-          block = '''\n\n/* Sitewide: content is visible immediately; no initial reveal/lift animation. */
-html body [data-reveal]:not([data-revealed]) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-html body .lda-motion-card[data-reveal]:not([data-revealed]) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition-delay: 0s !important;
-}
-'''
-          p.write_text(s.rstrip() + block + '\n')
+          lines = [
+              '',
+              '',
+              marker,
+              'html body [data-reveal]:not([data-revealed]) {',
+              '  opacity: 1 !important;',
+              '  transform: none !important;',
+              '  transition: none !important;',
+              '}',
+              'html body .lda-motion-card[data-reveal]:not([data-revealed]) {',
+              '  opacity: 1 !important;',
+              '  transform: none !important;',
+              '  transition-delay: 0s !important;',
+              '}',
+              ''
+          ]
+          p.write_text(s.rstrip() + '\n'.join(lines) + '\n')
           print('disabled initial reveal/lift animation sitewide')
           PY
       - name: Commit changes
