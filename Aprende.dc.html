@@ -329,7 +329,7 @@ body{margin:0;background:#fff}
       </sc-if>
     </sc-if>
 
-    <div class="lda-load-more-wrap lda-aprende-load-more" style="height:{{ loadMoreHeight }};min-height:{{ loadMoreHeight }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
+    <div class="lda-load-more-wrap lda-aprende-load-more {{ loadMoreTerminalClass }}" style="height:{{ loadMoreHeight }};min-height:{{ loadMoreHeight }};box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
       <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
         <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">Ver más</button>
       </sc-if>
@@ -782,6 +782,7 @@ class Component extends DCLogic {
       mainPad: m ? '24px 24px 0' : '96px 48px 36px',
       bannerBottomGap: '0px',
       loadMoreHeight: m && !showLoadMore ? '60px' : '88px',
+      loadMoreTerminalClass: m && !showLoadMore ? 'lda-aprende-load-more-terminal' : '',
       bannerHeight: m ? 'clamp(300px, calc((100vw - 96px) * 0.5625), 553.5px)' : 'clamp(560px, 36vw, 680px)',
       courseCols: m ? '1fr' : '0.8fr 1.2fr',
       coursePad: m ? '16px' : '32px',

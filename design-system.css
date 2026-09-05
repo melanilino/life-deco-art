@@ -256,6 +256,13 @@ html body #dc-boot-fallback .dc-fb-script {
     margin-bottom: 4px !important;
     transform: none !important;
   }
+  .lda-aprende-load-more.lda-aprende-load-more-terminal {
+    height: 60px !important;
+    min-height: 60px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    transform: none !important;
+  }
 
   .lda-card-grid > .lda-load-more-wrap {
     margin-top: -28px !important;
