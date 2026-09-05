@@ -1,0 +1,34 @@
+name: Fix custom order CTA gap
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-custom-order-cta-gap.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Tighten CTA button/email spacing on mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('design-system.css')
+          s=p.read_text()
+          bad='''  /* Closing custom-order CTA: reduce the oversized gap before the contact heading. */\n  html body a[href*="encargo"] { margin-bottom: 0 !important; }\n  html body a[href*="encargo"] + * { margin-top: 28px !important; }\n'''
+          s=s.replace(bad,'')
+          marker='/* Mobile custom-order CTA: keep Crear encargo and Correo visually grouped. */'
+          if marker not in s:
+              s += '''\n\n@media (max-width: 859px) {\n  /* Mobile custom-order CTA: keep Crear encargo and Correo visually grouped. */\n  html body div:has(> a[href="/encargo-personalizado"]):has(> a[href="/contacto"]) {\n    gap: 6px !important;\n  }\n  html body div:has(> a[href="/encargo-personalizado"]):has(> a[href="/contacto"]) > a {\n    margin-top: 0 !important;\n    margin-bottom: 0 !important;\n  }\n}\n'''
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css
+          git commit -m "Tighten mobile custom order CTA actions"
+          git push origin main
