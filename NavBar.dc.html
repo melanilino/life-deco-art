@@ -1,5 +1,5 @@
 <x-dc>
-<nav style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:{{ navPadding }};background:#FFFFFF;font-family:'Montserrat',sans-serif;transition:box-shadow .3s ease;" id="lda-nav">
+<nav style="position:fixed;top:0;left:0;right:0;z-index:50;height:{{ navHeight }};box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:{{ navPadding }};background:#FFFFFF;font-family:'Montserrat',sans-serif;transition:box-shadow .3s ease;" id="lda-nav">
   <a href="/" style="display:flex;align-items:baseline;gap:10px;text-decoration:none;color:#000000;flex-shrink:0;">
     <span class="lda-script-logo" style="font-size:30px;font-weight:400;line-height:1;letter-spacing:.13px;color:#000000;font-family:'Camelia Beauty',cursive;white-space:nowrap;">{{ siteName }}</span>
   </a>
@@ -11,10 +11,10 @@
     </div>
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-    <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="lda-mobile-navigation" style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;">
-      <span style="width:22px;height:2px;background:#000000;"></span>
-      <span style="width:22px;height:2px;background:#000000;"></span>
-      <span style="width:15px;height:2px;background:#000000;"></span>
+    <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="lda-mobile-navigation" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;">
+      <span style="width:20px;height:1.25px;background:#000000;"></span>
+      <span style="width:20px;height:1.25px;background:#000000;"></span>
+      <span style="width:20px;height:1.25px;background:#000000;"></span>
     </button>
   </sc-if>
 </nav>
@@ -102,7 +102,7 @@ class Component extends DCLogic {
     ];
     const sectionColors = { tienda:'#F65091', aprende:'#0CC0DF' };
     const links = items.map(it => ({ href:it.href,label:it.label,color:it.id===active?(sectionColors[it.id]||accentColor):'#000000',bgSize:it.id===active?'100%':'0%' }));
-    return { siteName: global.siteName || 'Life Deco Art', accentColor,links,isMobile:this.state.isMobile,isDesktop:!this.state.isMobile,navPadding:this.state.isMobile?'10px 20px':'26px 48px',menuOpen:this.state.isMobile&&this.state.menuOpen,menuLabel:this.state.menuOpen?'Cerrar menú':'Abrir menú',toggleMenu:()=>this.setState({ menuOpen:!this.state.menuOpen }) };
+    return { siteName: global.siteName || 'Life Deco Art', accentColor,links,isMobile:this.state.isMobile,isDesktop:!this.state.isMobile,navHeight:this.state.isMobile?'64px':'80px',navPadding:this.state.isMobile?'0 20px':'0 48px',menuOpen:this.state.isMobile&&this.state.menuOpen,menuLabel:this.state.menuOpen?'Cerrar menú':'Abrir menú',toggleMenu:()=>this.setState({ menuOpen:!this.state.menuOpen }) };
   }
 }
 </script>
