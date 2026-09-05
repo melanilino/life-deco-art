@@ -1,0 +1,39 @@
+name: Match closing CTA exactly to Inicio
+on:
+  push:
+    paths:
+      - '.github/workflows/match-closing-cta-home-exact.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Match CTA action spacing exactly
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = ['Tienda.dc.html','Aprende.dc.html']
+          for fn in files:
+              p=Path(fn)
+              s=p.read_text()
+              # Match Inicio's mobile action rhythm exactly:
+              # 14px flex gap + 6px vertical padding on Correo.
+              s=s.replace("ctaBtnGap: m ? '6px' : '18px'", "ctaBtnGap: m ? '14px' : '18px'")
+              s=s.replace("closingBtnGap: m ? '6px' : '18px'", "closingBtnGap: m ? '14px' : '18px'")
+              s=s.replace("min-height:0;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;padding:0;line-height:1.2;font-size:14px;", "display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;padding:6px 0;font-size:14px;")
+              s=s.replace("min-height:0;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:0;line-height:1.2;", "display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;")
+              p.write_text(s)
+              print('updated', fn)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Tienda.dc.html Aprende.dc.html
+          git commit -m "Match closing CTA actions exactly to Inicio"
+          git push origin main
