@@ -112,9 +112,6 @@ html body #dc-boot-fallback .dc-fb-script {
   html body .lda-footer-script,html body footer b[style*="Camelia Beauty"] { font-size:50px !important; line-height:.9 !important; top:0 !important; }
   :root { --lda-page-gutter:var(--lda-page-gutter-mobile); }
 
-  /* Closing custom-order CTA: reduce the oversized gap before the contact heading. */
-  html body a[href*="encargo"] { margin-bottom: 0 !important; }
-  html body a[href*="encargo"] + * { margin-top: 28px !important; }
 }
 
 html body .lda-essential-field,html body .lda-essential-field:hover,html body .lda-essential-field:active,html body .lda-essential-field:focus,html body .lda-essential-field:focus-visible { border-color:#E4DDCC !important; box-shadow:none !important; outline:none !important; }
@@ -122,3 +119,15 @@ html body .lda-contact-page input:not([type="submit"]):not([type="button"]),html
 .lda-container { width:100%; max-width:var(--lda-container-max); margin-inline:auto; padding-inline:var(--lda-page-gutter); box-sizing:border-box; }
 html body [data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition:none !important; }
 html body .lda-motion-card[data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition-delay:0s !important; }
+
+
+@media (max-width: 859px) {
+  /* Mobile custom-order CTA: keep Crear encargo and Correo visually grouped. */
+  html body div:has(> a[href="/encargo-personalizado"]):has(> a[href="/contacto"]) {
+    gap: 6px !important;
+  }
+  html body div:has(> a[href="/encargo-personalizado"]):has(> a[href="/contacto"]) > a {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+}
