@@ -255,7 +255,7 @@ body{margin:0;background:#fff}
       </div>
       <sc-if value="{{ showLoadMore }}" hint-placeholder-val="{{ false }}">
         <div class="lda-load-more-wrap lda-tienda-load-more" style="height:88px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;">
-          <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;transition:transform .25s ease,color .25s ease;" style-hover="transform:translateY(-2px);color:#B79A6B;">Ver más</button>
+          <button type="button" class="lda-load-more" onClick="{{ onLoadMore }}" style="min-height:44px;min-width:44px;border:0;background:transparent;color:var(--lda-text-secondary,#756348);padding:8px 4px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:300;letter-spacing:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;">Ver más</button>
         </div>
       </sc-if>
     </div>
@@ -546,7 +546,7 @@ class Component extends DCLogic {
       heroPad: m ? '40px 24px 24px' : '72px 48px 24px',
       h1Size: m ? '26px' : '44px',
       shopPad: m ? '24px 24px 0' : '72px 48px 36px',
-      shopEndPad: m && !showLoadMore ? '32px' : '0',
+      shopEndPad: m && !showLoadMore ? '60px' : '0',
       shopCols: m ? '1fr' : '200px 1fr',
       shopGap: m ? '32px' : '72px',
       productCols: m ? 'repeat(2,1fr)' : 'repeat(3,minmax(0,1fr))',
