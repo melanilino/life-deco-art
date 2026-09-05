@@ -45,12 +45,6 @@
   --lda-camelia-inline-shift: 0.08em;
 }
 
-/*
- * Camelia is intentionally larger than Montserrat for equal optical presence.
- * Its compact line-height prevents that larger font-size from expanding the
- * surrounding line box and creating oversized gaps between wrapped lines.
- * The small downward shift keeps both typefaces visually centered together.
- */
 html body .lda-camelia-hero,
 html body .lda-camelia-accent,
 html body .lda-camelia-long,
@@ -73,287 +67,58 @@ html body #dc-boot-fallback .dc-fb-script {
   vertical-align: baseline !important;
 }
 
-/* Standalone brand script is not mixed with Montserrat, so it keeps its own scale. */
-.lda-script-logo {
-  font-family: 'Camelia Beauty', cursive !important;
-}
-
-/* Give the editorial accent a little breathing room when it follows Montserrat. */
-.lda-del-estudio-title-row .lda-camelia-accent {
-  margin-left: 0.10em !important;
-}
-
-.lda-mobile-break {
-  display: none;
-}
-
-.lda-hero-idea-line {
-  white-space: nowrap;
-}
+.lda-script-logo { font-family: 'Camelia Beauty', cursive !important; }
+.lda-del-estudio-title-row .lda-camelia-accent { margin-left: 0.10em !important; }
+.lda-mobile-break { display: none; }
+.lda-hero-idea-line { white-space: nowrap; }
 
 @media (min-width: 860px) {
-  #lda-static-nav .lda-brand,
-  .lda-script-logo {
-    font-size: 35px !important;
-  }
-
-  /* Closing CTA: restore the natural word space hidden by the mobile-only line break. */
-  .lda-cta-script-word {
-    margin-left: 0.16em !important;
-  }
-
-  /* Desktop interactions: match mobile by removing focus halos and keeping only the normal thin field border. */
-  button,
-  a,
-  input,
-  select,
-  textarea,
-  summary,
-  [role="button"] {
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  button:active,
-  button:focus,
-  a:active,
-  a:focus,
-  summary:active,
-  summary:focus,
-  [role="button"]:active,
-  [role="button"]:focus {
-    box-shadow: none !important;
-    outline: none !important;
-  }
-  input:focus,
-  select:focus,
-  textarea:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    border-color: #E4DCCB !important;
-  }
+  #lda-static-nav .lda-brand, .lda-script-logo { font-size: 35px !important; }
+  .lda-cta-script-word { margin-left: 0.16em !important; }
+  button,a,input,select,textarea,summary,[role="button"] { -webkit-tap-highlight-color: transparent !important; }
+  button:active,button:focus,a:active,a:focus,summary:active,summary:focus,[role="button"]:active,[role="button"]:focus { box-shadow:none !important; outline:none !important; }
+  input:focus,select:focus,textarea:focus { box-shadow:none !important; outline:none !important; border-color:#E4DCCB !important; }
 }
 
 @media (max-width: 859px) {
-  #lda-static-nav .lda-brand,
-  .lda-script-logo {
-    font-size: 30px !important;
-  }
+  #lda-static-nav .lda-brand, .lda-script-logo { font-size: 30px !important; }
+  .lda-mobile-break { display: initial; }
+  #lda-static-nav .lda-mobile { margin-left:auto !important; }
+  #lda-static-nav summary { align-items:flex-end !important; -webkit-tap-highlight-color:transparent !important; background:transparent !important; color:inherit !important; outline:none; }
+  #lda-static-nav summary:active,#lda-static-nav summary:focus { background:transparent !important; }
+  #lda-static-nav summary:focus-visible { outline:1px solid currentColor; outline-offset:2px; }
+  #lda-static-nav .lda-burger { width:20px !important; height:1.25px !important; border-radius:0 !important; }
+  #lda-static-nav .lda-b1,#lda-static-nav .lda-b2,#lda-static-nav .lda-b3 { width:20px !important; }
+  #lda-static-nav .lda-mobile-panel,#lda-static-nav .lda-mobile-panel a { text-align:left !important; }
+  #lda-static-nav:has(.lda-mobile[open]) { background:#FFFFFF !important; box-shadow:0 1px 0 rgba(43,36,32,.06) !important; }
+  #lda-static-nav:has(.lda-mobile[open]) .lda-brand { color:#000000 !important; }
+  #lda-static-nav:has(.lda-mobile[open]) .lda-burger { background:#000000 !important; }
+  button,a,input,select,textarea,summary,[role="button"] { -webkit-tap-highlight-color:transparent !important; }
+  button:active,button:focus,a:active,a:focus,summary:active,summary:focus,[role="button"]:active,[role="button"]:focus { box-shadow:none !important; outline:none !important; }
+  input:focus,select:focus,textarea:focus { box-shadow:none !important; outline:none !important; border-color:#E4DCCB !important; }
+  .lda-mobile-category-list { gap:0 !important; }
+  .lda-mobile-category-list .lda-filter-control { min-height:32px !important; }
+  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control { min-height:24px !important; }
+  .lda-load-more-wrap { height:72px !important; min-height:72px !important; padding:0 !important; display:flex !important; align-items:center !important; justify-content:center !important; box-sizing:border-box !important; transform:translateY(10px); }
+  .lda-load-more-wrap .lda-load-more { min-height:40px !important; }
+  .lda-tienda-load-more,.lda-aprende-load-more { height:96px !important; min-height:96px !important; margin-top:4px !important; margin-bottom:4px !important; transform:none !important; }
+  .lda-aprende-load-more.lda-aprende-load-more-terminal { height:60px !important; min-height:60px !important; margin-top:0 !important; margin-bottom:0 !important; transform:none !important; }
+  .lda-card-grid > .lda-load-more-wrap { margin-top:-28px !important; transform:none; }
+  .lda-mobile-faq-card { padding:16px 20px !important; }
+  .lda-mobile-faq-card > button { min-height:44px !important; }
+  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] { padding-top:31px !important; padding-bottom:138px !important; }
+  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] + div { margin-top:-123px !important; }
+  html body .lda-eyebrow-servicios + h2 { margin-bottom:22px !important; }
+  html body .lda-footer-script,html body footer b[style*="Camelia Beauty"] { font-size:50px !important; line-height:.9 !important; top:0 !important; }
+  :root { --lda-page-gutter:var(--lda-page-gutter-mobile); }
 
-  .lda-mobile-break {
-    display: initial;
-  }
-
-  /* Keep mobile navigation visually stable: brand left, menu right. */
-  #lda-static-nav .lda-mobile {
-    margin-left: auto !important;
-  }
-  #lda-static-nav summary {
-    align-items: flex-end !important;
-    -webkit-tap-highlight-color: transparent !important;
-    background: transparent !important;
-    color: inherit !important;
-    outline: none;
-  }
-  #lda-static-nav summary:active,
-  #lda-static-nav summary:focus {
-    background: transparent !important;
-  }
-  #lda-static-nav summary:focus-visible {
-    outline: 1px solid currentColor;
-    outline-offset: 2px;
-  }
-  #lda-static-nav .lda-burger {
-    width: 20px !important;
-    height: 1.25px !important;
-    border-radius: 0 !important;
-  }
-  #lda-static-nav .lda-b1,
-  #lda-static-nav .lda-b2,
-  #lda-static-nav .lda-b3 {
-    width: 20px !important;
-  }
-  #lda-static-nav .lda-mobile-panel,
-  #lda-static-nav .lda-mobile-panel a {
-    text-align: left !important;
-  }
-
-  /* When the menu opens, the entire nav becomes white instead of showing hero video through it. */
-  #lda-static-nav:has(.lda-mobile[open]) {
-    background: #FFFFFF !important;
-    box-shadow: 0 1px 0 rgba(43,36,32,.06) !important;
-  }
-  #lda-static-nav:has(.lda-mobile[open]) .lda-brand {
-    color: #000000 !important;
-  }
-  #lda-static-nav:has(.lda-mobile[open]) .lda-burger {
-    background: #000000 !important;
-  }
-
-  /* Mobile interactions: remove tap/focus halos and keep the normal thin field border. */
-  button,
-  a,
-  input,
-  select,
-  textarea,
-  summary,
-  [role="button"] {
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  button:active,
-  button:focus,
-  a:active,
-  a:focus,
-  summary:active,
-  summary:focus,
-  [role="button"]:active,
-  [role="button"]:focus {
-    box-shadow: none !important;
-    outline: none !important;
-  }
-  input:focus,
-  select:focus,
-  textarea:focus {
-    box-shadow: none !important;
-    outline: none !important;
-    border-color: #E4DCCB !important;
-  }
-
-  /* Mobile storefront / learning rhythm refinement. */
-  .lda-mobile-category-list {
-    gap: 0 !important;
-  }
-  .lda-mobile-category-list .lda-filter-control {
-    min-height: 32px !important;
-  }
-  .lda-mobile-category-list .lda-subcategory-list .lda-filter-control {
-    min-height: 24px !important;
-  }
-  .lda-load-more-wrap {
-    height: 72px !important;
-    min-height: 72px !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    box-sizing: border-box !important;
-    transform: translateY(10px);
-  }
-  .lda-load-more-wrap .lda-load-more {
-    min-height: 40px !important;
-  }
-  /* Tienda needs slightly more real air than the generic wrapper because its product grid ends tighter. */
-  .lda-tienda-load-more {
-    height: 96px !important;
-    min-height: 96px !important;
-    margin-top: 4px !important;
-    margin-bottom: 4px !important;
-    transform: none !important;
-  }
-  /* Aprende: match Tienda exactly for the same visual air around “Ver más”. */
-  .lda-aprende-load-more {
-    height: 96px !important;
-    min-height: 96px !important;
-    margin-top: 4px !important;
-    margin-bottom: 4px !important;
-    transform: none !important;
-  }
-  .lda-aprende-load-more.lda-aprende-load-more-terminal {
-    height: 60px !important;
-    min-height: 60px !important;
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    transform: none !important;
-  }
-
-  .lda-card-grid > .lda-load-more-wrap {
-    margin-top: -28px !important;
-    transform: none;
-  }
-  .lda-mobile-faq-card {
-    padding: 16px 20px !important;
-  }
-  .lda-mobile-faq-card > button {
-    min-height: 44px !important;
-  }
-
-  /* Home Aprende spotlight: preserve approved layout, with slightly more air around the question. */
-  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] {
-    padding-top: 31px !important;
-    padding-bottom: 138px !important;
-  }
-  html body div[style*="background-color: #0CC0DF"][style*="text-align: center"] + div {
-    margin-top: -123px !important;
-  }
-
-  /* Give the Camelia descender in “ayudarte” room before the first card. */
-  html body .lda-eyebrow-servicios + h2 {
-    margin-bottom: 22px !important;
-  }
-
-  /* Footer script balances the BONITAS line without overpowering it. */
-  html body .lda-footer-script,
-  html body footer b[style*="Camelia Beauty"] {
-    font-size: 50px !important;
-    line-height: 0.9 !important;
-    top: 0 !important;
-  }
-
-  :root {
-    --lda-page-gutter: var(--lda-page-gutter-mobile);
-  }
+  /* Closing custom-order CTA: reduce the oversized gap before the contact heading. */
+  html body a[href*="encargo"] { margin-bottom: 0 !important; }
+  html body a[href*="encargo"] + * { margin-top: 28px !important; }
 }
 
-/* Aprende essentials: interaction must never recolor the neutral field border. */
-html body .lda-essential-field,
-html body .lda-essential-field:hover,
-html body .lda-essential-field:active,
-html body .lda-essential-field:focus,
-html body .lda-essential-field:focus-visible {
-  border-color: #E4DDCC !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-
-/* Contact form: use the same neutral beige border as Aprende and keep it unchanged on interaction. */
-html body .lda-contact-page input:not([type="submit"]):not([type="button"]),
-html body .lda-contact-page textarea,
-html body .lda-contact-page select,
-html body .lda-contact-page input:not([type="submit"]):not([type="button"]):hover,
-html body .lda-contact-page textarea:hover,
-html body .lda-contact-page select:hover,
-html body .lda-contact-page input:not([type="submit"]):not([type="button"]):active,
-html body .lda-contact-page textarea:active,
-html body .lda-contact-page select:active,
-html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus,
-html body .lda-contact-page textarea:focus,
-html body .lda-contact-page select:focus,
-html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus-visible,
-html body .lda-contact-page textarea:focus-visible,
-html body .lda-contact-page select:focus-visible {
-  border: 1px solid #E4DDCC !important;
-  border-color: #E4DDCC !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-
-/* Canonical centered content container for future page updates. */
-.lda-container {
-  width: 100%;
-  max-width: var(--lda-container-max);
-  margin-inline: auto;
-  padding-inline: var(--lda-page-gutter);
-  box-sizing: border-box;
-}
-
-/* Sitewide: content is visible immediately; no initial reveal/lift animation. */
-html body [data-reveal]:not([data-revealed]) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition: none !important;
-}
-html body .lda-motion-card[data-reveal]:not([data-revealed]) {
-  opacity: 1 !important;
-  transform: none !important;
-  transition-delay: 0s !important;
-}
-
+html body .lda-essential-field,html body .lda-essential-field:hover,html body .lda-essential-field:active,html body .lda-essential-field:focus,html body .lda-essential-field:focus-visible { border-color:#E4DDCC !important; box-shadow:none !important; outline:none !important; }
+html body .lda-contact-page input:not([type="submit"]):not([type="button"]),html body .lda-contact-page textarea,html body .lda-contact-page select,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):hover,html body .lda-contact-page textarea:hover,html body .lda-contact-page select:hover,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):active,html body .lda-contact-page textarea:active,html body .lda-contact-page select:active,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus,html body .lda-contact-page textarea:focus,html body .lda-contact-page select:focus,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus-visible,html body .lda-contact-page textarea:focus-visible,html body .lda-contact-page select:focus-visible { border:1px solid #E4DDCC !important; border-color:#E4DDCC !important; outline:none !important; box-shadow:none !important; }
+.lda-container { width:100%; max-width:var(--lda-container-max); margin-inline:auto; padding-inline:var(--lda-page-gutter); box-sizing:border-box; }
+html body [data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition:none !important; }
+html body .lda-motion-card[data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition-delay:0s !important; }
