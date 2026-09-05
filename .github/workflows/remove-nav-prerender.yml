@@ -1,0 +1,37 @@
+name: Remove nav prerender
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-nav-prerender.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove aggressive navigation prerender
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('NavBar.dc.html')
+          s = p.read_text()
+          start = "    // Prepare the five navbar destinations invisibly. On browsers that support\n"
+          end = "    if (!document.getElementById('lda-whatsapp-fab')) {\n"
+          i = s.find(start)
+          j = s.find(end)
+          if i < 0 or j < 0 or j <= i:
+              raise SystemExit('Expected prerender block not found')
+          s = s[:i] + "    // Navigation is intentionally direct: no eager prerender or document prefetch.\n\n" + s[j:]
+          p.write_text(s)
+          print('removed navbar speculation rules and document prefetch')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add NavBar.dc.html
+          git commit -m "Remove aggressive navbar prerender"
+          git push origin main
