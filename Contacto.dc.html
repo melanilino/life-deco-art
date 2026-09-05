@@ -132,7 +132,7 @@ body{margin:0;background:#fff}
     <div>
       <div class="lda-section-eyebrow" style="font-size:{{ eyebrowSize }};letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:{{ eyebrowGap }};">Contacto</div>
       <h1 style="font-size: {{ h1Size }}; line-height: 1.15; color: #000000; font-weight: 300; margin: 0">{{ heroTitlePrefix }}<span class="lda-script-hero" style="font-family:'Camelia Beauty',cursive;font-weight:400;font-size:1.35em;">{{ heroTitleAccent }}</span>{{ heroTitleSuffix }}</h1>
-      <p style="font-size: 14px; color: var(--lda-text-secondary,#756348); font-weight: 300; line-height: 1.8; margin:20px 0 0; max-width: 380px">{{ introText }}</p>
+      <p style="font-size: 14px; color: var(--lda-text-secondary,#756348); font-weight: 300; line-height: 1.8; margin-top: 20px; max-width: 380px">{{ introText }}</p>
     </div>
 
     <div style="background: #FFFFFF; border: {{ formBorder }}; border-radius: 8px; padding: {{ formPad }}; border-color: #E4DDCC">
@@ -230,7 +230,7 @@ class Component extends DCLogic {
       eyebrowSize: m ? '10px' : '12px',
       heroPad: m ? '40px 26px 40px' : '72px 48px 96px',
       heroCols: m ? '1fr' : '0.9fr 1.1fr',
-      heroGap: m ? '8px' : '56px',
+      heroGap: m ? '20px' : '56px',
       h1Size: m ? '26px' : '44px',
       formBorder: m ? 'none' : '1px solid #E4DCCB',
       formPad: m ? '0' : '40px',
