@@ -315,8 +315,8 @@ class Component extends DCLogic {
     const thumbs = gallery.map((entry, i) => ({ id: `pd-thumb-${entry.id || i}`, src: entry.url || '', srcset: entry.srcset || '', alt: entry.alt || `${product.name}, vista ${i + 1}`, view: galleryView(entry), ring: selectedGallery && selectedGallery.id === entry.id ? '0 0 0 2px #F65091' : 'none', onClick: () => this.setState({ gallerySelection: selectedGallery && selectedGallery.id === entry.id ? null : entry.id }), placeholder: `vista ${i+1} de ${product.name}` }));
     return {
       navGap: m ? '64px' : '88px',
-      mainAspect: m ? '1 / 1' : '4 / 5',
-      mainMaxHeight: m ? '360px' : 'none',
+      mainAspect: m ? '4 / 3' : '4 / 5',
+      mainMaxHeight: 'none',
       mainImageGap: m ? '10px' : '14px',
       crumbPad: m ? '12px 20px 0' : '24px 48px 0',
       crumbGap: m ? '5px' : '8px',
