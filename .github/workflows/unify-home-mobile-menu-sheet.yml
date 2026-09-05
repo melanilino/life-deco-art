@@ -1,0 +1,33 @@
+name: Unify home mobile menu sheet
+on:
+  push:
+    paths:
+      - '.github/workflows/unify-home-mobile-menu-sheet.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Make open home mobile menu one white sheet
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          old = "@media(max-width:859px){body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]){background-color:#fff!important;box-shadow:0 1px 0 rgba(43,36,32,.06)!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-brand{color:#000!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-burger{background:#000!important}}\n"
+          new = "@media(max-width:859px){body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]){background:transparent!important;box-shadow:none!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-brand{color:#000!important;position:relative;z-index:3}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) summary{position:relative;z-index:3}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-burger{background:#000!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-mobile-panel{top:0!important;padding-top:88px!important;z-index:2!important;background:#fff!important}}\n"
+          if old not in s:
+              raise SystemExit('Expected prior open-nav rule not found')
+          p.write_text(s.replace(old,new,1))
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Inicio.dc.html
+          git commit -m "Unify home mobile menu background"
+          git push origin main
