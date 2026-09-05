@@ -1,0 +1,69 @@
+name: Mobile consistency pass
+on:
+  push:
+    paths:
+      - '.github/workflows/mobile-consistency-pass.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply mobile consistency fixes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new, label):
+              p = Path(path)
+              s = p.read_text()
+              if old not in s:
+                  raise SystemExit(f'Missing expected text for {label} in {path}')
+              p.write_text(s.replace(old, new, 1))
+              print('updated', label)
+
+          # 1) Encargo: normalize iOS date field to same white field treatment.
+          replace_once(
+              'Encargos.dc.html',
+              "  .lda-enc-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; }",
+              "  .lda-enc-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; }\n  .lda-enc-input[type=\"date\"] { -webkit-appearance:none; appearance:none; background:#FFFFFF !important; color:#2B2420; min-height:44px; }\n  .lda-enc-input[type=\"date\"]::-webkit-date-and-time-value { text-align:left; }\n  .lda-enc-input[type=\"date\"]::-webkit-calendar-picker-indicator { opacity:.7; }",
+              'encargo mobile date field'
+          )
+
+          # 2) CTA copy: deliberate mobile break before “lista para enviar”.
+          replace_once(
+              'Encargos.dc.html',
+              'Se abrirá WhatsApp con tu información precargada, lista para enviar.',
+              'Se abrirá WhatsApp con tu información precargada,<br class="lda-mobile-break"> lista para enviar.',
+              'encargo cta line break'
+          )
+
+          # 3) Shared mobile hamburger: exactly match current main reference geometry.
+          replace_once(
+              'NavBar.dc.html',
+              'style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;"',
+              'style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;box-sizing:border-box;"',
+              'navbar button geometry'
+          )
+          for old, new, label in [
+              ('<span style="width:20px;height:1.25px;background:#000000;"></span>', '<span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>', 'burger line 1'),
+              ('<span style="width:20px;height:1.25px;background:#000000;"></span>', '<span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>', 'burger line 2'),
+              ('<span style="width:20px;height:1.25px;background:#000000;"></span>', '<span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>', 'burger line 3'),
+          ]:
+              replace_once('NavBar.dc.html', old, new, label)
+
+          # 4) Aprende detail: preserve 3 placeholders when CMS gallery is empty.
+          old = "pastGallery: (live.gallery || live.pastGallery || []).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),"
+          new = "pastGallery: ((Array.isArray(live.gallery) && live.gallery.length) ? live.gallery : ((Array.isArray(live.pastGallery) && live.pastGallery.length) ? live.pastGallery : fallback.pastGallery)).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: item.placeholder || 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),"
+          replace_once('Aprende Detalle.dc.html', old, new, 'taller gallery placeholder fallback')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Encargos.dc.html NavBar.dc.html 'Aprende Detalle.dc.html'
+          git commit -m "Fix mobile form nav copy and gallery consistency"
+          git push origin main
