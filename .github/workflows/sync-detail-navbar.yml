@@ -1,0 +1,81 @@
+name: Sync detail navbar
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-detail-navbar.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Revert image changes and sync navigation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new, label):
+              p = Path(path)
+              s = p.read_text()
+              if old not in s:
+                  raise SystemExit(f'Missing expected text for {label} in {path}')
+              p.write_text(s.replace(old, new, 1))
+              print('updated', label, path)
+
+          # Revert the image-ratio changes from the previous misunderstanding.
+          replace_once(
+              'Aprende Detalle.dc.html',
+              "heroRatio: m ? '4/3' : '21/8',",
+              "heroRatio: m ? '16/10' : '21/8',",
+              'Aprende detail hero ratio revert'
+          )
+          replace_once(
+              'Productos.dc.html',
+              "mainAspect: m ? '4 / 3' : '4 / 5',\n      mainMaxHeight: 'none',",
+              "mainAspect: m ? '1 / 1' : '4 / 5',\n      mainMaxHeight: m ? '360px' : 'none',",
+              'Tienda product hero ratio revert'
+          )
+
+          # Aprende detail was missing the shared design system, which caused the
+          # logo font to fall back to a different cursive face.
+          p = Path('Aprende Detalle.dc.html')
+          s = p.read_text()
+          marker = '<meta property="og:url" content="https://lifedecoart.com/aprende/cursos/lettering-para-bodas">\n'
+          link = '<link rel="stylesheet" href="/design-system.css?v=20260903camelia9">\n'
+          if link not in s:
+              if marker not in s:
+                  raise SystemExit('Missing Aprende detail head marker')
+              s = s.replace(marker, marker + link, 1)
+              p.write_text(s)
+              print('added design system to Aprende detail')
+
+          # Make the shared imported NavBar match the current site navigation.
+          replace_once(
+              'NavBar.dc.html',
+              'style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:{{ navPadding }};background:#FFFFFF;',
+              'style="position:fixed;top:0;left:0;right:0;z-index:50;height:{{ navHeight }};box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:{{ navPadding }};background:#FFFFFF;',
+              'NavBar fixed height'
+          )
+          replace_once(
+              'NavBar.dc.html',
+              'style="display:flex;flex-direction:column;justify-content:center;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;">\n      <span style="width:22px;height:2px;background:#000000;"></span>\n      <span style="width:22px;height:2px;background:#000000;"></span>\n      <span style="width:15px;height:2px;background:#000000;"></span>',
+              'style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;">\n      <span style="width:20px;height:1.25px;background:#000000;"></span>\n      <span style="width:20px;height:1.25px;background:#000000;"></span>\n      <span style="width:20px;height:1.25px;background:#000000;"></span>',
+              'NavBar current hamburger'
+          )
+          replace_once(
+              'NavBar.dc.html',
+              "navPadding:this.state.isMobile?'10px 20px':'26px 48px',menuOpen:",
+              "navHeight:this.state.isMobile?'64px':'80px',navPadding:this.state.isMobile?'0 20px':'0 48px',menuOpen:",
+              'NavBar current sizing'
+          )
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Aprende Detalle.dc.html' Productos.dc.html NavBar.dc.html
+          git commit -m "Match detail pages to current navigation"
+          git push origin main
