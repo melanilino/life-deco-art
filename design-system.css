@@ -344,3 +344,16 @@ html body .lda-contact-page select:focus-visible {
   padding-inline: var(--lda-page-gutter);
   box-sizing: border-box;
 }
+
+/* Sitewide: content is visible immediately; no initial reveal/lift animation. */
+html body [data-reveal]:not([data-revealed]) {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+html body .lda-motion-card[data-reveal]:not([data-revealed]) {
+  opacity: 1 !important;
+  transform: none !important;
+  transition-delay: 0s !important;
+}
+
