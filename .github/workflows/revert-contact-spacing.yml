@@ -1,0 +1,31 @@
+name: Revert contact spacing
+on:
+  push:
+    paths:
+      - '.github/workflows/revert-contact-spacing.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Restore previous contact spacing
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Contacto.dc.html')
+          s = p.read_text()
+          s = s.replace("heroGap: m ? '8px' : '56px',", "heroGap: m ? '20px' : '56px',", 1)
+          s = s.replace('margin:20px 0 0; max-width: 380px', 'margin-top: 20px; max-width: 380px', 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Contacto.dc.html
+          git commit -m "Restore previous contact spacing"
+          git push origin main
