@@ -1,0 +1,34 @@
+name: Match closing CTA spacing to Inicio
+on:
+  push:
+    paths:
+      - '.github/workflows/match-closing-cta-home-spacing.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Match Tienda and Aprende closing CTA spacing to Inicio
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          for fn in ['Tienda.dc.html','Aprende.dc.html']:
+              p=Path(fn)
+              s=p.read_text()
+              # Inicio uses a 14px mobile gap between the two actions. Match that exact rhythm.
+              s=s.replace("ctaBtnGap: m ? '6px' : '18px'", "ctaBtnGap: m ? '14px' : '18px'")
+              s=s.replace("closingBtnGap: m ? '6px' : '18px'", "closingBtnGap: m ? '14px' : '18px'")
+              p.write_text(s)
+              print('updated', fn)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Tienda.dc.html Aprende.dc.html
+          git commit -m "Match closing CTA mobile spacing to Inicio"
+          git push origin main
