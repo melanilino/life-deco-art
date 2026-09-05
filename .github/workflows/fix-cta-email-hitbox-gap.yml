@@ -1,0 +1,36 @@
+name: Fix CTA email hitbox gap
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-cta-email-hitbox-gap.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fix apparent gap caused by email link hitbox
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          files = ['Tienda.dc.html','Aprende.dc.html']
+          for fn in files:
+              p=Path(fn)
+              s=p.read_text()
+              # The visible gap remains because the secondary Correo link still reserves a 44px mobile tap box.
+              # Keep the actual flex gap small, but remove that extra vertical box only for this decorative secondary CTA.
+              s=s.replace("min-height:44px;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;padding:6px 0;", "min-height:0;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;padding:0;line-height:1.2;")
+              s=s.replace("min-height:44px;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;", "min-height:0;display:inline-flex;align-items:center;text-decoration:none;color:#FFFFFF;font-size:{{ ctaWaSize }};font-weight:500;letter-spacing:0.02em;padding:0;line-height:1.2;")
+              p.write_text(s)
+              print('updated', fn)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Tienda.dc.html Aprende.dc.html
+          git commit -m "Fix mobile CTA email visual gap"
+          git push origin main
