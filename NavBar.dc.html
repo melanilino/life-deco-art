@@ -11,10 +11,10 @@
     </div>
   </sc-if>
   <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-    <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="lda-mobile-navigation" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;">
-      <span style="width:20px;height:1.25px;background:#000000;"></span>
-      <span style="width:20px;height:1.25px;background:#000000;"></span>
-      <span style="width:20px;height:1.25px;background:#000000;"></span>
+    <button type="button" onClick="{{ toggleMenu }}" aria-label="{{ menuLabel }}" aria-expanded="{{ menuOpen }}" aria-controls="lda-mobile-navigation" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;padding:10px;min-width:44px;min-height:44px;cursor:pointer;border:0;background:transparent;-webkit-tap-highlight-color:transparent;box-sizing:border-box;">
+      <span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>
+      <span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>
+      <span style="display:block;width:20px;height:1.25px;border-radius:0;background:#000000;flex-shrink:0;"></span>
     </button>
   </sc-if>
 </nav>

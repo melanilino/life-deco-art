@@ -349,7 +349,7 @@ class Component extends DCLogic {
       faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
       testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
       gallery: live.gallery || live.pastGallery || [],
-      pastGallery: (live.gallery || live.pastGallery || []).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
+      pastGallery: ((Array.isArray(live.gallery) && live.gallery.length) ? live.gallery : ((Array.isArray(live.pastGallery) && live.pastGallery.length) ? live.pastGallery : fallback.pastGallery)).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: item.placeholder || 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
       mapImage: live.mapImageUrl || fallback.mapImage,
       locationDetail: live.locationDetail || fallback.locationDetail,
       cancelPolicy: live.cancellationPolicy || fallback.cancelPolicy,

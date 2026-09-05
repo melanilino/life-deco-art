@@ -25,6 +25,9 @@
   a { color: #F65091; }
   a:hover { color: #000000; }
   .lda-enc-input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; }
+  .lda-enc-input[type="date"] { -webkit-appearance:none; appearance:none; background:#FFFFFF !important; color:#2B2420; min-height:44px; }
+  .lda-enc-input[type="date"]::-webkit-date-and-time-value { text-align:left; }
+  .lda-enc-input[type="date"]::-webkit-calendar-picker-indicator { opacity:.7; }
 </style>
 </helmet>
 <dc-import name="NavBar" active-page="tienda" hint-size="100%,80px" style="position: absolute; left: 4px; top: 1px"></dc-import>
@@ -138,7 +141,7 @@
 
   <div style="max-width:640px;margin:0 auto;padding:{{ ctaPad }};text-align:center;">
     <a href="{{ whatsappUrl }}" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;background:#F65091;color:#FFFFFF;padding:16px 36px;border-radius:6px;font-size:15px;font-weight:500;transition:transform .25s ease;" style-hover="transform:translateY(-3px);">Enviar</a>
-    <p style="font-size:12px;color:#8B795E;font-weight:300;margin-top:14px;">Se abrirá WhatsApp con tu información precargada, lista para enviar.</p>
+    <p style="font-size:12px;color:#8B795E;font-weight:300;margin-top:14px;">Se abrirá WhatsApp con tu información precargada,<br class="lda-mobile-break"> lista para enviar.</p>
   </div>
 
 </section>
