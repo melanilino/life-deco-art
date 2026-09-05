@@ -44,32 +44,7 @@ class Component extends DCLogic {
       this.setState({ globalContent });
     } catch (_) {}
 
-    // Prepare the five navbar destinations invisibly. On browsers that support
-    // Speculation Rules this prerenders the full document, so clicking the nav
-    // swaps to an already-rendered page instead of showing an intermediate boot.
-    const navUrls = ['/', '/sobre-mi', '/tienda', '/aprende', '/contacto'];
-    if (!document.getElementById('lda-speculation-rules')) {
-      try {
-        if (HTMLScriptElement.supports && HTMLScriptElement.supports('speculationrules')) {
-          const s = document.createElement('script');
-          s.id = 'lda-speculation-rules';
-          s.type = 'speculationrules';
-          s.textContent = JSON.stringify({
-            prerender: [{ source: 'list', urls: navUrls, eagerness: 'eager' }]
-          });
-          document.head.appendChild(s);
-        } else {
-          navUrls.forEach((href) => {
-            if (href === window.location.pathname) return;
-            const l = document.createElement('link');
-            l.rel = 'prefetch';
-            l.href = href;
-            l.as = 'document';
-            document.head.appendChild(l);
-          });
-        }
-      } catch (_) {}
-    }
+    // Navigation is intentionally direct: no eager prerender or document prefetch.
 
     if (!document.getElementById('lda-whatsapp-fab')) {
       const a = document.createElement('a');
