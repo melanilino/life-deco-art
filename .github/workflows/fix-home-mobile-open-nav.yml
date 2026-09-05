@@ -1,0 +1,38 @@
+name: Fix home mobile open nav
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-home-mobile-open-nav.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Force white nav only while home mobile menu is open
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Inicio.dc.html')
+          s = p.read_text()
+          anchor = "@media(max-width:859px){#lda-static-nav{height:64px;padding:0 20px}#lda-static-nav .lda-desktop{display:none}#lda-static-nav .lda-mobile{display:block}.lda-nav-spacer{height:64px}#lda-whatsapp-fab-static{bottom:24px;right:18px}}\n"
+          rule = "@media(max-width:859px){body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]){background-color:#fff!important;box-shadow:0 1px 0 rgba(43,36,32,.06)!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-brand{color:#000!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-burger{background:#000!important}}\n"
+          if rule in s:
+              print('rule already present')
+          else:
+              if anchor not in s:
+                  raise SystemExit('Mobile nav anchor not found in Inicio.dc.html')
+              s = s.replace(anchor, anchor + rule, 1)
+              p.write_text(s)
+              print('updated Inicio.dc.html')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add Inicio.dc.html
+          git commit -m "Keep home mobile nav white when menu is open"
+          git push origin main
