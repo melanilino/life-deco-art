@@ -16,6 +16,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import base64
 
           targets = [
               'Aprende Detalle.dc.html',
@@ -32,45 +33,7 @@ jobs:
               'Tienda.dc.html',
           ]
 
-          gate = r'''\n<!-- LDA synchronized first paint -->
-<style id="lda-first-paint-gate">
-  html.lda-first-paint-pending,
-  html.lda-first-paint-pending body { background:#fff !important; }
-  html.lda-first-paint-pending body > * { visibility:hidden !important; }
-</style>
-<script id="lda-first-paint-gate-script">
-(function(){
-  var rootEl = document.documentElement;
-  rootEl.classList.add('lda-first-paint-pending');
-  var released = false;
-  var observer = null;
-  function release(){
-    if (released) return;
-    released = true;
-    if (observer) observer.disconnect();
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        rootEl.classList.remove('lda-first-paint-pending');
-      });
-    });
-  }
-  function ready(){
-    var root = document.getElementById('dc-root');
-    if (!root) return false;
-    if (!root.children.length && !(root.textContent || '').trim()) return false;
-    release();
-    return true;
-  }
-  if (!ready()) {
-    observer = new MutationObserver(function(){ ready(); });
-    observer.observe(rootEl, { childList:true, subtree:true });
-    document.addEventListener('DOMContentLoaded', ready, { once:true });
-    setTimeout(release, 3000);
-  }
-})();
-</script>
-<!-- /LDA synchronized first paint -->
-'''
+          gate = base64.b64decode('CjwhLS0gTERBIHN5bmNocm9uaXplZCBmaXJzdCBwYWludCAtLT4KPHN0eWxlIGlkPSJsZGEtZmlyc3QtcGFpbnQtZ2F0ZSI+CiAgaHRtbC5sZGEtZmlyc3QtcGFpbnQtcGVuZGluZywKICBodG1sLmxkYS1maXJzdC1wYWludC1wZW5kaW5nIGJvZHkgeyBiYWNrZ3JvdW5kOiNmZmYgIWltcG9ydGFudDsgfQogIGh0bWwubGRhLWZpcnN0LXBhaW50LXBlbmRpbmcgYm9keSA+ICogeyB2aXNpYmlsaXR5OmhpZGRlbiAhaW1wb3J0YW50OyB9Cjwvc3R5bGU+CjxzY3JpcHQgaWQ9ImxkYS1maXJzdC1wYWludC1nYXRlLXNjcmlwdCI+CihmdW5jdGlvbigpewogIHZhciByb290RWwgPSBkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQ7CiAgcm9vdEVsLmNsYXNzTGlzdC5hZGQoJ2xkYS1maXJzdC1wYWludC1wZW5kaW5nJyk7CiAgdmFyIHJlbGVhc2VkID0gZmFsc2U7CiAgdmFyIG9ic2VydmVyID0gbnVsbDsKICBmdW5jdGlvbiByZWxlYXNlKCl7CiAgICBpZiAocmVsZWFzZWQpIHJldHVybjsKICAgIHJlbGVhc2VkID0gdHJ1ZTsKICAgIGlmIChvYnNlcnZlcikgb2JzZXJ2ZXIuZGlzY29ubmVjdCgpOwogICAgcmVxdWVzdEFuaW1hdGlvbkZyYW1lKGZ1bmN0aW9uKCl7CiAgICAgIHJlcXVlc3RBbmltYXRpb25GcmFtZShmdW5jdGlvbigpewogICAgICAgIHJvb3RFbC5jbGFzc0xpc3QucmVtb3ZlKCdsZGEtZmlyc3QtcGFpbnQtcGVuZGluZycpOwogICAgICB9KTsKICAgIH0pOwogIH0KICBmdW5jdGlvbiByZWFkeSgpewogICAgdmFyIHJvb3QgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZGMtcm9vdCcpOwogICAgaWYgKCFyb290KSByZXR1cm4gZmFsc2U7CiAgICBpZiAoIXJvb3QuY2hpbGRyZW4ubGVuZ3RoICYmICEocm9vdC50ZXh0Q29udGVudCB8fCAnJykudHJpbSgpKSByZXR1cm4gZmFsc2U7CiAgICByZWxlYXNlKCk7CiAgICByZXR1cm4gdHJ1ZTsKICB9CiAgaWYgKCFyZWFkeSgpKSB7CiAgICBvYnNlcnZlciA9IG5ldyBNdXRhdGlvbk9ic2VydmVyKGZ1bmN0aW9uKCl7IHJlYWR5KCk7IH0pOwogICAgb2JzZXJ2ZXIub2JzZXJ2ZShyb290RWwsIHsgY2hpbGRMaXN0OnRydWUsIHN1YnRyZWU6dHJ1ZSB9KTsKICAgIGRvY3VtZW50LmFkZEV2ZW50TGlzdGVuZXIoJ0RPTUNvbnRlbnRMb2FkZWQnLCByZWFkeSwgeyBvbmNlOnRydWUgfSk7CiAgICBzZXRUaW1lb3V0KHJlbGVhc2UsIDMwMDApOwogIH0KfSkoKTsKPC9zY3JpcHQ+CjwhLS0gL0xEQSBzeW5jaHJvbml6ZWQgZmlyc3QgcGFpbnQgLS0+Cg==').decode()
 
           changed = []
           for name in targets:
@@ -82,10 +45,8 @@ jobs:
                   continue
               if '</head>' not in s:
                   raise SystemExit(f'No </head> in {name}')
-              s = s.replace('</head>', gate + '\n</head>', 1)
-              p.write_text(s)
+              p.write_text(s.replace('</head>', gate + '\n</head>', 1))
               changed.append(name)
-
           print('Updated:', ', '.join(changed) if changed else 'none')
           PY
       - name: Commit public pages only
