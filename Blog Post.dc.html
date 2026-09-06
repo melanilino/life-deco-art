@@ -64,7 +64,7 @@ a { color: #F65091; }
   @media (max-width: 600px) {
     .related-grid { grid-template-columns: 1fr; }
     .bp-title { font-size: 26px; }
-    .bp-title span { font-size: 26px; }
+    .bp-title span.lda-script-hero { font-size: 46px !important; line-height: .78 !important; }
     .bp-wrap { padding: 28px 26px 40px !important; }
     .bp-nav-spacer { height: 64px; }
     .bp-kicker, .section-kicker { font-size: 10px !important; margin-bottom: 12px !important; }
@@ -137,11 +137,6 @@ a { color: #F65091; }
   </div>
   </sc-if>
 
-  <div style="margin-top:48px;border-top:1px solid #F3EEE4;padding-top:32px;">
-    <div class="section-kicker" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:24px;">Comentarios</div>
-    <textarea placeholder="Escribe un comentario..." rows="3" style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #E4DCCB;border-radius:8px;font-family:Montserrat;font-size:14px;resize:vertical;margin-bottom:12px;"></textarea>
-    <button style="background:#0CC0DF;color:#FFFFFF;border:none;padding:12px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:Montserrat;">Publicar comentario</button>
-  </div>
 </div>
 </sc-if>
 
@@ -154,7 +149,7 @@ class Component extends DCLogic {
 
   DEFAULT_POSTS = [
     { id: 'b1', category: 'Técnica', title: 'Cómo sostener el marcador: el error que comete el 90% de las principiantes', meta: '3 jul 2026 · 4 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>Un pequeño ajuste en la posición de tu mano puede cambiarlo todo. Antes de preocuparte por marcadores caros o papel especial, vale la pena revisar cómo estás sosteniendo la herramienta.</p>
       <h2>El error más común</h2>
       <p>La mayoría de quienes empiezan sostienen el marcador como si fuera un lápiz para escribir a mano, con la mano muy cerca de la punta y demasiada presión. Esto genera trazos irregulares y cansancio en la muñeca después de pocos minutos.</p>
@@ -167,19 +162,19 @@ class Component extends DCLogic {
       <p>Antes de intentar una palabra completa, dedica unos minutos a repetir trazos rectos y curvos sueltos. <strong>La consistencia en el ángulo del marcador</strong> es lo que le da uniformidad al lettering, más que la velocidad con la que escribas.</p>
       <p>Con práctica diaria de 10 a 15 minutos, la mayoría de las personas nota una mejora notable en menos de dos semanas.</p>` },
     { id: 'b2', category: 'Materiales', title: 'Mis herramientas favoritas: guía honesta para quien empieza', meta: '26 jun 2026 · 6 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>Sin marcas de lujo ni listas interminables — lo que yo misma uso para practicar lettering todos los días.</p>` },
     { id: 'b3', category: 'Ideas creativas', title: '5 superficies que no sabías que podías usar para lettering', meta: '18 jun 2026 · 5 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>El papel es solo el comienzo — cinco superficies sorprendentes para practicar y crear piezas distintas.</p>` },
     { id: 'b4', category: 'Diseño', title: 'Combinaciones de tipografías que sí funcionan', meta: '10 jun 2026 · 5 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>Pares clásicos para tus composiciones de lettering, explicados con ejemplos.</p>` },
     { id: 'b5', category: 'Lettering', title: 'De boceto a pieza final: mi proceso creativo', meta: '2 jun 2026 · 7 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>Los pasos que sigo antes de dibujar la versión final de una pieza de lettering.</p>` },
     { id: 'b6', category: 'Manualidades', title: '3 manualidades con lettering para regalar', meta: '26 may 2026 · 4 min', imageUrl: '',
-      authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
+      authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art', authorPhoto: '',
       content: `<p>Proyectos fáciles de hacer en una tarde, ideales para regalar.</p>` },
   ];
 
@@ -265,10 +260,10 @@ class Component extends DCLogic {
       ...this.splitTitle(found.title),
       noImage: !found.imageUrl,
       noAuthorPhoto: !found.authorPhoto,
-      hasAuthor: !!(found.authorName || found.authorRole || found.authorPhoto),
+      hasAuthor: true,
       hasAuthorPhoto: !!found.authorPhoto,
-      authorName: found.authorName || '',
-      authorRole: found.authorRole || '',
+      authorName: found.authorName || 'Melani Lino',
+      authorRole: found.authorRole || 'Fundadora, Life Deco Art',
       bodyHtml: { __html: found.content || '' },
       imageSrcset: (found.imageMeta && found.imageMeta.imageUrl && found.imageMeta.imageUrl.srcset) || '',
       imageAlt: (found.imageAlts && found.imageAlts.imageUrl) || found.title || 'Artículo del blog',
