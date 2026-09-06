@@ -1,0 +1,36 @@
+name: Match blog title Montserrat to Aprende
+on:
+  push:
+    paths:
+      - '.github/workflows/match-blog-title-to-aprende.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Match only mobile blog Montserrat size
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+          old = ".bp-title { font-size: 20px; line-height: 1.32; }"
+          new = ".bp-title { font-size: 26px; line-height: 1.32; }"
+          if s.count(old) != 1:
+              raise SystemExit(f'Expected exactly one mobile blog title rule, found {s.count(old)}')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          print('Changed only mobile blog Montserrat from 20px to 26px')
+          PY
+      - name: Commit only blog template
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git diff --cached --check
+          git commit -m "Match mobile blog title to Aprende heading"
+          git push origin main
