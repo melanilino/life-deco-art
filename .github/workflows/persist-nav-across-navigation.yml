@@ -16,7 +16,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
+          import base64
           targets = [
               'Inicio.dc.html',
               'Aprende Detalle.dc.html',
@@ -32,32 +32,7 @@ jobs:
               'Terminos y Condiciones.dc.html',
               'Tienda.dc.html',
           ]
-
-          css = '''\n<!-- LDA persistent navigation transition -->
-<style id="lda-persistent-navigation-transition">
-@view-transition { navigation: auto; }
-#lda-static-nav { view-transition-name: lda-main-navigation; }
-#lda-whatsapp-fab-static { view-transition-name: lda-whatsapp-fab; }
-::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-group(lda-main-navigation),
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-group(lda-whatsapp-fab),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  animation: none !important;
-}
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  mix-blend-mode: normal !important;
-}
-</style>
-<!-- /LDA persistent navigation transition -->
-'''
-
+          css = base64.b64decode('CjwhLS0gTERBIHBlcnNpc3RlbnQgbmF2aWdhdGlvbiB0cmFuc2l0aW9uIC0tPgo8c3R5bGUgaWQ9ImxkYS1wZXJzaXN0ZW50LW5hdmlnYXRpb24tdHJhbnNpdGlvbiI+CkB2aWV3LXRyYW5zaXRpb24geyBuYXZpZ2F0aW9uOiBhdXRvOyB9CiNsZGEtc3RhdGljLW5hdiB7IHZpZXctdHJhbnNpdGlvbi1uYW1lOiBsZGEtbWFpbi1uYXZpZ2F0aW9uOyB9CiNsZGEtd2hhdHNhcHAtZmFiLXN0YXRpYyB7IHZpZXctdHJhbnNpdGlvbi1uYW1lOiBsZGEtd2hhdHNhcHAtZmFiOyB9Cjo6dmlldy10cmFuc2l0aW9uLW9sZChyb290KSwKOjp2aWV3LXRyYW5zaXRpb24tbmV3KHJvb3QpLAo6OnZpZXctdHJhbnNpdGlvbi1ncm91cChsZGEtbWFpbi1uYXZpZ2F0aW9uKSwKOjp2aWV3LXRyYW5zaXRpb24tb2xkKGxkYS1tYWluLW5hdmlnYXRpb24pLAo6OnZpZXctdHJhbnNpdGlvbi1uZXcobGRhLW1haW4tbmF2aWdhdGlvbiksCjo6dmlldy10cmFuc2l0aW9uLWdyb3VwKGxkYS13aGF0c2FwcC1mYWIpLAo6OnZpZXctdHJhbnNpdGlvbi1vbGQobGRhLXdoYXRzYXBwLWZhYiksCjo6dmlldy10cmFuc2l0aW9uLW5ldyhsZGEtd2hhdHNhcHAtZmFiKSB7CiAgYW5pbWF0aW9uOiBub25lICFpbXBvcnRhbnQ7Cn0KOjp2aWV3LXRyYW5zaXRpb24tb2xkKGxkYS1tYWluLW5hdmlnYXRpb24pLAo6OnZpZXctdHJhbnNpdGlvbi1uZXcobGRhLW1haW4tbmF2aWdhdGlvbiksCjo6dmlldy10cmFuc2l0aW9uLW9sZChsZGEtd2hhdHNhcHAtZmFiKSwKOjp2aWV3LXRyYW5zaXRpb24tbmV3KGxkYS13aGF0c2FwcC1mYWIpIHsKICBtaXgtYmxlbmQtbW9kZTogbm9ybWFsICFpbXBvcnRhbnQ7Cn0KPC9zdHlsZT4KPCEtLSAvTERBIHBlcnNpc3RlbnQgbmF2aWdhdGlvbiB0cmFuc2l0aW9uIC0tPgo=').decode()
           changed=[]
           for name in targets:
               p=Path(name)
