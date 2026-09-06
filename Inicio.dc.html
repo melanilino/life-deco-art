@@ -117,29 +117,6 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 @media(max-width:859px){body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]){background:transparent!important;box-shadow:none!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-brand{color:#000!important;position:relative;z-index:3;display:block;overflow:visible!important;padding-left:8px;margin-left:-8px}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) summary{position:relative;z-index:3}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-burger{background:#000!important}body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav:has(.lda-mobile[open]) .lda-mobile-panel{top:0!important;padding-top:88px!important;z-index:2!important;background:#fff!important}}
 </style>
 
-<!-- LDA persistent navigation transition -->
-<style id="lda-persistent-navigation-transition">
-@view-transition { navigation: auto; }
-#lda-static-nav { view-transition-name: lda-main-navigation; }
-#lda-whatsapp-fab-static { view-transition-name: lda-whatsapp-fab; }
-::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-group(lda-main-navigation),
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-group(lda-whatsapp-fab),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  animation: none !important;
-}
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  mix-blend-mode: normal !important;
-}
-</style>
-<!-- /LDA persistent navigation transition -->
 
 </head>
 <body class="lda-home-nav-overlay lda-home-at-top">

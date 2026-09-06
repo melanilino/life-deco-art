@@ -170,6 +170,19 @@
         });
       }
       syncState();
+
+      if (!details.dataset.ldaCloseBeforeNav) {
+        details.dataset.ldaCloseBeforeNav = "true";
+        const closeBeforeNavigation = (event) => {
+          const link = event.target && event.target.closest ? event.target.closest("a[href]") : null;
+          if (!link || !details.contains(link) || !details.open) return;
+          details.open = false;
+          syncState();
+        };
+        panel.addEventListener("pointerdown", closeBeforeNavigation, { passive: true });
+        panel.addEventListener("touchstart", closeBeforeNavigation, { passive: true });
+        panel.addEventListener("click", closeBeforeNavigation);
+      }
     });
 
     document.querySelectorAll('a[target="_blank"]').forEach((link) => {
@@ -365,28 +378,3 @@
     init();
   }
 })();
-/* LDA_INTERNAL_PAGE_PREFETCH */
-(() => {
-  const prefetched = new Set();
-  const prefetch = (href) => {
-    try {
-      const u = new URL(href, location.href);
-      if (u.origin !== location.origin || !/^https?:$/.test(u.protocol) || u.hash || u.pathname === location.pathname) return;
-      const key = u.pathname + u.search;
-      if (prefetched.has(key)) return;
-      prefetched.add(key);
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.as = 'document';
-      link.href = u.href;
-      document.head.appendChild(link);
-    } catch (_) {}
-  };
-  const getLink = (e) => e.target && e.target.closest ? e.target.closest('a[href]') : null;
-  document.addEventListener('pointerover', (e) => { const a = getLink(e); if (a) prefetch(a.href); }, { passive: true });
-  document.addEventListener('touchstart', (e) => { const a = getLink(e); if (a) prefetch(a.href); }, { passive: true });
-  const warm = () => document.querySelectorAll('#lda-static-nav a[href]').forEach((a) => prefetch(a.href));
-  if ('requestIdleCallback' in window) requestIdleCallback(warm, { timeout: 1200 });
-  else setTimeout(warm, 500);
-})();
-

@@ -51,38 +51,8 @@ x-dc{display:none!important}
 
 
 
-<!-- LDA cross-document navigation continuity -->
-<style id="lda-page-nav-continuity">
-@view-transition { navigation: auto; }
-::view-transition-old(root),
-::view-transition-new(root) { animation: none !important; }
-</style>
-<!-- /LDA cross-document navigation continuity -->
 
 
-<!-- LDA persistent navigation transition -->
-<style id="lda-persistent-navigation-transition">
-@view-transition { navigation: auto; }
-#lda-static-nav { view-transition-name: lda-main-navigation; }
-#lda-whatsapp-fab-static { view-transition-name: lda-whatsapp-fab; }
-::view-transition-old(root),
-::view-transition-new(root),
-::view-transition-group(lda-main-navigation),
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-group(lda-whatsapp-fab),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  animation: none !important;
-}
-::view-transition-old(lda-main-navigation),
-::view-transition-new(lda-main-navigation),
-::view-transition-old(lda-whatsapp-fab),
-::view-transition-new(lda-whatsapp-fab) {
-  mix-blend-mode: normal !important;
-}
-</style>
-<!-- /LDA persistent navigation transition -->
 
 </head>
 <body>
