@@ -170,19 +170,6 @@
         });
       }
       syncState();
-
-      if (!details.dataset.ldaCloseBeforeNav) {
-        details.dataset.ldaCloseBeforeNav = "true";
-        const closeBeforeNavigation = (event) => {
-          const link = event.target && event.target.closest ? event.target.closest("a[href]") : null;
-          if (!link || !details.contains(link) || !details.open) return;
-          details.open = false;
-          syncState();
-        };
-        panel.addEventListener("pointerdown", closeBeforeNavigation, { passive: true });
-        panel.addEventListener("touchstart", closeBeforeNavigation, { passive: true });
-        panel.addEventListener("click", closeBeforeNavigation);
-      }
     });
 
     document.querySelectorAll('a[target="_blank"]').forEach((link) => {
