@@ -170,6 +170,24 @@
         });
       }
       syncState();
+
+      if (!details.dataset.ldaHoldNavigation) {
+        details.dataset.ldaHoldNavigation = "true";
+        panel.addEventListener("click", (event) => {
+          const link = event.target && event.target.closest ? event.target.closest("a[href]") : null;
+          if (!link || !details.contains(link)) return;
+          const url = new URL(link.href, location.href);
+          if (url.origin !== location.origin || url.pathname === '/' || link.target === '_blank') return;
+          event.preventDefault();
+          if (details.dataset.ldaNavigating === 'true') return;
+          details.dataset.ldaNavigating = 'true';
+          try { sessionStorage.setItem('lda-nav-hold', '1'); } catch (_) {}
+          const minWait = new Promise((resolve) => setTimeout(resolve, 220));
+          const warm = fetch(url.href, { credentials: 'same-origin', cache: 'no-cache' }).catch(() => null);
+          Promise.allSettled([minWait, warm]).then(() => { location.assign(url.href); });
+          setTimeout(() => { location.assign(url.href); }, 900);
+        });
+      }
     });
 
     document.querySelectorAll('a[target="_blank"]').forEach((link) => {
@@ -341,6 +359,30 @@
     } catch (_) {}
   }
 
+  function releaseHeldNavigation() {
+    if (!document.documentElement.classList.contains("lda-nav-hold")) return;
+    const started = performance.now();
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      try { sessionStorage.removeItem("lda-nav-hold"); } catch (_) {}
+      document.documentElement.classList.remove("lda-nav-hold");
+    };
+    const waitForReady = () => {
+      const mounted = !!document.querySelector("#dc-root .sc-host");
+      const streaming = document.documentElement.classList.contains("sc-dc-streaming");
+      const elapsed = performance.now() - started;
+      if ((mounted && !streaming && elapsed >= 180) || elapsed >= 1200) {
+        const fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+        Promise.race([fonts, new Promise((resolve) => setTimeout(resolve, 180))]).then(() => requestAnimationFrame(() => requestAnimationFrame(finish)));
+        return;
+      }
+      requestAnimationFrame(waitForReady);
+    };
+    requestAnimationFrame(waitForReady);
+  }
+
   function init() {
     ensureFavicon();
     addAccessibilityStyles();
@@ -350,6 +392,7 @@
     observeRevealElements();
     updateDynamicMetadata();
     loadCmsDomContent();
+    releaseHeldNavigation();
     const observer = new MutationObserver(() => {
       enhanceContent();
       observeRevealElements();

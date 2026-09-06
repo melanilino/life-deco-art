@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script id="lda-nav-hold-init">
+try{
+  if(sessionStorage.getItem('lda-nav-hold')==='1' && location.pathname!=='/'){
+    document.documentElement.classList.add('lda-nav-hold');
+  }
+}catch(e){}
+</script>
 <link rel="canonical" href="https://lifedecoart.com/sobre-mi">
 <meta property="og:url" content="https://lifedecoart.com/sobre-mi">
 <link rel="preconnect" href="https://unpkg.com" crossorigin>

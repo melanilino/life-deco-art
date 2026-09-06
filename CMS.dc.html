@@ -3,6 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script id="lda-nav-hold-init">
+try{
+  if(sessionStorage.getItem('lda-nav-hold')==='1' && location.pathname!=='/'){
+    document.documentElement.classList.add('lda-nav-hold');
+  }
+}catch(e){}
+</script>
 <meta name="robots" content="noindex, nofollow">
 <!-- cms-hotfix-deploy-20260811-2108 -->
 <link rel="icon" type="image/svg+xml" href="./favicon.svg">

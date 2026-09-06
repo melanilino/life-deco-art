@@ -449,3 +449,23 @@ html.sc-dc-streaming .sc-interp.sc-missing {
   transition:none !important;
   animation:none !important;
 }
+
+
+/* LDA mobile navigation hold state */
+@media (max-width: 859px) {
+  html.lda-nav-hold body > :not(#lda-static-nav) {
+    visibility: hidden !important;
+  }
+  html.lda-nav-hold #lda-static-nav {
+    visibility: visible !important;
+    background: #fff !important;
+  }
+  html.lda-nav-hold #lda-static-nav .lda-mobile {
+    display: block !important;
+  }
+  html.lda-nav-hold #lda-static-nav details.lda-mobile > .lda-mobile-panel {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
