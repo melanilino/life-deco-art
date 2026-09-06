@@ -295,5 +295,22 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script>
+(function(){
+  function fixTitle(){
+    if(window.innerWidth>859)return;
+    var t=document.querySelector('.bp-title');
+    if(!t)return;
+    t.style.setProperty('font-size','18px','important');
+    t.style.setProperty('line-height','1.34','important');
+    var a=t.querySelector('.lda-script-hero');
+    if(a){a.style.setProperty('font-size','34px','important');a.style.setProperty('line-height','.82','important');}
+  }
+  fixTitle();
+  setTimeout(fixTitle,50);
+  setTimeout(fixTitle,250);
+  new MutationObserver(fixTitle).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 </body>
 </html>
