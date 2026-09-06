@@ -1,0 +1,31 @@
+name: Restore blog title balance
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-blog-title-balance.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Restore Montserrat and enlarge only Camelia on mobile
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+          s = s.replace("    .bp-title { font-size: 20px; line-height: 1.32; }", "    .bp-title { font-size: 26px; }")
+          s = s.replace("    .bp-title span.lda-script-hero { font-size: 34px !important; line-height: .82 !important; }", "    .bp-title span.lda-script-hero { font-size: 46px !important; line-height: .78 !important; }")
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git commit -m "Restore blog title balance on mobile"
+          git push origin main
