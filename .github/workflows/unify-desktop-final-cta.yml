@@ -27,35 +27,38 @@ jobs:
           if not pages:
               raise SystemExit('No final CTA pages found')
 
-          ref=next((p for p in pages if 'sobre' in p.name.lower()), None)
-          if not ref:
-              raise SystemExit('Sobre Mi reference page not found')
-
-          rs=ref.read_text()
-          keys=['ctaRegionHeight','ctaTopPad','ctaBottomPad','ctaBoxHeight','ctaPad','ctaRadius','ctaTextSize','ctaTextGap','ctaBtnGap','ctaBtnDir','ctaWaPad','ctaWaRadius','ctaWaSize']
-          ref_expr={}
-          for key in keys:
-              m=re.search(rf"({key}:\s*m\s*\?\s*'[^']*'\s*:\s*'[^']*')", rs)
-              if not m:
-                  raise SystemExit(f'Reference value missing for {key} in {ref.name}')
-              ref_expr[key]=m.group(1)
-
           changed=[]
           for p in pages:
               s=p.read_text(); old=s
-              for key, expr in ref_expr.items():
-                  s,n=re.subn(rf"{key}:\s*m\s*\?\s*'[^']*'\s*:\s*'[^']*'", expr, s, count=1)
+
+              # Match Sobre Mi desktop proportions while preserving each page's colors and mobile values.
+              replacements={
+                  'ctaRegionHeight':'508px',
+                  'ctaTopPad':'72px',
+                  'ctaBottomPad':'80px',
+                  'ctaBoxHeight':'356px',
+              }
+              for key, desktop in replacements.items():
+                  s,n=re.subn(rf"{key}:\s*m\s*\?\s*'([^']*)'\s*:\s*'[^']*'", rf"{key}: m ? '\1' : '{desktop}'", s, count=1)
                   if n!=1:
                       raise SystemExit(f'{key} not uniquely found in {p.name}')
-              # Preserve each page's colors/content, but bring desktop actions a little closer to description.
-              s,n=re.subn(r"ctaBtnMarginTop:\s*m\s*\?\s*'([^']*)'\s*:\s*'[^']*'", r"ctaBtnMarginTop: m ? '\1' : '38px'", s, count=1)
-              if n!=1:
-                  raise SystemExit(f'ctaBtnMarginTop not found in {p.name}')
+
+              # Pages use one of two names for the description-to-actions gap.
+              if 'closingTextActionGap:' in s:
+                  s,n=re.subn(r"closingTextActionGap:\s*m\s*\?\s*'([^']*)'\s*:\s*'[^']*'", r"closingTextActionGap: m ? '\1' : '38px'", s, count=1)
+                  if n!=1:
+                      raise SystemExit(f'closingTextActionGap not found in {p.name}')
+              elif 'ctaBtnMarginTop:' in s:
+                  s,n=re.subn(r"ctaBtnMarginTop:\s*m\s*\?\s*'([^']*)'\s*:\s*'[^']*'", r"ctaBtnMarginTop: m ? '\1' : '38px'", s, count=1)
+                  if n!=1:
+                      raise SystemExit(f'ctaBtnMarginTop not found in {p.name}')
+              else:
+                  raise SystemExit(f'CTA action gap variable not found in {p.name}')
+
               if s!=old:
                   p.write_text(s)
                   changed.append(p.name)
 
-          print('Reference:', ref.name)
           print('Updated:', ', '.join(changed))
           PY
       - name: Commit changes
