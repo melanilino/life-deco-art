@@ -1,0 +1,50 @@
+name: Polish blog post mobile
+on:
+  push:
+    paths:
+      - '.github/workflows/polish-blog-post-mobile.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Update blog post typography author and comments
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+
+          # 1) Camelia accent: restore a clearly larger optical scale on mobile.
+          s = s.replace("    .bp-title span { font-size: 26px; }", "    .bp-title span.lda-script-hero { font-size: 46px !important; line-height: .78 !important; }")
+
+          # 2) Author card: always show an author, falling back to the site owner identity.
+          s = s.replace("      hasAuthor: !!(found.authorName || found.authorRole || found.authorPhoto),", "      hasAuthor: true,")
+          s = s.replace("      authorName: found.authorName || '',", "      authorName: found.authorName || 'Melani Lino',")
+          s = s.replace("      authorRole: found.authorRole || '',", "      authorRole: found.authorRole || 'Fundadora, Life Deco Art',")
+          s = s.replace("authorName: 'Nombre Apellido', authorRole: 'Fundadora, Life Deco Art'", "authorName: 'Melani Lino', authorRole: 'Fundadora, Life Deco Art'")
+
+          # 3) Remove the non-functional comments UI entirely.
+          comments = '''  <div style="margin-top:48px;border-top:1px solid #F3EEE4;padding-top:32px;">
+    <div class="section-kicker" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:24px;">Comentarios</div>
+    <textarea placeholder="Escribe un comentario..." rows="3" style="width:100%;box-sizing:border-box;padding:14px;border:1px solid #E4DCCB;border-radius:8px;font-family:Montserrat;font-size:14px;resize:vertical;margin-bottom:12px;"></textarea>
+    <button style="background:#0CC0DF;color:#FFFFFF;border:none;padding:12px 24px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:Montserrat;">Publicar comentario</button>
+  </div>
+'''
+          if comments not in s:
+              raise SystemExit('comments block not found')
+          s = s.replace(comments, '')
+
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git commit -m "Polish blog post mobile experience"
+          git push origin main
