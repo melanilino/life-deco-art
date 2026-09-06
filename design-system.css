@@ -117,8 +117,24 @@ html body #dc-boot-fallback .dc-fb-script {
 html body .lda-essential-field,html body .lda-essential-field:hover,html body .lda-essential-field:active,html body .lda-essential-field:focus,html body .lda-essential-field:focus-visible { border-color:#E4DDCC !important; box-shadow:none !important; outline:none !important; }
 html body .lda-contact-page input:not([type="submit"]):not([type="button"]),html body .lda-contact-page textarea,html body .lda-contact-page select,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):hover,html body .lda-contact-page textarea:hover,html body .lda-contact-page select:hover,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):active,html body .lda-contact-page textarea:active,html body .lda-contact-page select:active,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus,html body .lda-contact-page textarea:focus,html body .lda-contact-page select:focus,html body .lda-contact-page input:not([type="submit"]):not([type="button"]):focus-visible,html body .lda-contact-page textarea:focus-visible,html body .lda-contact-page select:focus-visible { border:1px solid #E4DDCC !important; border-color:#E4DDCC !important; outline:none !important; box-shadow:none !important; }
 .lda-container { width:100%; max-width:var(--lda-container-max); margin-inline:auto; padding-inline:var(--lda-page-gutter); box-sizing:border-box; }
-html body [data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition:none !important; }
-html body .lda-motion-card[data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition-delay:0s !important; }
+html body [data-reveal],
+html body [data-reveal][data-revealed],
+html body [data-reveal]:not([data-revealed]) {
+  opacity:1 !important;
+  transform:none !important;
+  transition:none !important;
+  transition-delay:0s !important;
+  animation:none !important;
+}
+html body .lda-motion-card[data-reveal],
+html body .lda-motion-card[data-reveal][data-revealed],
+html body .lda-motion-card[data-reveal]:not([data-revealed]) {
+  opacity:1 !important;
+  transform:none !important;
+  transition:none !important;
+  transition-delay:0s !important;
+  animation:none !important;
+}
 
 
 @media (max-width: 859px) {
