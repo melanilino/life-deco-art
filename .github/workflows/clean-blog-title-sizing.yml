@@ -1,0 +1,57 @@
+name: Clean blog title sizing
+on:
+  push:
+    paths:
+      - '.github/workflows/clean-blog-title-sizing.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Make blog title sizing single-source and mobile-first
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+
+          old_css = """  .bp-title { font-size: 38px; }\n  .bp-title span { font-size: 44px; }\n  .bp-wrap { padding: 56px 24px 100px; }\n  .bp-nav-spacer { height: 88px; }\n  .bp-kicker { font-size: 12px; }\n  .bp-meta { font-size: 13px; }\n  @media (max-width: 859px) {\n    .related-grid { grid-template-columns: 1fr; }\n    .bp-title { font-size: 16px !important; line-height: 1.38 !important; -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; }\n    .bp-title span.lda-script-hero { font-size: 30px !important; line-height: .82 !important; }\n    .bp-wrap { padding: 28px 26px 40px !important; }\n    .bp-nav-spacer { height: 64px; }\n    .bp-kicker, .section-kicker { font-size: 10px !important; margin-bottom: 12px !important; }\n    .bp-meta { font-size: 12px !important; }\n    .post-body h2 { font-size: 17px !important; margin: 24px 0 10px !important; }\n    .post-body p, .post-body li { font-size: 15px !important; line-height: 1.8 !important; }\n  }"""
+          new_css = """  /* Blog title: one source of truth. Mobile first; desktop only scales up. */\n  .bp-title { font-size: 20px; line-height: 1.32; }\n  .bp-title .lda-script-hero { font-size: 36px !important; line-height: .82 !important; }\n  .bp-wrap { padding: 56px 24px 100px; }\n  .bp-nav-spacer { height: 88px; }\n  .bp-kicker { font-size: 12px; }\n  .bp-meta { font-size: 13px; }\n  @media (max-width: 859px) {\n    .related-grid { grid-template-columns: 1fr; }\n    .bp-wrap { padding: 28px 26px 40px !important; }\n    .bp-nav-spacer { height: 64px; }\n    .bp-kicker, .section-kicker { font-size: 10px !important; margin-bottom: 12px !important; }\n    .bp-meta { font-size: 12px !important; }\n    .post-body h2 { font-size: 17px !important; margin: 24px 0 10px !important; }\n    .post-body p, .post-body li { font-size: 15px !important; line-height: 1.8 !important; }\n  }\n  @media (min-width: 860px) {\n    .bp-title { font-size: 38px; line-height: 1.25; }\n    .bp-title .lda-script-hero { font-size: 52px !important; line-height: .78 !important; }\n  }"""
+          if old_css not in s:
+              raise SystemExit('Expected blog title CSS block not found')
+          s = s.replace(old_css, new_css, 1)
+
+          old_h1 = """<h1 class=\"bp-title\" style=\"font-size:min(38px,4.6vw);line-height:1.32;color:#000;font-weight:300;margin:0 0 14px;\">{{ post.titleStart }}<span class=\"lda-script-hero\" style=\"font-family:'Camelia Beauty',cursive;font-weight:400;font-size:min(52px,8.7vw);line-height:.82;\">{{ post.titleAccent }}</span></h1>"""
+          new_h1 = """<h1 class=\"bp-title\" style=\"color:#000;font-weight:300;margin:0 0 14px;\">{{ post.titleStart }}<span class=\"lda-script-hero\" style=\"font-family:'Camelia Beauty',cursive;font-weight:400;\">{{ post.titleAccent }}</span></h1>"""
+          if old_h1 not in s:
+              raise SystemExit('Expected blog title markup not found')
+          s = s.replace(old_h1, new_h1, 1)
+
+          for line in [
+              "      titleFontSize: window.innerWidth <= 859 ? '20px' : '38px',\n",
+              "      titleLineHeight: window.innerWidth <= 859 ? '1.32' : '1.25',\n",
+              "      accentFontSize: window.innerWidth <= 859 ? '34px' : '52px',\n",
+              "      accentLineHeight: window.innerWidth <= 859 ? '.82' : '.78',\n",
+          ]:
+              s = s.replace(line, '', 1)
+
+          marker = """<script>\n(function(){\n  function fixTitle(){\n    if(window.innerWidth>859)return;\n    var t=document.querySelector('.bp-title');\n    if(!t)return;\n    t.style.setProperty('font-size','18px','important');\n    t.style.setProperty('line-height','1.34','important');\n    var a=t.querySelector('.lda-script-hero');\n    if(a){a.style.setProperty('font-size','34px','important');a.style.setProperty('line-height','.82','important');}\n  }\n  fixTitle();\n  setTimeout(fixTitle,50);\n  setTimeout(fixTitle,250);\n  new MutationObserver(fixTitle).observe(document.documentElement,{childList:true,subtree:true});\n})();\n</script>\n"""
+          if marker not in s:
+              raise SystemExit('Expected legacy fixTitle script not found')
+          s = s.replace(marker, '', 1)
+
+          p.write_text(s)
+          print('Blog title sizing cleaned without touching other sections')
+          PY
+      - name: Commit only the blog template
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git diff --cached --check
+          git commit -m "Simplify blog title sizing"
+          git push origin main
