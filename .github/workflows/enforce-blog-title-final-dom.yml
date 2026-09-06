@@ -1,0 +1,58 @@
+name: Enforce blog title final DOM size
+on:
+  push:
+    paths:
+      - '.github/workflows/enforce-blog-title-final-dom.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Enforce blog title size after DC render
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+          marker = '</body>'
+          if marker not in s:
+              raise SystemExit('Missing body close tag')
+          script = '''<script>
+(() => {
+  const applyBlogTitleSize = () => {
+    if (window.innerWidth > 859) return;
+    const title = document.querySelector('.bp-title');
+    if (!title) return;
+    title.style.setProperty('font-size', '20px', 'important');
+    title.style.setProperty('line-height', '1.32', 'important');
+    const accent = title.querySelector('.lda-script-hero');
+    if (accent) {
+      accent.style.setProperty('font-size', '34px', 'important');
+      accent.style.setProperty('line-height', '.82', 'important');
+    }
+  };
+  applyBlogTitleSize();
+  requestAnimationFrame(applyBlogTitleSize);
+  setTimeout(applyBlogTitleSize, 120);
+  const observer = new MutationObserver(applyBlogTitleSize);
+  observer.observe(document.documentElement, { childList: true, subtree: true });
+  window.addEventListener('resize', applyBlogTitleSize, { passive: true });
+})();
+</script>
+'''
+          if 'const applyBlogTitleSize = () =>' in s:
+              raise SystemExit('Final DOM title sizing already present')
+          s = s.replace(marker, script + marker, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git commit -m "Enforce mobile blog title size after render"
+          git push origin main
