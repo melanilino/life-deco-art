@@ -24,44 +24,15 @@
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Bandeja Te Elijo Hoy | Life Deco Art"><meta name="twitter:description" content="Pieza personalizada hecha a mano por Life Deco Art."><meta name="twitter:image" content="https://lifedecoart.com/og-image.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Tienda","item":"https://lifedecoart.com/tienda"},{"@type":"ListItem","position":2,"name":"Personalizados","item":"https://lifedecoart.com/tienda?categoria=personalizados"},{"@type":"ListItem","position":3,"name":"Bandeja \"Te Elijo Hoy\""}]}</script>
 
-<!-- LDA synchronized first paint -->
-<style id="lda-first-paint-gate">
-  html.lda-first-paint-pending,
-  html.lda-first-paint-pending body { background:#fff !important; }
-  html.lda-first-paint-pending body > * { visibility:hidden !important; }
+
+
+<!-- LDA cross-document navigation continuity -->
+<style id="lda-page-nav-continuity">
+@view-transition { navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none !important; }
 </style>
-<script id="lda-first-paint-gate-script">
-(function(){
-  var rootEl = document.documentElement;
-  rootEl.classList.add('lda-first-paint-pending');
-  var released = false;
-  var observer = null;
-  function release(){
-    if (released) return;
-    released = true;
-    if (observer) observer.disconnect();
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        rootEl.classList.remove('lda-first-paint-pending');
-      });
-    });
-  }
-  function ready(){
-    var root = document.getElementById('dc-root');
-    if (!root) return false;
-    if (!root.children.length && !(root.textContent || '').trim()) return false;
-    release();
-    return true;
-  }
-  if (!ready()) {
-    observer = new MutationObserver(function(){ ready(); });
-    observer.observe(rootEl, { childList:true, subtree:true });
-    document.addEventListener('DOMContentLoaded', ready, { once:true });
-    setTimeout(release, 3000);
-  }
-})();
-</script>
-<!-- /LDA synchronized first paint -->
+<!-- /LDA cross-document navigation continuity -->
 
 </head>
 <body>
