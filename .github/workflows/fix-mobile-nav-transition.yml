@@ -1,0 +1,62 @@
+name: Fix mobile navigation transition
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-mobile-nav-transition.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Remove persistent nav transition and close mobile menu before navigation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          # Remove the cross-document transition experiments from every public page.
+          for p in Path('.').glob('*.dc.html'):
+              s = p.read_text()
+              s = re.sub(r'\n?<!-- LDA persistent navigation transition -->.*?<!-- /LDA persistent navigation transition -->\n?', '\n', s, flags=re.S)
+              s = re.sub(r'\n?<!-- LDA cross-document navigation continuity -->.*?<!-- /LDA cross-document navigation continuity -->\n?', '\n', s, flags=re.S)
+              p.write_text(s)
+
+          p = Path('site-enhancements.js')
+          s = p.read_text()
+          marker = '      syncState();\n    });\n\n    document.querySelectorAll(\'a[target="_blank"]\').forEach((link) => {'
+          insert = '''      syncState();
+
+      if (!details.dataset.ldaCloseBeforeNav) {
+        details.dataset.ldaCloseBeforeNav = "true";
+        const closeBeforeNavigation = (event) => {
+          const link = event.target && event.target.closest ? event.target.closest("a[href]") : null;
+          if (!link || !details.contains(link) || !details.open) return;
+          details.open = false;
+          syncState();
+        };
+        panel.addEventListener("pointerdown", closeBeforeNavigation, { passive: true });
+        panel.addEventListener("touchstart", closeBeforeNavigation, { passive: true });
+        panel.addEventListener("click", closeBeforeNavigation);
+      }
+    });
+
+    document.querySelectorAll('a[target="_blank"]').forEach((link) => {'''
+          if 'ldaCloseBeforeNav' not in s:
+              if marker not in s:
+                  raise SystemExit('Could not find mobile menu enhancement insertion point')
+              s = s.replace(marker, insert, 1)
+              p.write_text(s)
+          PY
+      - name: Commit fixes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -- '*.dc.html' site-enhancements.js
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Close mobile menu before page navigation"
+          git push origin main
