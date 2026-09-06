@@ -1,0 +1,105 @@
+name: Fix navigation first paint
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-navigation-first-paint.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Replace blank gate with cross-document continuity
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          targets = [
+              'Aprende Detalle.dc.html', 'Aprende.dc.html', 'Blog Post.dc.html',
+              'Contacto.dc.html', 'Encargos.dc.html', 'Politica de Privacidad.dc.html',
+              'Productos.dc.html', 'Recursos.dc.html', 'Servicios.dc.html',
+              'Sobre Mi.dc.html', 'Terminos y Condiciones.dc.html', 'Tienda.dc.html',
+          ]
+
+          continuity = '''\n<!-- LDA cross-document navigation continuity -->
+<style id="lda-page-nav-continuity">
+@view-transition { navigation: auto; }
+::view-transition-old(root),
+::view-transition-new(root) { animation: none !important; }
+</style>
+<!-- /LDA cross-document navigation continuity -->
+'''
+
+          gate_re = re.compile(r'\n?<!-- LDA synchronized first paint -->.*?<!-- /LDA synchronized first paint -->\n?', re.S)
+          changed = []
+          for name in targets:
+              p = Path(name)
+              s = p.read_text()
+              original = s
+              s = gate_re.sub('\n', s)
+              if 'id="lda-page-nav-continuity"' not in s:
+                  if '</head>' not in s:
+                      raise SystemExit(f'No </head> in {name}')
+                  s = s.replace('</head>', continuity + '\n</head>', 1)
+              if s != original:
+                  p.write_text(s)
+                  changed.append(name)
+
+          print('Updated:', ', '.join(changed))
+          PY
+      - name: Add lightweight internal-page prefetch
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('site-enhancements.js')
+          s = p.read_text()
+          marker = '/* LDA_INTERNAL_PAGE_PREFETCH */'
+          if marker not in s:
+              addon = r'''
+
+/* LDA_INTERNAL_PAGE_PREFETCH */
+(() => {
+  const prefetched = new Set();
+  const canPrefetch = (href) => {
+    try {
+      const u = new URL(href, location.href);
+      return u.origin === location.origin && /^https?:$/.test(u.protocol) && !u.hash && u.pathname !== location.pathname;
+    } catch (_) { return false; }
+  };
+  const prefetch = (href) => {
+    if (!canPrefetch(href)) return;
+    const u = new URL(href, location.href);
+    const key = u.pathname + u.search;
+    if (prefetched.has(key)) return;
+    prefetched.add(key);
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.as = 'document';
+    link.href = u.href;
+    document.head.appendChild(link);
+  };
+  const linkFromEvent = (e) => e.target && e.target.closest ? e.target.closest('a[href]') : null;
+  document.addEventListener('pointerover', (e) => { const a = linkFromEvent(e); if (a) prefetch(a.href); }, { passive: true });
+  document.addEventListener('touchstart', (e) => { const a = linkFromEvent(e); if (a) prefetch(a.href); }, { passive: true });
+  const warmMainNav = () => {
+    document.querySelectorAll('#lda-static-nav a[href]').forEach((a) => prefetch(a.href));
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(warmMainNav, { timeout: 1200 });
+  else setTimeout(warmMainNav, 500);
+})();
+'''
+              p.write_text(s.rstrip() + addon + '\n')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -- '*.dc.html' site-enhancements.js
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Keep page navigation visually continuous"
+          git push origin main
