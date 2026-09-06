@@ -55,22 +55,25 @@ a { color: #F65091; }
   .post-body li { font-size: 16px; line-height: 1.8; color: #333; margin-bottom: 6px; }
   .post-body strong { font-weight: 700; color: #000; }
   .related-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .bp-title { font-size: 38px; }
-  .bp-title span { font-size: 44px; }
+  /* Blog title: one source of truth. Mobile first; desktop only scales up. */
+  .bp-title { font-size: 20px; line-height: 1.32; }
+  .bp-title .lda-script-hero { font-size: 36px !important; line-height: .82 !important; }
   .bp-wrap { padding: 56px 24px 100px; }
   .bp-nav-spacer { height: 88px; }
   .bp-kicker { font-size: 12px; }
   .bp-meta { font-size: 13px; }
   @media (max-width: 859px) {
     .related-grid { grid-template-columns: 1fr; }
-    .bp-title { font-size: 16px !important; line-height: 1.38 !important; -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; }
-    .bp-title span.lda-script-hero { font-size: 30px !important; line-height: .82 !important; }
     .bp-wrap { padding: 28px 26px 40px !important; }
     .bp-nav-spacer { height: 64px; }
     .bp-kicker, .section-kicker { font-size: 10px !important; margin-bottom: 12px !important; }
     .bp-meta { font-size: 12px !important; }
     .post-body h2 { font-size: 17px !important; margin: 24px 0 10px !important; }
     .post-body p, .post-body li { font-size: 15px !important; line-height: 1.8 !important; }
+  }
+  @media (min-width: 860px) {
+    .bp-title { font-size: 38px; line-height: 1.25; }
+    .bp-title .lda-script-hero { font-size: 52px !important; line-height: .78 !important; }
   }
 </style>
 </helmet>
@@ -93,7 +96,7 @@ a { color: #F65091; }
 <div style="max-width:720px;margin:0 auto;" class="bp-wrap">
   <a href="/aprende?tab=Blog" style="font-size:13px;color:#8B795E;text-decoration:none;display:inline-block;margin-bottom:32px;">← Volver al blog</a>
   <div class="bp-kicker" style="letter-spacing:0.2em;text-transform:uppercase;color:#0CC0DF;font-weight:500;margin-bottom:14px;">{{ post.category }}</div>
-  <h1 class="bp-title" style="font-size:min(38px,4.6vw);line-height:1.32;color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span class="lda-script-hero" style="font-family:'Camelia Beauty',cursive;font-weight:400;font-size:min(52px,8.7vw);line-height:.82;">{{ post.titleAccent }}</span></h1>
+  <h1 class="bp-title" style="color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span class="lda-script-hero" style="font-family:'Camelia Beauty',cursive;font-weight:400;">{{ post.titleAccent }}</span></h1>
   <div class="bp-meta" style="color:#8B795E;margin-bottom:32px;">{{ post.meta }}</div>
   <div style="width:100%;aspect-ratio:16/9;background:#F3EEE4;border-radius:8px;margin-bottom:40px;overflow:hidden;">
     <image-slot id="blog-post-cover" shape="rect" fit="cover" priority="high" srcset="{{ post.imageSrcset }}" sizes="100vw" alt="{{ post.imageAlt }}" view-scale="{{ post.imageView.scale }}" view-x="{{ post.imageView.x }}" view-y="{{ post.imageView.y }}" style="width:100%;height:100%;" src="{{ post.imageUrl }}" placeholder="foto de portada del artículo"></image-slot>
@@ -258,10 +261,6 @@ class Component extends DCLogic {
       ...found,
       meta: [found.publishedAt, found.readingTime].filter(Boolean).join(' · ') || found.meta || '',
       ...this.splitTitle(found.title),
-      titleFontSize: window.innerWidth <= 859 ? '20px' : '38px',
-      titleLineHeight: window.innerWidth <= 859 ? '1.32' : '1.25',
-      accentFontSize: window.innerWidth <= 859 ? '34px' : '52px',
-      accentLineHeight: window.innerWidth <= 859 ? '.82' : '.78',
       noImage: !found.imageUrl,
       noAuthorPhoto: !found.authorPhoto,
       hasAuthor: true,
@@ -294,23 +293,6 @@ class Component extends DCLogic {
     };
   }
 }
-</script>
-<script>
-(function(){
-  function fixTitle(){
-    if(window.innerWidth>859)return;
-    var t=document.querySelector('.bp-title');
-    if(!t)return;
-    t.style.setProperty('font-size','18px','important');
-    t.style.setProperty('line-height','1.34','important');
-    var a=t.querySelector('.lda-script-hero');
-    if(a){a.style.setProperty('font-size','34px','important');a.style.setProperty('line-height','.82','important');}
-  }
-  fixTitle();
-  setTimeout(fixTitle,50);
-  setTimeout(fixTitle,250);
-  new MutationObserver(fixTitle).observe(document.documentElement,{childList:true,subtree:true});
-})();
 </script>
 </body>
 </html>
