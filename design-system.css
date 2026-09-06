@@ -147,3 +147,22 @@ html body .lda-motion-card[data-reveal]:not([data-revealed]) {
     margin-bottom: 0 !important;
   }
 }
+
+/* Global boot/loading visual cleanup */
+html body #dc-boot-fallback {
+  display:none !important;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+  transition:none !important;
+}
+html.sc-dc-streaming .sc-placeholder::before,
+html.sc-dc-streaming .sc-interp.sc-missing::before {
+  animation:none !important;
+  background:none !important;
+}
+html.sc-dc-streaming .sc-placeholder,
+html.sc-dc-streaming .sc-interp.sc-missing {
+  transition:none !important;
+  animation:none !important;
+}
