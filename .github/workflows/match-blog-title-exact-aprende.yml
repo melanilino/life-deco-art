@@ -1,0 +1,36 @@
+name: Match blog title exactly to Aprende
+on:
+  push:
+    paths:
+      - '.github/workflows/match-blog-title-exact-aprende.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Match blog title typography to Aprende hero
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+          old = ".bp-title .lda-script-hero { font-size: 36px !important; line-height: .82 !important; }"
+          new = ".bp-title .lda-script-hero { font-size: 1.6em !important; line-height: .82 !important; }"
+          if s.count(old) != 1:
+              raise SystemExit(f'Expected exactly one mobile Camelia rule, found {s.count(old)}')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          print('Blog mobile title now matches Aprende: Montserrat 26px, Camelia 1.6em (~41.6px)')
+          PY
+      - name: Commit only blog template
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git diff --cached --check
+          git commit -m "Match blog title typography to Aprende"
+          git push origin main
