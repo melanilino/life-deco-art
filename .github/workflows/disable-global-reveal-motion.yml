@@ -1,0 +1,52 @@
+name: Disable global reveal motion
+on:
+  push:
+    paths:
+      - '.github/workflows/disable-global-reveal-motion.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Neutralize reveal animation globally
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('design-system.css')
+          s = p.read_text()
+          old = '''html body [data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition:none !important; }
+html body .lda-motion-card[data-reveal]:not([data-revealed]) { opacity:1 !important; transform:none !important; transition-delay:0s !important; }'''
+          new = '''html body [data-reveal],
+html body [data-reveal][data-revealed],
+html body [data-reveal]:not([data-revealed]) {
+  opacity:1 !important;
+  transform:none !important;
+  transition:none !important;
+  transition-delay:0s !important;
+  animation:none !important;
+}
+html body .lda-motion-card[data-reveal],
+html body .lda-motion-card[data-reveal][data-revealed],
+html body .lda-motion-card[data-reveal]:not([data-revealed]) {
+  opacity:1 !important;
+  transform:none !important;
+  transition:none !important;
+  transition-delay:0s !important;
+  animation:none !important;
+}'''
+          if s.count(old) != 1:
+              raise SystemExit(f'Expected reveal block once, found {s.count(old)}')
+          p.write_text(s.replace(old, new, 1))
+          PY
+      - name: Commit design system only
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add design-system.css
+          git diff --cached --check
+          git commit -m "Disable global reveal entry motion"
+          git push origin main
