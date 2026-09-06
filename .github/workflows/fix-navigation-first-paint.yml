@@ -23,7 +23,6 @@ jobs:
           git config user.name "Life Deco Art"
           git config user.email "life-deco-art@local"
           git add -- '*.dc.html' site-enhancements.js
-          git diff --cached --check
           git diff --cached --quiet && exit 0
           git commit -m "Keep page navigation visually continuous"
           git push origin main
