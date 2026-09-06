@@ -7,6 +7,8 @@ for p in Path('.').glob('*.dc.html'):
     if p.name == 'Inicio.dc.html':
         continue
     s=p.read_text()
+    if '<!DOCTYPE html>' not in s or '<head>' not in s:
+        continue
     old=s
     if '/vendor/react-18.3.1.production.min.js' not in s:
         anchor='<link rel="preconnect" href="https://unpkg.com" crossorigin>\n'
