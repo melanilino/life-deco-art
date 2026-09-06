@@ -23,3 +23,4 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "Preload React before public page boot"
           git push origin main
+# retry after excluding component templates
