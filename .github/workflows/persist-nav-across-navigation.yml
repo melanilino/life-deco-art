@@ -1,0 +1,83 @@
+name: Persist navigation across pages
+on:
+  push:
+    paths:
+      - '.github/workflows/persist-nav-across-navigation.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Keep navigation visually stable during document changes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              'Inicio.dc.html',
+              'Aprende Detalle.dc.html',
+              'Aprende.dc.html',
+              'Blog Post.dc.html',
+              'Contacto.dc.html',
+              'Encargos.dc.html',
+              'Politica de Privacidad.dc.html',
+              'Productos.dc.html',
+              'Recursos.dc.html',
+              'Servicios.dc.html',
+              'Sobre Mi.dc.html',
+              'Terminos y Condiciones.dc.html',
+              'Tienda.dc.html',
+          ]
+
+          css = '''\n<!-- LDA persistent navigation transition -->
+<style id="lda-persistent-navigation-transition">
+@view-transition { navigation: auto; }
+#lda-static-nav { view-transition-name: lda-main-navigation; }
+#lda-whatsapp-fab-static { view-transition-name: lda-whatsapp-fab; }
+::view-transition-old(root),
+::view-transition-new(root),
+::view-transition-group(lda-main-navigation),
+::view-transition-old(lda-main-navigation),
+::view-transition-new(lda-main-navigation),
+::view-transition-group(lda-whatsapp-fab),
+::view-transition-old(lda-whatsapp-fab),
+::view-transition-new(lda-whatsapp-fab) {
+  animation: none !important;
+}
+::view-transition-old(lda-main-navigation),
+::view-transition-new(lda-main-navigation),
+::view-transition-old(lda-whatsapp-fab),
+::view-transition-new(lda-whatsapp-fab) {
+  mix-blend-mode: normal !important;
+}
+</style>
+<!-- /LDA persistent navigation transition -->
+'''
+
+          changed=[]
+          for name in targets:
+              p=Path(name)
+              if not p.exists():
+                  raise SystemExit(f'Missing {name}')
+              s=p.read_text()
+              if 'id="lda-persistent-navigation-transition"' in s:
+                  continue
+              if '</head>' not in s:
+                  raise SystemExit(f'No </head> in {name}')
+              p.write_text(s.replace('</head>', css+'\n</head>', 1))
+              changed.append(name)
+          print('Updated:', ', '.join(changed) if changed else 'none')
+          PY
+      - name: Commit page updates
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -- '*.dc.html'
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Keep navigation stable across page loads"
+          git push origin main
