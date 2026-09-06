@@ -1,0 +1,25 @@
+name: Hold mobile menu until destination ready
+on:
+  push:
+    paths:
+      - '.github/workflows/hold-mobile-menu-until-ready.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Apply mobile navigation hold
+        run: python3 .github/scripts/hold_mobile_menu_until_ready.py
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -- '*.dc.html' design-system.css site-enhancements.js
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Hold mobile menu until destination is ready"
+          git push origin main
