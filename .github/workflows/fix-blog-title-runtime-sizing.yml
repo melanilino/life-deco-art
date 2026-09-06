@@ -1,0 +1,45 @@
+name: Fix blog title runtime sizing
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-blog-title-runtime-sizing.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Drive blog title sizes from component render values
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+
+          # Make the actual rendered H1 consume simple runtime values instead of CSS/media/clamp rules.
+          pattern = re.compile(r'<h1 class="bp-title" style="[^"]*">\{\{ post\.titleStart \}\}<span class="lda-script-hero" style="[^"]*">\{\{ post\.titleAccent \}\}</span></h1>')
+          replacement = '<h1 class="bp-title" style="font-size:{{ post.titleFontSize }};line-height:{{ post.titleLineHeight }};color:#000;font-weight:300;margin:0 0 14px;">{{ post.titleStart }}<span class="lda-script-hero" style="font-family:\'Camelia Beauty\',cursive;font-weight:400;font-size:{{ post.accentFontSize }};line-height:{{ post.accentLineHeight }};">{{ post.titleAccent }}</span></h1>'
+          s2, n = pattern.subn(replacement, s, count=1)
+          if n != 1:
+              raise SystemExit(f'Expected exactly one blog title H1, found {n}')
+          s = s2
+
+          # Inject explicit runtime sizing into the post object generated in renderVals().
+          needle = "      ...this.splitTitle(found.title),\n"
+          if needle not in s:
+              raise SystemExit('Could not find splitTitle insertion point')
+          runtime = "      ...this.splitTitle(found.title),\n      titleFontSize: window.innerWidth <= 859 ? '20px' : '38px',\n      titleLineHeight: window.innerWidth <= 859 ? '1.32' : '1.25',\n      accentFontSize: window.innerWidth <= 859 ? '34px' : '52px',\n      accentLineHeight: window.innerWidth <= 859 ? '.82' : '.78',\n"
+          s = s.replace(needle, runtime, 1)
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git commit -m "Drive blog title sizing from runtime values"
+          git push origin main
