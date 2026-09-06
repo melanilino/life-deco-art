@@ -43,6 +43,7 @@
   }
 </style>
 </helmet>
+<div style="display:{{ detailDisplay }};">
 <dc-import name="NavBar" active-page="tienda" hint-size="100%,80px"></dc-import>
 <div style="height:{{ navGap }};"></div>
 
@@ -176,6 +177,7 @@
 </section>
 
 <dc-import name="Footer" hint-size="100%,320px"></dc-import>
+</div>
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -320,6 +322,7 @@ class Component extends DCLogic {
     const galleryView = (entry) => { const a = (entry && entry.adjustment) || {}; return { scale: Math.max(1, Math.min(3, Number(a.zoom || 100) / 100)), x: Math.max(-50, Math.min(50, Number(a.x || 0))), y: Math.max(-50, Math.min(50, Number(a.y || 0))) }; };
     const thumbs = gallery.map((entry, i) => ({ id: `pd-thumb-${entry.id || i}`, src: entry.url || '', srcset: entry.srcset || '', alt: entry.alt || `${product.name}, vista ${i + 1}`, view: galleryView(entry), ring: selectedGallery && selectedGallery.id === entry.id ? '0 0 0 2px #F65091' : 'none', onClick: () => this.setState({ gallerySelection: selectedGallery && selectedGallery.id === entry.id ? null : entry.id }), placeholder: `vista ${i+1} de ${product.name}` }));
     return {
+      detailDisplay: this.state.productReady ? 'block' : 'none',
       navGap: m ? '64px' : '88px',
       mainAspect: m ? '1 / 1' : '4 / 5',
       mainMaxHeight: m ? '360px' : 'none',
