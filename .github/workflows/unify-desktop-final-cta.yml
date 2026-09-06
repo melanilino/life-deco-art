@@ -1,0 +1,69 @@
+name: Unify desktop final CTA
+on:
+  push:
+    paths:
+      - '.github/workflows/unify-desktop-final-cta.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Unify desktop CTA geometry
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          pages=[]
+          for p in Path('.').glob('*.dc.html'):
+              s=p.read_text()
+              if '¿No diste con lo' in s and 'lda-cta-script-word' in s:
+                  pages.append(p)
+
+          if not pages:
+              raise SystemExit('No final CTA pages found')
+
+          ref=next((p for p in pages if 'sobre' in p.name.lower()), None)
+          if not ref:
+              raise SystemExit('Sobre Mi reference page not found')
+
+          rs=ref.read_text()
+          keys=['ctaRegionHeight','ctaTopPad','ctaBottomPad','ctaBoxHeight','ctaPad','ctaRadius','ctaTextSize','ctaTextGap','ctaBtnGap','ctaBtnDir','ctaWaPad','ctaWaRadius','ctaWaSize']
+          ref_expr={}
+          for key in keys:
+              m=re.search(rf"({key}:\s*m\s*\?\s*'[^']*'\s*:\s*'[^']*')", rs)
+              if not m:
+                  raise SystemExit(f'Reference value missing for {key} in {ref.name}')
+              ref_expr[key]=m.group(1)
+
+          changed=[]
+          for p in pages:
+              s=p.read_text(); old=s
+              for key, expr in ref_expr.items():
+                  s,n=re.subn(rf"{key}:\s*m\s*\?\s*'[^']*'\s*:\s*'[^']*'", expr, s, count=1)
+                  if n!=1:
+                      raise SystemExit(f'{key} not uniquely found in {p.name}')
+              # Preserve each page's colors/content, but bring desktop actions a little closer to description.
+              s,n=re.subn(r"ctaBtnMarginTop:\s*m\s*\?\s*'([^']*)'\s*:\s*'[^']*'", r"ctaBtnMarginTop: m ? '\1' : '38px'", s, count=1)
+              if n!=1:
+                  raise SystemExit(f'ctaBtnMarginTop not found in {p.name}')
+              if s!=old:
+                  p.write_text(s)
+                  changed.append(p.name)
+
+          print('Reference:', ref.name)
+          print('Updated:', ', '.join(changed))
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add -- '*.dc.html'
+          git diff --cached --check
+          git diff --cached --quiet && exit 0
+          git commit -m "Unify desktop final CTA layout"
+          git push origin main
