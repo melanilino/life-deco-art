@@ -1,0 +1,31 @@
+name: Fix blog iOS text sizing
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-blog-ios-text-adjust.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Prevent iOS text inflation on blog title
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('Blog Post.dc.html')
+          s = p.read_text()
+          s = s.replace("  html, body { margin: 0; max-width: 100%; overflow-x: clip; }", "  html, body { margin: 0; max-width: 100%; overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }")
+          s = s.replace("    .bp-title { font-size: 26px; }", "    .bp-title { font-size: 26px !important; -webkit-text-size-adjust: 100% !important; text-size-adjust: 100% !important; }")
+          p.write_text(s)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "Life Deco Art"
+          git config user.email "life-deco-art@local"
+          git add 'Blog Post.dc.html'
+          git commit -m "Prevent iOS text inflation on blog titles"
+          git push origin main
