@@ -244,11 +244,13 @@ class Component extends DCLogic {
         cms.getEntities('workshops').catch(() => []),
         cms.getPageContent('global').catch(() => ({})),
       ]);
-      const legacyItems = type === 'taller' ? (data.talleres || []) : (data.cursos || []);
-      const items = legacyItems.length ? legacyItems : entities.map((entry, index) => {
-        const legacy = legacyItems.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
-        return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
-      });
+      const legacyItems = type === 'taller' ? (Array.isArray(data.talleres) ? data.talleres : []) : (Array.isArray(data.cursos) ? data.cursos : []);
+      const entityItems = Array.isArray(entities) ? entities : [];
+      const useful = (entry) => Object.fromEntries(Object.entries(entry || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined));
+      const legacyById = new Map(legacyItems.map((entry, index) => [String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)), entry]));
+      const entityById = new Map(entityItems.map((entry, index) => [String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)), entry]));
+      const itemIds = [...new Set([...legacyById.keys(), ...entityById.keys()])];
+      const items = itemIds.map((itemId) => ({ ...useful(legacyById.get(itemId)), ...useful(entityById.get(itemId)), id: itemId }));
       const item = items.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry, index) => String(entry.id || (type === 'taller' ? `w${index + 1}` : `cu${index + 1}`)) === String(id));
       if (item) {
         const relation = String(item.nextItemId || '').split(':'), relatedList = relation[0] === 'taller' ? ((data.talleres && data.talleres.length) ? data.talleres : allWorkshops) : ((data.cursos && data.cursos.length) ? data.cursos : allCourses);
@@ -370,7 +372,7 @@ class Component extends DCLogic {
       faqs: Array.isArray(live.faqs) && live.faqs.length ? live.faqs : fallback.faqs,
       testimonials: Array.isArray(live.testimonials) && live.testimonials.length ? live.testimonials : fallback.testimonials,
       gallery: live.gallery || live.pastGallery || [],
-      pastGallery: ((Array.isArray(live.gallery) && live.gallery.length) ? live.gallery : ((Array.isArray(live.pastGallery) && live.pastGallery.length) ? live.pastGallery : fallback.pastGallery)).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: item.placeholder || 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
+      pastGallery: ((Array.isArray(live.gallery) && live.gallery.length) ? live.gallery : ((Array.isArray(live.pastGallery) && live.pastGallery.length) ? live.pastGallery : (Array.isArray(fallback.pastGallery) ? fallback.pastGallery : []))).map((entry, index) => { const item = typeof entry === 'string' ? { url: entry } : entry, adjustment = item.adjustment || {}; return { ...item, srcset: item.srcset || '', alt: item.alt || `${live.name || fallback.title}: imagen ${index + 1}`, id: 'ap-past-' + index, placeholder: item.placeholder || 'foto de taller anterior', viewScale: Number(adjustment.scale || adjustment.zoom / 100) || 1, viewX: Number(adjustment.x) || 0, viewY: Number(adjustment.y) || 0 }; }),
       mapImage: live.mapImageUrl || fallback.mapImage,
       locationDetail: live.locationDetail || fallback.locationDetail,
       cancelPolicy: live.cancellationPolicy || fallback.cancelPolicy,
@@ -391,7 +393,7 @@ class Component extends DCLogic {
           ].filter(row => row.value),
       heroImage: live.imageUrl || '',
     } : fallback;
-    const faqs = d.faqs.map((f, i) => ({
+    const faqs = (Array.isArray(d.faqs) ? d.faqs : []).map((f, i) => ({
       ...f,
       open: this.state.faqOpen === i,
       arrow: this.state.faqOpen === i ? 'rotate(180deg)' : 'rotate(0deg)',

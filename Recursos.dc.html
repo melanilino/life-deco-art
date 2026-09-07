@@ -139,11 +139,13 @@ class Component extends DCLogic {
         cms.getPageContent('aprende'),
         cms.getEntities('resources').catch(() => []),
       ]);
-      const legacyResources = data.gratis || [];
-      const resources = legacyResources.length ? legacyResources : entities.map((entry, index) => {
-        const legacy = legacyResources.find((old, oldIndex) => String(old.id || oldIndex) === String(entry.id || index));
-        return { ...entry, imageAdjustments: entry.imageAdjustments || (legacy && legacy.imageAdjustments) || {} };
-      });
+      const legacyResources = Array.isArray(data.gratis) ? data.gratis : [];
+      const entityResources = Array.isArray(entities) ? entities : [];
+      const useful = (entry) => Object.fromEntries(Object.entries(entry || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined));
+      const legacyById = new Map(legacyResources.map((entry, index) => [String(entry.id || `g${index + 1}`), entry]));
+      const entityById = new Map(entityResources.map((entry, index) => [String(entry.id || `g${index + 1}`), entry]));
+      const resourceIds = [...new Set([...legacyById.keys(), ...entityById.keys()])];
+      const resources = resourceIds.map((resourceId) => ({ ...useful(legacyById.get(resourceId)), ...useful(entityById.get(resourceId)), id: resourceId }));
       const resource = resources.filter((entry) => (entry.status || 'Activo') !== 'Borrador').find((entry, index) => String(entry.id || `g${index + 1}`) === String(id));
       if (resource) {
         const relation = String(resource.nextItemId || '').split(':');
