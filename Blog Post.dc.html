@@ -203,6 +203,7 @@ class Component extends DCLogic {
   ];
 
   async componentDidMount() {
+    this.syncPostBody();
     try {
       const cms = await import('./cms.js');
       const [data, entities] = await Promise.all([
@@ -234,6 +235,21 @@ class Component extends DCLogic {
     } catch (e) {
       this.setState({ allPosts: this.DEFAULT_POSTS, loading: false });
     }
+  }
+
+  componentDidUpdate() {
+    this.syncPostBody();
+  }
+
+  syncPostBody() {
+    const container = document.querySelector('.post-body');
+    if (!container) return;
+    const posts = (this.state.allPosts.length ? this.state.allPosts : this.DEFAULT_POSTS)
+      .filter(post => (post.status || 'Activo') !== 'Borrador');
+    const id = new URLSearchParams(window.location.search).get('id') || (posts[0] && posts[0].id);
+    const found = posts.find(post => String(post.id) === String(id));
+    const content = found && found.content ? String(found.content) : '';
+    if (container.innerHTML !== content) container.innerHTML = content;
   }
 
   splitTitle(title) {

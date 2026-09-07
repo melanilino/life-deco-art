@@ -354,6 +354,12 @@ class Component extends DCLogic {
 
   async componentDidMount() {
     this.setupReveal();
+    const query = new URLSearchParams(window.location.search);
+    const queryCategory = query.get('categoria');
+    const querySubcategory = query.get('subcategoria');
+    if (queryCategory) {
+      this.setState({ category: queryCategory, subcategory: querySubcategory || null, expanded: queryCategory, visiblePage: 1 });
+    }
     if (window.location.hash) {
       this.setState({ category: null, subcategory: null });
       const tryScroll = (n) => {

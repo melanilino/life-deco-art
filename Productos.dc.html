@@ -70,9 +70,9 @@ try{
   <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:{{ crumbGap }};flex-wrap:wrap;font-size:{{ crumbSize }};line-height:1.5;color:#8B795E;font-weight:300;min-width:0;">
     <a href="/tienda" style="text-decoration:none;color:#8B795E;">Tienda</a>
     <span>/</span>
-    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productCategory }}</a>
+    <a href="{{ categoryHref }}" style="text-decoration:none;color:#8B795E;">{{ productCategory }}</a>
     <span>/</span>
-    <a href="/tienda" style="text-decoration:none;color:#8B795E;">{{ productSubcategory }}</a>
+    <a href="{{ subcategoryHref }}" style="text-decoration:none;color:#8B795E;">{{ productSubcategory }}</a>
     <span>/</span>
     <span style="color:#000000;">{{ productName }}</span>
   </div>
@@ -366,6 +366,8 @@ class Component extends DCLogic {
       productReady: this.state.productReady,
       isMobile: m,
       productName: product.name || '', productPrice: product.price || '', productDesc: product.desc || '', productTag: product.tag || '', productCategory: product.category || 'Tienda', productSubcategory: product.subcategory || '', productDelivery: product.delivery || '',
+      categoryHref: `/tienda?categoria=${encodeURIComponent(product.category || '')}`,
+      subcategoryHref: `/tienda?categoria=${encodeURIComponent(product.category || '')}&subcategoria=${encodeURIComponent(product.subcategory || '')}`,
       mainImage: selectedGallery ? selectedGallery.url : (product.imageUrl || ''), mainSrcset: selectedGallery ? (selectedGallery.srcset || '') : ((product.imageMeta && product.imageMeta.imageUrl && product.imageMeta.imageUrl.srcset) || ''), mainAlt: selectedGallery ? (selectedGallery.alt || product.name || 'Producto') : ((product.imageAlts && product.imageAlts.imageUrl) || product.name || 'Producto'), mainImageView: selectedGallery ? galleryView(selectedGallery) : imageView(product), thumbs, hasThumbs: thumbs.length > 0, colors, sizes, hasColors: colors.length > 0, hasSizes: sizes.length > 0, colorDisplay: colors.length ? 'block' : 'none', sizeDisplay: sizes.length ? 'block' : 'none',
       includes: Array.isArray(product.includes) ? product.includes.filter(Boolean) : ['Bandeja de madera lacada', 'Lettering pintado a mano', 'Boceto digital previo'],
       excludes: Array.isArray(product.excludes) ? product.excludes.filter(Boolean) : ['Empaque de regalo (disponible por separado)', 'Envío incluido en el precio'],

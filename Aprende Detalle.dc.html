@@ -57,7 +57,7 @@ try{
   <div style="max-width:1240px;margin:0 auto;padding:{{ crumbPad }};display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:#8B795E;font-weight:300;">
     <a href="/aprende" style="text-decoration:none;color:#8B795E;">Aprende</a>
     <span>/</span>
-    <a href="/aprende" style="text-decoration:none;color:#8B795E;">{{ kindLabelPlural }}</a>
+    <a href="{{ kindHref }}" style="text-decoration:none;color:#8B795E;">{{ kindLabelPlural }}</a>
     <span>/</span>
     <span style="color:#000000;">{{ title }}</span>
   </div>
@@ -416,6 +416,7 @@ class Component extends DCLogic {
       isMobile: m,
       showDesktopBooking: !m,
       isTaller: type === 'taller', isCurso: type === 'curso',
+      kindHref: `/aprende?tab=${type === 'taller' ? 'Talleres' : 'Cursos'}`,
       whatsappUrl: `https://wa.me/${this.state.whatsappNumber || '18495390410'}?text=` + encodeURIComponent(`Hola! Quiero reservar mi plaza en: ${d.title}.`),
       ...d, faqs,
       heroSrcset: (d.imageMeta && d.imageMeta.imageUrl && d.imageMeta.imageUrl.srcset) || '',
