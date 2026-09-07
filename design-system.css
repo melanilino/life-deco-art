@@ -469,3 +469,82 @@ html.sc-dc-streaming .sc-interp.sc-missing {
     opacity: 1 !important;
   }
 }
+
+/* Canonical closing CTA — desktop follows the approved Sobre Mi composition. */
+@media (min-width: 860px) {
+  html body .lda-closing-cta-region {
+    max-width:1240px !important;
+    height:508px !important;
+    margin:0 auto !important;
+    padding:72px 48px 80px !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    align-items:flex-start !important;
+  }
+  html body .lda-closing-cta-panel {
+    width:100% !important;
+    max-width:760px !important;
+    height:356px !important;
+    margin:0 auto !important;
+    padding:0 !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    text-align:center !important;
+  }
+  html body .lda-closing-cta-title {
+    margin:0 0 8px !important;
+    color:#000000 !important;
+    font-size:32px !important;
+    line-height:1.3 !important;
+    font-weight:300 !important;
+    white-space:nowrap !important;
+  }
+  html body .lda-closing-cta-text {
+    margin:0 0 48px !important;
+    color:var(--lda-text-secondary,#756348) !important;
+    font-size:16px !important;
+    line-height:1.7 !important;
+    font-weight:300 !important;
+  }
+  html body .lda-closing-cta-actions {
+    display:flex !important;
+    flex-direction:row !important;
+    justify-content:center !important;
+    align-items:center !important;
+    flex-wrap:wrap !important;
+    gap:18px !important;
+    margin-top:0 !important;
+  }
+  html body .lda-closing-cta-primary {
+    min-height:44px !important;
+    padding:15px 30px !important;
+    border-radius:4px !important;
+    color:#FFFFFF !important;
+    background:#000000 !important;
+    font-size:14px !important;
+    line-height:1.2 !important;
+    font-weight:500 !important;
+    letter-spacing:0.02em !important;
+    box-sizing:border-box !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+  }
+  html body .lda-closing-cta-secondary {
+    min-height:44px !important;
+    padding:6px 0 !important;
+    color:#000000 !important;
+    font-size:14px !important;
+    line-height:1.2 !important;
+    font-weight:500 !important;
+    letter-spacing:0.02em !important;
+    box-sizing:border-box !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    background-image:linear-gradient(#000000,#000000) !important;
+  }
+}
