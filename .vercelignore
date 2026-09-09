@@ -1,0 +1,7 @@
+# Herramientas de prueba y evidencia local; no forman parte del sitio publicado.
+tests/
+.impeccable/
+PRODUCT.md
+panel/*.md
+scripts/panel-dev-server.mjs
+scripts/panel-ui-refinements.mjs
