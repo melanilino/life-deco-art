@@ -1,7 +1,7 @@
 # Tu panel de Life Deco Art
 
 ## Para comenzar
-Entra con el correo y la contraseña que ya utilizas en el CMS. El panel tiene un menú propio; el enlace «Abrir CMS de la web» abre el administrador del sitio.
+Entra con el correo y la contraseña privados del hub. El panel tiene un menú propio organizado en Inicio, Clientes, Ventas, Pendientes, Catálogo, Finanzas, Contenido, Agenda y Administración.
 
 Completa primero Configuración: datos comerciales, logotipo, valor habitual de tu hora, condiciones e instrucciones de pago. Los importes se muestran en pesos dominicanos. No escribas contraseñas en las notas ni en el directorio de cuentas.
 
