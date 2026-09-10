@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Panel privado: acceso otorgado únicamente desde la administración de Firebase.
+    function panelOwner(uid) {
+      return request.auth != null && request.auth.uid == uid
+        && exists(/databases/$(database)/documents/panelAccess/$(uid))
+        && get(/databases/$(database)/documents/panelAccess/$(uid)).data.enabled == true;
+    }
+    match /panelAccess/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+    match /panelData/{uid}/records/{recordId} {
+      allow read: if panelOwner(uid);
+      allow create: if panelOwner(uid)
+        && request.resource.data.id == recordId
+        && request.resource.data.kind in ['clients','products','calculations','quotes','invoices','orders','materials','purchases','movements','payments','expenses','campaigns','content','resources','accounts','tasks'];
+      allow update: if panelOwner(uid)
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.kind == resource.data.kind
+        && !(resource.data.kind in ['payments','movements'])
+        && (!(resource.data.kind in ['invoices','quotes']) || resource.data.status == 'borrador'
+          || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status','reason','approvedAt','updatedAt','resourceIds']));
+      allow delete: if false;
+    }
+    match /panelData/{uid}/meta/{metaId} {
+      allow read: if panelOwner(uid);
+      allow create, update: if panelOwner(uid) && metaId == 'state'
+        && request.resource.data.version is int;
+      allow delete: if false;
+    }
+    match /panelData/{uid}/history/{entryId} {
+      allow read, create: if panelOwner(uid);
+      allow update, delete: if false;
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

@@ -1,0 +1,16 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Solo la cuenta propietaria del hub puede usar su ruta privada.
+    match /panel-private/{uid}/{fileId} {
+      allow read: if request.auth != null && request.auth.uid == uid
+        && uid == 'HYMvz06CtsTK1ny44VJRNfLXV0K2';
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && uid == 'HYMvz06CtsTK1ny44VJRNfLXV0K2'
+        && request.resource.size < 15 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp|gif)|video/(mp4|webm)|application/pdf');
+      allow delete: if false;
+    }
+    match /{allPaths=**} { allow read, write: if false; }
+  }
+}

@@ -1,0 +1,22 @@
+import {totals,money,cents} from './domain.mjs';
+
+// Minimal paginated PDF writer; WinAnsi standard font supports the Spanish document text.
+// Business documents intentionally receive only sale prices, never internal costs.
+export function documentPdf(record,{paid=0,logo=null}={}){
+ const t=totals(record),issuer=record.issuer||{},client=record.client||{},pages=[];let rows=[];
+ const add=(text,size=11)=>{const chars=size>=18?43:82;const paragraphs=String(text||'').split('\n');for(const paragraph of paragraphs){const words=paragraph.split(/\s+/).flatMap(word=>word.match(new RegExp(`.{1,${chars}}`,'g'))||['']);let line='';for(const word of words){if((line+' '+word).length>chars&&line){rows.push({text:line,size});line='';}line+=(line?' ':'')+word;}rows.push({text:line,size});}};
+ add(issuer.name||'Life Deco Art',24);add(record.kind==='quotes'?'COTIZACIÓN':'FACTURA SIN COMPROBANTE FISCAL',14);add(`${record.number}${record.revision>1?' · Versión '+record.revision:''}`);
+ if(record.status==='borrador')add('BORRADOR · No emitido',12);
+ add([issuer.phone,issuer.email,issuer.address].filter(Boolean).join(' · '));add('');add(`Cliente: ${client.name||''}`);if(client.company)add(client.company);if(client.email)add(client.email);if(client.phone)add(client.phone);
+ add(`Fecha: ${record.date||''}`);if(record.validUntil)add(`Válida hasta: ${record.validUntil}`);if(record.due)add(`Vencimiento / entrega: ${record.due}`);add('');add(record.name,14);add('');
+ for(const l of record.lines||[]){add(l.description,12);add(`${l.quantity} × ${money(cents(l.price))}                         ${money(Math.round(Number(l.quantity)*cents(l.price)))}`);add('');}
+ add(`Subtotal: ${money(t.subtotal)}`);if(t.discount)add(`Descuento: ${money(t.discount)}`);if(t.shipping)add(`Envío: ${money(t.shipping)}`);if(t.tax)add(`Impuestos: ${money(t.tax)}`);add(`Total: ${money(t.total)}`,16);if(t.advance)add(`Anticipo solicitado: ${money(t.advance)}`);if(record.kind==='invoices'){add(`Pagos netos registrados: ${money(paid)}`);add(`Saldo: ${money(t.total-paid)}`);}add('');if(record.terms){add('Condiciones',12);add(record.terms);}if(issuer.paymentInstructions){add('Instrucciones de pago',12);add(issuer.paymentInstructions);}if(record.notes){add('Notas',12);add(record.notes);}
+ let height=0,page=[];for(const row of rows){if(height+row.size+9>680){pages.push(page);page=[];height=0;}page.push(row);height+=row.size+9;}if(page.length)pages.push(page);
+ const encoded=text=>String(text).replace(/[\u2018\u2019]/g,"'").replace(/[\u201c\u201d]/g,'"').replace(/[\u2013\u2014]/g,'-').replace(/[^\x20-\xff]/g,'?').replace(/([\\()])/g,'\\$1');
+ const objects=['','<< /Type /Catalog /Pages 2 0 R >>','','<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>'];
+ let logoId=null;if(logo?.bytes){logoId=objects.length;const bytes=Array.from(logo.bytes,b=>String.fromCharCode(b)).join('');objects.push(`<< /Type /XObject /Subtype /Image /Width ${logo.width} /Height ${logo.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n${bytes}\nendstream`);}
+ const kids=[];for(let i=0;i<pages.length;i++){const pageId=objects.length,streamId=pageId+1;kids.push(`${pageId} 0 R`);let stream='0.965 0.314 0.569 RG 2 w 48 815 m 547 815 l S\n';if(logoId&&i===0){const h=Math.min(60,75*logo.height/logo.width),w=h*logo.width/logo.height;stream+=`q ${w} 0 0 ${h} ${547-w} ${805-h} cm /Logo Do Q\n`;}let y=790;for(const row of pages[i]){stream+=`BT /F1 ${row.size} Tf 0.14 0.13 0.12 rg 1 0 0 1 48 ${y} Tm (${encoded(row.text)}) Tj ET\n`;y-=row.size+9;}stream+=`BT /F1 9 Tf 1 0 0 1 48 32 Tm (${encoded(`Life Deco Art · ${i+1} / ${pages.length}`)}) Tj ET\n`;objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> ${logoId?`/XObject << /Logo ${logoId} 0 R >>`:''} >> /Contents ${streamId} 0 R >>`,`<< /Length ${stream.length} >>\nstream\n${stream}endstream`);}
+ objects[2]=`<< /Type /Pages /Kids [${kids.join(' ')}] /Count ${pages.length} >>`;
+ let text='%PDF-1.4\n%\xE2\xE3\xCF\xD3\n',offsets=[0];for(let i=1;i<objects.length;i++){offsets.push(text.length);text+=`${i} 0 obj\n${objects[i]}\nendobj\n`;}const start=text.length;text+=`xref\n0 ${objects.length}\n0000000000 65535 f \n`;for(const n of offsets.slice(1))text+=`${String(n).padStart(10,'0')} 00000 n \n`;text+=`trailer\n<< /Size ${objects.length} /Root 1 0 R >>\nstartxref\n${start}\n%%EOF`;
+ return new Blob([Uint8Array.from(text,c=>c.charCodeAt(0))],{type:'application/pdf'});
+}

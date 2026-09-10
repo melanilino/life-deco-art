@@ -1,0 +1,4 @@
+# Evidencia sintética de verificación local.
+.impeccable/review/
+# Script temporal ya aplicado durante el refinamiento visual.
+scripts/panel-ui-refinements.mjs
