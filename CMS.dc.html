@@ -89,14 +89,14 @@ x-dc{display:none!important}
     <div style="font-size:20px;font-weight:300;margin-bottom:20px;">CMS — Web</div>
     <div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px;">
     <sc-for list="{{ pages }}" as="p" hint-placeholder-count="5">
-      <div onClick="{{ p.onSelect }}" style="min-height:44px;box-sizing:border-box;padding:11px 14px;border-radius:4px;font-size:14px;margin-bottom:3px;cursor:pointer;background:{{ p.bg }};color:{{ p.color }};display:flex;align-items:center;gap:12px;">
+      <div onClick="{{ p.onSelect }}" style="min-height:44px;box-sizing:border-box;padding:11px 14px;border-radius:4px;font-size:13px;margin-bottom:3px;cursor:pointer;background:{{ p.bg }};color:{{ p.color }};display:flex;align-items:center;gap:12px;">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:18px;height:18px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="{{ p.iconPath }}"></path></svg>
         <span>{{ p.label }}</span>
       </div>
     </sc-for>
     </div>
     <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.15);padding-top:8px;">
-      <button type="button" onClick="{{ onLogout }}" style="width:100%;min-height:44px;box-sizing:border-box;background:transparent;border:none;color:rgba(255,255,255,.75);padding:0;font-family:Montserrat,sans-serif;font-size:14px;font-weight:300;line-height:1.4;text-align:left;cursor:pointer;" style-hover="color:#FFFFFF;">Cerrar sesión</button>
+      <button type="button" onClick="{{ onLogout }}" style="width:100%;min-height:44px;box-sizing:border-box;background:transparent;border:none;color:rgba(255,255,255,.75);padding:0;font-family:Montserrat,sans-serif;font-size:13px;font-weight:300;line-height:1.4;text-align:left;cursor:pointer;" style-hover="color:#FFFFFF;">Cerrar sesión</button>
     </div>
   </div>
   <div style="flex: 1; padding: 26px 56px 48px; background-color: #F9F6EF; position: relative;">
