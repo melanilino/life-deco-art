@@ -31,3 +31,8 @@
 .topbar::after{content:"";position:absolute;right:38px;bottom:0;left:38px;border-bottom:1px solid var(--line)}
 @media(max-width:1150px){.topbar::after{right:24px;left:24px}}
 @media(max-width:859px){.topbar::after{right:18px;left:18px}}
+
+/* Información contextual y acción principal de la franja superior. */
+.topbar .page-description{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topbar [data-action=refresh]{background:var(--cyan);border-color:var(--cyan);color:white}
+.topbar [data-action=refresh]:hover{background:#0aacc7;border-color:#0aacc7;color:white}
