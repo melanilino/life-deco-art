@@ -58,7 +58,7 @@ x-dc{display:none!important}
   a:hover { color: #000000; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
-  .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto; }
+  .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column; }
   body:has(.cms-contained-editor) { overflow:hidden; }
   @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview, .cms-spotlight-grid { grid-template-columns:1fr!important; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
@@ -92,7 +92,7 @@ x-dc{display:none!important}
       <div onClick="{{ p.onSelect }}" style="padding:11px 14px;border-radius:4px;font-size:14px;margin-bottom:3px;cursor:pointer;background:{{ p.bg }};color:{{ p.color }};">{{ p.label }}</div>
     </sc-for>
     </div>
-    <div style="margin-top:24px;border-top:1px solid rgba(255,255,255,.15);padding-top:20px;">
+    <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,.15);padding-top:20px;">
       <button type="button" onClick="{{ onLogout }}" style="width:100%;min-height:44px;box-sizing:border-box;background:transparent;border:1px solid #514A40;color:#FFFFFF;padding:10px 15px;border-radius:6px;font-family:Montserrat,sans-serif;font-size:13px;font-weight:400;line-height:1.4;text-align:center;cursor:pointer;" style-hover="background:#272421;border-color:#968774;">Cerrar sesión</button>
     </div>
   </div>
