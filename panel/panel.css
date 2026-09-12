@@ -91,3 +91,4 @@ td,.agenda-row{border-bottom-color:var(--beige)}
 .workspace,.quick-notes-dialog{background:var(--cream)}
 .topbar::after,.quick-notes-head,.quick-notes-list article{border-color:var(--line)}
 #quick-note-text:focus-visible{outline:0;border-color:var(--line);box-shadow:none}
+.overview{border-top:0}
