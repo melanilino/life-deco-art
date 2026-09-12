@@ -15,7 +15,7 @@
 
 ## Inicio del hub
 - “Agenda y próximas entregas” reúne las fechas programadas del negocio.
-- El encabezado de Inicio ofrece “Notas rápidas” para guardar ideas, apuntes de reuniones y recordatorios breves.
+- El encabezado de Inicio ofrece “Notas rápidas” para guardar, consultar y eliminar ideas, apuntes de reuniones y recordatorios breves.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
 
 ## Acceso verificado
