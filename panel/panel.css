@@ -92,3 +92,7 @@ td,.agenda-row{border-bottom-color:var(--beige)}
 .topbar::after,.quick-notes-head,.quick-notes-list article{border-color:var(--line)}
 #quick-note-text:focus-visible{outline:0;border-color:var(--line);box-shadow:none}
 .overview{border-top:0}
+
+/* Enlaces de texto del contenido, alineados con el marrón del CMS. */
+.main a,.main button.link{color:var(--muted)}
+.main a:hover,.main button.link:hover{color:var(--ink)}
