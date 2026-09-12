@@ -37,19 +37,6 @@ export function documentStatus(s,r,date=today()){
 export function stock(s,id){return list(s,'movements',true).filter(m=>m.materialId===id).reduce((a,m)=>a+Number(m.quantity),0);}
 export function nextDate(date,repeat){const d=new Date(date+'T12:00:00Z');if(!Number.isFinite(+d))throw Error('Define una fecha válida para repetir la tarea.');if(repeat==='semanal')d.setUTCDate(d.getUTCDate()+7);else if(repeat==='diaria')d.setUTCDate(d.getUTCDate()+1);else {const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+1);d.setUTCDate(Math.min(day,new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate()));}return d.toISOString().slice(0,10);}
 export function events(s){return [...list(s,'tasks').filter(r=>r.date&&!['completada','cancelada'].includes(r.status)).map(r=>({...r,eventDate:r.date})),...list(s,'orders').filter(r=>r.due&&!['entregado','cancelado'].includes(r.status)).map(r=>({...r,eventDate:r.due,name:`Entrega · ${r.number}`})),...list(s,'content').filter(r=>r.date&&r.status!=='publicado').map(r=>({...r,eventDate:r.date})),...list(s,'accounts').filter(r=>r.renewal).map(r=>({...r,eventDate:r.renewal,name:`Renovación · ${r.name}`}))].sort((a,b)=>a.eventDate.localeCompare(b.eventDate));}
-export function nextCommitment(s,date=today()){
- const validDate=value=>/^\d{4}-\d{2}-\d{2}$/.test(String(value||''));
- const item=(r,eventDate,type,title=r.name)=>({...r,eventDate,commitmentType:type,commitmentTitle:title});
- const candidates=[
-  ...list(s,'tasks').filter(r=>validDate(r.date)&&!['completada','cancelada'].includes(r.status)).map(r=>item(r,r.date,'Tarea')),
-  ...list(s,'orders').filter(r=>validDate(r.due)&&!['entregado','cancelado'].includes(r.status)).map(r=>item(r,r.due,'Entrega',r.number||r.name)),
-  ...list(s,'content').filter(r=>validDate(r.date)&&r.status!=='publicado').map(r=>item(r,r.date,'Publicación')),
-  ...list(s,'accounts').filter(r=>validDate(r.renewal)).map(r=>item(r,r.renewal,'Renovación')),
-  ...list(s,'invoices').filter(r=>validDate(r.due)&&!['borrador','anulada','pagada'].includes(documentStatus(s,r,date))).map(r=>item(r,r.due,'Factura',r.number||r.name)),
-  ...list(s,'quotes').filter(r=>validDate(r.validUntil)&&['enviada','vencida'].includes(documentStatus(s,r,date))).map(r=>item(r,r.validUntil,'Cotización',r.number||r.name))
- ];
- return candidates.sort((a,b)=>a.eventDate.localeCompare(b.eventDate)||a.commitmentType.localeCompare(b.commitmentType,'es'))[0]||null;
-}
 function normalize(r){required(r.name);if(r.kind==='calculations')calculate(r);if(['quotes','invoices','orders'].includes(r.kind)){if(!r.lines?.length)throw Error('Añade al menos un concepto.');r.lines.forEach(l=>{required(l.description,'Descripción del concepto');if(!finite(l.quantity))throw Error('La cantidad debe ser mayor que cero.');finite(l.price);});totals(r);}return r;}
 export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toISOString()}={}){
  const s=structuredClone(state), changes=[], put=r=>{s.records[r.id]=r;changes.push(r.id);return r;};

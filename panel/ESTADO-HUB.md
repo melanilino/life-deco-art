@@ -13,6 +13,11 @@
 - Las reglas preparadas anteriormente para el CMS no se publicaron. Los archivos locales de reglas y documentos históricos requieren adaptación antes de cualquier despliegue.
 - No se han activado respaldos automáticos ni actualizado la cuenta de prueba a una cuenta pagada permanente.
 
+## Inicio del hub
+- “Agenda y próximas entregas” reúne las fechas programadas del negocio.
+- El encabezado de Inicio ofrece “Notas rápidas” para guardar ideas, apuntes de reuniones y recordatorios breves.
+- Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
+
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
 - panelAccess del UID de la propietaria creado con enabled true.
