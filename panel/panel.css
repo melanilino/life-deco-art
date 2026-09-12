@@ -40,6 +40,12 @@
 .topbar-copy h1{margin:0 0 6px;color:#000;font-size:28px;font-weight:300;letter-spacing:0;line-height:1.2}
 .topbar-copy p{margin:0;color:#8b795e;font-size:13px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar>.actions{justify-content:flex-end}
+.next-commitment{display:grid;grid-template-columns:18px minmax(0,1fr);grid-template-rows:auto auto auto;column-gap:10px;min-width:260px;max-width:360px;color:var(--ink);line-height:1.3;text-align:left;text-decoration:none}
+.next-commitment svg{grid-column:1;grid-row:1/4;width:18px;height:18px;margin-top:2px;fill:none;stroke:#8b795e;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.next-commitment span,.next-commitment small{color:#8b795e;font-size:11px;font-weight:300}
+.next-commitment strong{overflow:hidden;color:#000;font-size:13px;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
+.next-commitment[href]:hover strong{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.next-commitment.late small{color:var(--pink);font-weight:500}
 .main{max-width:none;margin:0;padding:20px var(--hub-content-gutter) 60px}
 @media(max-width:1150px){:root{--hub-content-gutter:24px}}
-@media(max-width:859px){:root{--hub-content-gutter:18px}.topbar{height:auto;min-height:98px;grid-template-columns:44px minmax(0,1fr);align-items:start;padding:14px var(--hub-content-gutter)}.topbar .menu-toggle{grid-column:1;grid-row:1}.topbar-copy{grid-column:2;grid-row:1}.topbar>.actions{grid-column:1/-1;justify-content:flex-end}.topbar-copy h1{font-size:24px}.topbar-copy p{white-space:normal}}
+@media(max-width:859px){:root{--hub-content-gutter:18px}.topbar{height:auto;min-height:98px;grid-template-columns:44px minmax(0,1fr);align-items:start;padding:14px var(--hub-content-gutter)}.topbar .menu-toggle{grid-column:1;grid-row:1}.topbar-copy{grid-column:2;grid-row:1}.topbar>.actions{grid-column:1/-1;justify-content:flex-end}.next-commitment{width:100%;min-width:0;max-width:none}.topbar-copy h1{font-size:24px}.topbar-copy p{white-space:normal}}
