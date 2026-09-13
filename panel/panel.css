@@ -29,9 +29,10 @@
 .sidebar nav a[aria-current=page]{background:var(--bright);color:white}
 .sidebar nav a[aria-current=page]:hover{background:#e83f82;color:white}
 
-/* La línea superior respeta los mismos márgenes visuales del CMS. */
-.topbar{position:relative;border-bottom:0}
-.topbar::after{content:"";position:absolute;right:var(--hub-content-gutter);bottom:0;left:var(--hub-content-gutter);border-bottom:1px solid #e4dccb}
+/* El encabezado y su navegación editorial comparten un solo cierre visual. */
+.page-header{position:relative}
+.topbar{border-bottom:0}
+.page-header::after{content:"";position:absolute;right:var(--hub-content-gutter);bottom:0;left:var(--hub-content-gutter);border-bottom:1px solid #e4dccb}
 
 /* Encabezado de cada página, con la misma altura y estructura visual del CMS. */
 .workspace{background:var(--cream)}
@@ -62,7 +63,7 @@
 .quick-notes-list time{color:var(--muted);font-size:11px}
 .quick-note-delete{min-height:auto;padding:2px 0;border:0;background:transparent;color:var(--pink);font-size:12px}
 .quick-note-delete:hover{border:0;background:transparent;color:var(--danger);text-decoration:underline;text-underline-offset:3px}
-.main{max-width:none;margin:0;padding:20px var(--hub-content-gutter) 60px}
+.main{max-width:none;margin:0;padding:28px var(--hub-content-gutter) 60px}
 @media(max-width:1150px){:root{--hub-content-gutter:24px}}
 @media(max-width:859px){:root{--hub-content-gutter:18px}.topbar{height:auto;min-height:98px;grid-template-columns:44px minmax(0,1fr);align-items:start;padding:14px var(--hub-content-gutter)}.topbar .menu-toggle{grid-column:1;grid-row:1}.topbar-copy{grid-column:2;grid-row:1}.topbar>.actions{grid-column:1/-1;justify-content:flex-end}.topbar-copy h1{font-size:24px}.topbar-copy p{white-space:normal}.quick-notes-dialog{width:calc(100% - 20px)}.quick-notes-head,#quick-note-form,.quick-notes-list{padding-right:18px;padding-left:18px}}
 
@@ -77,7 +78,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 input:not([type=checkbox]),select,textarea{border-color:var(--line)}
 .sidebar nav a{color:rgba(255,255,255,.75)}
 .sidebar nav a:hover{background:rgba(255,255,255,.08);color:var(--paper)}
-.tabs a.active{background:var(--paper);color:var(--ink)}
+.tabs{margin:0;padding:0 var(--hub-content-gutter) 14px;border:0;gap:28px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{position:relative;padding:0 0 9px;border-radius:0;color:var(--muted);font-size:13px;font-weight:400;text-decoration:none}
+.tabs a:hover{color:var(--ink)}
+.tabs a.active{background:transparent;color:var(--ink)}
+.tabs a.active::after{content:"";position:absolute;right:0;bottom:0;left:0;height:2px;background:var(--pink)}
 th,.form-actions,.hint{background:var(--cream)}
 td,.agenda-row{border-bottom-color:var(--beige)}
 .badge{border-color:var(--line);background:var(--beige);color:var(--muted)}
@@ -89,7 +95,7 @@ td,.agenda-row{border-bottom-color:var(--beige)}
 .calendar .weekday{background:var(--cream)}
 .calendar .event{border-color:var(--line);background:var(--beige)}
 .workspace,.quick-notes-dialog{background:var(--cream)}
-.topbar::after,.quick-notes-head,.quick-notes-list article{border-color:var(--line)}
+.page-header::after,.quick-notes-head,.quick-notes-list article{border-color:var(--line)}
 #quick-note-text:focus-visible{outline:0;border-color:var(--line);box-shadow:none}
 .overview{border-top:0}
 

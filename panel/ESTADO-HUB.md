@@ -36,6 +36,7 @@
 - Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
 - El HUB no almacena contraseñas; esa decisión se revisará más adelante.
 - Los formularios con distintos tipos de información usan subtítulos y bloques blancos para separar datos principales, contacto, fechas, importes, relaciones, renovaciones y notas según corresponda. Los formularios sencillos conservan un solo bloque.
+- Las categorías relacionadas se muestran como navegación editorial dentro del encabezado: texto sin recuadros, una línea rosa bajo la opción activa y un único separador antes del contenido.
 
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
