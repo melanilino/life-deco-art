@@ -35,6 +35,7 @@
 - Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Usa el fondo crema del HUB y organiza sus campos en bloques blancos: Información del negocio, Tu trabajo, Cotizaciones y Pagos.
 - Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
 - El HUB no almacena contraseñas; esa decisión se revisará más adelante.
+- Los formularios con distintos tipos de información usan subtítulos y bloques blancos para separar datos principales, contacto, fechas, importes, relaciones, renovaciones y notas según corresponda. Los formularios sencillos conservan un solo bloque.
 
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.

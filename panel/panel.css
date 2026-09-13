@@ -118,9 +118,11 @@ button:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 .field:has(input[type=checkbox]:focus-visible)>span{text-decoration:underline;text-underline-offset:3px}
 
-/* Configuración agrupada como las secciones editoriales del CMS. */
-.settings-sections{display:grid;gap:28px}
-.settings-group-title{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.settings-group .sheet{padding:24px}
+/* Formularios agrupados como las secciones editoriales del CMS. */
+.settings-sections,.sectioned-form{display:grid;gap:28px}
+.settings-group-title,.field-group-title{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.settings-group .sheet,.field-group .sheet{padding:24px}
 .settings-save{display:flex;justify-content:flex-end}
-@media(max-width:600px){.settings-sections{gap:22px}.settings-group .sheet{padding:18px}}
+.sectioned-form>.form-actions{padding:0;background:transparent}
+.main:focus{outline:0}
+@media(max-width:600px){.settings-sections,.sectioned-form{gap:22px}.settings-group .sheet,.field-group .sheet{padding:18px}}
