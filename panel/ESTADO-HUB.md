@@ -29,6 +29,13 @@
 - Los campos, botones, tablas y calendarios conservan los bordes y divisiones necesarios para entenderlos y utilizarlos.
 - Al seleccionar un control no aparece un segundo aro rosado; el enfoque se indica dentro del propio elemento.
 
+## Administración
+- Administración se divide en Servicios, Configuración y Seguridad.
+- Servicios registra plataformas, planes, estado, frecuencia y costo de pago, renovación automática, próxima renovación, aviso anticipado, responsable y enlaces de gestión. Resume servicios activos, pagos mensuales y anuales registrados y renovaciones de los próximos 30 días.
+- Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Como prueba visual, solo esta pantalla usa fondo derecho blanco y el formulario crema.
+- Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
+- El HUB no almacena contraseñas; esa decisión se revisará más adelante.
+
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
 - panelAccess del UID de la propietaria creado con enabled true.

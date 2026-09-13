@@ -117,3 +117,8 @@ a:focus-visible{outline:0;color:var(--ink);text-decoration-thickness:2px}
 button:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 .field:has(input[type=checkbox]:focus-visible)>span{text-decoration:underline;text-underline-offset:3px}
+
+/* Prueba visual solicitada solo para Configuración. */
+.workspace-settings{background:var(--paper)}
+.workspace-settings .sheet,.workspace-settings .form-actions{background:var(--cream)}
+.workspace-settings .tabs a.active{background:var(--cream)}
