@@ -18,6 +18,12 @@
 - El encabezado de Inicio ofrece “Notas rápidas” para guardar, consultar y eliminar ideas, apuntes de reuniones y recordatorios breves.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
 
+## Estadísticas
+- El menú incluye una sección independiente de Estadísticas.
+- La pantalla deja preparados tres grupos de análisis: ventas y productos, perfil de clientes y origen de clientes.
+- No muestra resultados ni conclusiones hasta que existan datos suficientes.
+- Antes de activar cada indicador se debe acordar qué información necesita y de dónde se obtendrá; los datos demográficos y de intereses todavía no se recopilan.
+
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
 - panelAccess del UID de la propietaria creado con enabled true.
