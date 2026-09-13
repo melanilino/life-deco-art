@@ -107,3 +107,13 @@ td,.agenda-row{border-bottom-color:var(--beige)}
 /* Enlaces de texto del contenido, alineados con el marrón del CMS. */
 .main a,.main button.link{color:var(--muted)}
 .main a:hover,.main button.link:hover{color:var(--ink)}
+
+/* Superficies limpias como el CMS: el color separa los bloques, sin contorno. */
+.sheet,.resource-card,.board-item,.login-card,.quick-notes-dialog,.confirm-dialog,.hint{border:0}
+
+/* Enfoque visible dentro del control, sin un segundo aro exterior. */
+a:focus-visible{outline:0;color:var(--ink);text-decoration-thickness:2px}
+.sidebar a:focus-visible{background:rgba(255,255,255,.08);color:var(--paper)}
+button:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
+input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
+.field:has(input[type=checkbox]:focus-visible)>span{text-decoration:underline;text-underline-offset:3px}

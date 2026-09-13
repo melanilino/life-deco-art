@@ -24,6 +24,11 @@
 - No muestra resultados ni conclusiones hasta que existan datos suficientes.
 - Antes de activar cada indicador se debe acordar qué información necesita y de dónde se obtendrá; los datos demográficos y de intereses todavía no se recopilan.
 
+## Regla visual de superficies
+- Las tarjetas y bloques del HUB se distinguen por su color y espaciado, sin un borde exterior.
+- Los campos, botones, tablas y calendarios conservan los bordes y divisiones necesarios para entenderlos y utilizarlos.
+- Al seleccionar un control no aparece un segundo aro rosado; el enfoque se indica dentro del propio elemento.
+
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
 - panelAccess del UID de la propietaria creado con enabled true.
