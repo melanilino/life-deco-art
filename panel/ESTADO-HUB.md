@@ -32,7 +32,7 @@
 ## Administración
 - Administración se divide en Servicios, Configuración y Seguridad.
 - Servicios registra plataformas, planes, estado, frecuencia y costo de pago, renovación automática, próxima renovación, aviso anticipado, responsable y enlaces de gestión. Resume servicios activos, pagos mensuales y anuales registrados y renovaciones de los próximos 30 días.
-- Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Como prueba visual, solo esta pantalla usa fondo derecho blanco y el formulario crema.
+- Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Usa el fondo crema del HUB y organiza sus campos en bloques blancos: Información del negocio, Tu trabajo, Cotizaciones y Pagos.
 - Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
 - El HUB no almacena contraseñas; esa decisión se revisará más adelante.
 

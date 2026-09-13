@@ -118,7 +118,9 @@ button:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;border-color:var(--muted);box-shadow:none}
 .field:has(input[type=checkbox]:focus-visible)>span{text-decoration:underline;text-underline-offset:3px}
 
-/* Prueba visual solicitada solo para Configuración. */
-.workspace-settings{background:var(--paper)}
-.workspace-settings .sheet,.workspace-settings .form-actions{background:var(--cream)}
-.workspace-settings .tabs a.active{background:var(--cream)}
+/* Configuración agrupada como las secciones editoriales del CMS. */
+.settings-sections{display:grid;gap:28px}
+.settings-group-title{margin:0 0 10px;color:var(--muted);font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.settings-group .sheet{padding:24px}
+.settings-save{display:flex;justify-content:flex-end}
+@media(max-width:600px){.settings-sections{gap:22px}.settings-group .sheet{padding:18px}}
