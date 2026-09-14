@@ -182,3 +182,9 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 @media(max-width:859px){.topbar-copy h1{font-size:var(--font-title)}}
 .topbar>.actions button,.topbar>.actions button.primary,.topbar>.actions .quick-notes-trigger{border-color:var(--cyan);background:var(--cyan);color:var(--white)}
 .topbar>.actions button:hover,.topbar>.actions button.primary:hover,.topbar>.actions .quick-notes-trigger:hover{border-color:var(--black);background:var(--cyan);color:var(--white);opacity:1}
+
+/* Buscador, filtros y resultados forman una sola superficie. */
+.list-panel{overflow:hidden;padding:18px;border-radius:var(--radius);background:var(--white)}
+.list-panel>.toolbar{margin:0 0 18px}
+.list-panel #list-results>.sheet{border-radius:0}
+@media(max-width:600px){.list-panel{padding:14px}.list-panel>.toolbar{margin-bottom:14px}}

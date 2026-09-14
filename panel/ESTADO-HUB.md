@@ -41,6 +41,7 @@
 - Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para texto y menú, marrón para texto auxiliar y divisiones, rosa para selecciones, cyan para acciones y enfoque, verde para éxito y rojo para errores o eliminación. El texto y los iconos sobre rosa y cyan son blancos para mantener el contraste visual aprobado.
 - Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Los botones de acción situados en el encabezado usan cyan.
 - Cuando una lista está vacía, la acción para crear un registro aparece solo en el encabezado; el estado vacío informa sin repetir el botón.
+- El buscador, el filtro, la exportación y el área de resultados de cada lista forman una sola superficie blanca, sin borde exterior.
 
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
