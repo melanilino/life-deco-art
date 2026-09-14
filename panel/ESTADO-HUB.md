@@ -38,7 +38,7 @@
 - Los formularios con distintos tipos de información usan subtítulos y bloques blancos para separar datos principales, contacto, fechas, importes, relaciones, renovaciones y notas según corresponda. Los formularios sencillos conservan un solo bloque.
 - Las categorías relacionadas se muestran como navegación editorial dentro del encabezado: texto sin recuadros, una línea rosa bajo la opción activa y un único separador antes del contenido.
 - El sistema visual del HUB usa Montserrat y una escala estable: títulos principales de 28 px y peso 300; títulos secundarios de 18 px y peso 500; interfaz de 13 px; información técnica de 11 px. La paleta se limita a crema, blanco, negro, marrón, rosa y cyan, con verde y rojo reservados para estados funcionales.
-- Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para texto y menú, marrón para texto auxiliar y divisiones, rosa para selecciones, cyan para acciones y enfoque, verde para éxito y rojo para errores o eliminación. El texto sobre rosa y cyan es negro para mantener su legibilidad.
+- Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para texto y menú, marrón para texto auxiliar y divisiones, rosa para selecciones, cyan para acciones y enfoque, verde para éxito y rojo para errores o eliminación. El texto y los iconos sobre rosa y cyan son blancos para mantener el contraste visual aprobado.
 - Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Los botones de acción situados en el encabezado usan cyan.
 
 ## Acceso verificado
