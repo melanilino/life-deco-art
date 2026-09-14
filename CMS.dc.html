@@ -59,7 +59,6 @@ x-dc{display:none!important}
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column; }
-  .cms-main label[style*="text-transform:uppercase"], .cms-main .cms-field-name { color:#8B795E!important;font-weight:600!important;text-transform:none!important;letter-spacing:0!important; }
   body:has(.cms-contained-editor) { overflow:hidden; }
   @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview, .cms-spotlight-grid { grid-template-columns:1fr!important; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
@@ -100,7 +99,7 @@ x-dc{display:none!important}
       <button type="button" onClick="{{ onLogout }}" style="width:100%;min-height:44px;box-sizing:border-box;background:transparent;border:none;color:rgba(255,255,255,.75);padding:0;font-family:Montserrat,sans-serif;font-size:13px;font-weight:300;line-height:1.4;text-align:left;cursor:pointer;" style-hover="color:#FFFFFF;">Cerrar sesión</button>
     </div>
   </div>
-  <div class="cms-main" style="flex: 1; padding: 26px 56px 48px; background-color: #F9F6EF; position: relative;">
+  <div style="flex: 1; padding: 26px 56px 48px; background-color: #F9F6EF; position: relative;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div style="font-size:28px;font-weight:300;color:#000000;margin-bottom:6px;">{{ currentPageLabel }}</div>
       <sc-if value="{{ hasSaveAction }}" hint-placeholder-val="{{ false }}">
@@ -122,7 +121,7 @@ x-dc{display:none!important}
     <sc-if value="{{ isConfigPage }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Identidad</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;">Favicon</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:8px;">Favicon</label>
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
           <div style="width:84px;height:84px;overflow:hidden;border-radius:8px;background:#F3EEE4;display:flex;align-items:center;justify-content:center;"><image-slot id="cms-config-favicon" shape="rect" fit="contain" style="width:100%;height:100%;" src="{{ configFaviconUrl }}" placeholder="favicon"></image-slot></div>
           <label style="display:inline-flex;align-items:center;padding:10px 16px;border:1px solid #E4DCCB;color:#5C5142;border-radius:4px;font-size:13px;cursor:pointer;">Subir<input type="file" accept="image/png,image/svg+xml,image/x-icon,image/vnd.microsoft.icon,image/webp" onChange="{{ onConfigFaviconUpload }}" style="display:none;"></label>
@@ -133,24 +132,24 @@ x-dc{display:none!important}
 
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Datos de contacto</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número de WhatsApp</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Número de WhatsApp</label>
         <input type="text" value="{{ configWhatsappNumber }}" onChange="{{ onConfigWhatsappNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Correo electrónico</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Correo electrónico</label>
         <input type="email" value="{{ configEmail }}" onChange="{{ onConfigEmail }}" placeholder="correo@ejemplo.com" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;">
       </div>
 
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Redes sociales</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;">
-        <sc-for list="{{ configSocialFields }}" as="social" hint-placeholder-count="4"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">{{ social.label }}</label><input type="url" value="{{ social.value }}" onChange="{{ social.onChange }}" placeholder="https://" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div></sc-for>
+        <sc-for list="{{ configSocialFields }}" as="social" hint-placeholder-count="4"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">{{ social.label }}</label><input type="url" value="{{ social.value }}" onChange="{{ social.onChange }}" placeholder="https://" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div></sc-for>
       </div>
 
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Botón flotante de WhatsApp</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Número</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Número</label>
         <input type="text" value="{{ configFloatingNumber }}" onChange="{{ onConfigFloatingNumber }}" placeholder="18495390410" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;margin-bottom:16px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Mensaje inicial</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Mensaje inicial</label>
         <textarea value="{{ configFloatingMessage }}" onChange="{{ onConfigFloatingMessage }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;margin-bottom:16px;"></textarea>
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Visibilidad</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Visibilidad</label>
         <select value="{{ configFloatingVisibility }}" onChange="{{ onConfigFloatingVisibility }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"><option value="true">Mostrar</option><option value="false">Ocultar</option></select>
       </div>
     </sc-if>
@@ -200,24 +199,24 @@ x-dc{display:none!important}
       </div>
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Presentación</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;max-width:760px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Texto introductorio</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Texto introductorio</label>
         <textarea value="{{ encargosIntroText }}" onChange="{{ onEncargosIntroText }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
       </div>
 
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Opciones del formulario</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;margin-bottom:24px;max-width:760px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Tipos de pieza — uno por línea</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Tipos de pieza — uno por línea</label>
         <textarea value="{{ encargosPieceTypesText }}" onChange="{{ onEncargosPieceTypes }}" rows="7" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.7;resize:vertical;margin-bottom:16px;"></textarea>
         <div style="font-size:12px;color:#8B795E;line-height:1.5;margin:-8px 0 16px;">La opción “Otro” siempre se conservará para que la persona pueda escribir una pieza diferente.</div>
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Rangos de presupuesto — uno por línea</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Rangos de presupuesto — uno por línea</label>
         <textarea value="{{ encargosBudgetOptionsText }}" onChange="{{ onEncargosBudgetOptions }}" rows="6" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.7;resize:vertical;"></textarea>
       </div>
 
       <div style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8B795E;font-weight:600;margin:4px 0 10px;">Proceso y mensaje</div>
       <div style="background:#FFFFFF;border-radius:8px;padding:24px;max-width:760px;">
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Pasos después de enviar — uno por línea</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Pasos después de enviar — uno por línea</label>
         <textarea value="{{ encargosStepsText }}" onChange="{{ onEncargosSteps }}" rows="5" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.7;resize:vertical;margin-bottom:16px;"></textarea>
-        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:6px;">Inicio del mensaje de WhatsApp</label>
+        <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Inicio del mensaje de WhatsApp</label>
         <textarea value="{{ encargosWhatsappMessage }}" onChange="{{ onEncargosWhatsappMessage }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea>
       </div>
       </div>
@@ -311,14 +310,14 @@ x-dc{display:none!important}
           <div style="background:#FFFFFF;border-radius:8px;padding:28px;margin-bottom:24px;">
             <div class="cms-spotlight-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-bottom:14px;">
               <div>
-                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Tipo de anuncio</label>
+                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Tipo de anuncio</label>
                 <select value="{{ inicioSpotlightType }}" onChange="{{ onInicioSpotlightType }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;">
                   <sc-for list="{{ inicioSpotlightTypeOptions }}" as="opt" hint-placeholder-count="7"><option value="{{ opt.value }}">{{ opt.label }}</option></sc-for>
                 </select>
               </div>
               <sc-if value="{{ inicioSpotlightShowsDestination }}" hint-placeholder-val="{{ true }}">
                 <div>
-                  <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Destino</label>
+                  <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Destino</label>
                   <select value="{{ inicioSpotlightDestination }}" onChange="{{ onInicioSpotlightDestination }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;">
                     <sc-for list="{{ inicioSpotlightDestinationOptions }}" as="opt" hint-placeholder-count="6"><option value="{{ opt.value }}">{{ opt.label }}</option></sc-for>
                   </select>
@@ -326,12 +325,12 @@ x-dc{display:none!important}
               </sc-if>
             </div>
             <div style="display:flex;flex-direction:column;gap:16px;">
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Encabezado</label><input type="text" value="{{ inicioSpotlightEyebrow }}" onChange="{{ onInicioSpotlightEyebrow }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Título</label><input type="text" value="{{ inicioSpotlightTitle }}" onChange="{{ onInicioSpotlightTitle }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Descripción</label><textarea value="{{ inicioSpotlightDescription }}" onChange="{{ onInicioSpotlightDescription }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Fecha <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><input type="date" value="{{ inicioSpotlightDate }}" onChange="{{ onInicioSpotlightDate }}" style="width:100%;box-sizing:border-box;padding:10px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;font-family:Montserrat;font-size:13px;"></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Modalidad <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><select value="{{ inicioSpotlightModality }}" onChange="{{ onInicioSpotlightModality }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;"><option value="">Sin modalidad</option><option value="Online">Online</option><option value="Presencial">Presencial</option><option value="Online y presencial">Online y presencial</option></select></div>
-              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Texto del botón</label><input type="text" value="{{ inicioSpotlightButtonLabel }}" onChange="{{ onInicioSpotlightButtonLabel }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Encabezado</label><input type="text" value="{{ inicioSpotlightEyebrow }}" onChange="{{ onInicioSpotlightEyebrow }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Título</label><input type="text" value="{{ inicioSpotlightTitle }}" onChange="{{ onInicioSpotlightTitle }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Descripción</label><textarea value="{{ inicioSpotlightDescription }}" onChange="{{ onInicioSpotlightDescription }}" rows="3" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Fecha <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><input type="date" value="{{ inicioSpotlightDate }}" onChange="{{ onInicioSpotlightDate }}" style="width:100%;box-sizing:border-box;padding:10px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;font-family:Montserrat;font-size:13px;"></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Modalidad <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label><select value="{{ inicioSpotlightModality }}" onChange="{{ onInicioSpotlightModality }}" style="width:100%;box-sizing:border-box;padding:11px 32px 11px 11px;border:1px solid #E4DCCB;border-radius:4px;background:#FFFFFF;color:#000;font-family:Montserrat;font-size:13px;"><option value="">Sin modalidad</option><option value="Online">Online</option><option value="Presencial">Presencial</option><option value="Online y presencial">Online y presencial</option></select></div>
+              <div><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">Texto del botón</label><input type="text" value="{{ inicioSpotlightButtonLabel }}" onChange="{{ onInicioSpotlightButtonLabel }}" style="width:100%;box-sizing:border-box;padding:11px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></div>
             </div>
           </div>
         </div>
@@ -417,7 +416,7 @@ x-dc{display:none!important}
               <div style="background:#FFFFFF;border-radius:10px;padding:28px;">
               <sc-for list="{{ selectedProduct.fields }}" as="f" hint-placeholder-count="4">
               <div style="display:{{ f.display }};margin-bottom:14px;">
-                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
+                <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">{{ f.label }}</label>
                 <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                 <sc-if value="{{ f.isLines }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if>
                 <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
@@ -435,7 +434,7 @@ x-dc{display:none!important}
             </sc-for>
             <sc-if value="{{ selectedProduct.emptySection }}" hint-placeholder-val="{{ false }}"><div style="padding:36px 20px;text-align:center;color:#8B795E;font-size:13px;line-height:1.6;">Esta sección todavía está vacía.</div></sc-if>
             <div style="display:{{ selectedProduct.colorsDisplay }};">
-            <div class="cms-field-name" style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Colores disponibles</div>
+            <div style="margin:20px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;">Colores disponibles</div>
             <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.colors }}" as="color" hint-placeholder-count="2">
                 <div data-reorder-group="{{ color.dragGroup }}" data-reorder-id="{{ color.id }}" style="display:flex;align-items:center;gap:8px;">
@@ -450,7 +449,7 @@ x-dc{display:none!important}
             </div>
 
             <div style="display:{{ selectedProduct.galleryDisplay }};">
-            <div class="cms-field-name" style="margin:4px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;">Galería de imágenes</div>
+            <div style="margin:4px 0 10px;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;">Galería de imágenes</div>
             <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;">
               <sc-for list="{{ selectedProduct.gallery }}" as="photo" hint-placeholder-count="2">
                 <div data-reorder-group="{{ photo.dragGroup }}" data-reorder-id="{{ photo.id }}" style="width:{{ photo.maxWidth }};">
@@ -535,7 +534,7 @@ x-dc{display:none!important}
                 <div style="min-width:0;"><div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#8B795E;margin-bottom:6px;">{{ card.label }}</div><div style="font-size:16px;font-weight:400;color:#2B2420;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ card.title }}</div></div>
                 <span aria-label="Abrir o cerrar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;color:#8B795E;transform:{{ card.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5"></path></svg></span>
               </div>
-              <sc-if value="{{ card.isOpen }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;border-top:1px solid #F3EEE4;"><sc-for list="{{ card.fields }}" as="f" hint-placeholder-count="3"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label><sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if><sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if></div></sc-for></div></sc-if>
+              <sc-if value="{{ card.isOpen }}" hint-placeholder-val="{{ false }}"><div style="padding:18px;border-top:1px solid #F3EEE4;"><sc-for list="{{ card.fields }}" as="f" hint-placeholder-count="3"><div style="margin-bottom:14px;"><label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">{{ f.label }}</label><sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if><sc-if value="{{ f.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if></div></sc-for></div></sc-if>
             </div>
           </sc-for>
         </div>
@@ -556,7 +555,7 @@ x-dc{display:none!important}
               <div style="width:100%;margin:0;padding:{{ item.editorPadding }};box-sizing:border-box;background-color:#FFFFFF;border-radius:{{ item.editorRadius }};">
                 <sc-for list="{{ item.fields }}" as="f" hint-placeholder-count="4">
                   <div style="display:{{ f.display }};margin-bottom:14px;">
-                    <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">{{ f.label }}</label>
+                    <label style="display:block;font-size:11px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:6px;">{{ f.label }}</label>
                     <sc-if value="{{ f.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;resize:vertical;"></textarea></sc-if>
                     <sc-if value="{{ f.isLines }}" hint-placeholder-val="{{ false }}"><textarea value="{{ f.value }}" onChange="{{ f.onChange }}" placeholder="{{ f.placeholder }}" rows="3" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;line-height:1.6;resize:vertical;"></textarea></sc-if>
                     <sc-if value="{{ f.isText }}" hint-placeholder-val="{{ false }}"><input type="text" value="{{ f.value }}" onChange="{{ f.onChange }}" style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:13px;"></sc-if>
@@ -583,7 +582,7 @@ x-dc{display:none!important}
                             <span onPointerDown="{{ row.onDragStart }}" onPointerMove="{{ row.onDragMove }}" onPointerUp="{{ row.onDragEnd }}" onPointerCancel="{{ row.onDragCancel }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:34px;flex:0 0 22px;color:#8B795E;cursor:grab;touch-action:none;font-size:16px;user-select:none;">⠿</span>
                             <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;flex:1;min-width:0;">
                               <sc-for list="{{ row.inputs }}" as="input" hint-placeholder-count="2">
-                                <div><label style="display:block;font-size:10px;font-weight:600;color:#8B795E;text-transform:uppercase;margin-bottom:5px;">{{ input.label }}</label><sc-if value="{{ input.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ input.value }}" onChange="{{ input.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;resize:vertical;"></textarea></sc-if><sc-if value="{{ input.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ input.value }}" onChange="{{ input.onChange }}" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></sc-if></div>
+                                <div><label style="display:block;font-size:10px;font-weight:600;color:#8B795E;text-transform:none;letter-spacing:0;margin-bottom:5px;">{{ input.label }}</label><sc-if value="{{ input.isTextarea }}" hint-placeholder-val="{{ false }}"><textarea value="{{ input.value }}" onChange="{{ input.onChange }}" rows="2" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;resize:vertical;"></textarea></sc-if><sc-if value="{{ input.isText }}" hint-placeholder-val="{{ true }}"><input type="text" value="{{ input.value }}" onChange="{{ input.onChange }}" style="width:100%;box-sizing:border-box;padding:9px;border:1px solid #E4DCCB;border-radius:4px;font-family:Montserrat;font-size:12px;"></sc-if></div>
                               </sc-for>
                             </div>
                             <span onClick="{{ row.onRemove }}" title="Eliminar" aria-label="Eliminar" style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;flex:0 0 34px;border:1px solid #E4DCCB;border-radius:4px;color:#C0392B;cursor:pointer;">×</span>
