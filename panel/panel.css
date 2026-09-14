@@ -82,9 +82,9 @@ input:not([type=checkbox]),select,textarea{border-color:var(--border)}
 .tabs{margin:0;padding:16px var(--hub-content-gutter) 0;border:0;gap:10px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{position:relative;display:inline-flex;align-items:center;min-height:38px;padding:8px 12px;border:0;border-radius:4px;background:transparent;color:var(--brown);font-size:13px;font-weight:400;text-decoration:none}
-.tabs a:hover{border-color:transparent;background:var(--brown-soft);color:var(--black)}
-.tabs a.active,.tabs a.active:hover{background:var(--brown-soft);color:var(--brown);font-weight:500}
-.tabs a.active::after{content:none}
+.tabs a:hover{border-color:transparent;background:transparent;color:var(--black)}
+.tabs a.active,.tabs a.active:hover{background:transparent;color:var(--brown);font-weight:400}
+.tabs a.active::after{content:"";position:absolute;right:12px;bottom:0;left:12px;height:1px;background:var(--brown)}
 th,.form-actions,.hint{background:var(--cream)}
 td,.agenda-row{border-bottom-color:var(--brown-soft)}
 .badge{border-color:var(--border);background:var(--brown-soft);color:var(--brown)}
@@ -160,7 +160,7 @@ button:hover{border-color:var(--border-strong);background:var(--brown-soft)}
 button.primary,.quick-notes-trigger{border-color:var(--cyan);background:var(--cyan);color:var(--white)}
 button.primary:hover,.quick-notes-trigger:hover{border-color:var(--black);background:var(--cyan);color:var(--white)}
 .sidebar nav a[aria-current=page],.sidebar nav a[aria-current=page]:hover{background:var(--pink);color:var(--white)}
-.tabs a.active::after{content:none}
+.tabs a.active::after{content:""}
 .badge{border-color:var(--border);background:var(--brown-soft);color:var(--brown)}
 .badge.good{border-color:var(--success-border);background:var(--success-soft);color:var(--success)}
 .badge.warn{border-color:var(--border-strong);background:var(--brown-soft);color:var(--brown)}
