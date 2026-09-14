@@ -42,6 +42,7 @@
 - Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Los botones de acción situados en el encabezado usan cyan.
 - Cuando una lista está vacía, la acción para crear un registro aparece solo en el encabezado; el estado vacío informa sin repetir el botón.
 - El buscador, el filtro, la exportación y el área de resultados de cada lista forman una sola superficie blanca, sin borde exterior.
+- Exportar CSV se alinea al extremo derecho de esta superficie. Al enfocar campos y botones se utiliza su propio borde, sin añadir un segundo aro exterior.
 
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.

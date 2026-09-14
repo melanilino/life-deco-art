@@ -186,5 +186,14 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
 /* Buscador, filtros y resultados forman una sola superficie. */
 .list-panel{overflow:hidden;padding:18px;border-radius:var(--radius);background:var(--white)}
 .list-panel>.toolbar{margin:0 0 18px}
+.list-panel>.toolbar>button:last-child{margin-left:auto}
 .list-panel #list-results>.sheet{border-radius:0}
 @media(max-width:600px){.list-panel{padding:14px}.list-panel>.toolbar{margin-bottom:14px}}
+
+/* El enfoque se muestra en el borde existente, sin un segundo aro exterior. */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:0;outline-offset:0;box-shadow:none}
+button:focus-visible{border-color:var(--border)}
+button.primary:focus-visible,.quick-notes-trigger:focus-visible{border-color:var(--cyan)}
+input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var(--border-strong)}
+.mobile-close:focus-visible{border-color:var(--brown)}
+.field:has(input[type=checkbox]:focus-visible)>span{text-decoration:none}
