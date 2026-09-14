@@ -13,6 +13,31 @@
 - Las reglas preparadas anteriormente para el CMS no se publicaron. Los archivos locales de reglas y documentos históricos requieren adaptación antes de cualquier despliegue.
 - No se han activado respaldos automáticos ni actualizado la cuenta de prueba a una cuenta pagada permanente.
 
+## Inicio del hub
+- “Agenda y próximas entregas” reúne las fechas programadas del negocio.
+- El encabezado de Inicio ofrece “Notas rápidas” para guardar, consultar y eliminar ideas, apuntes de reuniones y recordatorios breves.
+- Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
+
+## Estadísticas
+- El menú incluye una sección independiente de Estadísticas.
+- La pantalla deja preparados tres grupos de análisis: ventas y productos, perfil de clientes y origen de clientes.
+- No muestra resultados ni conclusiones hasta que existan datos suficientes.
+- Antes de activar cada indicador se debe acordar qué información necesita y de dónde se obtendrá; los datos demográficos y de intereses todavía no se recopilan.
+
+## Regla visual de superficies
+- Las tarjetas y bloques del HUB se distinguen por su color y espaciado, sin un borde exterior.
+- Los campos, botones, tablas y calendarios conservan los bordes y divisiones necesarios para entenderlos y utilizarlos.
+- Al seleccionar un control no aparece un segundo aro rosado; el enfoque se indica dentro del propio elemento.
+
+## Administración
+- Administración se divide en Servicios, Configuración y Seguridad.
+- Servicios registra plataformas, planes, estado, frecuencia y costo de pago, renovación automática, próxima renovación, aviso anticipado, responsable y enlaces de gestión. Resume servicios activos, pagos mensuales y anuales registrados y renovaciones de los próximos 30 días.
+- Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Usa el fondo crema del HUB y organiza sus campos en bloques blancos: Información del negocio, Tu trabajo, Cotizaciones y Pagos.
+- Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
+- El HUB no almacena contraseñas; esa decisión se revisará más adelante.
+- Los formularios con distintos tipos de información usan subtítulos y bloques blancos para separar datos principales, contacto, fechas, importes, relaciones, renovaciones y notas según corresponda. Los formularios sencillos conservan un solo bloque.
+- Las categorías relacionadas se muestran como navegación editorial dentro del encabezado: texto sin recuadros, una línea rosa bajo la opción activa y un único separador antes del contenido.
+
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
 - panelAccess del UID de la propietaria creado con enabled true.
