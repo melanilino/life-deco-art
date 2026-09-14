@@ -79,11 +79,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 input:not([type=checkbox]),select,textarea{border-color:var(--border)}
 .sidebar nav a{color:var(--on-dark-muted)}
 .sidebar nav a:hover{background:var(--on-dark-hover);color:var(--white)}
-.tabs{margin:0;padding:0 var(--hub-content-gutter);border:0;gap:10px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;scrollbar-width:none}
+.tabs{margin:0;padding:16px var(--hub-content-gutter) 0;border:0;gap:10px;overflow-x:auto;flex-wrap:nowrap;white-space:nowrap;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tabs a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:10px 15px;border:1px solid var(--border);border-radius:4px;background:var(--white);color:var(--brown);font-size:13px;font-weight:400;text-decoration:none}
-.tabs a:hover{border-color:var(--border-strong);background:var(--white);color:var(--black)}
-.tabs a.active{border-color:var(--border-strong);background:var(--white);color:var(--black)}
+.tabs a{position:relative;display:inline-flex;align-items:center;min-height:44px;padding:10px 15px;border:1px solid transparent;border-radius:4px;background:transparent;color:var(--brown);font-size:13px;font-weight:400;text-decoration:none}
+.tabs a:hover{border-color:transparent;background:var(--brown-soft);color:var(--black)}
+.tabs a.active,.tabs a.active:hover{border-color:var(--brown);background:var(--brown);color:var(--white)}
 .tabs a.active::after{content:none}
 th,.form-actions,.hint{background:var(--cream)}
 td,.agenda-row{border-bottom-color:var(--brown-soft)}
