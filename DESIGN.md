@@ -1,142 +1,148 @@
 ---
 name: Life Deco Art HUB — Inicio
-description: Tablero operativo cálido para la propietaria, documentado desde la implementación del 18 de septiembre de 2026.
+description: Inicio operativo con el sistema visual preexistente HUB/CMS.
 colors:
-  home-bg: "#f7f3ed"
-  home-card: "#fffdfb"
-  home-ink: "#211d1b"
-  home-muted: "#756c67"
-  home-accent: "#a9534d"
-  home-accent-soft: "#f8e8e6"
-  home-accent-hover: "#8f433e"
-  home-line: "#e7ddd6"
-  sidebar-charcoal: "#211e1b"
-  white: "#ffffff"
+  cream: "#F5EFE5"
+  white: "#FFFFFF"
+  black: "#1C1A17"
+  brown: "#8B795E"
+  pink: "#F65091"
+  cyan: "#0CC0DF"
+  brown-soft: "rgba(139,121,94,.10)"
+  border: "rgba(139,121,94,.28)"
+  success: "#2E7D32"
+  success-soft: "#E8F3E9"
+  error: "#C0392B"
+  error-background: "#FDECEC"
 typography:
   headline:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "28px"
     fontWeight: 300
-    lineHeight: 1.15
-    letterSpacing: "-.02em"
+    lineHeight: 1.2
   title:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "18px"
-    fontWeight: 600
-    letterSpacing: "-.02em"
+    fontWeight: 500
   body:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "13px"
     fontWeight: 400
     lineHeight: 1.65
+  label:
+    fontFamily: "Montserrat, Arial, sans-serif"
+    fontSize: "11px"
+    fontWeight: 400
   figure:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "22px"
     fontWeight: 500
     lineHeight: 1.2
-  label:
-    fontFamily: "Montserrat, Arial, sans-serif"
-    fontSize: "11px"
-    fontWeight: 400
 rounded:
-  card: "12px"
-  control: "9px"
-  navigation: "8px"
+  surface: "6px"
+  navigation: "4px"
+  attention-list: "9px"
 spacing:
   grid: "16px"
-  desktop-gutter: "34px"
+  desktop-gutter: "56px"
+  compact-gutter: "24px"
   mobile-gutter: "18px"
 components:
   create:
-    backgroundColor: "{colors.home-accent}"
+    backgroundColor: "{colors.cyan}"
     textColor: "{colors.white}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.surface}"
     padding: "0 18px"
-  create-hover:
-    backgroundColor: "{colors.home-accent-hover}"
+  notes:
+    backgroundColor: "{colors.cyan}"
     textColor: "{colors.white}"
+    rounded: "{rounded.surface}"
+    padding: "0 20px"
   dashboard-card:
-    backgroundColor: "{colors.home-card}"
-    rounded: "{rounded.card}"
+    backgroundColor: "{colors.white}"
+    rounded: "{rounded.surface}"
     padding: "14px 18px 16px"
+  navigation-active:
+    backgroundColor: "{colors.pink}"
+    textColor: "{colors.white}"
+    rounded: "{rounded.navigation}"
 ---
 
 # Design System: Life Deco Art HUB — Inicio
 
 ## Overview
 
-**Creative North Star: "Tablero de trabajo cálido"**
+**Creative North Star: "Inicio operativo del HUB/CMS"**
 
-Inicio organiza la atención de una sola propietaria con lectura rápida, cifras reales y accesos directos. La navegación carbón enmarca superficies suaves sobre crema; el terracota destaca acciones y orientación sin convertir cada bloque en una llamada principal.
+Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para selección y cian para acciones.
 
-Este documento describe exclusivamente la expresión implementada de Inicio (`.home-shell`, `.home-header`, `.home-main`) en `panel/panel.css` y `panel/app.mjs`. No redefine la identidad de la web pública ni cambia las otras pantallas del HUB. Los colores y controles heredados de Notas conservan su implementación actual.
+La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 18 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. La combinación de blanco sobre cian/rosa y el marrón auxiliar es una preferencia explícita aceptada por la propietaria.
 
 **Key Characteristics:**
-- Jerarquía operativa: atención, cifras y trabajo del día.
-- Superficies claras, esquinas suaves e iconos lineales.
-- Datos reales y vacíos explícitos, sin actividad simulada.
-- Navegación lateral en escritorio y menú desplegable en móvil.
+- Estructura operativa escaneable con datos reales.
+- Continuidad visual con HUB/CMS.
+- Superficies blancas planas sobre crema.
+- Navegación negra, selección rosa y acciones cian.
+- Vacíos explícitos y adaptación móvil.
 
 ## Colors
 
-El terracota es el acento principal de Inicio: Crear, navegación activa, títulos enlazados e iconos de sección. El crema sostiene el espacio; el blanco cálido identifica las tarjetas; la tinta oscura prioriza cifras y títulos. El gris cálido se reserva para contexto y etiquetas secundarias.
+Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; cian identifica Crear, Notas y Agregar actividad.
 
-Rojo, ámbar y verde distinguen atención urgente, advertencias y ausencia de asuntos urgentes. Las cifras usan fondos suaves propios en sus iconos. Estos colores acompañan siempre texto: no sustituyen la explicación. Las barras de etapas e inventario identifican categorías, no porcentajes ni avances medidos.
+Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Las barras de etapas e inventario identifican categorías: no representan porcentajes ni progreso medido.
+
+**The Continuity Rule.** Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.
 
 ## Typography
 
-Montserrat mantiene la continuidad del HUB. El saludo combina una entrada ligera con el nombre en peso 600. Las tarjetas usan títulos compactos; las cifras tienen números tabulares. El encabezado de marca utiliza letras espaciadas. Camelia queda en la firma lateral, no en las cifras ni en los controles.
+Montserrat es la familia de toda la interfaz de Inicio. Títulos principales: 28 px y peso 300; secundarios: 18 px y peso 500; interfaz: 13 px; información técnica: 11 px. El nombre del saludo usa peso 500. Las cifras principales usan 22 px y las de categorías 19 px, ambas con números tabulares y peso 500.
 
-En móvil, el saludo baja a 24 px y los títulos de tarjeta a 16 px. El archivo local de Montserrat 500 se declara para pesos 500–800: los valores de peso documentados son las declaraciones CSS, no archivos independientes para cada grosor.
+En móvil de hasta 640 px, el saludo baja a 24 px y los títulos de tarjeta a 16 px. Los archivos locales declaran el archivo Montserrat 500 para los pesos 500–800; los pesos descritos son declaraciones CSS, no archivos separados por grosor. Inicio no incluye firma manuscrita lateral.
 
 ## Layout
 
-La columna lateral de Inicio mide 255 px; el contenido ocupa el resto sin ancho máximo. El encabezado reúne saludo y acciones Crear/Notas. La cuadrícula principal separa bloques con el espaciado definido en los tokens.
+La barra lateral mide 250 px. El encabezado tiene una altura mínima de 98 px, saludo a la izquierda y acciones a la derecha. Comparte con el contenido el margen lateral `--hub-content-gutter`; una línea inferior se alinea con ese mismo margen. El margen es 56 px, baja a 24 px hasta 1150 px y a 18 px hasta 859 px. El contenido comienza con 28 px de separación superior en escritorio.
 
-Orden de Inicio: Requiere atención; cuatro indicadores; Trabajo de hoy junto a Pedidos por etapa e Inventario. En anchos superiores a 1250 px, las cifras ocupan cuatro columnas y la zona inferior reparte el espacio en proporción 1.35 a 1, con un mínimo de 360 px en la columna derecha.
-
-A 1250 px o menos, las cifras pasan a dos columnas y la zona inferior se apila; pedidos e inventario quedan emparejados. A 859 px o menos aparece el menú móvil y los bloques laterales pasan a una columna. A 640 px o menos las cifras se apilan, el avatar desaparece, las acciones admiten salto de línea y el menú Crear se alinea por la izquierda para permanecer dentro de la pantalla. Las etiquetas de etapas pueden ocupar varias líneas.
+Orden: atención prioritaria, cuatro métricas y zona inferior con agenda junto a etapas e inventario. Separación entre bloques: 16 px. Hasta 1250 px, las cifras pasan a dos columnas y la zona inferior se apila, con etapas e inventario emparejados. Hasta 859 px, la navegación pasa a menú móvil y esos resúmenes se apilan. Hasta 640 px, las cifras tienen una columna, se oculta el avatar, las acciones admiten salto de línea y Crear abre su menú alineado a la izquierda. Las etiquetas de categorías admiten varias líneas.
 
 ## Elevation & Depth
 
-Las tarjetas combinan borde tenue y sombra ambiental (`0 8px 24px rgba(84,61,49,.045)`). El desplegable Crear usa una sombra mayor (`0 14px 32px rgba(61,43,34,.14)`) para distinguir la capa temporal. No hay animación decorativa propia del tablero; se mantiene la regla global de movimiento reducido.
+Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La separación depende del contraste con el crema y del espacio. Los separadores internos de atención y categorías permanecen. El desplegable Crear, como capa temporal, conserva borde y sombra (`0 14px 32px var(--shadow-soft)`); esta excepción no debe trasladarse a las tarjetas. La regla global de movimiento reducido desactiva transiciones.
 
 ## Shapes
 
-Tarjetas redondeadas, controles compactos y círculos para iconos resumen. Los separadores finos agrupan filas de atención y categorías. Las barras de categorías tienen extremos completamente redondeados. Las formas circulares no indican botones cuando su contenido es solo un icono informativo.
+Radio base de superficies y acciones: 6 px. Navegación: 4 px. La lista interna de atención mantiene 9 px. Avatar e iconos resumen son circulares; las barras de categorías tienen extremos redondeados. Los círculos informativos no se presentan como botones.
 
 ## Components
 
 ### Cabecera y navegación
 
-El saludo usa el nombre disponible en la cuenta/configuración mediante `ownerName()`; no se añade una identidad ficticia. El texto implementado es «Buenos días» y no cambia automáticamente según la hora. El avatar es una inicial decorativa. Crear abre enlaces de creación; Notas abre el diálogo existente. La navegación marca la página mediante `aria-current="page"`.
+El saludo usa `ownerName()` y muestra «Buenos días»; no varía según la hora. El avatar representa una inicial y es decorativo. Crear despliega enlaces reales de creación y Notas abre el diálogo existente. Ambos botones son cian con texto blanco; al pasar el cursor conservan el fondo y oscurecen el borde. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`.
 
-### Atención prioritaria
+### Atención y cifras
 
-Solo aparecen categorías con registros: cotizaciones enviadas o vencidas, pedidos activos sin actualizar durante al menos tres días y materiales controlados en su mínimo o por debajo. Cada fila ofrece una acción a su sección. «Ver todo» lleva a la primera categoría presente, no a una bandeja agregada. Si no hay categorías, se muestra «Todo está al día» con la aclaración «con los datos registrados».
+Atención muestra cotizaciones enviadas o vencidas, pedidos activos sin actualización durante al menos tres días y materiales controlados en el mínimo o por debajo. «Ver todo» lleva a la primera categoría presente. Sin registros relevantes, el texto aclara que no hay asuntos urgentes «con los datos registrados».
 
-### Cifras
+Las cuatro cifras son Ventas del mes, Cobrado, Por cobrar y Gastos. Ventas usa facturas del mes; cobros y gastos van desde el inicio del mes hasta hoy; el saldo pendiente es total. Las tendencias comparan con el mes anterior completo; una base cero produce texto sin porcentaje inventado. Verde/rojo indica subida/bajada numérica, no conveniencia económica de un gasto.
 
-Ventas del mes, Cobrado, Por cobrar y Gastos proceden del estado del panel. Ventas usa facturas del mes; cobros y gastos usan el período del inicio de mes hasta hoy; Por cobrar muestra el saldo pendiente total. Las tendencias comparan con el mes anterior completo. Si la base anterior es cero, se muestra texto sin inventar porcentajes. El verde/rojo de la tendencia representa subida/bajada numérica y no una evaluación de conveniencia del gasto.
+### Agenda, etapas e inventario
 
-### Agenda y resúmenes
+Trabajo de hoy muestra hasta cuatro eventos de la fecha actual. El vacío conserva Agregar actividad. Pedidos agrupa pendiente, proceso (diseño/aprobación/producción), listo para entregar y entregado. Inventario cuenta materiales controlados, no unidades: sobre mínimo, positivos en el mínimo o por debajo y sin existencia. Todos los valores proceden del estado real.
 
-Trabajo de hoy muestra hasta cuatro eventos de la fecha actual con enlaces a sus registros. Sin eventos, mantiene un vacío claro y el enlace Agregar actividad. Pedidos agrupa pendiente, proceso (diseño/aprobación/producción), listo para entregar y entregado. Inventario cuenta materiales con control de existencias, no suma unidades: sobre mínimo, positivos en mínimo o por debajo, y sin existencias.
+### Interacción
 
-### Estados e interacción
-
-Los enlaces de títulos se subrayan al pasar el cursor; Crear oscurece su fondo; las acciones de atención y agenda cambian suavemente de superficie. El enfoque hereda las reglas del panel: no hay un aro adicional; enlaces cambian de color y campos usan el borde existente. Esta descripción registra lo implementado y no constituye una certificación general de accesibilidad.
+Los enlaces de títulos se subrayan al pasar el cursor. Los enlaces de atención usan marrón sobre fondo marrón suave y oscurecen el texto al pasar el cursor. Los campos y enlaces heredan el enfoque del HUB: borde existente o cambio de color, sin aro exterior añadido. Esta documentación registra la preferencia visual aceptada y la implementación; no afirma una certificación general de accesibilidad.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** mantener la jerarquía de lectura y los accesos asociados a datos reales.
-- **Do** conservar vacíos explícitos y las acciones disponibles para empezar.
-- **Do** limitar este mundo visual al alcance de Inicio hasta que se apruebe extenderlo.
-- **Do** verificar etiquetas largas, menú Crear y cifras en móvil después de cualquier cambio.
+- **Do** conservar Montserrat y los roles de color del HUB/CMS.
+- **Do** mantener las superficies blancas sin borde exterior ni sombra.
+- **Do** alinear el encabezado, su línea y el contenido con el mismo margen lateral.
+- **Do** mostrar datos reales, vacíos honestos y acciones útiles.
 
 ### Don't:
-- **Don't** rellenar el tablero con clientes, importes o actividad de muestra.
-- **Don't** interpretar las barras de categorías como porcentajes de avance.
-- **Don't** extrapolar las métricas mensuales como proyecciones o comparaciones entre períodos equivalentes.
-- **Don't** trasladar estos tokens a la web pública sin una decisión expresa.
+- **Don't** introducir una nueva paleta para Inicio.
+- **Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.
+- **Don't** rellenar métricas, agenda o atención con actividad ficticia.
+- **Don't** representar las barras de categorías como porcentajes o las comparaciones mensuales como períodos equivalentes.

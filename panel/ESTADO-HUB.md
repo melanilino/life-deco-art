@@ -19,7 +19,7 @@
 - “Trabajo de hoy” reúne las actividades, entregas, contenido y renovaciones programadas para la fecha actual.
 - El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. El encabezado también ofrece “Notas”.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
-- El nuevo diseño de Inicio usa una navegación oscura, superficies blancas sobre crema y acentos cálidos con contraste accesible. En móvil, todos los módulos se reorganizan en una sola columna.
+- El nuevo Inicio conserva el sistema visual aprobado del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones principales cian. En móvil, todos los módulos se reorganizan en una sola columna.
 
 ## Estadísticas
 - El menú incluye una sección independiente de Estadísticas.
