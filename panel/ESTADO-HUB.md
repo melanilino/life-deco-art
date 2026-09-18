@@ -35,7 +35,8 @@
 - Configuración conserva los datos comerciales y valores habituales usados en documentos y cálculos. Usa el fondo crema del HUB y organiza sus campos en bloques blancos: Información del negocio, Tu trabajo, Cotizaciones y Pagos.
 - Seguridad reúne la cuenta autorizada, las descargas de copias, el historial y la recuperación de registros. Los respaldos automáticos continúan pendientes de revisar costos y configurar.
 - El HUB no almacena contraseñas; esa decisión se revisará más adelante.
-- Los formularios con distintos tipos de información usan subtítulos y bloques blancos para separar datos principales, contacto, fechas, importes, relaciones, renovaciones y notas según corresponda. Los formularios sencillos conservan un solo bloque.
+- Los formularios usan una sola hoja blanca. Sus subtítulos internos organizan datos principales, contacto, fechas, importes, relaciones, renovaciones y notas sin dividirlos en tarjetas separadas.
+- Los enlaces “Volver a…” no aparecen en formularios ni fichas; la navegación se realiza desde el menú lateral. Las acciones finales muestran “Cancelar” y “Guardar”, alineadas y sin subrayado.
 - Las categorías relacionadas se separan 16 px de la línea del encabezado. Todas se muestran como texto marrón, sin recuadros ni fondos, y la opción activa se identifica con una línea marrón fina bajo el texto.
 - La línea del encabezado y la de la categoría activa comparten el mismo tono y grosor. La primera categoría se alinea con el título, la descripción y el contenido de la página.
 - El sistema visual del HUB usa Montserrat y una escala estable: títulos principales de 28 px y peso 300; títulos secundarios de 18 px y peso 500; interfaz de 13 px; información técnica de 11 px. La paleta se limita a crema, blanco, negro, marrón, rosa y cyan, con verde y rojo reservados para estados funcionales.
