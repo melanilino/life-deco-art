@@ -20,7 +20,8 @@
 - El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. El encabezado también ofrece “Notas”.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
 - El nuevo Inicio conserva el sistema visual aprobado del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones principales cian. En móvil, todos los módulos se reorganizan en una sola columna.
-- En Inicio, el saludo identifica a Melani sin avatar; las métricas y el estado «Todo está al día» usan iconos marrones sobre el mismo fondo neutro. Los títulos de Atención, Trabajo de hoy, Pedidos e Inventario no llevan iconos decorativos. Los enlaces de cabecera no llevan flechas y los resúmenes de pedidos e inventario muestran cantidades y nombres sin barras decorativas. En escritorio, estos dos resúmenes tienen un poco más de ancho que antes frente a Trabajo de hoy.
+- En Inicio, el saludo identifica a Melani sin avatar y las métricas usan iconos marrones sobre el mismo fondo neutro. Los títulos de Atención, Próximas entregas, Pedidos e Inventario no llevan iconos decorativos. Los enlaces de cabecera no llevan flechas y los resúmenes de pedidos e inventario muestran cantidades y nombres sin barras decorativas. En escritorio, estos dos resúmenes tienen un poco más de ancho que antes frente a Próximas entregas.
+- «Todo está al día» aparece sin check. El bloque antes llamado Trabajo de hoy ahora es «Próximas entregas» y muestra hasta cuatro compromisos de agenda desde la fecha actual, usando Hoy, Mañana o la fecha correspondiente. No usa puntos ni línea temporal. Este bloque sirve para anticiparse; «Requiere atención» queda reservado para alertas y asuntos que necesitan acción.
 
 ## Estadísticas
 - El menú incluye una sección independiente de Estadísticas.

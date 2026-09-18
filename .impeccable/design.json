@@ -52,10 +52,12 @@
       "greetingBehavior": "Fijo, sin dependencia de hora ni cuenta.",
       "avatar": "No existe avatar ni inicial.",
       "sectionLinks": "Abrir agenda y Ver todos sin flecha.",
-      "contentIcons": "Iconos del contenido principal en marrón #8B795E sobre brown-soft: cuatro métricas, check Todo está al día, filas de atención y Agregar actividad. Acciones cian y navegación mantienen su contexto.",
+      "contentIcons": "Iconos del contenido principal en marrón #8B795E sobre brown-soft: cuatro métricas, filas de atención y Agregar actividad. Acciones cian y navegación mantienen su contexto.",
       "addActivity": "Icono marrón sobre brown-soft.",
       "desktopLowerGrid": "minmax(0,1.1fr) minmax(400px,1fr)",
-      "sectionHeadings": "Requiere atención, Trabajo de hoy, Pedidos por etapa e Inventario sin iconos decorativos."
+      "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
+      "attentionEmpty": "Todo está al día: texto sin check ni icono.",
+      "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados."
     }
   },
   "components": [
@@ -87,8 +89,8 @@
       "name": "Tarjeta de agenda vacía",
       "kind": "card",
       "refersTo": "dashboard-card",
-      "description": "Superficie blanca plana con vacío explícito y acción útil.",
-      "html": "<section class=\"ds-card\"><h2>Trabajo de hoy</h2><p>Sin actividades programadas</p><a href=\"#tasks/new\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Agregar actividad</a></section>",
+      "description": "Superficie blanca plana para próximos compromisos, sin punto ni línea temporal; vacío explícito y acción útil.",
+      "html": "<section class=\"ds-card\"><h2>Próximas entregas</h2><p>Sin entregas programadas</p><a href=\"#tasks/new\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Agregar actividad</a></section>",
       "css": ".ds-card{padding:17px 20px;background:var(--white,#FFFFFF);border:0;border-radius:var(--radius,6px);box-shadow:none;font:400 13px Montserrat,Arial,sans-serif;color:var(--black,#1C1A17)}.ds-card h2{margin:0 0 10px;font-size:18px;font-weight:500;letter-spacing:-.02em}.ds-card p{font-size:12px;font-weight:500}.ds-card a{color:var(--brown,#8B795E);font-size:11px;text-decoration:none}.ds-card a:hover{text-decoration-thickness:2px}.ds-card a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}.ds-card a{display:flex;align-items:center;gap:11px}.ds-card a svg{width:27px;height:27px;padding:6px;border-radius:50%;background:var(--brown-soft,rgba(139,121,94,.10));color:var(--brown,#8B795E);fill:none;stroke:currentColor;stroke-width:1.7}"
     },
     {
