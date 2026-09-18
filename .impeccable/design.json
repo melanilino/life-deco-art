@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-18T00:00:00-04:00",
+  "title": "Design System: Life Deco Art HUB — Inicio",
+  "extensions": {
+    "scope": "Solo Inicio del HUB; no redefine la web pública ni los otros módulos.",
+    "sources": ["panel/panel.css", "panel/app.mjs", "panel.html"],
+    "typographyMeta": {
+      "headline": {"displayName": "Saludo", "purpose": "Entrada personal; nombre destacado con peso 600."},
+      "figure": {"displayName": "Cifra", "purpose": "Importes reales con font-variant-numeric: tabular-nums."}
+    },
+    "shadows": [
+      {"name": "dashboard-card", "value": "0 8px 24px rgba(84,61,49,.045)", "purpose": "Separación ambiental tenue de las tarjetas."},
+      {"name": "create-menu", "value": "0 14px 32px rgba(61,43,34,.14)", "purpose": "Capa temporal de creación."}
+    ],
+    "motion": [],
+    "breakpoints": [
+      {"name": "dashboard-two-columns", "value": "1250px"},
+      {"name": "mobile-navigation", "value": "859px"},
+      {"name": "single-column-metrics", "value": "640px"}
+    ],
+    "interaction": {
+      "focus": "El panel elimina el aro exterior; enlaces cambian de color y campos usan el borde existente. No se afirma certificación de accesibilidad.",
+      "reducedMotion": "La regla global prefers-reduced-motion desactiva transiciones.",
+      "categoryBars": "Longitud decorativa constante, sin proporción numérica.",
+      "emptyStates": "Los vacíos reflejan ausencia de registros; nunca simulan actividad."
+    }
+  },
+  "components": [
+    {
+      "name": "Crear",
+      "kind": "custom",
+      "refersTo": "create",
+      "description": "Disparador del menú nativo details, sin animación añadida.",
+      "html": "<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
+      "css": ".ds-create{font:500 14px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:50px;padding:0 18px;border:1px solid #a9534d;border-radius:9px;background:#a9534d;color:#fff;cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{background:#8f433e;border-color:#8f433e}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:#211d1b;text-decoration:none}.ds-create a:hover{background:#f8e8e6}.ds-create a:focus-visible{outline:0;color:#0CC0DF}"
+    },
+    {
+      "name": "Notas",
+      "kind": "button",
+      "description": "Acción secundaria de cabecera que abre las notas existentes.",
+      "html": "<button class=\"ds-notes\">Notas</button>",
+      "css": ".ds-notes{display:inline-flex;align-items:center;min-height:50px;padding:0 20px;border:1px solid #dfcdc5;border-radius:9px;background:#fffaf7;color:#211d1b;font:500 14px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes:hover{border-color:#a9534d;background:#fffaf7}.ds-notes:focus-visible{outline:0;box-shadow:none}"
+    },
+    {
+      "name": "Navegación activa",
+      "kind": "nav",
+      "description": "Carbón y terracota con identificación semántica de página.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Menú principal\"><a href=\"#home\" aria-current=\"page\">Inicio</a><a href=\"#clients\">Clientes</a></nav>",
+      "css": ".ds-nav{padding:19px;background:#211e1b;font:400 14px Montserrat,Arial,sans-serif}.ds-nav a{display:flex;align-items:center;min-height:51px;margin:0 0 3px;padding:12px 15px;border-radius:8px;color:#eee9e5;text-decoration:none}.ds-nav a:hover{background:rgba(255,255,255,.07)}.ds-nav a[aria-current=page],.ds-nav a[aria-current=page]:hover{background:#a9534d;color:#fff}.ds-nav a:focus-visible{outline:0;background:rgba(255,255,255,.08);color:#fff}"
+    },
+    {
+      "name": "Tarjeta de agenda vacía",
+      "kind": "card",
+      "refersTo": "dashboard-card",
+      "description": "Vacío explícito sin registros ficticios; acción para crear la primera actividad.",
+      "html": "<section class=\"ds-card\"><h2>Trabajo de hoy</h2><p>Sin actividades programadas</p><a href=\"#tasks/new\">Agregar actividad</a></section>",
+      "css": ".ds-card{padding:17px 20px;background:#fffdfb;border:1px solid rgba(130,91,70,.13);border-radius:12px;box-shadow:0 8px 24px rgba(84,61,49,.045);font:400 13px Montserrat,Arial,sans-serif;color:#211d1b}.ds-card h2{margin:0 0 10px;font-size:18px;font-weight:600;letter-spacing:-.02em}.ds-card p{font-size:12px;font-weight:500}.ds-card a{color:#756c67;font-size:11px;text-decoration:none}.ds-card a:hover{text-decoration-thickness:2px}.ds-card a:focus-visible{outline:0;color:#0CC0DF}"
+    },
+    {
+      "name": "Acción de atención",
+      "kind": "button",
+      "description": "Enlace de una fila prioritaria a su sección real.",
+      "html": "<a class=\"ds-attention-action\" href=\"#quotes\">Ver cotizaciones</a>",
+      "css": ".ds-attention-action{display:inline-block;padding:9px 12px;border-radius:7px;background:#f8e8e6;color:#8d2924;font:500 12px Montserrat,Arial,sans-serif;text-align:center;text-decoration:none}.ds-attention-action:hover{background:#f4d9d7}.ds-attention-action:focus-visible{outline:0;color:#0CC0DF}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Tablero de trabajo cálido",
+    "overview": "Inicio organiza la atención de una sola propietaria con lectura rápida, cifras reales y accesos directos. La navegación carbón enmarca superficies suaves sobre crema; el terracota destaca acciones y orientación sin convertir cada bloque en una llamada principal.\n\nEste documento describe exclusivamente la expresión implementada de Inicio (`.home-shell`, `.home-header`, `.home-main`) en `panel/panel.css` y `panel/app.mjs`. No redefine la identidad de la web pública ni cambia las otras pantallas del HUB. Los colores y controles heredados de Notas conservan su implementación actual.",
+    "keyCharacteristics": ["Jerarquía operativa: atención, cifras y trabajo del día.", "Superficies claras, esquinas suaves e iconos lineales.", "Datos reales y vacíos explícitos, sin actividad simulada.", "Navegación lateral en escritorio y menú desplegable en móvil."],
+    "rules": [],
+    "dos": ["**Do** mantener la jerarquía de lectura y los accesos asociados a datos reales.", "**Do** conservar vacíos explícitos y las acciones disponibles para empezar.", "**Do** limitar este mundo visual al alcance de Inicio hasta que se apruebe extenderlo.", "**Do** verificar etiquetas largas, menú Crear y cifras en móvil después de cualquier cambio."],
+    "donts": ["**Don't** rellenar el tablero con clientes, importes o actividad de muestra.", "**Don't** interpretar las barras de categorías como porcentajes de avance.", "**Don't** extrapolar las métricas mensuales como proyecciones o comparaciones entre períodos equivalentes.", "**Don't** trasladar estos tokens a la web pública sin una decisión expresa."]
+  }
+}

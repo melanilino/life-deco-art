@@ -14,9 +14,12 @@
 - No se han activado respaldos automáticos ni actualizado la cuenta de prueba a una cuenta pagada permanente.
 
 ## Inicio del hub
-- “Agenda y próximas entregas” reúne las fechas programadas del negocio.
-- El encabezado de Inicio ofrece “Notas rápidas” para guardar, consultar y eliminar ideas, apuntes de reuniones y recordatorios breves.
+- Inicio funciona como tablero operativo: muestra asuntos que requieren atención, ventas, cobros, saldos por cobrar, gastos, trabajo del día, etapas de pedidos e inventario.
+- Todos los importes, cantidades y avisos proceden de los registros del HUB. Si no existe actividad, la pantalla lo indica sin inventar datos.
+- “Trabajo de hoy” reúne las actividades, entregas, contenido y renovaciones programadas para la fecha actual.
+- El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. El encabezado también ofrece “Notas”.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
+- El nuevo diseño de Inicio usa una navegación oscura, superficies blancas sobre crema y acentos cálidos con contraste accesible. En móvil, todos los módulos se reorganizan en una sola columna.
 
 ## Estadísticas
 - El menú incluye una sección independiente de Estadísticas.
