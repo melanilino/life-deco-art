@@ -52,9 +52,10 @@
       "greetingBehavior": "Fijo, sin dependencia de hora ni cuenta.",
       "avatar": "No existe avatar ni inicial.",
       "sectionLinks": "Abrir agenda y Ver todos sin flecha.",
-      "contentIcons": "Marrón #8B795E en todos los iconos del contenido principal; acciones cian y navegación conservan su contexto.",
+      "contentIcons": "Iconos del contenido principal en marrón #8B795E sobre brown-soft: cuatro métricas, check Todo está al día, filas de atención y Agregar actividad. Acciones cian y navegación mantienen su contexto.",
       "addActivity": "Icono marrón sobre brown-soft.",
-      "desktopLowerGrid": "minmax(0,1.1fr) minmax(400px,1fr)"
+      "desktopLowerGrid": "minmax(0,1.1fr) minmax(400px,1fr)",
+      "sectionHeadings": "Requiere atención, Trabajo de hoy, Pedidos por etapa e Inventario sin iconos decorativos."
     }
   },
   "components": [

@@ -113,6 +113,8 @@ Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La s
 
 Radio base de superficies y acciones: 6 px. Navegación: 4 px. La lista interna de atención mantiene 9 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones.
 
+Los títulos Requiere atención, Trabajo de hoy, Pedidos por etapa e Inventario aparecen sin iconos decorativos. Los iconos circulares de las cuatro métricas y el check de «Todo está al día» comparten fondo `brown-soft` y color marrón (#8B795E). Agregar actividad conserva esa misma combinación. Los iconos de las filas de atención también usan este tratamiento uniforme; el color de estado se mantiene en los textos correspondientes.
+
 ## Components
 
 ### Cabecera y navegación
