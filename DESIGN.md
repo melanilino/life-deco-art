@@ -87,9 +87,9 @@ La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` 
 
 ## Colors
 
-Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; cian identifica Crear, Notas y Agregar actividad.
+Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; cian identifica Crear y Notas. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad; los iconos de acciones cian y navegación mantienen su contexto. Agregar actividad usa icono marrón sobre `brown-soft`.
 
-Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Las barras de etapas e inventario identifican categorías: no representan porcentajes ni progreso medido.
+Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Etapas e inventario muestran cifras y etiquetas sin barras inferiores.
 
 **The Continuity Rule.** Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.
 
@@ -103,7 +103,7 @@ En móvil de hasta 640 px, el saludo baja a 24 px y los títulos de tarjeta a 16
 
 La barra lateral mide 250 px. El encabezado tiene una altura mínima de 98 px, saludo a la izquierda y acciones a la derecha. Comparte con el contenido el margen lateral `--hub-content-gutter`; una línea inferior se alinea con ese mismo margen. El margen es 56 px, baja a 24 px hasta 1150 px y a 18 px hasta 859 px. El contenido comienza con 28 px de separación superior en escritorio.
 
-Orden: atención prioritaria, cuatro métricas y zona inferior con agenda junto a etapas e inventario. Separación entre bloques: 16 px. Hasta 1250 px, las cifras pasan a dos columnas y la zona inferior se apila, con etapas e inventario emparejados. Hasta 859 px, la navegación pasa a menú móvil y esos resúmenes se apilan. Hasta 640 px, las cifras tienen una columna, se oculta el avatar, las acciones admiten salto de línea y Crear abre su menú alineado a la izquierda. Las etiquetas de categorías admiten varias líneas.
+Orden: atención prioritaria, cuatro métricas y zona inferior con agenda junto a etapas e inventario. En escritorio, la zona inferior usa `minmax(0,1.1fr) minmax(400px,1fr)` para dar más ancho a Pedidos e Inventario. Separación entre bloques: 16 px. Hasta 1250 px, las cifras pasan a dos columnas y la zona inferior se apila, con etapas e inventario emparejados. Hasta 859 px, la navegación pasa a menú móvil y esos resúmenes se apilan. Hasta 640 px, las cifras tienen una columna, las acciones admiten salto de línea y Crear abre su menú alineado a la izquierda. Las etiquetas de categorías admiten varias líneas.
 
 ## Elevation & Depth
 
@@ -111,13 +111,13 @@ Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La s
 
 ## Shapes
 
-Radio base de superficies y acciones: 6 px. Navegación: 4 px. La lista interna de atención mantiene 9 px. Avatar e iconos resumen son circulares; las barras de categorías tienen extremos redondeados. Los círculos informativos no se presentan como botones.
+Radio base de superficies y acciones: 6 px. Navegación: 4 px. La lista interna de atención mantiene 9 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones.
 
 ## Components
 
 ### Cabecera y navegación
 
-El saludo usa `ownerName()` y muestra «Buenos días»; no varía según la hora. El avatar representa una inicial y es decorativo. Crear despliega enlaces reales de creación y Notas abre el diálogo existente. Ambos botones son cian con texto blanco; al pasar el cursor conservan el fondo y oscurecen el borde. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`.
+El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación y Notas abre el diálogo existente. Ambos botones son cian con texto blanco; al pasar el cursor conservan el fondo y oscurecen el borde. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
 
 ### Atención y cifras
 
@@ -145,4 +145,4 @@ Los enlaces de títulos se subrayan al pasar el cursor. Los enlaces de atención
 - **Don't** introducir una nueva paleta para Inicio.
 - **Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.
 - **Don't** rellenar métricas, agenda o atención con actividad ficticia.
-- **Don't** representar las barras de categorías como porcentajes o las comparaciones mensuales como períodos equivalentes.
+- **Don't** añadir barras bajo etapas e inventario ni presentar las comparaciones mensuales como períodos equivalentes.

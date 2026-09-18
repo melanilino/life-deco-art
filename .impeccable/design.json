@@ -4,64 +4,128 @@
   "title": "Design System: Life Deco Art HUB — Inicio",
   "extensions": {
     "scope": "Inicio operativo con continuidad visual HUB/CMS; no redefine la web pública.",
-    "sources": ["panel/panel.css", "panel/app.mjs", "panel.html"],
+    "sources": [
+      "panel/panel.css",
+      "panel/app.mjs",
+      "panel.html"
+    ],
     "acceptedPreference": "Blanco sobre cian/rosa y marrón auxiliar: preferencia explícita aceptada por la propietaria.",
     "shadows": [
-      {"name":"dashboard-card","value":"none","purpose":"Superficies blancas sin borde exterior ni sombra."},
-      {"name":"create-menu","value":"0 14px 32px var(--shadow-soft)","purpose":"Solo el desplegable temporal; no aplicar a tarjetas."}
+      {
+        "name": "dashboard-card",
+        "value": "none",
+        "purpose": "Superficies blancas sin borde exterior ni sombra."
+      },
+      {
+        "name": "create-menu",
+        "value": "0 14px 32px var(--shadow-soft)",
+        "purpose": "Solo el desplegable temporal; no aplicar a tarjetas."
+      }
     ],
     "motion": [],
     "breakpoints": [
-      {"name":"two-column-metrics","value":"1250px"},
-      {"name":"compact-gutter","value":"1150px"},
-      {"name":"mobile-navigation","value":"859px"},
-      {"name":"single-column-metrics","value":"640px"}
+      {
+        "name": "two-column-metrics",
+        "value": "1250px"
+      },
+      {
+        "name": "compact-gutter",
+        "value": "1150px"
+      },
+      {
+        "name": "mobile-navigation",
+        "value": "859px"
+      },
+      {
+        "name": "single-column-metrics",
+        "value": "640px"
+      }
     ],
     "interaction": {
-      "focus":"Borde existente o cambio de color, sin aro exterior añadido; no constituye certificación de accesibilidad.",
-      "reducedMotion":"La regla global prefers-reduced-motion desactiva transiciones.",
-      "categoryBars":"Identifican categorías, no porcentajes.",
-      "emptyStates":"Sin actividad ficticia; conservar acciones para empezar."
+      "focus": "Borde existente o cambio de color, sin aro exterior añadido; no constituye certificación de accesibilidad.",
+      "reducedMotion": "La regla global prefers-reduced-motion desactiva transiciones.",
+      "emptyStates": "Sin actividad ficticia; conservar acciones para empezar.",
+      "categorySummary": "Cifras y etiquetas de etapas e inventario sin barras inferiores."
+    },
+    "homeDetails": {
+      "greeting": "Buenos días, Melani",
+      "greetingBehavior": "Fijo, sin dependencia de hora ni cuenta.",
+      "avatar": "No existe avatar ni inicial.",
+      "sectionLinks": "Abrir agenda y Ver todos sin flecha.",
+      "contentIcons": "Marrón #8B795E en todos los iconos del contenido principal; acciones cian y navegación conservan su contexto.",
+      "addActivity": "Icono marrón sobre brown-soft.",
+      "desktopLowerGrid": "minmax(0,1.1fr) minmax(400px,1fr)"
     }
   },
   "components": [
     {
-      "name":"Crear", "kind":"custom", "refersTo":"create",
-      "description":"Disparador cian del menú nativo details.",
-      "html":"<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
-      "css":".ds-create{font:500 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{border-color:var(--black,#1C1A17)}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:var(--black,#1C1A17);text-decoration:none}.ds-create a:hover{background:var(--brown-soft,rgba(139,121,94,.10))}.ds-create a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
+      "name": "Crear",
+      "kind": "custom",
+      "refersTo": "create",
+      "description": "Disparador cian del menú nativo details.",
+      "html": "<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
+      "css": ".ds-create{font:500 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{border-color:var(--black,#1C1A17)}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:var(--black,#1C1A17);text-decoration:none}.ds-create a:hover{background:var(--brown-soft,rgba(139,121,94,.10))}.ds-create a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
     },
     {
-      "name":"Notas", "kind":"button", "refersTo":"notes",
-      "description":"Acción cian de cabecera, igual a Crear en jerarquía visual.",
-      "html":"<button class=\"ds-notes\">Notas</button>",
-      "css":".ds-notes{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes:hover{border-color:var(--black,#1C1A17)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
+      "name": "Notas",
+      "kind": "button",
+      "refersTo": "notes",
+      "description": "Acción cian de cabecera, igual a Crear en jerarquía visual.",
+      "html": "<button class=\"ds-notes\">Notas</button>",
+      "css": ".ds-notes{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes:hover{border-color:var(--black,#1C1A17)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
     },
     {
-      "name":"Navegación", "kind":"nav", "refersTo":"navigation-active",
-      "description":"Sidebar negro con selección rosa y texto blanco.",
-      "html":"<nav class=\"ds-nav\" aria-label=\"Menú principal\"><a href=\"#home\" aria-current=\"page\">Inicio</a><a href=\"#clients\">Clientes</a></nav>",
-      "css":".ds-nav{padding:20px 24px;background:var(--black,#1C1A17);font:400 13px Montserrat,Arial,sans-serif}.ds-nav a{display:flex;align-items:center;min-height:44px;margin:0 0 3px;padding:11px 14px;border-radius:4px;color:var(--white,#FFFFFF);text-decoration:none}.ds-nav a:hover{background:var(--on-dark-hover,rgba(255,255,255,.08))}.ds-nav a[aria-current=page],.ds-nav a[aria-current=page]:hover{background:var(--pink,#F65091);color:var(--white,#FFFFFF)}.ds-nav a:focus-visible{outline:0;background:var(--on-dark-hover,rgba(255,255,255,.08));color:var(--white,#FFFFFF)}"
+      "name": "Navegación",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Sidebar negro con selección rosa y texto blanco.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Menú principal\"><a href=\"#home\" aria-current=\"page\">Inicio</a><a href=\"#clients\">Clientes</a></nav>",
+      "css": ".ds-nav{padding:20px 24px;background:var(--black,#1C1A17);font:400 13px Montserrat,Arial,sans-serif}.ds-nav a{display:flex;align-items:center;min-height:44px;margin:0 0 3px;padding:11px 14px;border-radius:4px;color:var(--white,#FFFFFF);text-decoration:none}.ds-nav a:hover{background:var(--on-dark-hover,rgba(255,255,255,.08))}.ds-nav a[aria-current=page],.ds-nav a[aria-current=page]:hover{background:var(--pink,#F65091);color:var(--white,#FFFFFF)}.ds-nav a:focus-visible{outline:0;background:var(--on-dark-hover,rgba(255,255,255,.08));color:var(--white,#FFFFFF)}"
     },
     {
-      "name":"Tarjeta de agenda vacía", "kind":"card", "refersTo":"dashboard-card",
-      "description":"Superficie blanca plana con vacío explícito y acción útil.",
-      "html":"<section class=\"ds-card\"><h2>Trabajo de hoy</h2><p>Sin actividades programadas</p><a href=\"#tasks/new\">Agregar actividad</a></section>",
-      "css":".ds-card{padding:17px 20px;background:var(--white,#FFFFFF);border:0;border-radius:var(--radius,6px);box-shadow:none;font:400 13px Montserrat,Arial,sans-serif;color:var(--black,#1C1A17)}.ds-card h2{margin:0 0 10px;font-size:18px;font-weight:500;letter-spacing:-.02em}.ds-card p{font-size:12px;font-weight:500}.ds-card a{color:var(--brown,#8B795E);font-size:11px;text-decoration:none}.ds-card a:hover{text-decoration-thickness:2px}.ds-card a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
+      "name": "Tarjeta de agenda vacía",
+      "kind": "card",
+      "refersTo": "dashboard-card",
+      "description": "Superficie blanca plana con vacío explícito y acción útil.",
+      "html": "<section class=\"ds-card\"><h2>Trabajo de hoy</h2><p>Sin actividades programadas</p><a href=\"#tasks/new\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>Agregar actividad</a></section>",
+      "css": ".ds-card{padding:17px 20px;background:var(--white,#FFFFFF);border:0;border-radius:var(--radius,6px);box-shadow:none;font:400 13px Montserrat,Arial,sans-serif;color:var(--black,#1C1A17)}.ds-card h2{margin:0 0 10px;font-size:18px;font-weight:500;letter-spacing:-.02em}.ds-card p{font-size:12px;font-weight:500}.ds-card a{color:var(--brown,#8B795E);font-size:11px;text-decoration:none}.ds-card a:hover{text-decoration-thickness:2px}.ds-card a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}.ds-card a{display:flex;align-items:center;gap:11px}.ds-card a svg{width:27px;height:27px;padding:6px;border-radius:50%;background:var(--brown-soft,rgba(139,121,94,.10));color:var(--brown,#8B795E);fill:none;stroke:currentColor;stroke-width:1.7}"
     },
     {
-      "name":"Acción de atención", "kind":"button",
-      "description":"Enlace auxiliar marrón a la sección que requiere atención.",
-      "html":"<a class=\"ds-attention-action\" href=\"#quotes\">Ver cotizaciones</a>",
-      "css":".ds-attention-action{display:inline-block;padding:9px 12px;border-radius:var(--radius,6px);background:var(--brown-soft,rgba(139,121,94,.10));color:var(--brown,#8B795E);font:500 12px Montserrat,Arial,sans-serif;text-align:center;text-decoration:none}.ds-attention-action:hover{color:var(--black,#1C1A17)}.ds-attention-action:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
+      "name": "Acción de atención",
+      "kind": "button",
+      "description": "Enlace auxiliar marrón a la sección que requiere atención.",
+      "html": "<a class=\"ds-attention-action\" href=\"#quotes\">Ver cotizaciones</a>",
+      "css": ".ds-attention-action{display:inline-block;padding:9px 12px;border-radius:var(--radius,6px);background:var(--brown-soft,rgba(139,121,94,.10));color:var(--brown,#8B795E);font:500 12px Montserrat,Arial,sans-serif;text-align:center;text-decoration:none}.ds-attention-action:hover{color:var(--black,#1C1A17)}.ds-attention-action:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
     }
   ],
   "narrative": {
-    "northStar":"Inicio operativo del HUB/CMS",
-    "overview":"Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para selección y cian para acciones.\n\nLa fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 18 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. La combinación de blanco sobre cian/rosa y el marrón auxiliar es una preferencia explícita aceptada por la propietaria.",
-    "keyCharacteristics":["Estructura operativa escaneable con datos reales.","Continuidad visual con HUB/CMS.","Superficies blancas planas sobre crema.","Navegación negra, selección rosa y acciones cian.","Vacíos explícitos y adaptación móvil."],
-    "rules":[{"name":"The Continuity Rule","body":"Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.","section":"colors"}],
-    "dos":["**Do** conservar Montserrat y los roles de color del HUB/CMS.","**Do** mantener las superficies blancas sin borde exterior ni sombra.","**Do** alinear el encabezado, su línea y el contenido con el mismo margen lateral.","**Do** mostrar datos reales, vacíos honestos y acciones útiles."],
-    "donts":["**Don't** introducir una nueva paleta para Inicio.","**Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.","**Don't** rellenar métricas, agenda o atención con actividad ficticia.","**Don't** representar las barras de categorías como porcentajes o las comparaciones mensuales como períodos equivalentes."]
+    "northStar": "Inicio operativo del HUB/CMS",
+    "overview": "Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para selección y cian para acciones.\n\nLa fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 18 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. La combinación de blanco sobre cian/rosa y el marrón auxiliar es una preferencia explícita aceptada por la propietaria.",
+    "keyCharacteristics": [
+      "Estructura operativa escaneable con datos reales.",
+      "Continuidad visual con HUB/CMS.",
+      "Superficies blancas planas sobre crema.",
+      "Navegación negra, selección rosa y acciones cian.",
+      "Vacíos explícitos y adaptación móvil."
+    ],
+    "rules": [
+      {
+        "name": "The Continuity Rule",
+        "body": "Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "**Do** conservar Montserrat y los roles de color del HUB/CMS.",
+      "**Do** mantener las superficies blancas sin borde exterior ni sombra.",
+      "**Do** alinear el encabezado, su línea y el contenido con el mismo margen lateral.",
+      "**Do** mostrar datos reales, vacíos honestos y acciones útiles."
+    ],
+    "donts": [
+      "**Don't** introducir una nueva paleta para Inicio.",
+      "**Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.",
+      "**Don't** rellenar métricas, agenda o atención con actividad ficticia.",
+      "**Don't** añadir barras bajo etapas e inventario ni presentar las comparaciones mensuales como períodos equivalentes."
+    ]
   }
 }
