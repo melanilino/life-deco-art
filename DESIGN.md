@@ -54,7 +54,7 @@ components:
     rounded: "{rounded.surface}"
     padding: "0 18px"
   notes:
-    backgroundColor: "{colors.white}"
+    backgroundColor: "transparent"
     textColor: "{colors.cyan}"
     rounded: "{rounded.surface}"
     padding: "0 20px"
@@ -122,7 +122,7 @@ Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventa
 
 ### Cabecera y navegación
 
-El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación y es la acción primaria: fondo y borde cian, texto e iconos blancos. Conserva estos colores al pasar el cursor y mientras el menú está abierto. Notas abre el diálogo existente y es secundaria: fondo blanco, borde cian, texto e icono cian. Al pasar el cursor mantiene el borde, texto e icono cian y recibe fondo `rgba(12,192,223,.08)`; nunca cambia a negro. Ninguna de las dos acciones cambia su fondo o borde a negro en esos estados. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
+El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación y es la acción primaria: fondo y borde cian, texto e iconos blancos. Conserva estos colores al pasar el cursor y mientras el menú está abierto. Notas abre el diálogo existente y es secundaria: fondo transparente, borde cian, texto e icono cian. Al pasar el cursor mantiene el borde, texto e icono cian y recibe fondo `rgba(12,192,223,.08)`; nunca cambia a negro. Ninguna de las dos acciones cambia su fondo o borde a negro en esos estados. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
 
 ### Atención y cifras
 
