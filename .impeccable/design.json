@@ -58,7 +58,7 @@
       "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
-      "headerActions": "Crear primaria: cian sólido, borde cian, texto e iconos blancos, iguales en hover/open. Notas secundaria: transparente, borde cian, texto negro e icono marrón; hover rgba(12,192,223,.08), borde cian. Sin cambio a fondo o borde negro."
+      "headerActions": "Crear primaria: cian sólido, borde cian, texto e iconos blancos, iguales en hover/open. Notas secundaria: fondo blanco, borde cian, texto e icono cian; hover rgba(12,192,223,.08), conservando borde, texto e icono cian. Nunca cambia a negro."
     }
   },
   "components": [
@@ -74,9 +74,9 @@
       "name": "Notas",
       "kind": "button",
       "refersTo": "notes",
-      "description": "Acción secundaria transparente, borde cian, texto negro e icono marrón; fondo cian tenue al pasar el cursor.",
+      "description": "Acción secundaria con fondo blanco, borde, texto e icono cian; hover cian muy suave, sin cambio a negro.",
       "html": "<button class=\"ds-notes\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 2h10l4 4v16H5ZM14 2v5h5M8 12h8M8 16h8\"/></svg><span>Notas</span></button>",
-      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:transparent;color:var(--black,#1C1A17);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45;color:var(--brown,#8B795E)}.ds-notes:hover{border-color:var(--cyan,#0CC0DF);background:rgba(12,192,223,.08);color:var(--black,#1C1A17)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
+      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--white,#FFFFFF);color:var(--cyan,#0CC0DF);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45;color:var(--cyan,#0CC0DF)}.ds-notes:hover{border-color:var(--cyan,#0CC0DF);background:rgba(12,192,223,.08);color:var(--cyan,#0CC0DF)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
     },
     {
       "name": "Navegación",

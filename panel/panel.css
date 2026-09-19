@@ -224,9 +224,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var
 .home-welcome p{margin:3px 0 0;color:var(--brown);font-size:var(--font-interface)}
 .home-header-actions{display:flex;align-items:center;gap:15px}
 .home-header-actions button,.home-create summary{min-height:46px;border:1px solid var(--cyan);border-radius:var(--radius);font-size:var(--font-interface);font-weight:var(--font-medium)}
-.home-header-actions button{display:inline-flex;align-items:center;gap:9px;padding:0 20px;background:transparent;color:var(--black)}
-.home-header-actions button:hover{border-color:var(--cyan);background:rgba(12,192,223,.08);color:var(--black)}
-.home-header-actions button svg{color:var(--brown)}
+.home-header-actions button{display:inline-flex;align-items:center;gap:9px;padding:0 20px;background:var(--white);color:var(--cyan)}
+.home-header-actions button:hover{border-color:var(--cyan);background:rgba(12,192,223,.08);color:var(--cyan)}
+.home-header-actions button svg{color:var(--cyan)}
 .home-header-actions svg,.home-create svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45}
 .home-create{position:relative;padding:0;border:0}
 .home-create summary{display:flex;align-items:center;gap:10px;padding:0 18px;background:var(--home-accent);border-color:var(--home-accent);color:#fff;cursor:pointer;list-style:none}
