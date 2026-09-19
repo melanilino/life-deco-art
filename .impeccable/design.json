@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-18T00:00:00-04:00",
+  "generatedAt": "2026-09-19T00:00:00-04:00",
   "title": "Design System: Life Deco Art HUB — Inicio",
   "extensions": {
     "scope": "Inicio operativo con continuidad visual HUB/CMS; no redefine la web pública.",
@@ -57,7 +57,8 @@
       "desktopLowerGrid": "minmax(0,1.1fr) minmax(400px,1fr)",
       "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
-      "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados."
+      "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
+      "headerActions": "Crear primaria: cian sólido, borde cian, texto e iconos blancos, iguales en hover/open. Notas secundaria: transparente, borde cian, texto negro e icono marrón; hover rgba(12,192,223,.08), borde cian. Sin cambio a fondo o borde negro."
     }
   },
   "components": [
@@ -65,17 +66,17 @@
       "name": "Crear",
       "kind": "custom",
       "refersTo": "create",
-      "description": "Disparador cian del menú nativo details.",
+      "description": "Acción primaria cian sólida, texto e iconos blancos; conserva fondo y borde cian en hover/open.",
       "html": "<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
-      "css": ".ds-create{font:500 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{border-color:var(--black,#1C1A17)}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:var(--black,#1C1A17);text-decoration:none}.ds-create a:hover{background:var(--brown-soft,rgba(139,121,94,.10))}.ds-create a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
+      "css": ".ds-create{font:500 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{background:var(--cyan,#0CC0DF);border-color:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF)}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:var(--black,#1C1A17);text-decoration:none}.ds-create a:hover{background:var(--brown-soft,rgba(139,121,94,.10))}.ds-create a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
     },
     {
       "name": "Notas",
       "kind": "button",
       "refersTo": "notes",
-      "description": "Acción cian de cabecera, igual a Crear en jerarquía visual.",
-      "html": "<button class=\"ds-notes\">Notas</button>",
-      "css": ".ds-notes{display:inline-flex;align-items:center;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes:hover{border-color:var(--black,#1C1A17)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
+      "description": "Acción secundaria transparente, borde cian, texto negro e icono marrón; fondo cian tenue al pasar el cursor.",
+      "html": "<button class=\"ds-notes\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 2h10l4 4v16H5ZM14 2v5h5M8 12h8M8 16h8\"/></svg><span>Notas</span></button>",
+      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:transparent;color:var(--black,#1C1A17);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45;color:var(--brown,#8B795E)}.ds-notes:hover{border-color:var(--cyan,#0CC0DF);background:rgba(12,192,223,.08);color:var(--black,#1C1A17)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
     },
     {
       "name": "Navegación",

@@ -17,7 +17,7 @@
 - Inicio funciona como tablero operativo: muestra asuntos que requieren atención, ventas, cobros, saldos por cobrar, gastos, trabajo del día, etapas de pedidos e inventario.
 - Todos los importes, cantidades y avisos proceden de los registros del HUB. Si no existe actividad, la pantalla lo indica sin inventar datos.
 - “Trabajo de hoy” reúne las actividades, entregas, contenido y renovaciones programadas para la fecha actual.
-- El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. El encabezado también ofrece “Notas”.
+- El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. Es la acción principal con relleno cian. “Notas” es secundaria, con fondo transparente y borde cian. Al pasar el cursor ambos conservan el cian y nunca cambian a negro.
 - Las notas se conservan como datos privados del hub, con fecha y hora, y no aparecen mezcladas con los recursos de marca.
 - El nuevo Inicio conserva el sistema visual aprobado del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones principales cian. En móvil, todos los módulos se reorganizan en una sola columna.
 - En Inicio, el saludo identifica a Melani sin avatar y las métricas usan iconos marrones sobre el mismo fondo neutro. Los títulos de Atención, Próximas entregas, Pedidos e Inventario no llevan iconos decorativos. Los enlaces de cabecera no llevan flechas y los resúmenes de pedidos e inventario muestran cantidades y nombres sin barras decorativas. En escritorio, estos dos resúmenes tienen un poco más de ancho que antes frente a Próximas entregas.
