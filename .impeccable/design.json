@@ -58,7 +58,7 @@
       "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
-      "headerActions": "Crear y Notas: terracota apagado #A9635B sólido, borde del mismo color, texto e iconos blancos, iguales en hover/open. Guardar nota usa el mismo tratamiento."
+      "headerActions": "Crear y Notas: cian sólido, borde cian, texto e iconos blancos, iguales en hover/open. Guardar nota y la casilla fijada usan marrón suave."
     }
   },
   "components": [
@@ -104,7 +104,7 @@
   ],
   "narrative": {
     "northStar": "Inicio operativo del HUB/CMS",
-    "overview": "Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para selección y terracota apagado para acciones de cabecera y notas. Notas se presenta en un panel lateral derecho que mantiene visible el dashboard en escritorio.\n\nLa fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 20 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública.",
+    "overview": "Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para la navegación seleccionada, cian para Crear y Notas, y marrón suave para las acciones internas de notas. Notas se presenta en un panel lateral derecho que mantiene visible el dashboard en escritorio.\n\nLa fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 20 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública.",
     "keyCharacteristics": [
       "Estructura operativa escaneable con datos reales.",
       "Continuidad visual con HUB/CMS.",

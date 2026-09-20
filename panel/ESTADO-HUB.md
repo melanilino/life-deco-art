@@ -17,7 +17,7 @@
 - Inicio funciona como tablero operativo: muestra asuntos que requieren atención, ventas, cobros, saldos por cobrar, gastos, trabajo del día, etapas de pedidos e inventario.
 - Todos los importes, cantidades y avisos proceden de los registros del HUB. Si no existe actividad, la pantalla lo indica sin inventar datos.
 - “Trabajo de hoy” reúne las actividades, entregas, contenido y renovaciones programadas para la fecha actual.
-- El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. “Crear” y “Notas” usan terracota apagado `#A9635B`, texto blanco y conservan ese lenguaje visual al pasar el cursor.
+- El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. “Crear” y “Notas” usan cian, texto blanco y conservan ese lenguaje visual al pasar el cursor.
 - “Notas” abre un panel lateral derecho que mantiene visible el dashboard. Permite título opcional, vínculo con clientes, pedidos, cotizaciones o contenido, recordatorio, fijado, edición, eliminación, búsqueda y filtros. Las notas se conservan como datos privados y no aparecen mezcladas con los recursos de marca.
 - Una nota puede convertirse en tarea sin perder su vínculo original. Sus recordatorios aparecen en Próximas entregas y abren directamente la nota en el panel.
 - El nuevo Inicio conserva el sistema visual aprobado del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones principales cian. En móvil, todos los módulos se reorganizan en una sola columna.
