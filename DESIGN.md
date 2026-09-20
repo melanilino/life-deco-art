@@ -1,6 +1,6 @@
 ---
-name: Life Deco Art HUB — Inicio
-description: Inicio operativo con el sistema visual preexistente HUB/CMS.
+name: Life Deco Art HUB
+description: Sistema visual canónico del HUB; Inicio es la primera implementación.
 colors:
   cream: "#F5EFE5"
   white: "#FFFFFF"
@@ -28,7 +28,7 @@ typography:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "13px"
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: 1.5
   label:
     fontFamily: "Montserrat, Arial, sans-serif"
     fontSize: "11px"
@@ -41,7 +41,8 @@ typography:
 rounded:
   surface: "6px"
   navigation: "4px"
-  attention-list: "9px"
+  control: "4px"
+  attention-list: "6px"
 spacing:
   grid: "16px"
   desktop-gutter: "56px"
@@ -49,18 +50,18 @@ spacing:
   mobile-gutter: "18px"
 components:
   create:
-    backgroundColor: "{colors.cyan}"
-    textColor: "{colors.white}"
+    backgroundColor: "{colors.brown-soft}"
+    textColor: "{colors.brown}"
     rounded: "{rounded.surface}"
     padding: "0 18px"
   notes:
-    backgroundColor: "transparent"
-    textColor: "{colors.cyan}"
+    backgroundColor: "{colors.brown-soft}"
+    textColor: "{colors.brown}"
     rounded: "{rounded.surface}"
     padding: "0 20px"
   notes-hover:
-    backgroundColor: "rgba(12,192,223,.08)"
-    textColor: "{colors.cyan}"
+    backgroundColor: "{colors.brown-soft}"
+    textColor: "{colors.brown}"
   dashboard-card:
     backgroundColor: "{colors.white}"
     rounded: "{rounded.surface}"
@@ -79,22 +80,22 @@ components:
 
 Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para la navegación seleccionada, marrón suave para Crear, Notas y las acciones internas de notas.
 
-La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 18 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. La combinación de blanco sobre cian/rosa y el marrón auxiliar es una preferencia explícita aceptada por la propietaria.
+La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 20 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. Las reglas canónicas asignan una única función a cada color, nivel tipográfico, borde, radio y estado.
 
 **Key Characteristics:**
 - Estructura operativa escaneable con datos reales.
 - Continuidad visual con HUB/CMS.
 - Superficies blancas planas sobre crema.
-- Navegación negra, selección rosa y acciones cian.
+- Navegación negra, selección rosa y acciones suaves marrones; el cian queda para identidad, foco y la acción primaria explícita.
 - Vacíos explícitos y adaptación móvil.
 
 ## Colors
 
-Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; marrón suave identifica Crear, Notas, Guardar nota y la casilla fijada. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
+Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; marrón suave identifica Crear, Notas y Guardar nota; la casilla fijada usa marrón sólido con marca blanca. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
 
 Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Etapas e inventario muestran cifras y etiquetas sin barras inferiores.
 
-**The Continuity Rule.** Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.
+**Regla de función.** La apariencia depende de la función y jerarquía del elemento, no de la página ni del texto que contiene.
 
 ## Typography
 
@@ -114,7 +115,7 @@ Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La s
 
 ## Shapes
 
-Radio base de superficies y acciones: 6 px. Navegación: 4 px. La lista interna de atención mantiene 9 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones.
+Radio base de superficies y acciones: 6 px. Navegación: 4 px. Los controles usan 4 px y las superficies, botones y listas interiores 6 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones.
 
 Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventario aparecen sin iconos decorativos. Los iconos circulares de las cuatro métricas comparten fondo `brown-soft` y color marrón (#8B795E). Agregar actividad conserva esa misma combinación. Los iconos de las filas de atención también usan este tratamiento uniforme; el color de estado se mantiene en los textos correspondientes. «Todo está al día» es un estado vacío de texto, sin check ni icono.
 
@@ -148,6 +149,6 @@ Los enlaces de títulos se subrayan al pasar el cursor. Los enlaces de atención
 
 ### Don't:
 - **Don't** introducir una nueva paleta para Inicio.
-- **Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.
+- **Don't** mezclar colores, radios o grosores de borde en controles equivalentes.
 - **Don't** rellenar métricas, agenda o atención con actividad ficticia.
 - **Don't** añadir barras bajo etapas e inventario ni presentar las comparaciones mensuales como períodos equivalentes.

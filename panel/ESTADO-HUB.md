@@ -20,7 +20,7 @@
 - El menú “Crear” permite iniciar rápidamente un cliente, una cotización, un cálculo o una actividad. “Crear” y “Notas” usan marrón suave, texto marrón y conservan ese lenguaje visual al pasar el cursor.
 - “Notas” abre un panel lateral derecho que mantiene visible el dashboard. Permite título opcional, vínculo con clientes, pedidos, cotizaciones o contenido, recordatorio, fijado, edición, eliminación, búsqueda y filtros. Las notas se conservan como datos privados y no aparecen mezcladas con los recursos de marca.
 - Una nota puede convertirse en tarea sin perder su vínculo original. Sus recordatorios aparecen en Próximas entregas y abren directamente la nota en el panel.
-- El nuevo Inicio conserva el sistema visual aprobado del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones principales cian. En móvil, todos los módulos se reorganizan en una sola columna.
+- El nuevo Inicio aplica el sistema visual canónico del HUB: navegación negra con selección rosa, fondo crema, superficies blancas sin borde exterior ni sombra, texto auxiliar marrón y acciones suaves marrones. El cian queda para identidad, foco y una acción primaria explícita. En móvil, todos los módulos se reorganizan en una sola columna.
 - En Inicio, el saludo identifica a Melani sin avatar y las métricas usan iconos marrones sobre el mismo fondo neutro. Los títulos de Atención, Próximas entregas, Pedidos e Inventario no llevan iconos decorativos. Los enlaces de cabecera no llevan flechas y los resúmenes de pedidos e inventario muestran cantidades y nombres sin barras decorativas. En escritorio, estos dos resúmenes tienen un poco más de ancho que antes frente a Próximas entregas.
 - «Todo está al día» aparece sin check. El bloque antes llamado Trabajo de hoy ahora es «Próximas entregas» y muestra hasta cuatro compromisos de agenda desde la fecha actual, usando Hoy, Mañana o la fecha correspondiente. No usa puntos ni línea temporal. Este bloque sirve para anticiparse; «Requiere atención» queda reservado para alertas y asuntos que necesitan acción.
 
@@ -30,6 +30,23 @@
 - No muestra resultados ni conclusiones hasta que existan datos suficientes.
 - Antes de activar cada indicador se debe acordar qué información necesita y de dónde se obtendrá; los datos demográficos y de intereses todavía no se recopilan.
 
+## Sistema visual canónico del HUB
+- Estas reglas se aplican por función en todas las páginas; no se crean estilos particulares para una pantalla o para un texto concreto.
+- Montserrat es la única fuente operativa. La escala es: página 28 px/300, panel 22 px/500, sección 18 px/500, registro 15 px/500, interfaz y campos 13 px, ayuda 12 px y metadatos 11 px.
+- Los títulos se escriben normalmente y no se convierten automáticamente a mayúsculas ni reciben espaciado entre letras. Las mayúsculas espaciadas se reservan para identidad de marca.
+- Crema es fondo; blanco es superficie y campo; negro es información principal; marrón es información auxiliar, iconos y acciones suaves; rosa queda para la navegación principal seleccionada; cian queda para identidad, foco y una acción primaria explícita; verde y rojo son estados funcionales.
+- Todos los bordes funcionales miden 1 px y usan `rgba(139,121,94,.28)`; foco o selección usa `rgba(139,121,94,.46)`.
+- Campos y casillas usan radio de 4 px. Tarjetas, botones, listas interiores y menús usan radio de 6 px. Los círculos se reservan para iconos.
+- Tarjetas y registros usan fondo blanco sin borde exterior ni sombra. Las sombras quedan limitadas a paneles laterales, menús flotantes, diálogos y avisos temporales.
+- Campos tienen altura mínima de 52 px, texto de 13 px, fondo blanco, borde normal y placeholder marrón. Las áreas de texto comparten el mismo estilo y solo cambian de altura.
+- Las casillas son propias del HUB: 20 px, borde normal, radio de 4 px y marca marrón; no dependen del estilo rosa del navegador.
+- Crear, Notas y Guardar nota son acciones suaves: fondo marrón suave, texto e iconos marrones, sin borde visible y sin cambio de grosor o color al pasar el cursor.
+- Una acción primaria explícita conserva cian con texto blanco y peso 500; debe existir como máximo una por contexto. Botones secundarios son blancos con borde normal. Acciones de texto son marrones sin recuadro. Acciones destructivas usan rojo.
+- Filtros usan cápsula: transparente con borde normal cuando están inactivos y marrón suave con borde fuerte cuando están seleccionados.
+- La escala de espacio es 4, 8, 12, 16, 24, 32 y 56 px. No se añaden medidas nuevas sin una necesidad funcional.
+- Los iconos son lineales, marrones en contenido y blancos en navegación oscura; usan 18, 20 o 24 px. Los contenedores circulares de métricas usan 48 px.
+- La selección de texto es marrón suave. El foco modifica el borde existente sin crear un segundo aro.
+- Inicio es la primera implementación de estas reglas y será la referencia para revisar las demás secciones antes de replicar el sistema en el CMS.
 ## Regla visual de superficies
 - Las tarjetas y bloques del HUB se distinguen por su color y espaciado, sin un borde exterior.
 - Los campos, botones, tablas y calendarios conservan los bordes y divisiones necesarios para entenderlos y utilizarlos.
@@ -47,7 +64,7 @@
 - La línea del encabezado y la de la categoría activa comparten el mismo tono y grosor. La primera categoría se alinea con el título, la descripción y el contenido de la página.
 - El sistema visual del HUB usa Montserrat y una escala estable: títulos principales de 28 px y peso 300; títulos secundarios de 18 px y peso 500; interfaz de 13 px; información técnica de 11 px. La paleta se limita a crema, blanco, negro, marrón, rosa y cyan, con verde y rojo reservados para estados funcionales.
 - Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para texto y menú, marrón para texto auxiliar y divisiones, rosa para selecciones, cyan para acciones y enfoque, verde para éxito y rojo para errores o eliminación. El texto y los iconos sobre rosa y cyan son blancos para mantener el contraste visual aprobado.
-- Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Los botones de acción situados en el encabezado usan cyan.
+- Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Las acciones suaves del encabezado usan marrón suave; solo una acción expresamente primaria puede usar cian.
 - Cuando una lista está vacía, la acción para crear un registro aparece solo en el encabezado; el estado vacío informa sin repetir el botón.
 - El buscador, el filtro, la exportación y el área de resultados de cada lista forman una sola superficie blanca, sin borde exterior.
 - Exportar CSV se alinea al extremo derecho de esta superficie. Al enfocar campos y botones se utiliza su propio borde, sin añadir un segundo aro exterior.

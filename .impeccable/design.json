@@ -1,15 +1,15 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-19T00:00:00-04:00",
-  "title": "Design System: Life Deco Art HUB — Inicio",
+  "generatedAt": "2026-09-20T00:00:00-04:00",
+  "title": "Design System: Life Deco Art HUB",
   "extensions": {
-    "scope": "Inicio operativo con continuidad visual HUB/CMS; no redefine la web pública.",
+    "scope": "Sistema visual canónico para todo el HUB; Inicio es la primera implementación y no redefine la web pública ni el CMS.",
     "sources": [
       "panel/panel.css",
       "panel/app.mjs",
       "panel.html"
     ],
-    "acceptedPreference": "Blanco sobre cian/rosa y marrón auxiliar: preferencia explícita aceptada por la propietaria.",
+    "acceptedPreference": "Reglas por función: Montserrat; crema, blanco, negro y marrón; rosa para navegación seleccionada; cian para identidad, foco y acción primaria explícita.",
     "shadows": [
       {
         "name": "dashboard-card",
@@ -59,6 +59,14 @@
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
       "headerActions": "Crear, Notas y Guardar nota: fondo marrón suave, sin borde visible, texto e iconos marrones y peso regular; no cambian de grosor ni color en hover/open. La casilla fijada usa marrón."
+    },
+    "canonicalRules": {
+      "typeScale": "Página 28/300; panel 22/500; sección 18/500; registro 15/500; interfaz 13/400; ayuda 12/400; metadatos 11/400.",
+      "borders": "Todos los bordes funcionales: 1px rgba(139,121,94,.28); activo rgba(139,121,94,.46).",
+      "radii": "Campos y casillas 4px; superficies, botones, listas y menús 6px; círculos solo para iconos.",
+      "surfaces": "Tarjetas blancas sin borde exterior ni sombra; sombras solo en capas flotantes.",
+      "spacing": "Escala 4, 8, 12, 16, 24, 32 y 56px.",
+      "titles": "Escritura normal sin mayúsculas ni espaciado forzados, excepto identidad de marca."
     }
   },
   "components": [
@@ -66,17 +74,17 @@
       "name": "Crear",
       "kind": "custom",
       "refersTo": "create",
-      "description": "Acción primaria cian sólida, texto e iconos blancos; conserva fondo y borde cian en hover/open.",
+      "description": "Acción suave con fondo marrón suave, sin borde visible, texto e iconos marrones y peso regular; no cambia en hover/open.",
       "html": "<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
-      "css": ".ds-create{font:500 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:46px;padding:0 18px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF);cursor:pointer;list-style:none}.ds-create summary::-webkit-details-marker{display:none}.ds-create[open] summary,.ds-create summary:hover{background:var(--cyan,#0CC0DF);border-color:var(--cyan,#0CC0DF);color:var(--white,#FFFFFF)}.ds-create summary:focus-visible{outline:0;box-shadow:none}.ds-create a{display:block;padding:9px 11px;color:var(--black,#1C1A17);text-decoration:none}.ds-create a:hover{background:var(--brown-soft,rgba(139,121,94,.10))}.ds-create a:focus-visible{outline:0;color:var(--cyan,#0CC0DF)}"
+      "css": ".ds-create{font:400 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);cursor:pointer;list-style:none}.ds-create[open] summary,.ds-create summary:hover{background:var(--brown-soft);color:var(--brown);font-weight:400}"
     },
     {
       "name": "Notas",
       "kind": "button",
       "refersTo": "notes",
-      "description": "Acción secundaria con fondo transparente, borde, texto e icono cian; hover cian muy suave, sin cambio a negro.",
+      "description": "Acción suave equivalente a Crear y Guardar nota.",
       "html": "<button class=\"ds-notes\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 2h10l4 4v16H5ZM14 2v5h5M8 12h8M8 16h8\"/></svg><span>Notas</span></button>",
-      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 20px;border:1px solid var(--cyan,#0CC0DF);border-radius:var(--radius,6px);background:transparent;color:var(--cyan,#0CC0DF);font:500 13px Montserrat,Arial,sans-serif;cursor:pointer}.ds-notes svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.45;color:var(--cyan,#0CC0DF)}.ds-notes:hover{border-color:var(--cyan,#0CC0DF);background:rgba(12,192,223,.08);color:var(--cyan,#0CC0DF)}.ds-notes:focus-visible{outline:0;box-shadow:none;border-color:var(--cyan,#0CC0DF)}"
+      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 20px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);font:400 13px Montserrat,Arial,sans-serif}.ds-notes:hover{background:var(--brown-soft);color:var(--brown);font-weight:400}"
     },
     {
       "name": "Navegación",
@@ -103,33 +111,33 @@
     }
   ],
   "narrative": {
-    "northStar": "Inicio operativo del HUB/CMS",
+    "northStar": "Sistema operativo coherente del HUB",
     "overview": "Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para la navegación seleccionada, marrón suave para Crear, Notas y las acciones internas de notas. Notas se presenta en un panel lateral derecho que mantiene visible el dashboard en escritorio.\n\nLa fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 20 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública.",
     "keyCharacteristics": [
-      "Estructura operativa escaneable con datos reales.",
-      "Continuidad visual con HUB/CMS.",
+      "Jerarquía tipográfica estable por función.",
       "Superficies blancas planas sobre crema.",
-      "Navegación negra, selección rosa y acciones cian.",
-      "Vacíos explícitos y adaptación móvil."
+      "Un único sistema de bordes y radios.",
+      "Navegación negra con selección rosa; acciones suaves marrones.",
+      "Vacíos honestos y adaptación móvil."
     ],
     "rules": [
       {
-        "name": "The Continuity Rule",
-        "body": "Conservar la asignación de colores del HUB/CMS y la preferencia explícita de blanco sobre cian/rosa y marrón auxiliar; no sustituirla por una nueva paleta.",
-        "section": "colors"
+        "name": "Regla de función",
+        "body": "La apariencia depende de la función y jerarquía del elemento, no de la página ni del texto que contiene.",
+        "section": "system"
       }
     ],
     "dos": [
-      "**Do** conservar Montserrat y los roles de color del HUB/CMS.",
-      "**Do** mantener las superficies blancas sin borde exterior ni sombra.",
-      "**Do** alinear el encabezado, su línea y el contenido con el mismo margen lateral.",
-      "**Do** mostrar datos reales, vacíos honestos y acciones útiles."
+      "**Do** reutilizar los mismos niveles tipográficos, bordes, radios, espacios y estados en todo el HUB.",
+      "**Do** mantener superficies blancas sin borde exterior ni sombra.",
+      "**Do** reservar rosa, cian, verde y rojo para sus funciones definidas.",
+      "**Do** mostrar datos reales y vacíos honestos."
     ],
     "donts": [
-      "**Don't** introducir una nueva paleta para Inicio.",
-      "**Don't** reemplazar la preferencia aceptada de blanco sobre cian/rosa y marrón auxiliar.",
-      "**Don't** rellenar métricas, agenda o atención con actividad ficticia.",
-      "**Don't** añadir barras bajo etapas e inventario ni presentar las comparaciones mensuales como períodos equivalentes."
+      "**Dont** crear estilos particulares para una página o un texto.",
+      "**Dont** convertir títulos operativos automáticamente a mayúsculas.",
+      "**Dont** mezclar colores o grosores de borde en controles equivalentes.",
+      "**Dont** añadir sombras a tarjetas ni colores decorativos a estados técnicos."
     ]
   }
 }
