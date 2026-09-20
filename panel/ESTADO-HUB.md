@@ -40,10 +40,10 @@
 - Tarjetas y registros usan fondo blanco sin borde exterior ni sombra. Las sombras quedan limitadas a paneles laterales, menús flotantes, diálogos y avisos temporales.
 - Campos tienen altura mínima de 52 px, texto de 13 px, fondo blanco, borde normal y placeholder marrón. Las áreas de texto comparten el mismo estilo y solo cambian de altura.
 - Las casillas son propias del HUB: 20 px, borde normal, radio de 4 px y marca marrón; no dependen del estilo rosa del navegador.
-- Crear y Notas son acciones suaves: fondo marrón suave, texto e iconos marrones, sin borde visible y sin cambio de grosor o color al pasar el cursor. Guardar nota usa fondo marrón suave, borde normal, texto marrón y peso regular estable.
+- Crear y Notas son acciones suaves: fondo marrón suave, texto e iconos marrones, sin borde visible y sin cambio de grosor o color al pasar el cursor. Guardar nota no tiene sombreado: conserva borde normal y peso regular; su texto pasa de marrón a negro al interactuar.
 - Una acción primaria explícita conserva cian con texto blanco y peso 500; debe existir como máximo una por contexto. Botones secundarios son blancos con borde normal. Acciones de texto son marrones sin recuadro. Acciones destructivas usan rojo.
-- Filtros usan cápsula y mantienen el mismo borde, texto marrón y peso regular; la selección se comunica únicamente con fondo marrón suave.
-- El buscador de Notas es una superficie blanca sin contorno exterior; el icono y el texto comunican su función. La chincheta junto al título de una nota indica que está fijada como importante. En los filtros, la selección se comunica solo mediante un sombreado suave: el texto permanece marrón y con peso regular. Guardar nota sigue esta misma regla.
+- Filtros usan cápsula y mantienen el mismo borde y peso regular; el estado seleccionado combina fondo marrón suave con texto negro, sin negrita.
+- El buscador de Notas es una superficie blanca sin contorno exterior; el icono y el texto comunican su función. Las notas fijadas se identifican mediante el filtro y la acción Fijar/Desfijar del menú, sin añadir un icono junto al título.
 - La escala de espacio es 4, 8, 12, 16, 24, 32 y 56 px. No se añaden medidas nuevas sin una necesidad funcional.
 - Los iconos son lineales, marrones en contenido y blancos en navegación oscura; usan 18, 20 o 24 px. Los contenedores circulares de métricas usan 48 px.
 - La selección de texto es marrón suave. El foco modifica el borde existente sin crear un segundo aro.

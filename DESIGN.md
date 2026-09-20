@@ -115,7 +115,7 @@ Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La s
 
 ## Shapes
 
-Radio base de superficies y acciones: 6 px. Navegación: 4 px. Los controles usan 4 px y las superficies, botones y listas interiores 6 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones. La chincheta junto al título de una nota indica que está fijada como importante. Los filtros de notas conservan siempre texto marrón y peso regular; el estado seleccionado se comunica únicamente con un sombreado marrón suave. Guardar nota sigue esa misma apariencia.
+Radio base de superficies y acciones: 6 px. Navegación: 4 px. Los controles usan 4 px y las superficies, botones y listas interiores 6 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones. Las notas fijadas se reconocen mediante el filtro y la acción Fijar/Desfijar, sin icono junto al título. Los filtros mantienen peso regular; el seleccionado usa sombreado marrón suave y texto negro. Guardar nota no tiene sombreado y su texto pasa de marrón a negro al interactuar.
 
 Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventario aparecen sin iconos decorativos. Los iconos circulares de las cuatro métricas comparten fondo `brown-soft` y color marrón (#8B795E). Agregar actividad conserva esa misma combinación. Los iconos de las filas de atención también usan este tratamiento uniforme; el color de estado se mantiene en los textos correspondientes. «Todo está al día» es un estado vacío de texto, sin check ni icono.
 
@@ -123,7 +123,7 @@ Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventa
 
 ### Cabecera y navegación
 
-El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación. Crear y Notas usan fondo marrón suave con texto e iconos marrones. Guardar nota y los filtros conservan borde normal, texto marrón y peso regular; el estado seleccionado se comunica solo mediante fondo marrón suave. Notas abre un panel lateral derecho de 470 px en escritorio y pantalla completa en móvil. El buscador de Notas es una superficie blanca sin contorno exterior. El panel admite título, vínculo, recordatorio, fijado, edición, eliminación, conversión a tarea, búsqueda y filtros. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
+El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación. Crear y Notas usan fondo marrón suave con texto e iconos marrones. Guardar nota conserva fondo transparente, borde normal y peso regular; su texto pasa a negro al interactuar. Los filtros conservan peso regular y el seleccionado usa sombreado marrón suave con texto negro. Notas abre un panel lateral derecho de 470 px en escritorio y pantalla completa en móvil. El buscador de Notas es una superficie blanca sin contorno exterior. El panel admite título, vínculo, recordatorio, fijado, edición, eliminación, conversión a tarea, búsqueda y filtros. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
 
 ### Atención y cifras
 
