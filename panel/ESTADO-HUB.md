@@ -43,7 +43,7 @@
 - Crear y Notas son acciones suaves: fondo marrón suave, texto e iconos marrones y sin borde visible. Al pasar el cursor o enfocarlos, el sombreado aumenta levemente y texto e iconos pasan a negro, siempre con peso regular. Guardar nota no tiene sombreado en reposo; al interactuar recibe fondo marrón suave y texto negro sin cambiar de grosor.
 - Una acción primaria explícita conserva cian con texto blanco y peso 500; debe existir como máximo una por contexto. Botones secundarios son blancos con borde normal. Acciones de texto son marrones sin recuadro. Acciones destructivas usan rojo.
 - Filtros usan cápsula y mantienen el mismo borde y peso regular; el estado seleccionado combina fondo marrón suave con texto negro, sin negrita.
-- El buscador de Notas es una superficie blanca sin contorno exterior; el icono y el texto comunican su función. Las notas fijadas se identifican mediante el filtro y la acción Fijar/Desfijar del menú, sin añadir un icono junto al título.
+- El buscador de Notas es una superficie blanca sin contorno exterior; el icono y el texto comunican su función. Una nota fijada muestra una chincheta vertical lineal marrón junto al título; una nota sin fijar no muestra indicador. El filtro y la acción Fijar/Desfijar conservan la gestión del estado.
 - La escala de espacio es 4, 8, 12, 16, 24, 32 y 56 px. No se añaden medidas nuevas sin una necesidad funcional.
 - Los iconos son lineales, marrones en contenido y blancos en navegación oscura; usan 18, 20 o 24 px. Los contenedores circulares de métricas usan 48 px.
 - La selección de texto es marrón suave. El foco modifica el borde existente sin crear un segundo aro.

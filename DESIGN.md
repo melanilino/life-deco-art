@@ -115,7 +115,7 @@ Las tarjetas y métricas tienen fondo blanco, sin borde exterior ni sombra. La s
 
 ## Shapes
 
-Radio base de superficies y acciones: 6 px. Navegación: 4 px. Los controles usan 4 px y las superficies, botones y listas interiores 6 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones. Las notas fijadas se reconocen mediante el filtro y la acción Fijar/Desfijar, sin icono junto al título. Los filtros mantienen peso regular; el seleccionado usa sombreado marrón suave y texto negro. Guardar nota no tiene sombreado en reposo; al interactuar recibe fondo marrón suave y texto negro, sin aumentar el grosor.
+Radio base de superficies y acciones: 6 px. Navegación: 4 px. Los controles usan 4 px y las superficies, botones y listas interiores 6 px. Los iconos resumen son circulares; los círculos informativos no se presentan como botones. Una nota fijada muestra una chincheta vertical lineal marrón junto al título; las notas sin fijar no muestran indicador. Los filtros mantienen peso regular; el seleccionado usa sombreado marrón suave y texto negro. Guardar nota no tiene sombreado en reposo; al interactuar recibe fondo marrón suave y texto negro, sin aumentar el grosor.
 
 Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventario aparecen sin iconos decorativos. Los iconos circulares de las cuatro métricas comparten fondo `brown-soft` y color marrón (#8B795E). Agregar actividad conserva esa misma combinación. Los iconos de las filas de atención también usan este tratamiento uniforme; el color de estado se mantiene en los textos correspondientes. «Todo está al día» es un estado vacío de texto, sin check ni icono.
 
