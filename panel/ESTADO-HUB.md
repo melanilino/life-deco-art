@@ -40,9 +40,10 @@
 - Tarjetas y registros usan fondo blanco sin borde exterior ni sombra. Las sombras quedan limitadas a paneles laterales, menús flotantes, diálogos y avisos temporales.
 - Campos tienen altura mínima de 52 px, texto de 13 px, fondo blanco, borde normal y placeholder marrón. Las áreas de texto comparten el mismo estilo y solo cambian de altura.
 - Las casillas son propias del HUB: 20 px, borde normal, radio de 4 px y marca marrón; no dependen del estilo rosa del navegador.
-- Crear, Notas y Guardar nota son acciones suaves: fondo marrón suave, texto e iconos marrones, sin borde visible y sin cambio de grosor o color al pasar el cursor.
+- Crear y Notas son acciones suaves: fondo marrón suave, texto e iconos marrones, sin borde visible y sin cambio de grosor o color al pasar el cursor. Guardar nota comparte el estado seleccionado de los filtros: fondo marrón suave, borde fuerte, texto negro y peso 500 estable.
 - Una acción primaria explícita conserva cian con texto blanco y peso 500; debe existir como máximo una por contexto. Botones secundarios son blancos con borde normal. Acciones de texto son marrones sin recuadro. Acciones destructivas usan rojo.
 - Filtros usan cápsula: transparente con borde normal cuando están inactivos y marrón suave con borde fuerte cuando están seleccionados.
+- El buscador de Notas es una superficie blanca sin contorno exterior; el icono y el texto comunican su función. La chincheta junto al título de una nota indica que está fijada como importante.
 - La escala de espacio es 4, 8, 12, 16, 24, 32 y 56 px. No se añaden medidas nuevas sin una necesidad funcional.
 - Los iconos son lineales, marrones en contenido y blancos en navegación oscura; usan 18, 20 o 24 px. Los contenedores circulares de métricas usan 48 px.
 - La selección de texto es marrón suave. El foco modifica el borde existente sin crear un segundo aro.

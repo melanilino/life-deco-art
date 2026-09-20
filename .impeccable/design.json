@@ -58,7 +58,8 @@
       "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
-      "headerActions": "Crear, Notas y Guardar nota: fondo marrón suave, sin borde visible, texto e iconos marrones y peso regular; no cambian de grosor ni color en hover/open. La casilla fijada usa marrón."
+      "headerActions": "Crear y Notas: fondo marrón suave sin borde, texto e iconos marrones y peso regular. Guardar nota: estado seleccionado con fondo marrón suave, borde fuerte, texto negro y peso 500 estable.",
+      "notesControls": "Buscador blanco sin contorno exterior. Filtros seleccionados y Guardar nota comparten fondo marrón suave, borde fuerte y peso 500. La chincheta indica una nota fijada."
     },
     "canonicalRules": {
       "typeScale": "Página 28/300; panel 22/500; sección 18/500; registro 15/500; interfaz 13/400; ayuda 12/400; metadatos 11/400.",
@@ -66,7 +67,8 @@
       "radii": "Campos y casillas 4px; superficies, botones, listas y menús 6px; círculos solo para iconos.",
       "surfaces": "Tarjetas blancas sin borde exterior ni sombra; sombras solo en capas flotantes.",
       "spacing": "Escala 4, 8, 12, 16, 24, 32 y 56px.",
-      "titles": "Escritura normal sin mayúsculas ni espaciado forzados, excepto identidad de marca."
+      "titles": "Escritura normal sin mayúsculas ni espaciado forzados, excepto identidad de marca.",
+      "checkbox": "20px, borde normal, radio 4px, fondo marrón al marcar y check blanco centrado."
     }
   },
   "components": [
