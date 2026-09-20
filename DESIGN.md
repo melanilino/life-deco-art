@@ -77,7 +77,7 @@ components:
 
 **Creative North Star: "Inicio operativo del HUB/CMS"**
 
-Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para la navegación seleccionada, cian para Crear y Notas, y marrón suave para las acciones internas de notas.
+Inicio conserva la estructura de trabajo aprobada: saludo personal, Crear/Notas, atención prioritaria, cuatro métricas, agenda, etapas de pedidos e inventario. Su apariencia reutiliza el sistema preexistente del HUB/CMS: Montserrat, fondo crema, superficies blancas y navegación negra, con rosa para la navegación seleccionada, marrón suave para Crear, Notas y las acciones internas de notas.
 
 La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` y `panel.html`, revisada el 18 de septiembre de 2026. Esta memoria describe Inicio y su continuidad con el HUB; no ordena cambios en la web pública. La combinación de blanco sobre cian/rosa y el marrón auxiliar es una preferencia explícita aceptada por la propietaria.
 
@@ -90,7 +90,7 @@ La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` 
 
 ## Colors
 
-Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; cian identifica Crear y Notas; el marrón suave identifica Guardar nota y la casilla fijada. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
+Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; marrón suave identifica Crear, Notas, Guardar nota y la casilla fijada. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
 
 Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Etapas e inventario muestran cifras y etiquetas sin barras inferiores.
 
@@ -122,7 +122,7 @@ Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventa
 
 ### Cabecera y navegación
 
-El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación. Crear y Notas usan fondo y borde cian, con texto e iconos blancos, también al pasar el cursor. Notas abre un panel lateral derecho de 470 px en escritorio y pantalla completa en móvil. El panel admite título, vínculo, recordatorio, fijado, edición, eliminación, conversión a tarea, búsqueda y filtros. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
+El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. Crear despliega enlaces reales de creación. Crear, Notas y Guardar nota usan fondo marrón suave, con texto e iconos marrones, también al pasar el cursor. Notas abre un panel lateral derecho de 470 px en escritorio y pantalla completa en móvil. El panel admite título, vínculo, recordatorio, fijado, edición, eliminación, conversión a tarea, búsqueda y filtros. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
 
 ### Atención y cifras
 
