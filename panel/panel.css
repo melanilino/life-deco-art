@@ -352,9 +352,9 @@ input:not([type=checkbox]):focus-visible,select:focus-visible,textarea:focus-vis
 .field{gap:6px}.field>span,.line-row label{color:var(--brown);font-size:var(--font-body);font-weight:var(--font-medium)}
 
 input[type=checkbox]{appearance:none;display:inline-grid;place-content:center;flex:0 0 20px;width:20px;height:20px;margin:0;border:1px solid var(--border);border-radius:var(--control-radius);background:var(--white);accent-color:auto}
-input[type=checkbox]::before{content:""}
+input[type=checkbox]::before{content:"";width:5px;height:10px;border:solid var(--white);border-width:0 2px 2px 0;transform:rotate(45deg) scale(0);transform-origin:center}
 input[type=checkbox]:checked{border-color:var(--border-strong);background:var(--brown)}
-input[type=checkbox]:checked::before{content:"✔";color:var(--white);font-family:Arial,sans-serif;font-size:14px;font-weight:700;line-height:1;transform:none}
+input[type=checkbox]:checked::before{transform:rotate(45deg) scale(1)}
 input[type=checkbox]:focus-visible{border-color:var(--border-strong)}
 .quick-note-pin{gap:var(--space-2);font-size:var(--font-body)}
 
@@ -362,7 +362,7 @@ button{min-height:44px;border:1px solid var(--border);border-radius:var(--surfac
 button:hover{border-color:var(--border-strong);background:var(--brown-soft);color:var(--black);font-weight:var(--font-regular)}
 button.primary,button.primary:hover{border-color:var(--cyan);background:var(--cyan);color:var(--white);font-weight:var(--font-medium)}
 .home-header-actions button,.home-create summary,.home-header-actions button:hover,.home-create[open] summary,.home-create summary:hover{border-color:transparent;background:var(--brown-soft);color:var(--brown);font-weight:var(--font-regular);box-shadow:none}
-.quick-note-actions .notes-save,.quick-note-actions .notes-save:hover{border-color:var(--border-strong);background:var(--brown-soft);color:var(--black);font-weight:var(--font-medium);box-shadow:none}
+.quick-note-actions .notes-save,.quick-note-actions .notes-save:hover{border-color:var(--border);background:var(--brown-soft);color:var(--brown);font-weight:var(--font-regular);box-shadow:none}
 .home-header-actions button svg,.home-create summary svg{color:var(--brown)}
 button:disabled{opacity:.45}
 
@@ -373,7 +373,7 @@ button:disabled{opacity:.45}
 .quick-note-search input,.quick-note-search input:focus-visible{border:0}
 .quick-note-filters button{border:1px solid var(--border);background:transparent;color:var(--brown)}
 .quick-note-filters button:hover{border-color:var(--border);background:transparent;color:var(--brown)}
-.quick-note-filters button.active,.quick-note-filters button.active:hover{border-color:var(--border-strong);background:var(--brown-soft);color:var(--black);font-weight:var(--font-medium)}
+.quick-note-filters button.active,.quick-note-filters button.active:hover{border-color:var(--border);background:var(--brown-soft);color:var(--brown);font-weight:var(--font-regular)}
 .quick-note-card>p{font-size:var(--font-body)}
 
 .page-header::after,.home-header::after,.quick-notes-head,td,.agenda-row,details,.doc-total .grand,.stage-grid>div,.inventory-grid>div{border-color:var(--border)}

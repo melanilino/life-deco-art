@@ -58,8 +58,8 @@
       "sectionHeadings": "Requiere atención, Próximas entregas, Pedidos por etapa e Inventario sin iconos decorativos.",
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
-      "headerActions": "Crear y Notas: fondo marrón suave sin borde, texto e iconos marrones y peso regular. Guardar nota: estado seleccionado con fondo marrón suave, borde fuerte, texto negro y peso 500 estable.",
-      "notesControls": "Buscador blanco sin contorno exterior. Filtros seleccionados y Guardar nota comparten fondo marrón suave, borde fuerte y peso 500. La chincheta indica una nota fijada."
+      "headerActions": "Crear y Notas: fondo marrón suave sin borde, texto e iconos marrones y peso regular. Guardar nota: fondo marrón suave, borde normal, texto marrón y peso regular estable.",
+      "notesControls": "Buscador blanco sin contorno exterior. Los filtros mantienen texto marrón y peso 400; la selección se indica solo con fondo marrón suave. Guardar nota usa la misma apariencia. La chincheta indica una nota fijada."
     },
     "canonicalRules": {
       "typeScale": "Página 28/300; panel 22/500; sección 18/500; registro 15/500; interfaz 13/400; ayuda 12/400; metadatos 11/400.",
