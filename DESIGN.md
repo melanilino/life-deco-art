@@ -91,7 +91,7 @@ La fuente de verdad es la implementación de `panel/panel.css`, `panel/app.mjs` 
 
 ## Colors
 
-Crema es el fondo de trabajo; blanco identifica tarjetas y texto de acciones. Negro sostiene títulos, cifras y barra lateral. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y separadores suaves. Rosa identifica la navegación seleccionada; marrón suave identifica Crear, Notas y Guardar nota; la casilla fijada usa marrón sólido con marca blanca. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
+Crema es el fondo de trabajo; blanco identifica tarjetas y campos. Negro sostiene títulos, cifras, barra lateral y estados activos o interactivos. Marrón sirve para texto auxiliar, enlaces de contenido, iconos y acciones en reposo. Rosa identifica únicamente la navegación principal seleccionada. Marrón suave identifica acciones suaves y estados seleccionados; Guardar nota lo utiliza solo al interactuar. La casilla fijada usa marrón sólido con marca blanca. Todos los iconos del contenido principal usan marrón (#8B795E), incluidos atención, métricas y Agregar actividad. Agregar actividad usa icono marrón sobre `brown-soft`.
 
 Verde y rojo expresan estados y tendencias. Advertencias informativas usan marrón. Los estados conservan etiquetas además del color. Etapas e inventario muestran cifras y etiquetas sin barras inferiores.
 
@@ -124,6 +124,15 @@ Los títulos Requiere atención, Próximas entregas, Pedidos por etapa e Inventa
 ### Cabecera y navegación
 
 El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los datos de la cuenta. No existe avatar ni inicial. La marca Life Deco Art de la pantalla de carga usa peso 500, igual que el nombre del saludo. Crear despliega enlaces reales de creación. Crear y Notas usan fondo marrón suave con texto e iconos marrones; al interactuar aumentan levemente el sombreado y pasan a negro sin cambiar de grosor. Guardar nota conserva fondo transparente, borde normal y peso regular; al interactuar recibe fondo marrón suave y texto negro. Los filtros conservan peso regular y el seleccionado usa sombreado marrón suave con texto negro. Notas abre un panel lateral derecho de 470 px en escritorio y pantalla completa en móvil. El buscador de Notas es una superficie blanca sin contorno exterior. El panel admite título, vínculo, recordatorio, fijado, edición, eliminación, conversión a tarea, búsqueda y filtros. La navegación usa fondo negro, texto blanco y selección rosa con `aria-current="page"`. Los enlaces Abrir agenda y Ver todos aparecen sin flecha.
+
+### Regla de interacción para futuras páginas
+
+- El peso tipográfico no cambia entre reposo, hover, foco, apertura o selección; los botones de interfaz permanecen en 400, salvo una acción primaria expresamente definida en 500.
+- El estado interactivo se comunica mediante color y fondo: marrón en reposo, negro al interactuar y `brown-soft` como sombreado. No se usa negrita como señal de interacción.
+- Crear y Notas parten de `brown-soft`; en hover, foco u open usan un sombreado marrón ligeramente más intenso, con texto e iconos negros.
+- Guardar nota parte sin relleno, con borde normal y texto marrón; en hover, foco o active usa `brown-soft` y texto negro.
+- Los filtros mantienen borde y peso. El filtro seleccionado usa `brown-soft` y texto negro; los demás permanecen transparentes con texto marrón.
+- El foco modifica el propio control y no añade un segundo aro. Los estados deben funcionar igual con teclado y cursor.
 
 ### Atención y cifras
 

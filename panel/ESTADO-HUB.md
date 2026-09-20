@@ -48,6 +48,14 @@
 - Los iconos son lineales, marrones en contenido y blancos en navegación oscura; usan 18, 20 o 24 px. Los contenedores circulares de métricas usan 48 px.
 - La selección de texto es marrón suave. El foco modifica el borde existente sin crear un segundo aro.
 - Inicio es la primera implementación de estas reglas y será la referencia para revisar las demás secciones antes de replicar el sistema en el CMS.
+
+### Estados de interacción obligatorios
+- Ningún botón aumenta de peso al pasar el cursor, recibir foco, abrirse o quedar seleccionado. Los cambios de estado se expresan con color y fondo.
+- Acciones suaves en reposo: texto e iconos marrones, peso 400. En hover o foco: texto e iconos negros, peso 400 y sombreado `brown-soft` o su variante ligeramente más intensa.
+- Crear y Notas conservan fondo marrón suave en reposo; al interactuar el fondo aumenta ligeramente de intensidad.
+- Guardar nota permanece transparente en reposo; al interactuar recibe fondo marrón suave.
+- Los filtros permanecen transparentes en reposo. El seleccionado usa fondo marrón suave y texto negro, siempre con peso 400.
+- Estas reglas se aplican a componentes equivalentes en cualquier página futura del HUB; no se crean variaciones por nombre o sección.
 ## Regla visual de superficies
 - Las tarjetas y bloques del HUB se distinguen por su color y espaciado, sin un borde exterior.
 - Los campos, botones, tablas y calendarios conservan los bordes y divisiones necesarios para entenderlos y utilizarlos.
@@ -64,7 +72,7 @@
 - Las categorías relacionadas se separan 16 px de la línea del encabezado. Todas se muestran como texto marrón, sin recuadros ni fondos, y la opción activa se identifica con una línea marrón fina bajo el texto.
 - La línea del encabezado y la de la categoría activa comparten el mismo tono y grosor. La primera categoría se alinea con el título, la descripción y el contenido de la página.
 - El sistema visual del HUB usa Montserrat y una escala estable: títulos principales de 28 px y peso 300; títulos secundarios de 18 px y peso 500; interfaz de 13 px; información técnica de 11 px. La paleta se limita a crema, blanco, negro, marrón, rosa y cyan, con verde y rojo reservados para estados funcionales.
-- Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para texto y menú, marrón para texto auxiliar y divisiones, rosa para selecciones, cyan para acciones y enfoque, verde para éxito y rojo para errores o eliminación. El texto y los iconos sobre rosa y cyan son blancos para mantener el contraste visual aprobado.
+- Los colores tienen una función única en todo el HUB: crema para el fondo, blanco para tarjetas y campos, negro para información principal y estados interactivos, marrón para texto auxiliar, iconos, divisiones y acciones suaves, rosa para la selección de la navegación principal, cian para identidad, foco y una acción primaria explícita, verde para éxito y rojo para errores o eliminación. El texto y los iconos sobre rosa y cian son blancos.
 - Cada encabezado cierra con una línea justo debajo de su descripción y antes de las pestañas relacionadas. Las acciones suaves del encabezado usan marrón suave; solo una acción expresamente primaria puede usar cian.
 - Cuando una lista está vacía, la acción para crear un registro aparece solo en el encabezado; el estado vacío informa sin repetir el botón.
 - El buscador, el filtro, la exportación y el área de resultados de cada lista forman una sola superficie blanca, sin borde exterior.

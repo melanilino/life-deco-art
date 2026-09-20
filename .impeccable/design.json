@@ -69,7 +69,8 @@
       "surfaces": "Tarjetas blancas sin borde exterior ni sombra; sombras solo en capas flotantes.",
       "spacing": "Escala 4, 8, 12, 16, 24, 32 y 56px.",
       "titles": "Escritura normal sin mayúsculas ni espaciado forzados, excepto identidad de marca.",
-      "checkbox": "20px, borde normal, radio 4px, fondo marrón al marcar y check blanco centrado."
+      "checkbox": "20px, borde normal, radio 4px, fondo marrón al marcar y check blanco centrado.",
+      "interactionStates": "El peso tipográfico nunca cambia entre reposo, hover, foco, apertura o selección. Acciones suaves usan marrón en reposo y negro con sombreado marrón suave al interactuar. Filtros seleccionados usan marrón suave y negro con peso 400."
     }
   },
   "components": [
@@ -77,17 +78,17 @@
       "name": "Crear",
       "kind": "custom",
       "refersTo": "create",
-      "description": "Acción suave con fondo marrón suave, sin borde visible, texto e iconos marrones y peso regular; no cambia en hover/open.",
+      "description": "Acción suave con fondo marrón suave, sin borde visible, texto e iconos marrones y peso regular; en hover, foco u open aumenta el sombreado y pasa a negro sin cambiar de peso.",
       "html": "<details class=\"ds-create\"><summary>+ Crear</summary><a href=\"#quotes/new\">Cotización</a></details>",
-      "css": ".ds-create{font:400 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);cursor:pointer;list-style:none}.ds-create[open] summary,.ds-create summary:hover{background:var(--brown-soft);color:var(--brown);font-weight:400}"
+      "css": ".ds-create{font:400 13px Montserrat,Arial,sans-serif}.ds-create summary{display:flex;align-items:center;min-height:44px;padding:0 18px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);cursor:pointer;list-style:none}.ds-create[open] summary,.ds-create summary:hover,.ds-create summary:focus-visible{background:rgba(139,121,94,.16);color:var(--black);font-weight:400}"
     },
     {
       "name": "Notas",
       "kind": "button",
       "refersTo": "notes",
-      "description": "Acción suave equivalente a Crear y Guardar nota.",
+      "description": "Acción suave equivalente a Crear: fondo marrón suave y texto marrón en reposo; sombreado más intenso y texto negro al interactuar, siempre con peso regular.",
       "html": "<button class=\"ds-notes\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 2h10l4 4v16H5ZM14 2v5h5M8 12h8M8 16h8\"/></svg><span>Notas</span></button>",
-      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 20px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);font:400 13px Montserrat,Arial,sans-serif}.ds-notes:hover{background:var(--brown-soft);color:var(--brown);font-weight:400}"
+      "css": ".ds-notes{display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:0 20px;border:1px solid transparent;border-radius:6px;background:var(--brown-soft);color:var(--brown);font:400 13px Montserrat,Arial,sans-serif}.ds-notes:hover,.ds-notes:focus-visible{background:rgba(139,121,94,.16);color:var(--black);font-weight:400}"
     },
     {
       "name": "Navegación",
