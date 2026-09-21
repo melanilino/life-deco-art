@@ -59,7 +59,7 @@
       "attentionEmpty": "Todo está al día: texto sin check ni icono.",
       "upcomingAgenda": "Próximas entregas: hasta cuatro eventos de agenda desde hoy (tareas, pedidos, contenido o renovaciones), con etiqueta Hoy/Mañana/fecha. Sin punto ni línea temporal decorativa. Bloque preventivo; Requiere atención se reserva para alertas y asuntos atrasados según los criterios implementados.",
       "loadingBrand": "Life Deco Art en la pantalla de carga usa peso 500, igual que el nombre Melani del saludo.",
-      "headerActions": "Crear y Notas: fondo marrón suave sin borde, texto e iconos marrones y peso regular; al interactuar aumentan levemente el sombreado y pasan a negro sin cambiar de grosor. Guardar nota: fondo transparente, borde normal y peso regular; al interactuar recibe fondo marrón suave y texto negro.",
+      "headerActions": "Crear y Notas: fondo marrón suave sin borde, texto e iconos marrones y peso regular; al interactuar usan rgba(139,121,94,.16) y pasan a negro sin cambiar de grosor. Guardar nota: fondo transparente, borde normal y peso regular; al interactuar usa exactamente ese mismo sombreado y texto negro.",
       "notesControls": "Buscador blanco sin contorno exterior. Los filtros mantienen peso 400; la selección usa fondo marrón suave y texto negro. Una nota fijada muestra una chincheta vertical lineal marrón junto al título; una nota sin fijar no muestra indicador."
     },
     "canonicalRules": {

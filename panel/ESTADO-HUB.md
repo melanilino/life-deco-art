@@ -53,7 +53,7 @@
 - Ningún botón aumenta de peso al pasar el cursor, recibir foco, abrirse o quedar seleccionado. Los cambios de estado se expresan con color y fondo.
 - Acciones suaves en reposo: texto e iconos marrones, peso 400. En hover o foco: texto e iconos negros, peso 400 y sombreado `brown-soft` o su variante ligeramente más intensa.
 - Crear y Notas conservan fondo marrón suave en reposo; al interactuar el fondo aumenta ligeramente de intensidad.
-- Guardar nota permanece transparente en reposo; al interactuar recibe fondo marrón suave.
+- Guardar nota permanece transparente en reposo; al interactuar recibe exactamente el mismo sombreado `rgba(139,121,94,.16)` y texto negro de Crear y Notas.
 - Los filtros permanecen transparentes en reposo. El seleccionado usa fondo marrón suave y texto negro, siempre con peso 400.
 - Estas reglas se aplican a componentes equivalentes en cualquier página futura del HUB; no se crean variaciones por nombre o sección.
 ## Regla visual de superficies

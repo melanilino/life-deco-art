@@ -130,7 +130,7 @@ El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los dat
 - El peso tipográfico no cambia entre reposo, hover, foco, apertura o selección; los botones de interfaz permanecen en 400, salvo una acción primaria expresamente definida en 500.
 - El estado interactivo se comunica mediante color y fondo: marrón en reposo, negro al interactuar y `brown-soft` como sombreado. No se usa negrita como señal de interacción.
 - Crear y Notas parten de `brown-soft`; en hover, foco u open usan un sombreado marrón ligeramente más intenso, con texto e iconos negros.
-- Guardar nota parte sin relleno, con borde normal y texto marrón; en hover, foco o active usa `brown-soft` y texto negro.
+- Guardar nota parte sin relleno, con borde normal y texto marrón; en hover, foco o active usa exactamente el mismo sombreado marrón de Crear y Notas (`rgba(139,121,94,.16)`) y texto negro.
 - Los filtros mantienen borde y peso. El filtro seleccionado usa `brown-soft` y texto negro; los demás permanecen transparentes con texto marrón.
 - El foco modifica el propio control y no añade un segundo aro. Los estados deben funcionar igual con teclado y cursor.
 

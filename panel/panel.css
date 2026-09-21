@@ -364,7 +364,7 @@ button:hover{border-color:var(--border-strong);background:var(--brown-soft);colo
 button.primary,button.primary:hover{border-color:var(--cyan);background:var(--cyan);color:var(--white);font-weight:var(--font-medium)}
 .home-header-actions button,.home-create summary,.home-header-actions button:hover,.home-create[open] summary,.home-create summary:hover{border-color:transparent;background:var(--brown-soft);color:var(--brown);font-weight:var(--font-regular);box-shadow:none}
 .quick-note-actions .notes-save{border-color:var(--border);background:transparent;color:var(--brown);font-weight:var(--font-regular);box-shadow:none}
-.quick-note-actions .notes-save:hover,.quick-note-actions .notes-save:focus-visible,.quick-note-actions .notes-save:active{border-color:var(--border);background:var(--brown-soft);color:var(--black);font-weight:var(--font-regular);box-shadow:none}
+.quick-note-actions .notes-save:hover,.quick-note-actions .notes-save:focus-visible,.quick-note-actions .notes-save:active{border-color:var(--border);background:rgba(139,121,94,.16);color:var(--black);font-weight:var(--font-regular);box-shadow:none}
 .home-header-actions button:hover,.home-header-actions button:focus-visible,.home-create summary:hover,.home-create summary:focus-visible,.home-create[open] summary{border-color:transparent;background:rgba(139,121,94,.16);color:var(--black);font-weight:var(--font-regular);box-shadow:none}
 .home-header-actions button svg,.home-create summary svg{color:var(--brown)}
 .home-header-actions button:hover svg,.home-header-actions button:focus-visible svg,.home-create summary:hover svg,.home-create summary:focus-visible svg,.home-create[open] summary svg{color:var(--black)}
