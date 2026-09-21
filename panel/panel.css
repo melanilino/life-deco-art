@@ -455,10 +455,10 @@ button:disabled{opacity:.45}
 @media(max-width:640px){.client-metrics{grid-template-columns:1fr}.client-metric{min-height:100px}.clients-toolbar{display:flex;flex-direction:column}.clients-toolbar>*{width:100%}.client-panel-scroll{padding:16px}.client-form-grid{grid-template-columns:1fr}.client-form-grid .wide{grid-column:auto}#client-form>header,#client-form>footer{padding-right:18px;padding-left:18px}#client-form>footer>div{display:grid;grid-template-columns:1fr 1fr}#client-form>footer .client-order-button{grid-column:1/-1;grid-row:1}.client-panel-backdrop{display:none}}
 
 /* Estructura compartida: navegación, divisores y paneles laterales del HUB. */
-:root{--hub-panel-width:550px;--hub-header-height:124px;--hub-panel-header-height:120px}
+:root{--hub-panel-width:500px;--hub-header-height:100px;--hub-panel-header-height:100px}
 .home-shell{grid-template-columns:250px minmax(0,1fr)}
 .home-shell .sidebar{padding:32px 24px 20px}
-.home-shell .sidebar .brand{padding:0 0 44px}
+.home-shell .sidebar .brand{padding:0 0 20px}
 .home-shell .brand-name{font-size:13px;font-weight:500;letter-spacing:.14em}
 .home-shell .brand-context{font-size:20px;font-weight:300}
 .home-shell .sidebar nav{padding-top:16px}
@@ -474,6 +474,7 @@ button:disabled{opacity:.45}
 .quick-notes-head,#client-form>header,.creation-panel-head{min-height:var(--hub-panel-header-height);padding:22px 24px 18px;border-bottom:1px solid var(--border);background:var(--cream)}
 .quick-notes-empty{padding:18px;border-radius:var(--surface-radius);background:var(--white)}
 .clients-toolbar select{appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231C1A17' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px}
+.quick-note-options select{appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231C1A17' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:16px}
 
 .creation-panel-layer{position:fixed;inset:0;z-index:90}
 .creation-panel-backdrop{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;border:0;border-radius:0;background:rgba(25,23,20,.28)}
