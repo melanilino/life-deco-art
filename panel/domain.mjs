@@ -59,6 +59,7 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(cmd.kind==='expenses'){finite(data.amount);required(data.date,'Fecha del gasto');}
   if(cmd.kind==='purchases'){finite(data.total);if(!data.materialId||!finite(data.quantity))throw Error('Selecciona un material y una cantidad mayor que cero.');if(get(s,data.materialId).kind!=='materials')throw Error('Selecciona un material válido.');}
   if(cmd.kind==='tasks'&&data.repeat&&data.repeat!=='ninguna'&&!data.date)throw Error('La tarea recurrente necesita una fecha.');
+  if(cmd.kind==='clients'&&data.clientType){if(!data.phone&&!data.email&&!data.instagram)throw Error('Añade por lo menos un medio de contacto.');if(!old)data.activity=[...(data.activity||[]),{label:'Cliente creado',at}];}
   if(cmd.kind==='resources'&&data.recordType==='quick-note'){required(data.note,'Nota');if(data.reminderDate&&!/^\d{4}-\d{2}-\d{2}$/.test(data.reminderDate))throw Error('Selecciona una fecha válida para el recordatorio.');if(data.relatedId){const related=get(s,data.relatedId);if(!['clients','orders','quotes','content'].includes(data.relatedKind)||related.kind!==data.relatedKind)throw Error('Selecciona un registro válido para vincular la nota.');}}
   if(cmd.kind==='orders'&&!old&&data.calculationId)data.estimate=calculate(get(s,data.calculationId));
   if(old?.kind==='tasks'&&old.status!==data.status)throw Error('Cambia el estado desde la ficha para conservar las recurrencias.');
