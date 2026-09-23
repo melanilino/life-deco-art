@@ -84,10 +84,10 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const existing=list(s,cmd.kind,true).find(x=>x.quoteId===r.id&&x.status!=='anulada');if(existing)throw Error(`Ya existe ${existing.number} para esta cotización.`);
   result=create(cmd.kind,{...snapshot(r),name:r.name,quoteId:r.id,number:number(cmd.kind),status:cmd.kind==='orders'?'pendiente':'borrador',rootId:null,revision:1,issuedAt:null,approvedAt:null,due:r.due||''});
  }else if(cmd.action==='status'){
-  const r=get(s,cmd.id),allowed={orders:['pendiente','en diseño','esperando aprobación','en producción','listo para entregar','entregado','cancelado'],content:['idea','en preparación','listo','programado','publicado'],tasks:['pendiente','en curso','completada','cancelada'],quotes:['rechazada'],invoices:['anulada']};
+  const r=get(s,cmd.id),allowed={orders:['pendiente','en diseño','esperando aprobación','en producción','listo para entregar','entregado','cancelado'],content:['idea','en preparación','listo','programado','publicado'],tasks:['pendiente','en curso','completada','cancelada'],quotes:['rechazada','cancelada'],invoices:['anulada']};
   if(!allowed[r.kind]?.includes(cmd.status))throw Error('Estado no permitido.');
-  if(['anulada','cancelado'].includes(cmd.status))required(cmd.reason,'Motivo');
-  if(r.kind==='quotes'&&r.status!=='enviada')throw Error('Solo se puede rechazar una cotización enviada.');
+  if(['anulada','cancelado','cancelada'].includes(cmd.status))required(cmd.reason,'Motivo');
+  if(r.kind==='quotes'&&cmd.status==='rechazada'&&r.status!=='enviada')throw Error('Solo se puede rechazar una cotización enviada.');
   result=update(r,{status:cmd.status,reason:cmd.reason||''});
   if(r.kind==='tasks'&&cmd.status==='completada'&&r.status!=='completada'&&r.repeat&&r.repeat!=='ninguna')create('tasks',{...r,status:'pendiente',date:nextDate(r.date,r.repeat),previousId:r.id},`${id}-next`);
  }else if(cmd.action==='replace'){
