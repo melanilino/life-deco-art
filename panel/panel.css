@@ -432,6 +432,7 @@ button:disabled{opacity:.45}
 #client-form>header h2{margin:0 0 3px;font-size:var(--font-panel-title)}#client-form>header p{margin:0;color:var(--brown);font-size:var(--font-helper)}
 #client-form>header button{flex:0 0 32px;min-height:32px;padding:0;border:0;background:transparent;font-size:27px;font-weight:300}
 .client-panel-scroll{min-height:0;overflow-y:auto;padding:20px 24px 28px;overscroll-behavior:contain}
+.client-form-card{padding:20px;border-radius:var(--surface-radius);background:var(--white)}
 .client-type-switch{display:grid;grid-template-columns:1fr 1fr;margin-bottom:22px;border:1px solid var(--border);border-radius:var(--surface-radius);background:var(--white)}
 .client-type-switch button{display:flex;align-items:center;justify-content:center;gap:8px;border:0;background:transparent;color:var(--brown)}
 .client-type-switch button+button{border-left:1px solid var(--border)}.client-type-switch button.active{background:var(--brown-soft);color:var(--black)}
@@ -488,7 +489,7 @@ button:disabled{opacity:.45}
 .creation-panel-head p{margin:0;color:var(--brown);font-size:var(--font-helper)}
 .creation-panel-head button{flex:0 0 32px;min-height:32px;padding:0;border:0;background:transparent;font-size:27px;font-weight:300}
 .creation-panel-scroll{min-height:0;overflow-y:auto;padding:20px 24px 28px;overscroll-behavior:contain}
-.creation-panel #record-form{overflow:visible}
+.creation-panel #record-form{overflow:visible;border:0;background:var(--white)}
 .creation-panel #record-form .form-section{padding:20px}
 .creation-panel #record-form .form-actions{padding:16px 20px;border-radius:0 0 var(--surface-radius) var(--surface-radius);background:var(--white)}
 .creation-panel #record-form .form-actions .cancel-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 15px;border:1px solid var(--border);border-radius:var(--surface-radius);background:transparent;color:var(--brown);text-decoration:none}
