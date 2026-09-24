@@ -85,7 +85,7 @@
 - La cabecera muestra «Vista actual» en lugar de «Crear». La etiqueta y el nombre de la vista comparten exactamente el mismo borde izquierdo y una separación vertical compacta y constante; ningún nombre se recorta y la flecha aparece inmediatamente después del texto real. Cuando una sección tiene subcategorías, el selector permite cambiar entre ellas sin repetir pestañas; cuando tiene una sola vista, se muestra su nombre sin flecha. Las acciones para registrar elementos nuevos viven en la barra operativa de cada lista.
 - En Clientes, «Nuevo cliente» permanece en la barra de filtros y abre el mismo panel lateral aprobado.
 - El buscador, el filtro, la exportación y el área de resultados de cada lista forman una sola superficie blanca, sin borde exterior.
-- Exportar CSV aparece siempre en el pie de las tablas, incluso cuando todavía no existen registros, y se alinea con la paginación cuando exista. Al enfocar campos y botones se utiliza su propio borde, sin añadir un segundo aro exterior.
+- El pie de todas las tablas muestra el conteo a la izquierda y, a la derecha, «Exportar CSV» con su icono seguido por la paginación. Permanece visible aunque todavía no existan registros. Al enfocar campos y botones se utiliza su propio borde, sin añadir un segundo aro exterior.
 
 ## Acceso verificado
 - Usuario hola@lifedecoart.com creado por la propietaria en Authentication.
