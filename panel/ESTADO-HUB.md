@@ -30,6 +30,14 @@
 - No muestra resultados ni conclusiones hasta que existan datos suficientes.
 - Antes de activar cada indicador se debe acordar qué información necesita y de dónde se obtendrá; los datos demográficos y de intereses todavía no se recopilan.
 
+## Pedidos y proyectos
+- Pedidos cuenta con vistas Lista y Tablero sobre los mismos registros. La búsqueda y los filtros de estado y fecha se conservan al alternar entre ambas vistas.
+- Las etapas del trabajo son Pendiente, Diseño, Aprobación, Producción, Listo y Entregado. «Esperando cliente» se guarda como una condición independiente de la etapa; los atrasos se calculan desde la fecha de entrega.
+- El tablero permite mover pedidos entre etapas. La ficha del pedido ofrece el mismo control como alternativa y pide confirmación antes de marcar una entrega, guardando su fecha real.
+- El pie muestra el conteo, la exportación CSV del resultado filtrado y la paginación incluso cuando no hay pedidos.
+- Nuevo pedido usa una página completa dentro del HUB. Cliente, nombre del proyecto y fecha prevista organizan el alta; cotización, responsable, descripción, referencias, artículos y materiales pueden completarse según corresponda. Si se crea un cliente desde el formulario, el pedido en curso se recupera al volver.
+- El detalle reúne cliente, entrega, etapa, condición, responsable, descripción, artículos, archivos e historial básico. Cancelar conserva el pedido y exige un motivo.
+
 ## Sistema visual canónico del HUB
 - Estas reglas se aplican por función en todas las páginas; no se crean estilos particulares para una pantalla o para un texto concreto.
 - Montserrat es la única fuente operativa. La escala es: página 28 px/300, panel 22 px/500, sección 18 px/500, registro 15 px/500, interfaz y campos 13 px, ayuda 12 px y metadatos 11 px.
