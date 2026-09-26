@@ -35,8 +35,9 @@
 - Las etapas del trabajo son Pendiente, Diseño, Aprobación, Producción, Listo y Entregado. «Esperando cliente» se guarda como una condición independiente de la etapa; los atrasos se calculan desde la fecha de entrega.
 - El tablero permite mover pedidos entre etapas. La ficha del pedido ofrece el mismo control como alternativa y pide confirmación antes de marcar una entrega, guardando su fecha real.
 - El pie muestra el conteo, la exportación CSV del resultado filtrado y la paginación incluso cuando no hay pedidos.
-- Nuevo pedido usa una página completa dentro del HUB. Cliente, nombre del proyecto y fecha prevista organizan el alta; cotización, responsable, descripción, referencias, artículos y materiales pueden completarse según corresponda. Si se crea un cliente desde el formulario, el pedido en curso se recupera al volver.
-- El detalle reúne cliente, entrega, etapa, condición, responsable, descripción, artículos, archivos e historial básico. Cancelar conserva el pedido y exige un motivo.
+- Nuevo pedido usa una página completa dentro del HUB. Cliente, nombre del proyecto y fecha prevista organizan el alta; cotización, responsable, descripción, referencias, artículos y materiales pueden completarse según corresponda. Al seleccionar una cotización aprobada se reutilizan el cliente, el proyecto, las partidas, las cantidades y los importes acordados. Si se crea un cliente desde el formulario, el pedido en curso se recupera al volver.
+- Una cotización enviada puede marcarse como aprobada y crear inmediatamente solo el pedido o el pedido y la factura. Una cotización ya aprobada mantiene también las acciones «Crear pedido» y «Crear factura» en su ficha.
+- El detalle reúne cliente, entrega, etapa, condición, responsable, descripción, artículos, archivos e historial básico. Cuando procede de una cotización, muestra además un resumen enlazado con su número, total, vigencia, notas y condiciones. Cancelar conserva el pedido y exige un motivo.
 
 ## Sistema visual canónico del HUB
 - Estas reglas se aplican por función en todas las páginas; no se crean estilos particulares para una pantalla o para un texto concreto.
