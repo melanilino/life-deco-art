@@ -97,11 +97,11 @@
 - El pie de todas las tablas muestra el conteo a la izquierda y, a la derecha, «Exportar CSV» con su icono seguido por la paginación. Permanece visible aunque todavía no existan registros. Al enfocar campos y botones se utiliza su propio borde, sin añadir un segundo aro exterior.
 
 ## Catálogo
-- «Vista actual» contiene únicamente Productos y servicios, Materiales e inventario y Proveedores y compras. Calculadoras, formularios, detalles, movimientos e historiales se abren dentro de esas tres vistas.
-- Productos y servicios se crean como registros distintos. Pueden guardarse sin precio y completar después su composición habitual, mano de obra, otros costos, publicidad, recargo sobre costo, precio sugerido y precio vigente.
+- «Vista actual» contiene únicamente Portafolio, Inventario y Proveedores. Calculadoras, formularios, detalles, movimientos e historiales se abren dentro de esas tres vistas.
+- Portafolio reúne productos y servicios. La lista tiene una sola acción «Nuevo» y la pantalla de creación permite alternar entre Producto y Servicio antes de completar el formulario. Pueden guardarse sin precio y completar después su composición habitual, mano de obra, otros costos, publicidad, recargo sobre costo, precio sugerido y precio vigente.
 - El costo de cada material usado proviene de la compra recibida más reciente. Si falta, el HUB muestra «Falta costo» y no lo sustituye por cero. Cuando cambia un costo, los productos relacionados quedan señalados para revisar su precio sin modificar automáticamente el precio publicado.
 - Cada material guarda su presentación de compra, rendimiento, unidad de consumo, mínimo, proveedor, existencia e historial de movimientos. Las cotizaciones no descuentan inventario; el consumo real se confirma desde el pedido.
-- Proveedores y compras comparten una vista. Una compra puede incluir varios materiales y un solo envío u otros cargos compartidos; el HUB los distribuye proporcionalmente y deja visible el cálculo por artículo. Solo una compra recibida actualiza costos y existencias.
+- Proveedores mantiene accesibles proveedores y compras mediante un filtro de la tabla. La lista tiene una sola acción «Nuevo» y la pantalla de creación permite alternar entre Proveedor y Compra. Una compra puede incluir varios materiales y un solo envío u otros cargos compartidos; el HUB los distribuye proporcionalmente y deja visible el cálculo por artículo. Solo una compra recibida actualiza costos y existencias.
 - Al añadir un producto o servicio del Catálogo a una cotización se conserva una copia de su composición, costo y precio de ese momento. Los cambios posteriores del catálogo no alteran el documento comercial ni el pedido que nazca de él.
 
 ## Acceso verificado
