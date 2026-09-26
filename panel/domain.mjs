@@ -1,11 +1,11 @@
 // Reglas del negocio compartidas por la interfaz y las pruebas. Importes en centavos.
-export const kinds = ['clients','products','calculations','quotes','invoices','orders','materials','purchases','movements','payments','expenses','campaigns','content','resources','accounts','tasks'];
+export const kinds = ['clients','products','calculations','quotes','invoices','orders','materials','suppliers','purchases','movements','payments','expenses','campaigns','content','resources','accounts','tasks'];
 export const today = () => new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santo_Domingo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 export const money = cents => new Intl.NumberFormat('es-DO',{style:'currency',currency:'DOP'}).format((Number(cents)||0)/100);
 export const cents = value => Math.round(finite(value)*100);
 export function finite(v,min=0) { const n=Number(v||0); if(!Number.isFinite(n)||n<min||n>1e12) throw Error('Revisa los importes y cantidades: deben ser números válidos.'); return n; }
 export function required(v,label='Nombre') { if(!String(v||'').trim()) throw Error(`${label} es obligatorio.`); return String(v).trim(); }
-export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0},settings:{name:'Life Deco Art',currency:'DOP',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
+export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0,purchases:0},settings:{name:'Life Deco Art',currency:'DOP',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
 export function list(s,kind,archived=false){return Object.values(s.records).filter(r=>r.kind===kind&&(archived||!r.archived));}
 export function get(s,id){const r=s.records[id];if(!r)throw Error('No se encontró el registro. Actualiza el panel.');return r;}
 export function calculate(c){
@@ -42,7 +42,7 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
  const s=structuredClone(state), changes=[], put=r=>{s.records[r.id]=r;changes.push(r.id);return r;};
  const create=(kind,data,recordId=id)=>put({...data,id:recordId,kind,createdAt:at,updatedAt:at});
  const update=(r,data)=>put({...r,...data,updatedAt:at});
- const number=kind=>`${({quotes:'COT',orders:'PED',invoices:'FAC'})[kind]}-${String(++s.counters[kind]).padStart(4,'0')}`;
+ const number=kind=>{s.counters[kind]=(s.counters[kind]||0)+1;return `${({quotes:'COT',orders:'PED',invoices:'FAC',purchases:'COM'})[kind]}-${String(s.counters[kind]).padStart(4,'0')}`;};
  const snapshot=r=>({...r,issuer:{...structuredClone(s.settings),logoPath:s.records[s.settings.logoResourceId]?.path||''},client:structuredClone(s.records[r.clientId]||{}),estimate:r.estimate||((r.calculationId&&s.records[r.calculationId])?calculate(s.records[r.calculationId]):null)});
  let result;
  if(cmd.action==='save'){
@@ -55,15 +55,17 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(old?.kind==='orders'&&old.quoteId&&JSON.stringify(totals(old))!==JSON.stringify(totals(data)))throw Error('Este pedido procede de una cotización aprobada. Revisa la cotización antes de cambiar los importes.');
   if(data.clientId&&get(s,data.clientId).kind!=='clients')throw Error('Selecciona un cliente válido.');
   if(['quotes','invoices','orders'].includes(cmd.kind)&&!data.clientId)throw Error('Selecciona un cliente.');
-  if(cmd.kind==='materials'){finite(data.packageCost);if(!finite(data.packageUnits))throw Error('Indica cuántas unidades contiene el paquete.');data.unitCost=finite(data.packageCost)/finite(data.packageUnits);}
+  if(cmd.kind==='materials'){finite(data.packageCost);if(!finite(data.packageUnits))throw Error('Indica el rendimiento de la presentación.');if(data.packageCost||!old)data.unitCost=finite(data.packageCost)/finite(data.packageUnits);if(data.supplierId&&get(s,data.supplierId).kind!=='suppliers')throw Error('Selecciona un proveedor válido.');}
+  if(cmd.kind==='suppliers'){required(data.name,'Nombre del proveedor');}
+  if(cmd.kind==='products'){data.price=finite(data.price);data.otherCost=finite(data.otherCost);data.adPercent=finite(data.adPercent);data.markup=finite(data.markup);for(const line of data.recipe||[]){if(!line.materialId||get(s,line.materialId).kind!=='materials')throw Error('Selecciona un material válido.');if(!finite(line.quantity))throw Error('La cantidad de material debe ser mayor que cero.');}for(const task of data.labor||[]){required(task.name,'Nombre de la tarea');finite(task.hours);finite(task.rate);}data.priceHistory=Array.isArray(data.priceHistory)?data.priceHistory:[];}
   if(cmd.kind==='expenses'){finite(data.amount);required(data.date,'Fecha del gasto');}
-  if(cmd.kind==='purchases'){finite(data.total);if(!data.materialId||!finite(data.quantity))throw Error('Selecciona un material y una cantidad mayor que cero.');if(get(s,data.materialId).kind!=='materials')throw Error('Selecciona un material válido.');}
+  if(cmd.kind==='purchases'){finite(data.total);if(data.supplierId&&get(s,data.supplierId).kind!=='suppliers')throw Error('Selecciona un proveedor válido.');const items=data.items?.length?data.items:[{materialId:data.materialId,quantity:data.quantity,subtotal:data.total,usageUnits:data.quantity}];if(!items.length)throw Error('Añade por lo menos un material.');for(const item of items){if(!item.materialId||get(s,item.materialId).kind!=='materials'||!finite(item.quantity))throw Error('Selecciona un material y una cantidad mayor que cero.');finite(item.subtotal);}data.items=items;}
   if(cmd.kind==='tasks'&&data.repeat&&data.repeat!=='ninguna'&&!data.date)throw Error('La tarea recurrente necesita una fecha.');
   if(cmd.kind==='clients'&&data.clientType){if(!data.phone&&!data.email&&!data.instagram)throw Error('Añade por lo menos un medio de contacto.');if(!old)data.activity=[...(data.activity||[]),{label:'Cliente creado',at}];}
   if(cmd.kind==='resources'&&data.recordType==='quick-note'){required(data.note,'Nota');if(data.reminderDate&&!/^\d{4}-\d{2}-\d{2}$/.test(data.reminderDate))throw Error('Selecciona una fecha válida para el recordatorio.');if(data.relatedId){const related=get(s,data.relatedId);if(!['clients','orders','quotes','content'].includes(data.relatedKind)||related.kind!==data.relatedKind)throw Error('Selecciona un registro válido para vincular la nota.');}}
   if(cmd.kind==='orders'&&!old&&data.calculationId)data.estimate=calculate(get(s,data.calculationId));
   if(old?.kind==='tasks'&&old.status!==data.status)throw Error('Cambia el estado desde la ficha para conservar las recurrencias.');
-  result=old?update(old,data):create(cmd.kind,{...data,...(['quotes','invoices','orders'].includes(cmd.kind)?{number:number(cmd.kind)}:{}),status:data.status||(['quotes','invoices'].includes(cmd.kind)?'borrador':cmd.kind==='orders'?'pendiente':cmd.kind==='tasks'?'pendiente':'activo'),...(cmd.kind==='orders'?{stage:data.stage||'pendiente',condition:data.condition||''}:{})});
+  result=old?update(old,data):create(cmd.kind,{...data,...(['quotes','invoices','orders','purchases'].includes(cmd.kind)?{number:number(cmd.kind)}:{}),status:data.status||(['quotes','invoices'].includes(cmd.kind)?'borrador':cmd.kind==='orders'?'pendiente':cmd.kind==='purchases'?'por recibir':cmd.kind==='tasks'?'pendiente':'activo'),...(cmd.kind==='orders'?{stage:data.stage||'pendiente',condition:data.condition||''}:{})});
  }else if(cmd.action==='settings'){
   s.settings={...s.settings,...cmd.data,name:required(cmd.data.name),currency:'DOP'};finite(s.settings.hourly);finite(s.settings.validDays);
  }else if(cmd.action==='archive'){
@@ -104,9 +106,9 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   result=create('payments',{name:cmd.type==='refund'?'Reembolso':'Pago',target:target.id,type:cmd.type==='refund'?'refund':'payment',direction:target.kind==='invoices'?'income':'expense',amount,date:cmd.date||today(),method:cmd.method||'',reference:cmd.reference||'',reason:cmd.reason||'',originalId:cmd.originalId||null});
  }else if(cmd.action==='purchase'){
   const r=get(s,cmd.id);if(r.kind!=='purchases'||r.confirmed)throw Error('Esta compra ya fue registrada o no es válida.');
-  const m=get(s,r.materialId);if(m.kind!=='materials')throw Error('Material no válido.');const quantity=finite(r.quantity);if(!quantity)throw Error('Cantidad no válida.');
-  if(m.track)create('movements',{name:'Compra',materialId:m.id,quantity,sourceId:r.id,date:r.date||today()},`${id}-movement`);
-  update(m,{unitCost:finite(r.total)/quantity,packageCost:finite(r.total)/quantity*finite(m.packageUnits)});result=update(r,{confirmed:true});
+  const items=r.items?.length?r.items:[{materialId:r.materialId,quantity:r.quantity,subtotal:r.total}],base=items.reduce((sum,item)=>sum+finite(item.subtotal),0),shared=finite(r.shipping)+finite(r.other),allocations=[];let index=0;
+  for(const item of items){const m=get(s,item.materialId);if(m.kind!=='materials')throw Error('Material no válido.');const packages=finite(item.quantity);if(!packages)throw Error('Cantidad no válida.');const usageUnits=item.usageUnits?finite(item.usageUnits):packages*finite(m.packageUnits),allocated=base?shared*finite(item.subtotal)/base:shared/items.length,acquisition=finite(item.subtotal)+allocated,unitCost=acquisition/usageUnits;if(m.track)create('movements',{name:'Compra recibida',materialId:m.id,quantity:usageUnits,sourceId:r.id,date:r.date||today(),unitCost},`${id}-movement-${index++}`);update(m,{unitCost,packageCost:acquisition/packages,referencePurchaseId:r.id,referenceSupplierId:r.supplierId||m.supplierId||'',referenceDate:r.date||today()});for(const product of list(s,'products',true)){if((product.recipe||[]).some(line=>line.materialId===m.id))update(product,{priceReview:true});}allocations.push({...item,allocatedShared:allocated,usageUnits,unitCost});}
+  result=update(r,{confirmed:true,status:'recibida',allocations,receivedAt:at});
  }else if(cmd.action==='consume'){
   const r=get(s,cmd.id);if(r.kind!=='orders'||r.consumed)throw Error('El consumo inicial ya se confirmó. Usa un ajuste para registrar diferencias.');
   const amounts=new Map();for(const l of cmd.lines||[]){if(!l.materialId)throw Error('Selecciona cada material.');amounts.set(l.materialId,(amounts.get(l.materialId)||0)+finite(l.quantity));}
