@@ -26,8 +26,8 @@ export function totals(d){
  if(advance>total)throw Error('El anticipo supera el total.');
  return {subtotal,discount,shipping,tax,total,advance};
 }
-export function paid(s,id){return list(s,'payments',true).filter(p=>p.target===id).reduce((a,p)=>a+(p.type==='refund'?-p.amount:p.amount),0);}
-export function balance(s,r){return (r.kind==='purchases'?cents(r.total):totals(r).total)-paid(s,r.id);}
+export function paid(s,id){const r=s.records[id];return list(s,'payments',true).filter(p=>p.target===id||(r?.kind==='invoices'&&r.advanceOrderId&&p.target===r.advanceOrderId)).reduce((a,p)=>a+(p.type==='refund'?-p.amount:p.amount),0);}
+export function balance(s,r){return (r.kind==='purchases'?cents(r.total):r.kind==='expenses'?cents(r.amount):totals(r).total)-paid(s,r.id);}
 export function documentStatus(s,r,date=today()){
  if(r.status==='anulada'||r.status==='cancelado')return r.status;
  if(r.kind==='invoices'&&r.status!=='borrador'){if(balance(s,r)<=0)return 'pagada';return r.due&&r.due<date?'vencida':'pendiente';}
@@ -51,10 +51,13 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(old&&old.kind!==cmd.kind)throw Error('El registro pertenece a otra sección.');
   if(old&&['quotes','invoices'].includes(old.kind)&&old.status!=='borrador')throw Error('Crea una nueva versión o sustituye el documento emitido.');
   if(old?.kind==='purchases'&&(old.confirmed||paid(s,old.id)!==0))throw Error('La compra ya tiene movimientos; registra un ajuste.');
+  if(old?.kind==='expenses'&&old.recordType==='finance-entry')throw Error('Conserva el registro financiero y corrige sus pagos desde el detalle.');
   const data=normalize({...old,...cmd.data,kind:cmd.kind});
+  if(old?.kind==='orders'&&paid(s,old.id)>0&&(old.quoteId!==data.quoteId||old.clientId!==data.clientId||totals(data).total<paid(s,old.id)))throw Error('Conserva el vínculo y el importe del pedido que tiene anticipos.');
   if(old?.kind==='orders'&&old.quoteId&&JSON.stringify(totals(old))!==JSON.stringify(totals(data)))throw Error('Este pedido procede de una cotización aprobada. Revisa la cotización antes de cambiar los importes.');
   if(data.clientId&&get(s,data.clientId).kind!=='clients')throw Error('Selecciona un cliente válido.');
   if(['quotes','invoices','orders'].includes(cmd.kind)&&!data.clientId)throw Error('Selecciona un cliente.');
+  if(cmd.kind==='invoices')for(const [key,kind]of [['quoteId','quotes'],['orderId','orders']]){if(data[key]){const source=get(s,data[key]);if(source.kind!==kind||source.clientId!==data.clientId)throw Error('El origen debe pertenecer al mismo cliente de la factura.');if(key==='orderId'&&data.quoteId&&source.quoteId!==data.quoteId)throw Error('El pedido y la cotización deben corresponder al mismo trabajo.');}}
   if(cmd.kind==='materials'){finite(data.packageCost);if(!finite(data.packageUnits))throw Error('Indica el rendimiento de la presentación.');if(data.packageCost||!old)data.unitCost=finite(data.packageCost)/finite(data.packageUnits);if(data.supplierId&&get(s,data.supplierId).kind!=='suppliers')throw Error('Selecciona un proveedor válido.');}
   if(cmd.kind==='suppliers'){required(data.name,'Nombre del proveedor');}
   if(cmd.kind==='products'){data.price=finite(data.price);data.otherCost=finite(data.otherCost);data.adPercent=finite(data.adPercent);data.markup=finite(data.markup);for(const line of data.recipe||[]){if(!line.materialId||get(s,line.materialId).kind!=='materials')throw Error('Selecciona un material válido.');if(!finite(line.quantity))throw Error('La cantidad de material debe ser mayor que cero.');}for(const task of data.labor||[]){required(task.name,'Nombre de la tarea');finite(task.hours);finite(task.rate);}data.priceHistory=Array.isArray(data.priceHistory)?data.priceHistory:[];}
@@ -66,12 +69,29 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(cmd.kind==='orders'&&!old&&data.calculationId)data.estimate=calculate(get(s,data.calculationId));
   if(old?.kind==='tasks'&&old.status!==data.status)throw Error('Cambia el estado desde la ficha para conservar las recurrencias.');
   result=old?update(old,data):create(cmd.kind,{...data,...(['quotes','invoices','orders','purchases'].includes(cmd.kind)?{number:number(cmd.kind)}:{}),status:data.status||(['quotes','invoices'].includes(cmd.kind)?'borrador':cmd.kind==='orders'?'pendiente':cmd.kind==='purchases'?'por recibir':cmd.kind==='tasks'?'pendiente':'activo'),...(cmd.kind==='orders'?{stage:data.stage||'pendiente',condition:data.condition||''}:{})});
+ }else if(cmd.action==='finance-entry'){
+  const d=cmd.data||{},amount=cents(d.amount),direction=d.direction;
+  if(!['income','expense'].includes(direction)||!amount)throw Error('Indica un importe mayor que cero.');
+  required(d.name,'Concepto');required(d.category,'Categoría');required(d.date,'Fecha');
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d.date))throw Error('Selecciona una fecha válida.');
+  if(d.orderId&&get(s,d.orderId).kind!=='orders')throw Error('Selecciona un pedido válido.');
+  const isPaid=direction==='income'||d.paymentState==='paid';
+  if(direction==='expense'&&!['paid','pending'].includes(d.paymentState))throw Error('Selecciona el estado del pago.');
+  if(isPaid){required(d.method,'Método');required(direction==='income'?d.date:d.paymentDate,'Fecha de pago');}
+  result=create('expenses',{name:d.name.trim(),category:d.category.trim(),amount:amount/100,date:d.date,direction,recordType:'finance-entry',paymentState:isPaid?'paid':'pending',person:d.person||'',orderId:d.orderId||'',notes:d.notes||'',expectedDate:!isPaid?d.expectedDate||'':'',status:'activo'});
+  if(d.receipt){const resource=create('resources',{...d.receipt,name:d.receipt.fileName,recordType:'finance-receipt',sourceId:result.id},`${id}-receipt`);update(result,{resourceIds:[resource.id]});}
+  if(isPaid)create('payments',{name:d.name.trim(),target:result.id,type:'payment',direction,amount,date:direction==='income'?d.date:d.paymentDate,method:d.method,reference:''},`${id}-payment`);
  }else if(cmd.action==='settings'){
   s.settings={...s.settings,...cmd.data,name:required(cmd.data.name),currency:'DOP'};finite(s.settings.hourly);finite(s.settings.validDays);
  }else if(cmd.action==='archive'){
   const r=get(s,cmd.id);if(['invoices','quotes','orders','purchases'].includes(r.kind))throw Error('Conserva los documentos y cambia su estado desde su ficha.');result=update(r,{archived:!r.archived});
  }else if(cmd.action==='issue'){
-  const r=get(s,cmd.id);if(!['quotes','invoices'].includes(r.kind)||r.status!=='borrador')throw Error('Solo se pueden emitir borradores.');normalize(r);result=update(r,{...snapshot(r),status:r.kind==='quotes'?'enviada':'pendiente',issuedAt:at});
+  const r=get(s,cmd.id);if(!['quotes','invoices'].includes(r.kind)||r.status!=='borrador')throw Error('Solo se pueden emitir borradores.');normalize(r);
+  const matchingOrders=r.kind==='invoices'?list(s,'orders',true).filter(o=>r.quoteId&&o.quoteId===r.quoteId&&o.status!=='cancelado'):[];
+  if(!r.advanceOrderId&&!r.orderId&&matchingOrders.length>1)throw Error('Selecciona el pedido correspondiente antes de emitir la factura.');
+  const order=r.kind==='invoices'?(s.records[r.advanceOrderId||r.orderId]||matchingOrders[0]):null;
+  if(order){if(order.kind!=='orders'||order.clientId!==r.clientId)throw Error('Revisa el pedido relacionado.');if(list(s,'invoices',true).some(i=>i.id!==r.id&&i.advanceOrderId===order.id&&!['borrador','anulada'].includes(i.status)))throw Error('Este pedido ya está vinculado a una factura emitida.');if(paid(s,order.id)>totals(r).total)throw Error('El anticipo supera esta factura. Revisa los importes antes de emitirla.');}
+  result=update(r,{...snapshot(r),...(order?{advanceOrderId:order.id}:{}),status:r.kind==='quotes'?'enviada':'pendiente',issuedAt:at});
  }else if(cmd.action==='approve'){
   const r=get(s,cmd.id);if(r.kind!=='quotes'||r.status!=='enviada'||documentStatus(s,r)==='vencida')throw Error('Emite o renueva la cotización antes de aprobarla.');result=update(r,{status:'aprobada',approvedAt:at});
  }else if(cmd.action==='revise'){
@@ -97,13 +117,15 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   result=create('invoices',{...r,number:number('invoices'),status:'borrador',replacesId:r.id,quoteId:null,issuedAt:null},id);
  }else if(cmd.action==='payment'){
   const target=get(s,cmd.target),amount=cents(cmd.amount);if(!amount)throw Error('El pago debe ser mayor que cero.');
-  if(!['invoices','purchases'].includes(target.kind)||['borrador','cancelado'].includes(target.status))throw Error('Emite la factura o selecciona una compra.');
+  if(!['invoices','purchases','orders','expenses'].includes(target.kind)||['borrador','cancelado'].includes(target.status))throw Error('Selecciona un registro pendiente válido.');
+  if(target.kind==='expenses'&&target.recordType!=='finance-entry')throw Error('Este gasto ya se registró como pagado.');
+  if(target.kind==='orders'&&cmd.type!=='refund'&&list(s,'invoices',true).some(i=>!['borrador','anulada'].includes(i.status)&&(i.advanceOrderId===target.id||(target.quoteId&&i.quoteId===target.quoteId))))throw Error('El pedido ya tiene una factura. Registra el cobro desde Ventas.');
   if(cmd.type==='refund'){
    const original=get(s,cmd.originalId);if(original.kind!=='payments'||original.type==='refund'||original.target!==target.id)throw Error('Selecciona el pago original.');
    const refunded=list(s,'payments',true).filter(p=>p.originalId===original.id).reduce((a,p)=>a+p.amount,0);
    if(amount>original.amount-refunded)throw Error('El reembolso supera el importe disponible del pago.');required(cmd.reason,'Motivo');
   }else{if(target.status==='anulada')throw Error('No se pueden añadir pagos a una factura anulada.');if(amount>balance(s,target))throw Error('El pago supera el saldo pendiente.');}
-  result=create('payments',{name:cmd.type==='refund'?'Reembolso':'Pago',target:target.id,type:cmd.type==='refund'?'refund':'payment',direction:target.kind==='invoices'?'income':'expense',amount,date:cmd.date||today(),method:cmd.method||'',reference:cmd.reference||'',reason:cmd.reason||'',originalId:cmd.originalId||null});
+  result=create('payments',{name:cmd.type==='refund'?'Reembolso':target.kind==='orders'?'Anticipo':'Pago',target:target.id,type:cmd.type==='refund'?'refund':'payment',direction:['invoices','orders'].includes(target.kind)||target.direction==='income'?'income':'expense',amount,date:cmd.date||today(),method:cmd.method||'',reference:cmd.reference||'',reason:cmd.reason||'',originalId:cmd.originalId||null});
  }else if(cmd.action==='purchase'){
   const r=get(s,cmd.id);if(r.kind!=='purchases'||r.confirmed)throw Error('Esta compra ya fue registrada o no es válida.');
   const items=r.items?.length?r.items:[{materialId:r.materialId,quantity:r.quantity,subtotal:r.total}],base=items.reduce((sum,item)=>sum+finite(item.subtotal),0),shared=finite(r.shipping)+finite(r.other),allocations=[];let index=0;
@@ -135,6 +157,6 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
 }
 export function cashflow(s,from='',to='9999',clientId='',orderId=''){
  const invoices=list(s,'invoices',true),orders=list(s,'orders',true);
- const entries=[...list(s,'payments',true).map(p=>{const t=s.records[p.target];return {...p,clientId:t?.clientId||'',orderId:orders.find(o=>o.quoteId&&o.quoteId===t?.quoteId)?.id||'',signed:(p.direction==='income'?1:-1)*(p.type==='refund'?-1:1)*p.amount};}),...list(s,'expenses',true).map(e=>({...e,signed:-cents(e.amount)}))].filter(e=>(e.date||'')>=from&&(e.date||'')<=to&&(!clientId||e.clientId===clientId)&&(!orderId||e.orderId===orderId));
- return {entries,income:entries.filter(e=>e.signed>0).reduce((a,e)=>a+e.signed,0),expense:-entries.filter(e=>e.signed<0).reduce((a,e)=>a+e.signed,0),receivable:invoices.filter(r=>!['borrador','anulada'].includes(r.status)).reduce((a,r)=>a+balance(s,r),0),payable:list(s,'purchases').reduce((a,r)=>a+balance(s,r),0)};
+ const entries=[...list(s,'payments',true).map(p=>{const t=s.records[p.target];return {...p,concept:t?.name||p.name,origin:t?.kind||'payments',sourceNumber:t?.number||'',clientId:t?.clientId||'',orderId:t?.kind==='orders'?t.id:t?.orderId||t?.advanceOrderId||orders.find(o=>o.quoteId&&o.quoteId===t?.quoteId)?.id||'',signed:(p.direction==='income'?1:-1)*(p.type==='refund'?-1:1)*p.amount};}),...list(s,'expenses',true).filter(e=>e.recordType!=='finance-entry').map(e=>({...e,concept:e.name,origin:'expenses',direction:'expense',signed:-cents(e.amount)}))].filter(e=>(e.date||'')>=from&&(e.date||'')<=to&&(!clientId||e.clientId===clientId)&&(!orderId||e.orderId===orderId)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+ return {entries,income:entries.filter(e=>e.direction==='income').reduce((a,e)=>a+e.signed,0),expense:entries.filter(e=>e.direction==='expense').reduce((a,e)=>a-e.signed,0),receivable:invoices.filter(r=>!['borrador','anulada'].includes(r.status)).reduce((a,r)=>a+Math.max(0,balance(s,r)),0),payable:[...list(s,'purchases',true).filter(r=>!['anulada','cancelado'].includes(r.status)),...list(s,'expenses',true).filter(r=>r.recordType==='finance-entry'&&r.direction==='expense')].reduce((a,r)=>a+Math.max(0,balance(s,r)),0)};
 }

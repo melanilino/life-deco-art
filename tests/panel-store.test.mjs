@@ -15,3 +15,9 @@ test('transacción conserva registro, secuencia e historial juntos',async()=>{co
 test('fallo de transacción no guarda parcialmente ni adelanta la vista',async()=>{const h=await harness();await h.store.load();h.fail=true;await assert.rejects(h.store.commit({action:'save',kind:'clients',data:{name:'Prueba'}}),/NETWORK_TEST/);assert.equal(h.docs.size,1);h.fail=false;const r=await h.store.commit({action:'save',kind:'clients',data:{name:'Prueba'}});assert.equal(r.state.version,1);});
 test('pestaña obsoleta no sobrescribe otra sesión',async()=>{const h=await harness();await h.store.load();h.docs.set('panelData/owner/meta/state',{...domain.emptyState(),version:5});await assert.rejects(h.store.commit({action:'save',kind:'clients',data:{name:'Prueba'}}),/otra ventana/);assert.equal(h.docs.get('panelData/owner/meta/state').version,5);});
 test('usuario no habilitado no carga el panel',async()=>{const h=await harness();h.docs.set('panelAccess/owner',{enabled:false});await assert.rejects(h.store.load(),/PANEL_ACCESS_PENDING/);});
+
+test('registro financiero y pago se guardan juntos o ninguno ante un fallo',async()=>{
+ const h=await harness();await h.store.load();const cmd={action:'finance-entry',data:{name:'Ingreso atómico',direction:'income',category:'Prueba',amount:100,date:'2026-09-26',method:'Efectivo'}};
+ h.fail=true;await assert.rejects(h.store.commit(cmd),/NETWORK_TEST/);assert.equal(h.docs.size,1);
+ h.fail=false;const result=await h.store.commit(cmd);assert.equal(domain.list(result.state,'expenses').length,1);assert.equal(domain.list(result.state,'payments').length,1);assert.equal(domain.cashflow(result.state).entries.length,1);assert.equal([...h.docs.keys()].filter(k=>k.includes('/history/')).length,1);
+});

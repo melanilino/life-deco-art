@@ -20,3 +20,35 @@ test('servicio crea aviso previo y omite renovaciones canceladas',()=>{const x=s
 test('nota rápida se conserva como recurso privado y puede eliminarse',()=>{const x=setup(),id=x.run({action:'save',kind:'resources',data:{name:'Idea de reunión',note:'Idea de reunión\nRevisar propuesta.',recordType:'quick-note'}}),note=get(x.state,id);assert.equal(note.recordType,'quick-note');assert.match(note.note,/Revisar propuesta/);x.run({action:'archive',id});assert.equal(list(x.state,'resources').length,0);});
 test('nota vinculada genera recordatorio y puede convertirse en tarea sin perderse',()=>{const x=setup(),id=x.run({action:'save',kind:'resources',data:{name:'Confirmar medidas',title:'Seguimiento',note:'Escribir al cliente.',recordType:'quick-note',relatedKind:'clients',relatedId:x.client,reminderDate:'2026-09-08',pinned:true}});assert.equal(events(x.state).find(r=>r.id===id).eventDate,'2026-09-08');const taskId=x.run({action:'note-task',id}),note=get(x.state,id),task=get(x.state,taskId);assert.equal(note.taskId,taskId);assert.equal(task.noteId,id);assert.equal(task.clientId,x.client);assert.equal(task.date,'2026-09-08');assert.equal(task.priority,'alta');assert.ok(get(x.state,id));assert.equal(events(x.state).filter(r=>r.id===id).length,0);assert.throws(()=>x.run({action:'note-task',id}),/ya tiene una tarea/);});
 test('PDF descargable no incluye costos internos y pagina documentos largos',async()=>{const q={...quoteData('x'),kind:'invoices',number:'FAC-0001',status:'pendiente',issuer:{name:'Life Deco Art'},client:{name:'Prueba'},actualCost:99999,lines:Array.from({length:80},(_,i)=>({description:`Artículo ${i}`,quantity:1,price:100}))};const pdf=await documentPdf(q).text();assert.ok(pdf.startsWith('%PDF-1.4'));assert.ok(pdf.includes('FACTURA SIN COMPROBANTE FISCAL'));assert.ok(!pdf.includes('99999'));assert.ok((pdf.match(/\/Type \/Page /g)||[]).length>1);});
+
+test('finanzas separa gasto pendiente, pagos parciales y fecha efectiva del pago',()=>{
+ const x=setup(),id=x.run({action:'finance-entry',data:{name:'Gasto de prueba',direction:'expense',category:'Prueba',amount:300,date:'2026-08-10',paymentState:'pending',expectedDate:'2026-09-30'}});
+ assert.equal(cashflow(x.state,'2026-09-01','2026-09-30').payable,30000);assert.equal(cashflow(x.state).entries.length,0);
+ x.run({action:'payment',target:id,amount:100,date:'2026-09-02',method:'Efectivo'});
+ assert.equal(cashflow(x.state,'2026-08-01','2026-08-31').expense,0);assert.equal(cashflow(x.state,'2026-09-01','2026-09-30').expense,10000);assert.equal(cashflow(x.state).payable,20000);
+ x.run({action:'payment',target:id,amount:200,date:'2026-10-02',method:'Transferencia'});
+ assert.equal(cashflow(x.state).payable,0);assert.equal(cashflow(x.state).entries.length,2);assert.throws(()=>x.run({action:'payment',target:id,amount:1}),/supera/);
+});
+test('ingreso y gasto pagado crean un único movimiento vinculado y conservan el comprobante',()=>{
+ const x=setup(),income=x.run({action:'finance-entry',data:{name:'Ingreso de prueba',direction:'income',category:'Prueba',amount:120,date:'2026-09-15',method:'Efectivo',receipt:{path:'panel-private/test/file',fileName:'prueba.pdf',mime:'application/pdf',size:10}}});
+ const expense=x.run({action:'finance-entry',data:{name:'Gasto pagado',direction:'expense',category:'Prueba',amount:40,date:'2026-08-12',paymentState:'paid',paymentDate:'2026-09-16',method:'Tarjeta'}});
+ const f=cashflow(x.state,'2026-09-01','2026-09-30');assert.equal(f.entries.length,2);assert.equal(f.income,12000);assert.equal(f.expense,4000);assert.equal(f.payable,0);assert.equal(balance(x.state,get(x.state,expense)),0);assert.equal(f.entries.filter(e=>e.target===income).length,1);assert.equal(get(x.state,get(x.state,income).resourceIds[0]).fileName,'prueba.pdf');
+ assert.throws(()=>x.run({action:'save',kind:'expenses',id:expense,data:{name:'Cambio',amount:100}}),/Conserva/);
+ assert.throws(()=>x.run({action:'finance-entry',data:{name:'Sin método',direction:'income',category:'Prueba',amount:10,date:'2026-09-15'}}),/Método/);
+});
+test('cotización no es efectivo y anticipo del pedido se aplica una sola vez al facturar',()=>{
+ const x=setup(),q=x.run({action:'save',kind:'quotes',data:quoteData(x.client)});x.run({action:'issue',id:q});x.run({action:'approve',id:q});assert.equal(cashflow(x.state).income,0);
+ const o=x.run({action:'convert',id:q,kind:'orders'});x.run({action:'payment',target:o,amount:50,date:'2026-08-20',method:'Efectivo'});
+ const invoice=x.run({action:'convert',id:q,kind:'invoices'});assert.equal(cashflow(x.state).receivable,0);x.run({action:'issue',id:invoice});assert.equal(cashflow(x.state).receivable,15000);assert.equal(paid(x.state,invoice),5000);assert.equal(cashflow(x.state).entries.length,1);
+ assert.throws(()=>x.run({action:'payment',target:o,amount:10}),/Ventas/);
+ x.run({action:'payment',target:invoice,amount:150,date:'2026-09-20',method:'Efectivo'});assert.equal(balance(x.state,get(x.state,invoice)),0);assert.equal(cashflow(x.state,'2026-09-01','2026-09-30').income,15000);assert.equal(cashflow(x.state).income,20000);
+ const duplicate=x.run({action:'save',kind:'invoices',data:{...quoteData(x.client),orderId:o}});assert.throws(()=>x.run({action:'issue',id:duplicate}),/ya está vinculado/);
+});
+test('pedido sin cotización aplica su anticipo a la factura vinculada y protege al cliente',()=>{
+ const x=setup(),o=x.run({action:'save',kind:'orders',data:quoteData(x.client)});x.run({action:'payment',target:o,amount:25,date:'2026-09-01',method:'Efectivo'});
+ const invoice=x.run({action:'save',kind:'invoices',data:{...quoteData(x.client),orderId:o}});x.run({action:'issue',id:invoice});assert.equal(balance(x.state,get(x.state,invoice)),17500);
+ const other=x.run({action:'save',kind:'clients',data:{name:'Otro cliente'}});assert.throws(()=>x.run({action:'save',kind:'invoices',data:{...quoteData(other),orderId:o}}),/mismo cliente/);
+});
+test('gastos históricos siguen contando una vez y no admiten un segundo pago',()=>{
+ const x=setup(),id=x.run({action:'save',kind:'expenses',data:{name:'Gasto histórico',amount:45,date:'2026-08-01',method:'Efectivo'}});assert.equal(cashflow(x.state).expense,4500);assert.equal(cashflow(x.state).payable,0);assert.throws(()=>x.run({action:'payment',target:id,amount:45}),/ya se registró/);
+});
