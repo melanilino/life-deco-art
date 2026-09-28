@@ -118,7 +118,7 @@
 - Se evitó otorgar a Storage un rol adicional para consultar Firestore, porque el hub tiene una sola propietaria y la regla puede limitarse directamente a su UID.
 
 ## Finanzas · septiembre 2026
-- Finanzas tiene una única pantalla principal, sin selector «Resumen». Recibido y Pagado corresponden al mes seleccionado; Por cobrar y Por pagar incluyen los saldos de todos los períodos.
+- Finanzas tiene una única pantalla principal, identificada como «Vista actual · Finanzas» junto a Notas. Recibido y Pagado corresponden al mes seleccionado; Por cobrar y Por pagar incluyen los saldos de todos los períodos.
 - Movimientos reúne únicamente cobros y pagos efectivos, con búsqueda, tipo y mes. El CSV al pie utiliza los mismos filtros y permanece disponible sin registros.
 - «Registrar» abre una página completa con Ingreso/Gasto. Los campos compartidos se conservan al alternar; los gastos pendientes ocultan método y fecha de pago, y permiten una fecha prevista.
 - Los nuevos registros independientes usan `recordType: finance-entry` en la colección de registros existente. El registro y su pago se guardan en una misma transacción; los gastos históricos conservan su tratamiento como pagados, sin duplicarse.
@@ -126,3 +126,5 @@
 - Los pagos de compras se registran desde su detalle; los anticipos, desde el pedido; los cobros de facturas, desde Ventas. Finanzas los recibe automáticamente.
 - Una factura puede vincularse a un pedido o reconocerlo por su cotización. Al emitirla se aplica el anticipo de ese pedido, sin crear otro movimiento. Un pedido facturado dirige los nuevos cobros a la factura; no se puede aplicar su anticipo a dos facturas vigentes.
 - Verificación: pruebas automatizadas de saldos, fechas, filtros, anticipos, registros históricos y guardado atómico; recorrido local de ingreso, gasto pendiente y pago parcial; revisión de escritorio y móvil. No se crearon movimientos en los datos reales ni se modificaron las integraciones externas.
+
+- Ajuste visual de Finanzas (27/09): «Todos los períodos» aparece primero, a la izquierda; el resumen mensual queda a la derecha. «Ver detalle» no lleva subrayado en reposo y cambia a negro con subrayado fino al pasar el cursor o recibir foco.
