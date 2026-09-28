@@ -128,3 +128,10 @@
 - Verificación: pruebas automatizadas de saldos, fechas, filtros, anticipos, registros históricos y guardado atómico; recorrido local de ingreso, gasto pendiente y pago parcial; revisión de escritorio y móvil. No se crearon movimientos en los datos reales ni se modificaron las integraciones externas.
 
 - Ajuste visual de Finanzas (27/09): «Todos los períodos» aparece primero, a la izquierda; el resumen mensual queda a la derecha. «Ver detalle» no lleva subrayado en reposo y cambia a negro con subrayado fino al pasar el cursor o recibir foco.
+
+
+## Estadísticas — 27 de septiembre de 2026
+
+Panel conectado a facturas emitidas (fecha de venta, no cobro), excluyendo borradores y anulaciones. Incluye cuatro indicadores, evolución mensual, clasificación por cantidad o importe, compradores nuevos/recurrentes, origen y perfil opcional. Los detalles enlazan a los documentos y clientes fuente. El período afecta toda la página; comparación con el intervalo inmediatamente anterior de igual duración en días, acortando el período actual hasta hoy. Se omite el porcentaje si el importe anterior es cero. Los importes por artículo distribuyen el descuento proporcionalmente y no incluyen impuestos ni envío.
+
+Edad y género se capturan explícitamente en Clientes y admiten datos sin especificar. Las empresas se incluyen como compradores pero no se les atribuye edad ni género. Los pedidos usan la fecha real de entrega, preservada al volver a guardar el mismo estado. No se incluye rentabilidad de productos. Verificación con datos sintéticos separados de producción, pruebas de cálculos y controles de período, comparación y clasificación.

@@ -9,6 +9,13 @@ run({action:'save',kind:'quotes',data:{name:'Trabajo de prueba',clientId:'test-1
 run({action:'save',kind:'tasks',data:{name:'Revisar materiales de prueba',date:'2026-09-07',priority:'alta',status:'pendiente',repeat:'semanal'}});
 run({action:'adjustStock',materialId:'test-2',quantity:10,reason:'Existencias de prueba'});
 run({action:'save',kind:'resources',data:{name:'Imagen con error simulado',path:'panel-private/fixture-only/error',mime:'image/png',role:'referencia',visibility:'interno'}});
+if(new URLSearchParams(location.search).has('statistics-fixture')){
+ run({action:'save',kind:'clients',id:'test-1',data:{source:'Referido',ageRange:'25–34',gender:'Mujer'}});
+ for(const [date,description,quantity,price] of [['2025-03-05','Pieza de prueba',1,100],['2026-03-05','Pieza de prueba',2,200],['2026-06-05','Servicio de prueba',1,700],['2026-09-05','Pieza de prueba',4,200]]){
+ const invoice=run({action:'save',kind:'invoices',data:{name:description,clientId:'test-1',date,lines:[{description,quantity,price}]}});
+ run({action:'issue',id:invoice.result});
+ }
+}
 export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only'}));return ()=>{};};
 export const load=async()=>structuredClone(state);
 export const commit=async cmd=>run(cmd);

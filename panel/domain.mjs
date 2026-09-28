@@ -110,7 +110,7 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(!allowed[r.kind]?.includes(cmd.status))throw Error('Estado no permitido.');
   if(['anulada','cancelado','cancelada'].includes(cmd.status))required(cmd.reason,'Motivo');
   if(r.kind==='quotes'&&cmd.status==='rechazada'&&r.status!=='enviada')throw Error('Solo se puede rechazar una cotización enviada.');
-  result=update(r,r.kind==='orders'?{status:cmd.status,stage:cmd.status,reason:cmd.reason||'',deliveredAt:cmd.status==='entregado'?at:null}:{status:cmd.status,reason:cmd.reason||''});
+  result=update(r,r.kind==='orders'?{status:cmd.status,stage:cmd.status,reason:cmd.reason||'',deliveredAt:cmd.status==='entregado'?(r.status==='entregado'&&r.deliveredAt?r.deliveredAt:at):null}:{status:cmd.status,reason:cmd.reason||''});
   if(r.kind==='tasks'&&cmd.status==='completada'&&r.status!=='completada'&&r.repeat&&r.repeat!=='ninguna')create('tasks',{...r,status:'pendiente',date:nextDate(r.date,r.repeat),previousId:r.id},`${id}-next`);
  }else if(cmd.action==='replace'){
   const r=get(s,cmd.id);if(r.kind!=='invoices'||r.status!=='anulada')throw Error('Anula la factura antes de sustituirla.');
