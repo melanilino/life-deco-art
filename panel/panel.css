@@ -677,3 +677,5 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 .stats-profile-grid .stats-empty{padding:16px 0}
 @media(min-width:1101px){.stats-middle,.stats-bottom{grid-template-columns:minmax(0,.8fr) minmax(0,.8fr) minmax(0,1fr);gap:20px}.stats-middle>.stats-card:first-child{grid-column:span 2}.stats-profile{grid-column:auto}}
 @media(min-width:601px) and (max-width:1100px){.stats-bottom{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-profile{grid-column:1/-1}}
+
+#stats-results > .stats-note{max-width:none;width:100%}

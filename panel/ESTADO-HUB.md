@@ -142,3 +142,5 @@ Inicio del contenido unificado a 28 px bajo el encabezado (24 px en móvil), inc
 
 
 Ajuste de recuadros: aclaraciones de Finanzas fuera de las tarjetas, centradas debajo. Estadísticas comparte columnas entre Lo más vendido y Perfil de clientes; las tarjetas inferiores se estiran a la misma altura y los estados vacíos del perfil usan menos espacio.
+
+La aclaración final de Estadísticas aprovecha todo el ancho de la sección antes de continuar en la siguiente línea.
