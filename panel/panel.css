@@ -671,3 +671,9 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 @media(max-width:1450px){.metrics-row,.client-metrics,.sales-metrics,.stats-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:859px){:root{--hub-content-start:24px}.home-workspace>.main{padding-right:18px;padding-left:18px}.sales-metrics,.sales-panel{margin-right:0;margin-left:0}}
 @media(max-width:640px){.metrics-row,.client-metrics,.sales-metrics,.stats-metrics{grid-template-columns:1fr}}
+.finance-metric-group{min-width:0}
+.finance-metric-caption{text-align:center;color:var(--brown);font-size:13px;line-height:1.4;margin:8px 0 0;max-width:none}
+.stats-middle,.stats-bottom{align-items:stretch}
+.stats-profile-grid .stats-empty{padding:16px 0}
+@media(min-width:1101px){.stats-middle,.stats-bottom{grid-template-columns:minmax(0,.8fr) minmax(0,.8fr) minmax(0,1fr);gap:20px}.stats-middle>.stats-card:first-child{grid-column:span 2}.stats-profile{grid-column:auto}}
+@media(min-width:601px) and (max-width:1100px){.stats-bottom{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-profile{grid-column:1/-1}}

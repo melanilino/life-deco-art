@@ -139,3 +139,6 @@ Edad y género se capturan explícitamente en Clientes y admiten datos sin espec
 
 ## Alineación de páginas — 30 de septiembre de 2026
 Inicio del contenido unificado a 28 px bajo el encabezado (24 px en móvil), incluidos los formularios. Indicadores de Inicio, Clientes, Ventas, Pedidos, Estadísticas y Finanzas comparten una altura base de 122 px; se conserva el ancho doble de Finanzas. Las cuadrículas comparten separación y puntos de adaptación. El contenido ampliado sigue pudiendo crecer para no recortar información.
+
+
+Ajuste de recuadros: aclaraciones de Finanzas fuera de las tarjetas, centradas debajo. Estadísticas comparte columnas entre Lo más vendido y Perfil de clientes; las tarjetas inferiores se estiran a la misma altura y los estados vacíos del perfil usan menos espacio.
