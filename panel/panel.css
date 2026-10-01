@@ -653,3 +653,21 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 @media(max-width:600px){.stats-bottom{grid-template-columns:1fr}.stats-profile{grid-column:auto}.stats-metric{padding:16px 12px;gap:8px}.stats-icon{display:none}.stats-metric strong{font-size:21px}.stats-card{padding:18px}.stats-filters{padding:16px}.stats-filters>span{width:100%}.stats-profile-grid{gap:12px}.stats-profile-grid>div+div{padding-left:12px}.stats-ranking summary{grid-template-columns:24px minmax(0,1fr) auto}.stats-ranking .stats-track{display:none}}
 .statistics-dashboard>*,#stats-results{min-width:0}.statistics-dashboard details{padding:0;border:0;background:transparent}.statistics-dashboard .stats-details{margin:10px 0 0}.statistics-dashboard .stats-ranking>details{margin:0;border-bottom:1px solid var(--border)}.statistics-dashboard .stats-bar-detail{margin:0}.stats-metrics{align-items:stretch}.stats-metric strong{white-space:nowrap;font-size:clamp(18px,1.6vw,28px)}
 @media(max-width:600px){.stats-filters label{min-width:0;width:100%;flex:auto}.stats-filters select{width:220px;min-width:0}.stats-metric strong{font-size:18px}.stats-filters input{width:185px}.stats-filters label:last-child{display:grid;gap:8px}.stats-filters label:last-child select{width:100%}}
+
+/* Ritmo compartido entre todas las páginas del hub. */
+:root{--hub-content-start:28px;--hub-metric-height:122px}
+.home-workspace>.main{padding-top:var(--hub-content-start)!important}
+.home-workspace>.main>:first-child{margin-top:0}
+.metrics-row,.client-metrics,.sales-metrics,.stats-metrics{gap:var(--space-4);grid-template-columns:repeat(4,minmax(0,1fr))}
+.metric-card,.client-metric,.sales-metric,.stats-metric{min-height:var(--hub-metric-height);padding:16px 20px;align-items:center}
+.client-metric small,.client-metric p{white-space:normal}
+.stats-metric{align-items:center}.stats-metric h2{line-height:1.4}.stats-metric .stats-details{margin-top:4px}
+.finance-metric-card{min-height:var(--hub-metric-height);padding:12px 20px;display:flex;flex-direction:column;justify-content:center}
+.finance-metric-pair>div{gap:2px;padding:0 12px}
+.finance-metric-pair h2{font-size:14px;line-height:20px}
+.finance-metric-pair strong{font-size:24px;line-height:29px}
+.finance-metric-pair span,.finance-metric-pair a{line-height:18px}
+.finance-metric-card>p{margin:8px 0 0;line-height:17px}
+@media(max-width:1450px){.metrics-row,.client-metrics,.sales-metrics,.stats-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:859px){:root{--hub-content-start:24px}.home-workspace>.main{padding-right:18px;padding-left:18px}.sales-metrics,.sales-panel{margin-right:0;margin-left:0}}
+@media(max-width:640px){.metrics-row,.client-metrics,.sales-metrics,.stats-metrics{grid-template-columns:1fr}}
