@@ -679,3 +679,20 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 @media(min-width:601px) and (max-width:1100px){.stats-bottom{grid-template-columns:repeat(2,minmax(0,1fr))}.stats-profile{grid-column:1/-1}}
 
 #stats-results > .stats-note{max-width:none;width:100%}
+
+/* Finanzas: referencia aprobada de saldos y movimientos. */
+.finance-metric-card{min-height:160px;padding:18px 20px;justify-content:flex-start}
+.finance-metric-heading{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:20px}
+.finance-metric-heading h2{font-size:14px;line-height:20px;margin:0}
+.finance-metric-heading span{font-size:13px;color:var(--brown);text-align:right}
+.finance-metric-heading span::first-letter{text-transform:uppercase}
+.finance-metric-pair>div{padding:2px 12px}
+.finance-movements .finance-table-footer{justify-content:space-between;align-items:center;border-top:0;margin-top:12px;padding-top:0;gap:12px;color:var(--brown);font-size:13px}
+.finance-movements .sales-table-wrap{border:1px solid var(--border);border-radius:6px;overflow:auto}
+.finance-movements .finance-table{margin:0}
+.finance-movements .finance-table thead{background:var(--cream,#f4eee3)}
+.finance-movements-empty{display:flex;flex-direction:column;align-items:center;gap:8px;padding:38px 16px;white-space:normal}
+.finance-movements-empty svg{width:28px;height:32px;margin-bottom:6px}
+.finance-movements-empty strong{color:var(--black);font-size:16px;font-weight:500}
+.finance-movements-empty span{font-size:13px}
+@media(max-width:700px){.finance-metric-heading{gap:8px}.finance-metric-heading h2,.finance-metric-heading span{font-size:12px}.finance-movements .finance-table-footer{flex-wrap:wrap}}
