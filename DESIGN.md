@@ -161,3 +161,10 @@ Los enlaces de títulos se subrayan al pasar el cursor. Los enlaces de atención
 - **Don't** mezclar colores, radios o grosores de borde en controles equivalentes.
 - **Don't** rellenar métricas, agenda o atención con actividad ficticia.
 - **Don't** añadir barras bajo etapas e inventario ni presentar las comparaciones mensuales como períodos equivalentes.
+
+
+## Contenido (10 de octubre de 2026)
+
+Una sola colección alimenta Lista, Tablero y Calendario. Se mantienen el fondo crema, las tarjetas blancas y los controles neutros del HUB. Los filtros se conservan al cambiar de vista; en móvil los selectores ocupan una fila completa. El formulario se abre como página completa y protege los cambios sin guardar, también al abrir Notas.
+
+Cada plataforma conserva su texto, fecha prevista y confirmación con fecha real. Estar listo no equivale a estar publicado; una publicación parcial permanece en su etapa de preparación. Agenda utiliza las mismas publicaciones pendientes y abre su campo correspondiente. Archivar conserva el registro y permite restaurarlo. Campañas y Recursos siguen disponibles. No se publican contenidos automáticamente en redes sociales.

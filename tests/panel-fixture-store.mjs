@@ -16,6 +16,10 @@ if(new URLSearchParams(location.search).has('statistics-fixture')){
  run({action:'issue',id:invoice.result});
  }
 }
+if(new URLSearchParams(location.search).has('content-fixture')){
+ for(let i=0;i<12;i++)run({action:'save',kind:'content',data:{name:'Contenido de prueba '+String(i+1).padStart(2,'0'),format:i%2?'Carrusel':'Video',stage:['idea','en preparación','listo'][i%3],publications:i===0?[]:[{id:'instagram',platform:'Instagram',date:'2026-10-12',time:'19:00',status:i===3?'publicado':'pendiente',actualDate:i===3?'2026-10-10':''},{id:'tiktok',platform:'TikTok',date:'2026-10-14',time:'18:00',status:'pendiente',actualDate:''}]}});
+ run({action:'save',kind:'content',data:{name:'Contenido antiguo de prueba',channel:'Instagram',status:'programado',date:'2026-10-16',copy:'Texto anterior'}});
+}
 export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only'}));return ()=>{};};
 export const load=async()=>structuredClone(state);
 export const commit=async cmd=>run(cmd);
