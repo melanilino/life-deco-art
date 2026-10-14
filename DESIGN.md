@@ -173,3 +173,6 @@ Cada plataforma conserva su texto, fecha prevista y confirmación con fecha real
 ### Vista temporal de Contenido (13 de octubre de 2026)
 
 Por decisión de la propietaria, Contenido abre únicamente la tabla. El selector Lista/Tablero/Calendario queda oculto; las otras vistas y su código se conservan. La barra distribuye búsqueda, Estado, Plataforma y Nuevo contenido sin dejar un espacio para el selector oculto.
+
+
+Corrección del 13 de octubre: la vista temporal solicitada es el tablero de columnas y tarjetas (tipo Trello). Tabla y Calendario permanecen conservados y ocultos, junto con el selector de vistas.
