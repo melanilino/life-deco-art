@@ -182,3 +182,6 @@ Pedidos (13 de octubre): se retira la vista de tablero y su selector; la lista e
 
 
 Contenido: navegación entre Contenido, Campañas y Recursos mediante Vista actual junto a Notas. El tablero vacío muestra únicamente los mensajes de cada columna.
+
+
+Agenda (13 de octubre): la entrada principal abre únicamente el calendario. Lista y tablero se conservan sin acceso desde la vista principal; se mantiene la creación y edición de tareas.
