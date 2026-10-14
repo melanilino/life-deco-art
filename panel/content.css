@@ -24,3 +24,10 @@
 .content-calendar-controls h2::first-letter{text-transform:uppercase}
 .content-confirm{max-width:480px;width:calc(100% - 32px);border:1px solid var(--border);border-radius:8px;padding:24px;background:var(--white);color:var(--black)}.content-confirm::backdrop{background:rgba(0,0,0,.25)}.content-confirm h2{font-size:20px;margin:0 0 16px}.content-confirm p{white-space:pre-line}.content-confirm>div{display:flex;justify-content:flex-end;gap:12px;margin-top:24px}.content-confirm [data-yes]{background:var(--black);color:var(--white);border-color:var(--black)}
 .content-table .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Vista de tabla temporal; conservar los controles de las otras vistas. */
+.content-toolbar-table-only{grid-template-columns:minmax(180px,1fr) minmax(180px,.6fr) minmax(210px,.7fr) auto}
+.content-toolbar-table-only .content-toggle[hidden]{display:none}
+.content-toolbar-table-only .content-new{grid-column:auto}
+@media(max-width:1000px){.content-toolbar-table-only{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.content-toolbar-table-only{grid-template-columns:1fr}.content-toolbar-table-only .content-new{grid-column:1/-1}}

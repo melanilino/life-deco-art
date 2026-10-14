@@ -168,3 +168,8 @@ Los enlaces de títulos se subrayan al pasar el cursor. Los enlaces de atención
 Una sola colección alimenta Lista, Tablero y Calendario. Se mantienen el fondo crema, las tarjetas blancas y los controles neutros del HUB. Los filtros se conservan al cambiar de vista; en móvil los selectores ocupan una fila completa. El formulario se abre como página completa y protege los cambios sin guardar, también al abrir Notas.
 
 Cada plataforma conserva su texto, fecha prevista y confirmación con fecha real. Estar listo no equivale a estar publicado; una publicación parcial permanece en su etapa de preparación. Agenda utiliza las mismas publicaciones pendientes y abre su campo correspondiente. Archivar conserva el registro y permite restaurarlo. Campañas y Recursos siguen disponibles. No se publican contenidos automáticamente en redes sociales.
+
+
+### Vista temporal de Contenido (13 de octubre de 2026)
+
+Por decisión de la propietaria, Contenido abre únicamente la tabla. El selector Lista/Tablero/Calendario queda oculto; las otras vistas y su código se conservan. La barra distribuye búsqueda, Estado, Plataforma y Nuevo contenido sin dejar un espacio para el selector oculto.
