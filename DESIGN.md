@@ -179,3 +179,6 @@ Corrección del 13 de octubre: la vista temporal solicitada es el tablero de col
 
 
 Pedidos (13 de octubre): se retira la vista de tablero y su selector; la lista es la única vista de pedidos.
+
+
+Contenido: navegación entre Contenido, Campañas y Recursos mediante Vista actual junto a Notas. El tablero vacío muestra únicamente los mensajes de cada columna.
