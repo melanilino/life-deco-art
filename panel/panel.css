@@ -697,3 +697,6 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 .finance-movements-empty strong{color:var(--black);font-size:16px;font-weight:500}
 .finance-movements-empty span{font-size:13px}
 @media(max-width:700px){.finance-metric-heading{gap:8px}.finance-metric-heading h2,.finance-metric-heading span{font-size:12px}.finance-movements .finance-table-footer{flex-wrap:wrap}}
+
+/* Pedidos: vista única de lista. */
+@media(min-width:1401px){.order-toolbar{grid-template-columns:minmax(240px,1fr) minmax(170px,.4fr) minmax(170px,.4fr) auto}}

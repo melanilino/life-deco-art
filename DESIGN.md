@@ -176,3 +176,6 @@ Por decisión de la propietaria, Contenido abre únicamente la tabla. El selecto
 
 
 Corrección del 13 de octubre: la vista temporal solicitada es el tablero de columnas y tarjetas (tipo Trello). Tabla y Calendario permanecen conservados y ocultos, junto con el selector de vistas.
+
+
+Pedidos (13 de octubre): se retira la vista de tablero y su selector; la lista es la única vista de pedidos.
