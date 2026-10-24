@@ -41,7 +41,7 @@ export async function commit(cmd){
   if((meta.data()?.version||0)!==previous.version)throw Error('Los datos cambiaron en otra ventana. Actualiza el panel antes de guardar.');
   const {records,...head}=change.state;tx.set(metaRef,head);
   for(const key of change.changed)tx.set(doc(db,base,'records',key),records[key]);
-  tx.set(doc(db,base,'history',id),change.history);
+  tx.set(doc(db,base,'history',id),{...change.history,actor:{uid:user.uid,email:user.email||''}});
  });
  if(active!==session)throw Error('La sesión cambió. Comprueba el último cambio al volver a entrar.');
  current=change.state;return change;
@@ -73,6 +73,6 @@ export async function restoreBackup(backup){
   const metaRef=doc(db,root(),'meta','state'),meta=await tx.get(metaRef);if((meta.data()?.version||0)!==state.version)throw Error('Los datos cambiaron. Repite la recuperación.');
   const {records,...head}=state;tx.set(metaRef,{...head,counters:plan.counters,version:state.version+1});
   for(const r of missing)tx.set(doc(db,root(),'records',r.id),r);
-  const id=crypto.randomUUID();tx.set(doc(db,root(),'history',id),{id,at:new Date().toISOString(),action:'restore-missing',target:'',changed:missing.map(r=>r.id)});
+  const id=crypto.randomUUID();tx.set(doc(db,root(),'history',id),{id,at:new Date().toISOString(),action:'restore-missing',actor:{uid:user.uid,email:user.email||''},target:'',changed:missing.map(r=>r.id)});
  });return {count:missing.length,state:await load()};
 }

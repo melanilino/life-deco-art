@@ -1,3 +1,4 @@
+import {planRecovery} from '/panel/recovery.mjs';
 // Datos sintéticos: solo scripts/panel-dev-server.mjs --fixtures sirve este adaptador.
 import {emptyState,applyCommand} from '/panel/domain.mjs';
 let state=emptyState();const logs=[];let index=0;
@@ -27,15 +28,20 @@ if(new URLSearchParams(location.search).has('agenda-fixture')){
  run({action:'save',kind:'content',data:{name:'Publicación de prueba',stage:'listo',publications:[{id:'ig',platform:'Instagram',date:'2026-10-24',time:'11:15',status:'pendiente'}]}});
  const saved=sessionStorage.getItem('agenda-fixture-state');if(saved){state=JSON.parse(saved);index=Math.max(index,...Object.keys(state.records).map(id=>Number(id.replace('test-',''))||0));}
 }
-export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only'}));return ()=>{};};
+if(new URLSearchParams(location.search).has('admin-fixture')){
+ run({action:'admin-subscription',data:{name:'Plataforma de prueba',usage:'Diseño de prueba',plan:'Plan de prueba',cost:1200,currency:'DOP',frequency:'anual',renewal:'2026-10-28',status:'activo'}});
+ run({action:'admin-subscription',data:{name:'Servicio de prueba en USD',usage:'Almacenamiento de prueba',plan:'Plan de prueba',cost:10,currency:'USD',frequency:'mensual',renewal:'2026-10-30',status:'activo'}});
+ const saved=sessionStorage.getItem('admin-fixture-state');if(saved){state=JSON.parse(saved);index=Math.max(index,...Object.keys(state.records).map(id=>Number(id.replace('test-',''))||0));}
+}
+export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only',email:'prueba@example.invalid',providerData:[{providerId:'password'}]}));return ()=>{};};
 export const load=async()=>structuredClone(state);
 let failSchedule=new URLSearchParams(location.search).has('agenda-failure');
-export const commit=async cmd=>{if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));return r;};
+export const commit=async cmd=>{if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('admin-fixture'))sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return r;};
 export const history=async()=>logs;
 export const logout=async()=>location.reload();
 export const login=async()=>{};
 export const resetPassword=async()=>{};
 export const upload=async()=>{throw Error('Los archivos se verifican contra Firebase privado, no en esta prueba local.');};
 export const downloadFile=async()=>{throw Error('Sin archivos de prueba.');};
-export const exportBackup=async()=>({format:'life-deco-art-panel',schema:1,state});
-export const restoreBackup=async()=>{throw Error('La recuperación se verifica con pruebas de almacenamiento.');};
+export const exportBackup=async includeFiles=>({format:'life-deco-art-panel',schema:1,owner:'fixture-only',state:structuredClone(state),includesFiles:includeFiles,files:[],history:logs,exportedAt:new Date().toISOString()});
+export const restoreBackup=async backup=>{if(!new URLSearchParams(location.search).has('admin-fixture'))throw Error('La recuperación se verifica con pruebas de almacenamiento.');const plan=planRecovery(state,backup,'fixture-only');state={...state,counters:plan.counters,version:state.version+1,records:{...state.records,...Object.fromEntries(plan.records.map(r=>[r.id,r]))}};sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return {count:plan.records.length,state:structuredClone(state)};};

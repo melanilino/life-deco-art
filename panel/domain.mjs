@@ -1,3 +1,4 @@
+import {adminMutation} from './admin-model.mjs';
 import {agendaMutation,agendaEvents} from './agenda-model.mjs';
 import {contentEvents,validateContent} from './content-model.mjs';
 // Reglas del negocio compartidas por la interfaz y las pruebas. Importes en centavos.
@@ -7,7 +8,7 @@ export const money = cents => new Intl.NumberFormat('es-DO',{style:'currency',cu
 export const cents = value => Math.round(finite(value)*100);
 export function finite(v,min=0) { const n=Number(v||0); if(!Number.isFinite(n)||n<min||n>1e12) throw Error('Revisa los importes y cantidades: deben ser números válidos.'); return n; }
 export function required(v,label='Nombre') { if(!String(v||'').trim()) throw Error(`${label} es obligatorio.`); return String(v).trim(); }
-export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0,purchases:0},settings:{name:'Life Deco Art',currency:'DOP',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
+export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0,purchases:0},settings:{name:'Life Deco Art',currency:'DOP',timezone:'America/Santo_Domingo',dateFormat:'DD/MM/AAAA',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
 export function list(s,kind,archived=false){return Object.values(s.records).filter(r=>r.kind===kind&&!r.deleted&&(archived||!r.archived));}
 export function get(s,id){const r=s.records[id];if(!r)throw Error('No se encontró el registro. Actualiza el panel.');return r;}
 export function calculate(c){
@@ -47,7 +48,8 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
  const number=kind=>{s.counters[kind]=(s.counters[kind]||0)+1;return `${({quotes:'COT',orders:'PED',invoices:'FAC',purchases:'COM'})[kind]}-${String(s.counters[kind]).padStart(4,'0')}`;};
  const snapshot=r=>({...r,issuer:{...structuredClone(s.settings),logoPath:s.records[s.settings.logoResourceId]?.path||''},client:structuredClone(s.records[r.clientId]||{}),estimate:r.estimate||((r.calculationId&&s.records[r.calculationId])?calculate(s.records[r.calculationId]):null)});
  let result;
- if(cmd.action.startsWith('agenda-')){result=agendaMutation(s,cmd,{put,at,id,nextDate});
+ if(cmd.action.startsWith('admin-')){result=adminMutation(s,cmd,{put,at,id});
+ }else if(cmd.action.startsWith('agenda-')){result=agendaMutation(s,cmd,{put,at,id,nextDate});
  }else if(cmd.action==='save'){
   if(!kinds.includes(cmd.kind)||['payments','movements'].includes(cmd.kind))throw Error('Tipo de registro no editable.');
   const old=cmd.id?get(s,cmd.id):null;
