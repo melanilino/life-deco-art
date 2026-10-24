@@ -1,3 +1,4 @@
+import {agendaMutation,agendaEvents} from './agenda-model.mjs';
 import {contentEvents,validateContent} from './content-model.mjs';
 // Reglas del negocio compartidas por la interfaz y las pruebas. Importes en centavos.
 export const kinds = ['clients','products','calculations','quotes','invoices','orders','materials','suppliers','purchases','movements','payments','expenses','campaigns','content','resources','accounts','tasks'];
@@ -7,7 +8,7 @@ export const cents = value => Math.round(finite(value)*100);
 export function finite(v,min=0) { const n=Number(v||0); if(!Number.isFinite(n)||n<min||n>1e12) throw Error('Revisa los importes y cantidades: deben ser números válidos.'); return n; }
 export function required(v,label='Nombre') { if(!String(v||'').trim()) throw Error(`${label} es obligatorio.`); return String(v).trim(); }
 export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0,purchases:0},settings:{name:'Life Deco Art',currency:'DOP',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
-export function list(s,kind,archived=false){return Object.values(s.records).filter(r=>r.kind===kind&&(archived||!r.archived));}
+export function list(s,kind,archived=false){return Object.values(s.records).filter(r=>r.kind===kind&&!r.deleted&&(archived||!r.archived));}
 export function get(s,id){const r=s.records[id];if(!r)throw Error('No se encontró el registro. Actualiza el panel.');return r;}
 export function calculate(c){
  const units=finite(c.units)||1, hours=finite(c.hours), hourly=finite(c.hourly), other=finite(c.other), packaging=finite(c.packaging);
@@ -37,7 +38,7 @@ export function documentStatus(s,r,date=today()){
 }
 export function stock(s,id){return list(s,'movements',true).filter(m=>m.materialId===id).reduce((a,m)=>a+Number(m.quantity),0);}
 export function nextDate(date,repeat){const d=new Date(date+'T12:00:00Z');if(!Number.isFinite(+d))throw Error('Define una fecha válida para repetir la tarea.');if(repeat==='semanal')d.setUTCDate(d.getUTCDate()+7);else if(repeat==='diaria')d.setUTCDate(d.getUTCDate()+1);else {const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+1);d.setUTCDate(Math.min(day,new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate()));}return d.toISOString().slice(0,10);}
-export function events(s){const services=list(s,'accounts').filter(r=>r.renewal&&r.status!=='cancelado'),renewals=services.map(r=>({...r,eventDate:r.renewal,name:`Renovación · ${r.name}`})),reminders=services.filter(r=>Number(r.reminderDays)>0).map(r=>{const date=new Date(r.renewal+'T12:00:00Z');date.setUTCDate(date.getUTCDate()-Number(r.reminderDays));return {...r,eventDate:date.toISOString().slice(0,10),name:`Revisar renovación · ${r.name}`};}),noteReminders=list(s,'resources').filter(r=>r.recordType==='quick-note'&&r.reminderDate&&!r.taskId).map(r=>({...r,eventDate:r.reminderDate,name:`Recordatorio · ${r.title||r.name}`}));return [...list(s,'tasks').filter(r=>r.date&&!['completada','cancelada'].includes(r.status)).map(r=>({...r,eventDate:r.date})),...list(s,'orders').filter(r=>r.due&&!['entregado','cancelado'].includes(r.status)).map(r=>({...r,eventDate:r.due,name:`Entrega · ${r.number}`})),...contentEvents(list(s,'content')).filter(e=>e.publicationStatus!=='publicado'),...noteReminders,...renewals,...reminders].sort((a,b)=>a.eventDate.localeCompare(b.eventDate));}
+export function events(s){const services=list(s,'accounts').filter(r=>r.renewal&&r.status!=='cancelado'),renewals=services.map(r=>({...r,eventDate:r.renewal,name:`Renovación · ${r.name}`})),reminders=services.filter(r=>Number(r.reminderDays)>0).map(r=>{const date=new Date(r.renewal+'T12:00:00Z');date.setUTCDate(date.getUTCDate()-Number(r.reminderDays));return {...r,eventDate:date.toISOString().slice(0,10),name:`Revisar renovación · ${r.name}`};}),noteReminders=list(s,'resources').filter(r=>r.recordType==='quick-note'&&r.reminderDate&&!r.taskId).map(r=>({...r,eventDate:r.reminderDate,name:`Recordatorio · ${r.title||r.name}`}));return [...agendaEvents(s).filter(e=>!['completada','cancelada'].includes(e.status)).map(e=>({...s.records[e.id],...e,href:e.type==='content'?`#content/${e.id}/publication-${e.publicationId}`:e.href,eventDate:e.date,publicationStatus:e.type==='content'?'pendiente':undefined})),...noteReminders,...renewals,...reminders].sort((a,b)=>a.eventDate.localeCompare(b.eventDate));}
 function normalize(r){required(r.name);if(r.kind==='calculations')calculate(r);if(['quotes','invoices'].includes(r.kind)){if(!r.lines?.length)throw Error('Añade al menos un concepto.');r.lines.forEach(l=>{required(l.description,'Descripción del concepto');if(!finite(l.quantity))throw Error('La cantidad debe ser mayor que cero.');finite(l.price);});totals(r);}if(r.kind==='orders'&&r.lines?.length){r.lines.forEach(l=>{required(l.description,'Descripción del artículo');if(!finite(l.quantity))throw Error('La cantidad debe ser mayor que cero.');finite(l.price);});totals(r);}return r;}
 export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toISOString()}={}){
  const s=structuredClone(state), changes=[], put=r=>{s.records[r.id]=r;changes.push(r.id);return r;};
@@ -46,7 +47,8 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
  const number=kind=>{s.counters[kind]=(s.counters[kind]||0)+1;return `${({quotes:'COT',orders:'PED',invoices:'FAC',purchases:'COM'})[kind]}-${String(s.counters[kind]).padStart(4,'0')}`;};
  const snapshot=r=>({...r,issuer:{...structuredClone(s.settings),logoPath:s.records[s.settings.logoResourceId]?.path||''},client:structuredClone(s.records[r.clientId]||{}),estimate:r.estimate||((r.calculationId&&s.records[r.calculationId])?calculate(s.records[r.calculationId]):null)});
  let result;
- if(cmd.action==='save'){
+ if(cmd.action.startsWith('agenda-')){result=agendaMutation(s,cmd,{put,at,id,nextDate});
+ }else if(cmd.action==='save'){
   if(!kinds.includes(cmd.kind)||['payments','movements'].includes(cmd.kind))throw Error('Tipo de registro no editable.');
   const old=cmd.id?get(s,cmd.id):null;
   if(old&&old.kind!==cmd.kind)throw Error('El registro pertenece a otra sección.');

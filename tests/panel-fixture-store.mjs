@@ -20,9 +20,17 @@ if(new URLSearchParams(location.search).has('content-fixture')){
  for(let i=0;i<12;i++)run({action:'save',kind:'content',data:{name:'Contenido de prueba '+String(i+1).padStart(2,'0'),format:i%2?'Carrusel':'Video',stage:['idea','en preparación','listo'][i%3],publications:i===0?[]:[{id:'instagram',platform:'Instagram',date:'2026-10-12',time:'19:00',status:i===3?'publicado':'pendiente',actualDate:i===3?'2026-10-10':''},{id:'tiktok',platform:'TikTok',date:'2026-10-14',time:'18:00',status:'pendiente',actualDate:''}]}});
  run({action:'save',kind:'content',data:{name:'Contenido antiguo de prueba',channel:'Instagram',status:'programado',date:'2026-10-16',copy:'Texto anterior'}});
 }
+if(new URLSearchParams(location.search).has('agenda-fixture')){
+ for(const [name,start,end] of [['Actividad de prueba 1','2026-10-24T09:15','2026-10-24T10:00'],['Actividad simultánea','2026-10-24T09:30','2026-10-24T10:30']])run({action:'agenda-save',data:{name,start,end,recordType:'activity',status:'pendiente',priority:'media'}});
+ for(const [name,date,status] of [['Tarea vencida','2026-10-22','pendiente'],['Tarea de hoy','2026-10-24','pendiente'],['Tarea futura','2026-10-28','en curso'],['Tarea sin fecha','','pendiente'],['Tarea completada','','completada']])run({action:'agenda-save',data:{name,date,status,recordType:'task',priority:'media'}});
+ run({action:'save',kind:'orders',data:{name:'Entrega de prueba',clientId:'test-1',due:'2026-10-24'}});
+ run({action:'save',kind:'content',data:{name:'Publicación de prueba',stage:'listo',publications:[{id:'ig',platform:'Instagram',date:'2026-10-24',time:'11:15',status:'pendiente'}]}});
+ const saved=sessionStorage.getItem('agenda-fixture-state');if(saved){state=JSON.parse(saved);index=Math.max(index,...Object.keys(state.records).map(id=>Number(id.replace('test-',''))||0));}
+}
 export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only'}));return ()=>{};};
 export const load=async()=>structuredClone(state);
-export const commit=async cmd=>run(cmd);
+let failSchedule=new URLSearchParams(location.search).has('agenda-failure');
+export const commit=async cmd=>{if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));return r;};
 export const history=async()=>logs;
 export const logout=async()=>location.reload();
 export const login=async()=>{};

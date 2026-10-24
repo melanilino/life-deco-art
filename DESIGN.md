@@ -185,3 +185,11 @@ Contenido: navegación entre Contenido, Campañas y Recursos mediante Vista actu
 
 
 Agenda (13 de octubre): la entrada principal abre únicamente el calendario. Lista y tablero se conservan sin acceso desde la vista principal; se mantiene la creación y edición de tareas.
+
+## Agenda y Tareas (24 de octubre de 2026)
+
+Agenda y Tareas comparten la opción Agenda en el menú y se alternan desde Vista actual, junto a Notas. Agenda abre en Semana y conserva Día/Mes, búsqueda, filtros y configuración real del formato horario y desplazamiento inicial. Los controles de Semana y Nueva actividad comparten las columnas del sábado y domingo con la cuadrícula; el encabezado compensa el ancho real de la barra de desplazamiento. Las horas se anclan a las líneas completas, con selección y ajuste cada quince minutos. Los solapamientos tienen carriles separados. En móvil se mantiene el ancho legible con desplazamiento local.
+
+Actividades y tareas se guardan como registros únicos privados del hub, con zona America/Santo_Domingo, origen y fecha de modificación. Las tareas admiten solo título, fecha límite independiente del horario reservado, prioridad y estado. La lista agrupa vencidas, hoy, próximas y sin fecha; completadas queda plegado. El tablero cambia estado mediante arrastre, con Deshacer. Los formularios completos conservan borradores al abrir Notas y advierten al salir. La eliminación conserva el historial y excluye el registro de las vistas activas.
+
+Entregas y publicaciones por plataforma se derivan de sus registros de origen. La programación se modifica en esos registros, sin copias ni movimientos financieros. Llegar a una fecha no completa pedidos ni publicaciones. Los recordatorios se consultan dentro del hub; no hay conexión a Google Calendar, notificaciones externas ni sincronización declarada.
