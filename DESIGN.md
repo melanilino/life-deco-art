@@ -201,3 +201,6 @@ Suscripciones, Configuración y Seguridad usan Vista actual junto a Notas y cons
 Configuración muestra cinco bloques inicialmente plegados: Información del negocio, Costos, Preferencias, Documentos y Pagos. Consulta y edición son estados separados; solo el bloque editado muestra Guardar/Cancelar. Tarifa vacía significa Sin configurar y cero explícito queda registrado. Los documentos y Finanzas siguen en DOP y la zona operativa es America/Santo_Domingo; las preferencias muestran los valores compatibles con el hub. El formato de fecha y los datos de pago se capturan en los documentos nuevos; los emitidos mantienen su información original.
 
 Seguridad tiene tres desplegables con resúmenes persistentes, método de acceso real, copias manuales diferenciadas, fecha/tipo de última copia preparada e historial con autor para cambios nuevos. No se atribuyen autores a registros antiguos sin ese dato. Recuperación exige validar el archivo, mostrar los registros faltantes, confirmar y comunicar el resultado; conserva datos existentes. El respaldo automático permanece pendiente de activación (política prevista: diario, 30 días). No se conectan integraciones externas.
+
+
+Configuración: Editar aparece en el encabezado del bloque desplegado, inmediatamente antes de la flecha. Al editar queda sustituido por las acciones del formulario.
