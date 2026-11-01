@@ -37,3 +37,28 @@ export function createClientGuard({ask,getHash,setHash}){
   async guardHash(){if(restoring){restoring=false;return false;}if(dirty&&getHash()!==hash&&!await this.canLeave()){restoring=true;setHash(hash);return false;}return true;}
  };
 }
+
+// History includes archived documents; active work excludes archived or closed orders.
+export function clientOverview(state,id){
+ const records=Object.values(state.records).filter(r=>!r.deleted);
+ const stamp=value=>{const n=Date.parse(value||'');return Number.isFinite(n)?n:0;};
+ const created=r=>stamp(r.createdAt||r.date);
+ const orders=records.filter(r=>r.kind==='orders'&&r.clientId===id).sort((a,b)=>created(b)-created(a)||String(b.id).localeCompare(String(a.id)));
+ const related=records.filter(r=>r.id===id||['orders','quotes','invoices'].includes(r.kind)&&r.clientId===id);
+ const targets=new Set(related.filter(r=>['orders','invoices'].includes(r.kind)).map(r=>r.id));
+ const activity=[...related,...records.filter(r=>r.kind==='payments'&&targets.has(r.target))];
+ const dates=activity.flatMap(r=>[r.createdAt,r.updatedAt,r.issuedAt,r.deliveredAt,...(r.kind==='payments'&&!r.createdAt&&!r.updatedAt?[r.date]:[])]).filter(v=>stamp(v)>0).sort((a,b)=>stamp(b)-stamp(a));
+ return {lastOrder:orders[0]||null,activeOrders:orders.filter(r=>!r.archived&&!['entregado','cancelado'].includes(r.status)&&!['entregado','cancelado'].includes(r.stage)).length,lastActivity:dates[0]||''};
+}
+export function clientPageRows(rows,page=1,size=10){
+ const pages=Math.max(1,Math.ceil(rows.length/size)),current=Math.max(1,Math.min(pages,Math.trunc(Number(page))||1)),start=(current-1)*size;
+ return {rows:rows.slice(start,start+size),page:current,pages,total:rows.length,from:rows.length?start+1:0,to:Math.min(start+size,rows.length)};
+}
+export function clientDateLabel(value,today){
+ if(!value)return 'Sin actividad';
+ const d=new Date(value);if(!Number.isFinite(+d))return 'Sin fecha';
+ const date=String(value).length===10?value:new Intl.DateTimeFormat('en-CA',{timeZone:'America/Santo_Domingo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+ const days=Math.round((Date.parse(today+'T12:00:00Z')-Date.parse(date+'T12:00:00Z'))/86400000);
+ if(days===0)return 'Hoy';if(days===1)return 'Hace 1 día';if(days>1&&days<30)return `Hace ${days} días`;
+ return new Intl.DateTimeFormat('es-DO',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(date+'T12:00:00Z'));
+}

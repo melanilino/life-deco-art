@@ -10,6 +10,12 @@ run({action:'save',kind:'quotes',data:{name:'Trabajo de prueba',clientId:'test-1
 run({action:'save',kind:'tasks',data:{name:'Revisar materiales de prueba',date:'2026-09-07',priority:'alta',status:'pendiente',repeat:'semanal'}});
 run({action:'adjustStock',materialId:'test-2',quantity:10,reason:'Existencias de prueba'});
 run({action:'save',kind:'resources',data:{name:'Imagen con error simulado',path:'panel-private/fixture-only/error',mime:'image/png',role:'referencia',visibility:'interno'}});
+if(new URLSearchParams(location.search).has('clients-fixture')){
+ for(let i=1;i<=22;i++)run({action:'save',kind:'clients',data:{name:i===1?'Empresa de prueba con un nombre comercial extenso para comprobar los espacios y la lectura en el listado':'Cliente de prueba '+String(i).padStart(2,'0'),clientType:i%2?'company':'person',phone:'809555'+String(i).padStart(4,'0'),email:'cliente'+i+'@example.invalid',tags:i%3?'Frecuente':'Taller'}});
+ const old=run({action:'save',kind:'orders',data:{name:'Pedido anterior actualizado',clientId:'test-1',lines:[],status:'pendiente'}}).result;
+ const recent=run({action:'save',kind:'orders',data:{name:'Pedido más reciente',clientId:'test-1',lines:[],status:'pendiente'}}).result;
+ state.records[old].createdAt='2026-09-01T14:00:00Z';state.records[old].updatedAt='2026-10-31T14:00:00Z';state.records[recent].createdAt='2026-10-01T14:00:00Z';
+}
 if(new URLSearchParams(location.search).has('statistics-fixture')){
  run({action:'save',kind:'clients',id:'test-1',data:{source:'Referido',ageRange:'25–34',gender:'Mujer'}});
  for(const [date,description,quantity,price] of [['2025-03-05','Pieza de prueba',1,100],['2026-03-05','Pieza de prueba',2,200],['2026-06-05','Servicio de prueba',1,700],['2026-09-05','Pieza de prueba',4,200]]){
