@@ -204,3 +204,6 @@ Seguridad tiene tres desplegables con resúmenes persistentes, método de acceso
 
 
 Configuración: Editar aparece en el encabezado del bloque desplegado, inmediatamente antes de la flecha. Al editar queda sustituido por las acciones del formulario.
+
+### Inicio — revisión funcional 31/10/2026
+Conserva la identidad visual. Ventas usa la fecha comercial compartida con Estadísticas y el período hasta hoy. Comparaciones neutrales contra el mismo tramo anterior; sin porcentaje cuando faltan días equivalentes. Próximos compromisos conserva el enlace específico del origen y Agregar actividad abre el formulario de actividad. Alertas aclaran su alcance, Pedidos indica todos los períodos y excluye cancelados, Inventario cuenta materiales controlados. Gastos se denomina Pagado del mes. No se agregaron nuevas categorías de alertas.
