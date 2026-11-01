@@ -1,6 +1,6 @@
 import {planRecovery} from '/panel/recovery.mjs';
 // Datos sintéticos: solo scripts/panel-dev-server.mjs --fixtures sirve este adaptador.
-import {emptyState,applyCommand} from '/panel/domain.mjs';
+import {emptyState,applyCommand,today} from '/panel/domain.mjs';
 let state=emptyState();const logs=[];let index=0;
 function run(cmd){const change=applyCommand(state,cmd,{id:`test-${++index}`,at:'2026-09-07T14:00:00Z'});state=change.state;logs.push(change.history);return change;}
 run({action:'save',kind:'clients',data:{name:'Cliente de prueba',email:'prueba@example.invalid'}});
@@ -15,6 +15,21 @@ if(new URLSearchParams(location.search).has('clients-fixture')){
  const old=run({action:'save',kind:'orders',data:{name:'Pedido anterior actualizado',clientId:'test-1',lines:[],status:'pendiente'}}).result;
  const recent=run({action:'save',kind:'orders',data:{name:'Pedido más reciente',clientId:'test-1',lines:[],status:'pendiente'}}).result;
  state.records[old].createdAt='2026-09-01T14:00:00Z';state.records[old].updatedAt='2026-10-31T14:00:00Z';state.records[recent].createdAt='2026-10-01T14:00:00Z';
+}
+if(new URLSearchParams(location.search).has('sales-metrics-fixture')){
+ const date=today(),after=new Date(date+'T12:00:00Z'),before=new Date(date.slice(0,7)+'-01T12:00:00Z');after.setUTCDate(after.getUTCDate()+3);before.setUTCDate(before.getUTCDate()-1);const valid=after.toISOString().slice(0,10),previous=before.toISOString().slice(0,10);
+ const proposal=(name,price,until=valid)=>{const id=run({action:'save',kind:'quotes',data:{name,clientId:'test-1',date,validUntil:until,lines:[{description:'Pieza ficticia',quantity:1,price}]}}).result;run({action:'issue',id});return id;};
+ const root=proposal('Propuesta ficticia versionada',100),revision=run({action:'revise',id:root}).result;run({action:'save',kind:'quotes',id:revision,data:{validUntil:valid,lines:[{description:'Pieza ficticia revisada',quantity:1,price:200}]}});run({action:'issue',id:revision});run({action:'revise',id:revision});
+ const accepted=proposal('Propuesta ficticia aceptada sin convertir',150);run({action:'approve',id:accepted});
+ const converted=proposal('Propuesta ficticia convertida',500);run({action:'approve',id:converted});run({action:'convert',id:converted,kind:'orders'});
+ proposal('Propuesta ficticia vencida',300,previous);
+ const cancelled=proposal('Propuesta ficticia cancelada',400);run({action:'status',id:cancelled,status:'cancelada',reason:'Comprobación ficticia'});
+ const invoice=(name,price,when=date,orderId='')=>{const id=run({action:'save',kind:'invoices',data:{name,clientId:'test-1',date:when,due:when,orderId,lines:[{description:'Pieza ficticia',quantity:1,price}]}}).result;run({action:'issue',id});return id;};
+ const direct=invoice('Factura ficticia con pago parcial',200),payment=run({action:'payment',target:direct,amount:50,date}).result;run({action:'payment',target:direct,type:'refund',originalId:payment,amount:10,date,reason:'Prueba'});
+ const order=run({action:'save',kind:'orders',data:{name:'Pedido ficticio con anticipo anterior',clientId:'test-1',lines:[{description:'Pieza',quantity:1,price:100}]}}).result,advance=run({action:'payment',target:order,amount:30,date:previous}).result;invoice('Factura ficticia con anticipo aplicado',100,date,order);run({action:'payment',target:order,type:'refund',originalId:advance,amount:5,date,reason:'Prueba'});
+ const unbilled=run({action:'save',kind:'orders',data:{name:'Pedido ficticio sin facturar',clientId:'test-1',lines:[{description:'Pieza',quantity:1,price:100}]}}).result;run({action:'payment',target:unbilled,amount:20,date});
+ const voided=invoice('Factura ficticia anulada',300);run({action:'status',id:voided,status:'anulada',reason:'Prueba'});invoice('Factura ficticia de otro mes',400,previous);run({action:'save',kind:'invoices',data:{name:'Factura ficticia en borrador',clientId:'test-1',date,lines:[{description:'Pieza',quantity:1,price:999}]}});
+ run({action:'finance-entry',data:{direction:'income',name:'Ingreso independiente ficticio',category:'Prueba',amount:99,date,method:'Efectivo'}});
 }
 if(new URLSearchParams(location.search).has('sales-fixture')){
  run({action:'save',kind:'quotes',id:'test-4',data:{discount:10,shipping:20,taxPercent:18,advanceType:'percent',advance:50,due:'2026-11-10',terms:'Condición de prueba: conservar el texto acordado.'}});
