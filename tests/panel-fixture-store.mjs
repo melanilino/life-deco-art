@@ -16,6 +16,13 @@ if(new URLSearchParams(location.search).has('clients-fixture')){
  const recent=run({action:'save',kind:'orders',data:{name:'Pedido más reciente',clientId:'test-1',lines:[],status:'pendiente'}}).result;
  state.records[old].createdAt='2026-09-01T14:00:00Z';state.records[old].updatedAt='2026-10-31T14:00:00Z';state.records[recent].createdAt='2026-10-01T14:00:00Z';
 }
+if(new URLSearchParams(location.search).has('sales-fixture')){
+ run({action:'save',kind:'quotes',id:'test-4',data:{discount:10,shipping:20,taxPercent:18,advanceType:'percent',advance:50,due:'2026-11-10',terms:'Condición de prueba: conservar el texto acordado.'}});
+ const c=run({action:'save',kind:'clients',data:{name:'Cliente archivado de prueba',phone:'8095550199'}}).result;
+ run({action:'save',kind:'invoices',data:{name:'Factura de prueba con ajustes',clientId:c,date:'2026-11-01',due:'2026-11-10',lines:[{description:'Pieza de prueba',quantity:1,price:100}],discount:10,shipping:20,taxPercent:18,advanceType:'percent',advance:50,terms:'Condición personalizada de prueba: dos pagos acordados.'}});
+ run({action:'archive',id:c});
+ const saved=sessionStorage.getItem('sales-fixture-state');if(saved){state=JSON.parse(saved);index=Math.max(index,...Object.keys(state.records).map(id=>Number(id.replace('test-',''))||0));}
+}
 if(new URLSearchParams(location.search).has('statistics-fixture')){
  run({action:'save',kind:'clients',id:'test-1',data:{source:'Referido',ageRange:'25–34',gender:'Mujer'}});
  for(const [date,description,quantity,price] of [['2025-03-05','Pieza de prueba',1,100],['2026-03-05','Pieza de prueba',2,200],['2026-06-05','Servicio de prueba',1,700],['2026-09-05','Pieza de prueba',4,200]]){
@@ -42,7 +49,8 @@ if(new URLSearchParams(location.search).has('admin-fixture')){
 export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only',email:'prueba@example.invalid',providerData:[{providerId:'password'}]}));return ()=>{};};
 export const load=async()=>structuredClone(state);
 let failSchedule=new URLSearchParams(location.search).has('agenda-failure');
-export const commit=async cmd=>{if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('admin-fixture'))sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return r;};
+let failSales=new URLSearchParams(location.search).get('sales-failure');
+export const commit=async cmd=>{if(failSales&&(cmd.action==='issue'&&failSales==='issue'||cmd.action==='save'&&['quotes','invoices'].includes(cmd.kind)&&failSales==='save')){failSales='';throw Error('Fallo de prueba en '+cmd.action+'.');}if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('sales-fixture'))sessionStorage.setItem('sales-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('admin-fixture'))sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return r;};
 export const history=async()=>logs;
 export const logout=async()=>location.reload();
 export const login=async()=>{};
