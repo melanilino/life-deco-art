@@ -210,3 +210,6 @@ Conserva la identidad visual. Ventas usa la fecha comercial compartida con Estad
 
 ### Clientes — saldos y exportación 31/10/2026
 El saldo del listado pasa la factura completa al cálculo compartido, conservando pagos, reembolsos y anticipos. El indicador de clientes con deuda y el orden por mayor saldo usan ese mismo resultado. Exportar CSV toma exactamente los clientes visibles con búsqueda, tipo, etiqueta y orden aplicados; las otras secciones conservan su selección anterior. Sin cambios visuales ni modificaciones de registros.
+
+### Clientes — perfil y formulario 01/11/2026
+La ficha muestra Volver, Editar y Archivar/Recuperar. Crear y editar usan el formulario completo compartido; editar actualiza el mismo registro y conserva notas e intereses anteriores. Los campos del tipo inactivo quedan deshabilitados para evitar validaciones invisibles. Duplicados excluyen el id editado e indican teléfono/correo según la coincidencia. La salida y cierre/recarga avisan de cambios sin guardar; guardar Notas conserva el nodo del formulario. Guardar y crear pedido mantiene el cliente seleccionado. La ficha conserva la identidad visual aprobada. Verificación con datos sintéticos en navegador de escritorio y móvil, sin desbordamiento horizontal, más pruebas automáticas.
