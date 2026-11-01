@@ -207,3 +207,6 @@ Configuración: Editar aparece en el encabezado del bloque desplegado, inmediata
 
 ### Inicio — revisión funcional 31/10/2026
 Conserva la identidad visual. Ventas usa la fecha comercial compartida con Estadísticas y el período hasta hoy. Comparaciones neutrales contra el mismo tramo anterior; sin porcentaje cuando faltan días equivalentes. Próximos compromisos conserva el enlace específico del origen y Agregar actividad abre el formulario de actividad. Alertas aclaran su alcance, Pedidos indica todos los períodos y excluye cancelados, Inventario cuenta materiales controlados. Gastos se denomina Pagado del mes. No se agregaron nuevas categorías de alertas.
+
+### Clientes — saldos y exportación 31/10/2026
+El saldo del listado pasa la factura completa al cálculo compartido, conservando pagos, reembolsos y anticipos. El indicador de clientes con deuda y el orden por mayor saldo usan ese mismo resultado. Exportar CSV toma exactamente los clientes visibles con búsqueda, tipo, etiqueta y orden aplicados; las otras secciones conservan su selección anterior. Sin cambios visuales ni modificaciones de registros.
