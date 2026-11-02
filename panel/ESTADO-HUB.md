@@ -144,3 +144,10 @@ Inicio del contenido unificado a 28 px bajo el encabezado (24 px en móvil), inc
 Ajuste de recuadros: aclaraciones de Finanzas fuera de las tarjetas, centradas debajo. Estadísticas comparte columnas entre Lo más vendido y Perfil de clientes; las tarjetas inferiores se estiran a la misma altura y los estados vacíos del perfil usan menos espacio.
 
 La aclaración final de Estadísticas aprovecha todo el ancho de la sección antes de continuar en la siguiente línea.
+
+
+## Ventas · cierre del bloque 3 · 2 de noviembre de 2026
+- Vista previa de cotizaciones y facturas desde los datos actuales del formulario, sin guardar, emitir ni reservar numeración. Permite revisar datos, artículos, descuentos, impuestos, envío, anticipo, condiciones y notas; volver o cerrar con Escape conserva la edición. Los campos aún vacíos se identifican en la vista previa. Esta presentación de revisión no sustituye la descarga PDF del documento guardado.
+- Listas paginadas de diez documentos, con contador, páginas y límites reales; búsqueda y filtros regresan a la primera página. CSV conserva todos los resultados filtrados. Las versiones revisadas se identifican en la lista de cotizaciones.
+- El campo del trabajo en facturas se llama Proyecto o pedido, también identificado como obligatorio en cotizaciones. En facturas nuevas ya no se guarda el texto de numeración automática como nombre del proyecto; los datos históricos se conservan. La numeración sigue siendo automática al guardar.
+- Verificación: 91 pruebas automáticas; navegador local con datos sintéticos, tres páginas en ambas listas, filtros, vista previa de ambos documentos, conservación al cerrar y revisión a 390 px. Sin cambios en Firebase ni integraciones externas.

@@ -10,6 +10,9 @@ run({action:'save',kind:'quotes',data:{name:'Trabajo de prueba',clientId:'test-1
 run({action:'save',kind:'tasks',data:{name:'Revisar materiales de prueba',date:'2026-09-07',priority:'alta',status:'pendiente',repeat:'semanal'}});
 run({action:'adjustStock',materialId:'test-2',quantity:10,reason:'Existencias de prueba'});
 run({action:'save',kind:'resources',data:{name:'Imagen con error simulado',path:'panel-private/fixture-only/error',mime:'image/png',role:'referencia',visibility:'interno'}});
+if(new URLSearchParams(location.search).has('sales-pages-fixture')){
+ for(const kind of ['quotes','invoices'])for(let i=1;i<=22;i++)run({action:'save',kind,data:{name:i===1?'Proyecto ficticio con un título muy extenso para comprobar que el contenido de las tablas se mantiene legible sin desbordar el espacio disponible':'Trabajo ficticio '+String(i).padStart(2,'0'),clientId:'test-1',date:today(),due:today(),validUntil:today(),lines:[{description:'Artículo ficticio',quantity:1,price:100+i}]}});
+}
 if(new URLSearchParams(location.search).has('clients-fixture')){
  for(let i=1;i<=22;i++)run({action:'save',kind:'clients',data:{name:i===1?'Empresa de prueba con un nombre comercial extenso para comprobar los espacios y la lectura en el listado':'Cliente de prueba '+String(i).padStart(2,'0'),clientType:i%2?'company':'person',phone:'809555'+String(i).padStart(4,'0'),email:'cliente'+i+'@example.invalid',tags:i%3?'Frecuente':'Taller'}});
  const old=run({action:'save',kind:'orders',data:{name:'Pedido anterior actualizado',clientId:'test-1',lines:[],status:'pendiente'}}).result;
