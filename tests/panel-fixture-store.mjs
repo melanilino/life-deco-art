@@ -10,6 +10,12 @@ run({action:'save',kind:'quotes',data:{name:'Trabajo de prueba',clientId:'test-1
 run({action:'save',kind:'tasks',data:{name:'Revisar materiales de prueba',date:'2026-09-07',priority:'alta',status:'pendiente',repeat:'semanal'}});
 run({action:'adjustStock',materialId:'test-2',quantity:10,reason:'Existencias de prueba'});
 run({action:'save',kind:'resources',data:{name:'Imagen con error simulado',path:'panel-private/fixture-only/error',mime:'image/png',role:'referencia',visibility:'interno'}});
+if(new URLSearchParams(location.search).has('orders-fixture')){
+ const quote=run({action:'save',kind:'quotes',data:{name:'Proyecto ficticio con cotización',clientId:'test-1',date:today(),lines:[{description:'Pieza con composición ficticia',quantity:1,price:100,productId:'producto-ficticio',composition:{recipe:[{materialId:'test-2',quantity:2}]}}],discount:10,shipping:20,taxPercent:18,advanceType:'percent',advance:50,terms:'Condiciones ficticias que deben conservarse',notes:'Notas ficticias'}}).result;
+ run({action:'issue',id:quote});run({action:'approve',id:quote});const order=run({action:'convert',id:quote,kind:'orders'}).result;
+ run({action:'save',kind:'orders',id:order,data:{due:today(),description:'Detalle de producción ficticio'}});
+ const saved=sessionStorage.getItem('orders-fixture-state');if(saved){state=JSON.parse(saved);index=Math.max(index,...Object.keys(state.records).map(id=>Number(id.replace('test-',''))||0));}
+}
 if(new URLSearchParams(location.search).has('sales-pages-fixture')){
  for(const kind of ['quotes','invoices'])for(let i=1;i<=22;i++)run({action:'save',kind,data:{name:i===1?'Proyecto ficticio con un título muy extenso para comprobar que el contenido de las tablas se mantiene legible sin desbordar el espacio disponible':'Trabajo ficticio '+String(i).padStart(2,'0'),clientId:'test-1',date:today(),due:today(),validUntil:today(),lines:[{description:'Artículo ficticio',quantity:1,price:100+i}]}});
 }
@@ -67,8 +73,9 @@ if(new URLSearchParams(location.search).has('admin-fixture')){
 export const observeAuth=fn=>{queueMicrotask(()=>fn({uid:'fixture-only',email:'prueba@example.invalid',providerData:[{providerId:'password'}]}));return ()=>{};};
 export const load=async()=>structuredClone(state);
 let failSchedule=new URLSearchParams(location.search).has('agenda-failure');
+let failOrder=new URLSearchParams(location.search).has('orders-failure');
 let failSales=new URLSearchParams(location.search).get('sales-failure');
-export const commit=async cmd=>{if(failSales&&(cmd.action==='issue'&&failSales==='issue'||cmd.action==='save'&&['quotes','invoices'].includes(cmd.kind)&&failSales==='save')){failSales='';throw Error('Fallo de prueba en '+cmd.action+'.');}if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('sales-fixture'))sessionStorage.setItem('sales-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('admin-fixture'))sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return r;};
+export const commit=async cmd=>{if(failOrder&&cmd.action==='save'&&cmd.kind==='orders'){failOrder=false;throw Error('Fallo de guardado ficticio.');}if(failSales&&(cmd.action==='issue'&&failSales==='issue'||cmd.action==='save'&&['quotes','invoices'].includes(cmd.kind)&&failSales==='save')){failSales='';throw Error('Fallo de prueba en '+cmd.action+'.');}if(failSchedule&&cmd.action==='agenda-schedule'){failSchedule=false;throw Error('Fallo de guardado simulado.');}const r=run(cmd);if(new URLSearchParams(location.search).has('orders-fixture'))sessionStorage.setItem('orders-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('sales-fixture'))sessionStorage.setItem('sales-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('agenda-fixture'))sessionStorage.setItem('agenda-fixture-state',JSON.stringify(state));if(new URLSearchParams(location.search).has('admin-fixture'))sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return r;};
 export const history=async()=>logs;
 export const logout=async()=>location.reload();
 export const login=async()=>{};

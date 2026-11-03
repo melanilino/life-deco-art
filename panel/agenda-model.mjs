@@ -31,7 +31,7 @@ export function agendaEvents(s){
  const type=r.recordType==='activity'?'activity':'task',start=r.start||'',end=r.end||'';
  if(start)result.push({key:r.id,id:r.id,name:r.name,type,status:r.status||'pendiente',start,end,date:start.slice(0,10),timed:true,href:'#tasks/'+r.id});
  else if(r.date&&type==='task')result.push({key:r.id,id:r.id,name:r.name,type,status:r.status||'pendiente',date:r.date,timed:false,href:'#tasks/'+r.id});
- }else if(r.kind==='orders'&&r.due&&!['entregado','cancelado'].includes(r.status)){
+ }else if(r.kind==='orders'&&r.due&&!['entregado','cancelado','borrador'].includes(r.status)){
  const start=r.deliveryStart?r.due+'T'+r.deliveryStart.slice(11):'',end=start?local(stamp(start)+(stamp(r.deliveryEnd)-stamp(r.deliveryStart))):'';result.push({key:r.id,id:r.id,name:'Entrega · '+(r.number||r.name),type:'order',status:'pendiente',date:r.due,start,end,timed:Boolean(start),href:'#tasks/link/'+r.id});
  }else if(r.kind==='content')for(const p of publications(r).filter(p=>p.date&&p.status!=='publicado')){
  const start=p.time?p.date+'T'+p.time:'';
@@ -60,7 +60,7 @@ export function agendaMutation(s,cmd,{put,at,id,nextDate}){
  const r=find(),d=cmd.data||{};if(Boolean(d.start)!==Boolean(d.end))throw Error('Completa el inicio y la finalización.');if(['orders','content'].includes(r.kind)&&!d.start&&!validDate(d.date))throw Error('Indica una fecha válida.');if(d.start&&(!validLocal(d.start)||!validLocal(d.end)||stamp(d.end)<=stamp(d.start)||[d.start,d.end].some(v=>Number(v.slice(14,16))%15)))throw Error('Revisa el horario y utiliza intervalos de 15 minutos.');
  if(d.date&&!validDate(d.date))throw Error('Revisa la fecha.');
  if(r.kind==='tasks')return agendaMutation(s,{action:'agenda-save',id:r.id,data:{...d,...(d.start&&r.recordType!=='activity'?{date:r.date||''}:{}),recordType:r.recordType||'task'}},{put,at,id,nextDate});
- if(r.kind==='orders'){if(['entregado','cancelado'].includes(r.status))throw Error('El pedido ya no está pendiente de entrega.');return write(r,{due:d.start?d.start.slice(0,10):d.date,deliveryStart:d.start||'',deliveryEnd:d.end||''});}
+ if(r.kind==='orders'){if(['entregado','cancelado','borrador'].includes(r.status))throw Error('El pedido ya no está pendiente de entrega.');return write(r,{due:d.start?d.start.slice(0,10):d.date,deliveryStart:d.start||'',deliveryEnd:d.end||''});}
  if(r.kind==='content'){
  const ps=publications(r).map(p=>({...p})),p=ps.find(p=>p.id===cmd.publicationId);if(!p||p.status==='publicado')throw Error('Esta publicación ya no está pendiente.');
  p.date=d.start?d.start.slice(0,10):d.date;p.time=d.start?d.start.slice(11,16):'';p.end=d.end||'';return write(r,{publications:ps});

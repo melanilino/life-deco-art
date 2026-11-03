@@ -48,7 +48,7 @@ export function clientOverview(state,id){
  const targets=new Set(related.filter(r=>['orders','invoices'].includes(r.kind)).map(r=>r.id));
  const activity=[...related,...records.filter(r=>r.kind==='payments'&&targets.has(r.target))];
  const dates=activity.flatMap(r=>[r.createdAt,r.updatedAt,r.issuedAt,r.deliveredAt,...(r.kind==='payments'&&!r.createdAt&&!r.updatedAt?[r.date]:[])]).filter(v=>stamp(v)>0).sort((a,b)=>stamp(b)-stamp(a));
- return {lastOrder:orders[0]||null,activeOrders:orders.filter(r=>!r.archived&&!['entregado','cancelado'].includes(r.status)&&!['entregado','cancelado'].includes(r.stage)).length,lastActivity:dates[0]||''};
+ return {lastOrder:orders[0]||null,activeOrders:orders.filter(r=>!r.archived&&!['entregado','cancelado','borrador'].includes(r.status)&&!['entregado','cancelado','borrador'].includes(r.stage)).length,lastActivity:dates[0]||''};
 }
 export function clientPageRows(rows,page=1,size=10){
  const pages=Math.max(1,Math.ceil(rows.length/size)),current=Math.max(1,Math.min(pages,Math.trunc(Number(page))||1)),start=(current-1)*size;

@@ -63,6 +63,13 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   if(old?.kind==='orders'&&old.quoteId&&JSON.stringify(totals(old))!==JSON.stringify(totals(data)))throw Error('Este pedido procede de una cotización aprobada. Revisa la cotización antes de cambiar los importes.');
   if(data.clientId&&get(s,data.clientId).kind!=='clients')throw Error('Selecciona un cliente válido.');
   if(['quotes','invoices','orders'].includes(cmd.kind)&&!data.clientId)throw Error('Selecciona un cliente.');
+  if(cmd.kind==='orders'){
+   if(data.quoteId){const quote=get(s,data.quoteId);if(quote.kind!=='quotes'||quote.clientId!==data.clientId)throw Error('La cotización debe pertenecer al mismo cliente del pedido.');if(old?.quoteId!==data.quoteId&&(quote.status!=='aprobada'||quote.archived||quote.deleted))throw Error('Selecciona una cotización aprobada y disponible.');if(old?.quoteId!==data.quoteId&&list(s,'orders',true).some(o=>o.id!==old?.id&&o.quoteId===data.quoteId&&o.status!=='cancelado'))throw Error('Esta cotización ya tiene un pedido. Abre el pedido existente.');}
+   if(old?.quoteId&&old.status!=='borrador'&&old.quoteId!==data.quoteId)throw Error('Conserva la cotización de origen del pedido activo.');
+   if(data.status==='borrador'&&old&&old.status!=='borrador')throw Error('Un pedido activo no puede volver a borrador.');
+   if(old?.status==='borrador'&&data.status!=='borrador'&&!data.due)throw Error('Selecciona la fecha de entrega prevista para crear el pedido.');
+   if(data.status==='borrador')data.stage='borrador';
+  }
   if(cmd.kind==='invoices')for(const [key,kind]of [['quoteId','quotes'],['orderId','orders']]){if(data[key]){const source=get(s,data[key]);if(source.kind!==kind||source.clientId!==data.clientId)throw Error('El origen debe pertenecer al mismo cliente de la factura.');if(key==='orderId'&&data.quoteId&&source.quoteId!==data.quoteId)throw Error('El pedido y la cotización deben corresponder al mismo trabajo.');}}
   if(cmd.kind==='materials'){finite(data.packageCost);if(!finite(data.packageUnits))throw Error('Indica el rendimiento de la presentación.');if(data.packageCost||!old)data.unitCost=finite(data.packageCost)/finite(data.packageUnits);if(data.supplierId&&get(s,data.supplierId).kind!=='suppliers')throw Error('Selecciona un proveedor válido.');}
   if(cmd.kind==='suppliers'){required(data.name,'Nombre del proveedor');}
@@ -93,10 +100,10 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const r=get(s,cmd.id);if(['invoices','quotes','orders','purchases'].includes(r.kind))throw Error('Conserva los documentos y cambia su estado desde su ficha.');result=update(r,{archived:!r.archived});
  }else if(cmd.action==='issue'){
   const r=get(s,cmd.id);if(!['quotes','invoices'].includes(r.kind)||r.status!=='borrador')throw Error('Solo se pueden emitir borradores.');normalize(r);
-  const matchingOrders=r.kind==='invoices'?list(s,'orders',true).filter(o=>r.quoteId&&o.quoteId===r.quoteId&&o.status!=='cancelado'):[];
+  const matchingOrders=r.kind==='invoices'?list(s,'orders',true).filter(o=>r.quoteId&&o.quoteId===r.quoteId&&!['cancelado','borrador'].includes(o.status)):[];
   if(!r.advanceOrderId&&!r.orderId&&matchingOrders.length>1)throw Error('Selecciona el pedido correspondiente antes de emitir la factura.');
   const order=r.kind==='invoices'?(s.records[r.advanceOrderId||r.orderId]||matchingOrders[0]):null;
-  if(order){if(order.kind!=='orders'||order.clientId!==r.clientId)throw Error('Revisa el pedido relacionado.');if(list(s,'invoices',true).some(i=>i.id!==r.id&&i.advanceOrderId===order.id&&!['borrador','anulada'].includes(i.status)))throw Error('Este pedido ya está vinculado a una factura emitida.');if(paid(s,order.id)>totals(r).total)throw Error('El anticipo supera esta factura. Revisa los importes antes de emitirla.');}
+  if(order){if(order.kind!=='orders'||['borrador','cancelado'].includes(order.status)||order.clientId!==r.clientId)throw Error('Revisa el pedido relacionado.');if(list(s,'invoices',true).some(i=>i.id!==r.id&&i.advanceOrderId===order.id&&!['borrador','anulada'].includes(i.status)))throw Error('Este pedido ya está vinculado a una factura emitida.');if(paid(s,order.id)>totals(r).total)throw Error('El anticipo supera esta factura. Revisa los importes antes de emitirla.');}
   result=update(r,{...snapshot(r),...(order?{advanceOrderId:order.id}:{}),status:r.kind==='quotes'?'enviada':'pendiente',issuedAt:at});
  }else if(cmd.action==='approve'){
   const r=get(s,cmd.id);if(r.kind!=='quotes'||r.status!=='enviada'||documentStatus(s,r)==='vencida')throw Error('Emite o renueva la cotización antes de aprobarla.');result=update(r,{status:'aprobada',approvedAt:at});
@@ -112,7 +119,7 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const existing=list(s,cmd.kind,true).find(x=>x.quoteId===r.id&&x.status!=='anulada');if(existing)throw Error(`Ya existe ${existing.number} para esta cotización.`);
   result=create(cmd.kind,{...snapshot(r),name:r.name,quoteId:r.id,number:number(cmd.kind),status:cmd.kind==='orders'?'pendiente':'borrador',stage:cmd.kind==='orders'?'pendiente':undefined,condition:'',rootId:null,revision:1,issuedAt:null,approvedAt:null,due:r.due||''});
  }else if(cmd.action==='status'){
-  const r=get(s,cmd.id),allowed={orders:['pendiente','diseño','aprobación','producción','listo','entregado','cancelado','en diseño','esperando aprobación','en producción','listo para entregar'],content:['idea','en preparación','listo','programado','publicado'],tasks:['pendiente','en curso','completada','cancelada'],quotes:['rechazada','cancelada'],invoices:['anulada']};
+  const r=get(s,cmd.id);if(r.kind==='orders'&&r.status==='borrador')throw Error('Completa el borrador desde Editar pedido antes de actualizar su avance.');const allowed={orders:['pendiente','diseño','aprobación','producción','listo','entregado','cancelado','en diseño','esperando aprobación','en producción','listo para entregar'],content:['idea','en preparación','listo','programado','publicado'],tasks:['pendiente','en curso','completada','cancelada'],quotes:['rechazada','cancelada'],invoices:['anulada']};
   if(r.kind==='content'&&Array.isArray(r.publications))throw Error('Edita la preparación y las publicaciones desde Contenido.');
   if(!allowed[r.kind]?.includes(cmd.status))throw Error('Estado no permitido.');
   if(['anulada','cancelado','cancelada'].includes(cmd.status))required(cmd.reason,'Motivo');
