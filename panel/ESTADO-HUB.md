@@ -170,3 +170,10 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 - Después de facturar, el detalle del pedido consulta los pagos y saldo de la factura vinculada, incluidos el anticipo y los cobros posteriores. El anticipo sigue siendo un único movimiento, según su fecha real de cobro.
 - Verificación: 102 pruebas automáticas, incluida la transacción fallida de avance; navegador local con un fallo de guardado y reintento, filtros de atraso, cancelación histórica con etapa antigua, precios y resumen a 390 px. Recorrido sintético pedido RD$200.50 → anticipo RD$50 → factura → cobro RD$150.50; Finanzas muestra dos movimientos y saldo cero. No se utilizaron registros reales ni se modificaron integraciones externas.
 - Permanece pendiente el bloque 3: consulta de adjuntos, historial ampliado y paginación de Pedidos.
+
+
+## Pedidos · bloque 3 · 4 de noviembre de 2026
+- Paginación de diez pedidos con contador y controles reales. Los filtros reinician la página y el CSV exporta todos los resultados filtrados.
+- Descarga de referencias desde el detalle mediante el acceso privado existente. Los errores se comunican y permiten reintentar.
+- Consulta del historial del pedido y sus cobros, con fecha, acción y autor disponible; se distingue ausencia de registros de un fallo al consultar. No se atribuye autor a cambios antiguos sin identificación.
+- Verificación: sintaxis, diferencias y 103 pruebas automáticas. La descarga con archivos reales en Firebase y el recorrido autenticado en navegador permanecen sin ejercitar en este bloque.
