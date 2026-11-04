@@ -160,3 +160,13 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 - Guardado protegido contra edición simultánea del formulario y doble envío; los controles recuperan su estado anterior al fallar. El reintento reutiliza las referencias ya subidas durante esa sesión del formulario. Un archivo vacío no produce falsos avisos de cambios.
 - Verificación: 97 pruebas automáticas; navegador local con datos ficticios para protección al salir, regreso desde Nuevo cliente, fallo y reintento, guardado del borrador y activación sin duplicados. Formulario revisado a 390 px sin desbordamiento. Las subidas reales a Firebase no se ejercitaron ni se modificaron sus reglas.
 - Siguen pendientes los bloques 2 y 3 de Pedidos: avance y estados, importes de pedidos independientes, consulta de archivos, historial ampliado y paginación.
+
+
+## Pedidos · bloque 2 · 4 de noviembre de 2026
+- Etapa y Esperando cliente se actualizan en una única operación con historial. Los cancelados no se reactivan desde avance, estado ni edición. Se conserva su motivo y sus movimientos; las devoluciones de anticipos siguen requiriendo el pago original y un motivo.
+- Entregar limpia Esperando cliente y conserva la primera fecha real al guardar nuevamente. Reabrir un entregado requiere confirmación explícita; deja de contar como completado hasta confirmar otra entrega. Los estados antiguos se interpretan de forma coherente sin reescribir registros.
+- Indicadores y filtros comparten reglas: borradores, cancelados, entregados y archivados no se consideran activos o atrasados. Un pedido puede esperar al cliente y estar atrasado a la vez, mostrando ambas condiciones. Próximas entregas excluye pedidos inactivos.
+- Los artículos del pedido independiente permiten cantidades y precios unitarios, con importe y resumen calculados mientras se edita. Los importes acordados en cotización o de un pedido facturado quedan protegidos; se conserva la composición y los cargos anteriores.
+- Después de facturar, el detalle del pedido consulta los pagos y saldo de la factura vinculada, incluidos el anticipo y los cobros posteriores. El anticipo sigue siendo un único movimiento, según su fecha real de cobro.
+- Verificación: 102 pruebas automáticas, incluida la transacción fallida de avance; navegador local con un fallo de guardado y reintento, filtros de atraso, cancelación histórica con etapa antigua, precios y resumen a 390 px. Recorrido sintético pedido RD$200.50 → anticipo RD$50 → factura → cobro RD$150.50; Finanzas muestra dos movimientos y saldo cero. No se utilizaron registros reales ni se modificaron integraciones externas.
+- Permanece pendiente el bloque 3: consulta de adjuntos, historial ampliado y paginación de Pedidos.

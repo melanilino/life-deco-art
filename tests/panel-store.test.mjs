@@ -16,6 +16,12 @@ test('fallo de transacción no guarda parcialmente ni adelanta la vista',async()
 test('pestaña obsoleta no sobrescribe otra sesión',async()=>{const h=await harness();await h.store.load();h.docs.set('panelData/owner/meta/state',{...domain.emptyState(),version:5});await assert.rejects(h.store.commit({action:'save',kind:'clients',data:{name:'Prueba'}}),/otra ventana/);assert.equal(h.docs.get('panelData/owner/meta/state').version,5);});
 test('usuario no habilitado no carga el panel',async()=>{const h=await harness();h.docs.set('panelAccess/owner',{enabled:false});await assert.rejects(h.store.load(),/PANEL_ACCESS_PENDING/);});
 
+test('avance y espera del pedido se guardan juntos y un fallo no deja una etapa parcial',async()=>{
+ const h=await harness();await h.store.load();const client=await h.store.commit({action:'save',kind:'clients',data:{name:'Cliente ficticio'}}),order=await h.store.commit({action:'save',kind:'orders',data:{name:'Pedido ficticio',clientId:client.result,due:'2026-11-05'}}),before=h.docs.get('panelData/owner/records/'+order.result),logs=[...h.docs.keys()].filter(p=>p.includes('/history/')).length;
+ h.fail=true;await assert.rejects(h.store.commit({action:'order-progress',id:order.result,stage:'producción',waiting:true}),/NETWORK_TEST/);assert.deepEqual(h.docs.get('panelData/owner/records/'+order.result),before);
+ h.fail=false;const result=await h.store.commit({action:'order-progress',id:order.result,stage:'producción',waiting:true});assert.equal(result.state.records[order.result].stage,'producción');assert.equal(result.state.records[order.result].condition,'esperando cliente');assert.equal([...h.docs.keys()].filter(p=>p.includes('/history/')).length,logs+1);
+});
+
 test('registro financiero y pago se guardan juntos o ninguno ante un fallo',async()=>{
  const h=await harness();await h.store.load();const cmd={action:'finance-entry',data:{name:'Ingreso atómico',direction:'income',category:'Prueba',amount:100,date:'2026-09-26',method:'Efectivo'}};
  h.fail=true;await assert.rejects(h.store.commit(cmd),/NETWORK_TEST/);assert.equal(h.docs.size,1);

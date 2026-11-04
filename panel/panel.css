@@ -719,3 +719,10 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 .sales-preview-totals{margin:24px 0 24px auto;max-width:320px}.sales-preview-totals>div{display:flex;justify-content:space-between;gap:16px;padding:6px 0}.sales-preview-totals dd{margin:0;white-space:nowrap}
 .sales-version{display:block;color:var(--brown);margin-top:4px}.sales-table .num{white-space:nowrap;font-variant-numeric:tabular-nums}
 @media(max-width:640px){.sales-preview-dialog{padding:16px}.sales-preview-toolbar{align-items:flex-start;flex-direction:column}.sales-preview-dates{flex-direction:column;gap:12px}.sales-preview-totals{max-width:none}}
+.order-material-row{grid-template-columns:minmax(0,1fr) 80px 120px 110px 34px;align-items:end;gap:10px}
+.order-material-row label{min-width:0}.order-material-row label>span{display:block;margin-bottom:6px;color:var(--brown);font-size:var(--font-helper)}
+.order-material-row input{width:100%;min-width:0}.order-material-row output{align-self:end;padding-bottom:10px;text-align:right;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.order-amount-summary{margin-bottom:24px}.order-amount-summary h3{font-size:var(--font-secondary-title);margin:0 0 12px;font-weight:var(--font-medium)}
+.order-amount-summary .doc-total,.order-detail-amounts .doc-total{width:100%;margin:0;padding:0}.order-amount-summary .doc-total .grand{font-size:22px}
+.order-progress-card>div>button{width:100%;margin-top:8px}
+@media(max-width:640px){.order-material-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.order-material-row label:first-of-type{grid-column:1/-1}.order-material-row output{text-align:left;align-self:center;padding:0}.order-material-row>button{justify-self:end;width:42px}}

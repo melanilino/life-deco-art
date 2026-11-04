@@ -1,3 +1,4 @@
+import {orderStageOf,orderProgressPatch} from './order-state.mjs';
 import {adminMutation} from './admin-model.mjs';
 import {agendaMutation,agendaEvents} from './agenda-model.mjs';
 import {contentEvents,validateContent} from './content-model.mjs';
@@ -68,6 +69,10 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
    if(old?.quoteId&&old.status!=='borrador'&&old.quoteId!==data.quoteId)throw Error('Conserva la cotización de origen del pedido activo.');
    if(data.status==='borrador'&&old&&old.status!=='borrador')throw Error('Un pedido activo no puede volver a borrador.');
    if(old?.status==='borrador'&&data.status!=='borrador'&&!data.due)throw Error('Selecciona la fecha de entrega prevista para crear el pedido.');
+   if(old?.status==='cancelado'&&(data.status!==old.status||orderStageOf({status:data.stage||data.status})!==orderStageOf({status:old.stage||old.status})))throw Error('El pedido está cancelado y no admite cambios de etapa.');
+   if(old&&old.status!=='borrador'&&(data.status!==old.status||orderStageOf({status:data.stage||data.status})!==orderStageOf({status:old.stage||old.status})))throw Error('Actualiza la etapa desde el control de avance del pedido.');
+   if(old&&list(s,'invoices',true).some(i=>!['borrador','anulada'].includes(i.status)&&(i.advanceOrderId===old.id||i.orderId===old.id||old.quoteId&&i.quoteId===old.quoteId))&&(data.clientId!==old.clientId||data.quoteId!==old.quoteId||JSON.stringify(totals(data))!==JSON.stringify(totals(old))))throw Error('El pedido ya está facturado. Conserva su cliente y sus importes.');
+   if(['borrador','cancelado','entregado'].includes(data.status))data.condition='';
    if(data.status==='borrador')data.stage='borrador';
   }
   if(cmd.kind==='invoices')for(const [key,kind]of [['quoteId','quotes'],['orderId','orders']]){if(data[key]){const source=get(s,data[key]);if(source.kind!==kind||source.clientId!==data.clientId)throw Error('El origen debe pertenecer al mismo cliente de la factura.');if(key==='orderId'&&data.quoteId&&source.quoteId!==data.quoteId)throw Error('El pedido y la cotización deben corresponder al mismo trabajo.');}}
@@ -118,20 +123,22 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const r=get(s,cmd.id);if(r.kind!=='quotes'||r.status!=='aprobada'||!['orders','invoices'].includes(cmd.kind))throw Error('Selecciona una cotización aprobada.');
   const existing=list(s,cmd.kind,true).find(x=>x.quoteId===r.id&&x.status!=='anulada');if(existing)throw Error(`Ya existe ${existing.number} para esta cotización.`);
   result=create(cmd.kind,{...snapshot(r),name:r.name,quoteId:r.id,number:number(cmd.kind),status:cmd.kind==='orders'?'pendiente':'borrador',stage:cmd.kind==='orders'?'pendiente':undefined,condition:'',rootId:null,revision:1,issuedAt:null,approvedAt:null,due:r.due||''});
+ }else if(cmd.action==='order-progress'){
+  const r=get(s,cmd.id);if(r.kind!=='orders')throw Error('Selecciona un pedido válido.');if(cmd.stage==='cancelado')required(cmd.reason,'Motivo');result=update(r,{...orderProgressPatch(r,cmd,at),reason:cmd.reason||r.reason||''});
  }else if(cmd.action==='status'){
   const r=get(s,cmd.id);if(r.kind==='orders'&&r.status==='borrador')throw Error('Completa el borrador desde Editar pedido antes de actualizar su avance.');const allowed={orders:['pendiente','diseño','aprobación','producción','listo','entregado','cancelado','en diseño','esperando aprobación','en producción','listo para entregar'],content:['idea','en preparación','listo','programado','publicado'],tasks:['pendiente','en curso','completada','cancelada'],quotes:['rechazada','cancelada'],invoices:['anulada']};
   if(r.kind==='content'&&Array.isArray(r.publications))throw Error('Edita la preparación y las publicaciones desde Contenido.');
   if(!allowed[r.kind]?.includes(cmd.status))throw Error('Estado no permitido.');
   if(['anulada','cancelado','cancelada'].includes(cmd.status))required(cmd.reason,'Motivo');
   if(r.kind==='quotes'&&cmd.status==='rechazada'&&r.status!=='enviada')throw Error('Solo se puede rechazar una cotización enviada.');
-  result=update(r,r.kind==='orders'?{status:cmd.status,stage:cmd.status,reason:cmd.reason||'',deliveredAt:cmd.status==='entregado'?(r.status==='entregado'&&r.deliveredAt?r.deliveredAt:at):null}:{status:cmd.status,reason:cmd.reason||''});
+  result=update(r,r.kind==='orders'?{...orderProgressPatch(r,{stage:cmd.status,waiting:cmd.waiting,reopen:cmd.reopen},at),reason:cmd.reason||''}:{status:cmd.status,reason:cmd.reason||''});
   if(r.kind==='tasks'&&cmd.status==='completada'&&r.status!=='completada'&&r.repeat&&r.repeat!=='ninguna')create('tasks',{...r,status:'pendiente',date:nextDate(r.date,r.repeat),previousId:r.id},`${id}-next`);
  }else if(cmd.action==='replace'){
   const r=get(s,cmd.id);if(r.kind!=='invoices'||r.status!=='anulada')throw Error('Anula la factura antes de sustituirla.');
   result=create('invoices',{...r,number:number('invoices'),status:'borrador',replacesId:r.id,quoteId:null,issuedAt:null},id);
  }else if(cmd.action==='payment'){
   const target=get(s,cmd.target),amount=cents(cmd.amount);if(!amount)throw Error('El pago debe ser mayor que cero.');
-  if(!['invoices','purchases','orders','expenses'].includes(target.kind)||['borrador','cancelado'].includes(target.status))throw Error('Selecciona un registro pendiente válido.');
+  if(!['invoices','purchases','orders','expenses'].includes(target.kind)||(target.status==='borrador'||target.status==='cancelado'&&cmd.type!=='refund'))throw Error('Selecciona un registro pendiente válido.');
   if(target.kind==='expenses'&&target.recordType!=='finance-entry')throw Error('Este gasto ya se registró como pagado.');
   if(target.kind==='orders'&&cmd.type!=='refund'&&list(s,'invoices',true).some(i=>!['borrador','anulada'].includes(i.status)&&(i.advanceOrderId===target.id||(target.quoteId&&i.quoteId===target.quoteId))))throw Error('El pedido ya tiene una factura. Registra el cobro desde Ventas.');
   if(cmd.type==='refund'){
