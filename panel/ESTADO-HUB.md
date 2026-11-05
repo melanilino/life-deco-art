@@ -191,3 +191,9 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 - Cambiar rendimiento o costo de un material marca sus productos relacionados para revisar, conservando el precio vigente y el costo de la versión anterior. Se preservan los costos positivos históricos sin presentación registrada.
 - Historial centralizado para cambios de precio desde ficha y calculadora, con precio, costo disponible y composición anterior. Guardar sin cambios no duplica versiones. La revisión de costos actualiza la referencia sin modificar documentos emitidos. Los costos anteriores desconocidos se muestran Sin configurar.
 - Verificación: 111 pruebas automáticas, sintaxis y diferencias. Navegador autenticado y revisión visual pendientes; sin cambios en integraciones ni datos reales.
+
+
+## Catálogo · bloque 3 · 4 de noviembre de 2026
+- Paginación de diez registros en Portafolio, Inventario y Proveedores/Compras. Los filtros y búsquedas reinician la página; CSV conserva todos los resultados filtrados.
+- Mensajes de búsqueda sin resultados distintos del catálogo vacío. Selector de Proveedores/Compras corregido a 44 px en móvil.
+- Verificación: 115 pruebas automáticas y navegador local con 23 registros ficticios por tipo, navegación hasta la última página y reinicio al alternar listas. Comprobado a 390 px sin ensanchar la página; tablas con desplazamiento horizontal. No se utilizaron datos reales.

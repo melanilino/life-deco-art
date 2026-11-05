@@ -10,6 +10,9 @@ run({action:'save',kind:'quotes',data:{name:'Trabajo de prueba',clientId:'test-1
 run({action:'save',kind:'tasks',data:{name:'Revisar materiales de prueba',date:'2026-09-07',priority:'alta',status:'pendiente',repeat:'semanal'}});
 run({action:'adjustStock',materialId:'test-2',quantity:10,reason:'Existencias de prueba'});
 run({action:'save',kind:'resources',data:{name:'Imagen con error simulado',path:'panel-private/fixture-only/error',mime:'image/png',role:'referencia',visibility:'interno'}});
+if(new URLSearchParams(location.search).has('catalog-pages-fixture')){
+ for(let i=1;i<=23;i++){run({action:'save',kind:'products',data:{name:'Producto ficticio '+String(i).padStart(2,'0'),itemType:i%2?'producto':'servicio',price:100+i}});run({action:'save',kind:'materials',data:{name:'Material ficticio '+i,packageUnits:1}});const supplier=run({action:'save',kind:'suppliers',data:{name:'Proveedor ficticio '+i}}).result;run({action:'save',kind:'purchases',data:{name:'Compra ficticia '+i,supplierId:supplier,items:[{materialId:'test-2',quantity:1,subtotal:100}],total:100}});}
+}
 if(new URLSearchParams(location.search).has('orders-progress-fixture')){
  const date=today(),before=new Date(date+'T12:00:00Z');before.setUTCDate(before.getUTCDate()-2);const due=before.toISOString().slice(0,10),data={name:'Pedido ficticio esperando y atrasado',clientId:'test-1',due,lines:[{description:'Pieza ficticia',quantity:1,price:100}]};
  const waiting=run({action:'save',kind:'orders',data}).result;run({action:'order-progress',id:waiting,stage:'producción',waiting:true});
