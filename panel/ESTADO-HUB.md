@@ -232,3 +232,10 @@ Verificación: 128 pruebas aprobadas. Regresión de tres artículos de 100 con d
 El período Desde/Hasta, la comparación y la clasificación Cantidad/Importe se mantienen en memoria durante la sesión. Guardar notas, actualizar los datos o visitar otra sección y volver no reinicia estos controles. Cada reconstrucción usa los datos actuales con la selección conservada. Un rango incompleto conserva su mensaje de validación. Al cerrar sesión se restablecen los valores predeterminados; no se escribe en almacenamiento del navegador ni se promete persistencia al recargar la pestaña.
 
 Verificación: 130 pruebas aprobadas y comprobación en navegador local con datos ficticios. Marzo–junio 2026, comparación activada e Importe permanecieron tras guardar una nota y tras ir a Finanzas y volver. Evidencia en .impeccable/review/estadisticas-filtros-20261104.png. La presentación del gráfico queda para el bloque 3.
+
+
+### 2026-11-05 · Estadísticas, bloque 3
+
+El gráfico reserva márgenes para los importes del eje y alinea las etiquetas de los extremos hacia dentro. Los textos pasan a 12 px y el ancho aumenta con los meses para evitar superposiciones; el desplazamiento horizontal queda dentro del gráfico y admite teclado. Las consultas por mes conservan sus registros. Los detalles de puntos se muestran con cursor, foco y toque sobre el punto; tocar otro cambia el detalle y repetir el toque lo cierra.
+
+Verificación: 131 pruebas aprobadas. Navegador local con datos ficticios: escritorio y móvil de 390 × 844, período marzo–junio, etiquetas completas y detalle de junio con RD$700 y 1 venta. Sin desbordamiento horizontal de la página móvil. Evidencias en .impeccable/review/estadisticas-grafico-escritorio-20261105.png y estadisticas-grafico-movil-20261105.png. Los tres bloques previstos de Estadísticas quedan completados; no se usaron registros reales ni se modificaron integraciones.

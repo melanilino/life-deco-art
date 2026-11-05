@@ -8,7 +8,7 @@ function mount(selection,state=emptyState()){
  const root={querySelector:selector=>nodes[selector],addEventListener:(event,fn)=>events[event]=fn};
  const previous=globalThis.document;globalThis.document={querySelector:()=>root};
  try{bindStatistics(state,()=>'',selection);}finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
- return {nodes,change:()=>events.change(),sort:mode=>events.click({target:{closest:()=>({dataset:{statsSort:mode}})}})};
+ return {nodes,root,change:()=>events.change(),sort:mode=>events.click({target:{closest:()=>({dataset:{statsSort:mode}})}}),tap:point=>events.click({target:{closest:selector=>selector==='.stats-point'?point:null}})};
 }
 
 test('período, comparación e importe sobreviven a reconstruir la pantalla con datos actualizados',()=>{
@@ -24,4 +24,10 @@ test('rango incompleto conserva el error y una sesión nueva comienza con valore
  const selection=createStatisticsSelection('2026-11-04'),first=mount(selection);first.nodes['#stats-from'].value='';first.change();assert.equal(first.nodes['#stats-error'].hidden,false);assert.equal(first.nodes['#stats-results'].innerHTML,'');
  const second=mount(selection);assert.equal(second.nodes['#stats-from'].value,'');assert.equal(second.nodes['#stats-error'].hidden,false);
  assert.deepEqual(createStatisticsSelection('2027-01-02'),{from:'2027-01',to:'2027-01',compare:'none',mode:'quantity'});
+});
+
+test('tocar un punto muestra su detalle y cambia o cierra la selección sin alterar filtros',()=>{
+ const selection=createStatisticsSelection('2026-11-05'),view=mount(selection),first={dataset:{}},last={dataset:{}};
+ view.root.querySelectorAll=()=>[first,last].filter(p=>p.dataset.active);
+ view.tap(first);assert.equal(first.dataset.active,'true');view.tap(last);assert.equal(first.dataset.active,undefined);assert.equal(last.dataset.active,'true');view.tap(last);assert.equal(last.dataset.active,undefined);assert.equal(selection.mode,'quantity');
 });
