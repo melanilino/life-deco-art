@@ -177,3 +177,10 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 - Descarga de referencias desde el detalle mediante el acceso privado existente. Los errores se comunican y permiten reintentar.
 - Consulta del historial del pedido y sus cobros, con fecha, acción y autor disponible; se distingue ausencia de registros de un fallo al consultar. No se atribuye autor a cambios antiguos sin identificación.
 - Verificación: sintaxis, diferencias y 103 pruebas automáticas. La descarga con archivos reales en Firebase y el recorrido autenticado en navegador permanecen sin ejercitar en este bloque.
+
+
+## Catálogo · bloque 1 · 4 de noviembre de 2026
+- Formularios conservados por tipo y ruta al alternar Producto/Servicio o Proveedor/Compra y al regenerar la pantalla. Protección al navegar, cerrar sesión y recargar con cambios sin guardar, incluidos renglones de la calculadora y de compras.
+- Guardado de material con existencias iniciales y compra con recepción en una sola operación de estado e historial. Un error no conserva un registro parcial ni adelanta contadores. Reintentos disponibles al fallar y doble envío bloqueado tras éxito.
+- Verificación: sintaxis y 107 pruebas automáticas, incluidos cambio de tipo, cancelación de salida, fallo/reintento y operaciones compuestas. Revisión visual en navegador y recorrido con Firebase real pendientes.
+- Los cambios de costos e historial de precios del bloque 2 permanecen pendientes.

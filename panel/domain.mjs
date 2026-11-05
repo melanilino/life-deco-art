@@ -43,6 +43,15 @@ export function nextDate(date,repeat){const d=new Date(date+'T12:00:00Z');if(!Nu
 export function events(s){const services=list(s,'accounts').filter(r=>r.renewal&&r.status!=='cancelado'),renewals=services.map(r=>({...r,eventDate:r.renewal,name:`Renovación · ${r.name}`})),reminders=services.filter(r=>Number(r.reminderDays)>0).map(r=>{const date=new Date(r.renewal+'T12:00:00Z');date.setUTCDate(date.getUTCDate()-Number(r.reminderDays));return {...r,eventDate:date.toISOString().slice(0,10),name:`Revisar renovación · ${r.name}`};}),noteReminders=list(s,'resources').filter(r=>r.recordType==='quick-note'&&r.reminderDate&&!r.taskId).map(r=>({...r,eventDate:r.reminderDate,name:`Recordatorio · ${r.title||r.name}`}));return [...agendaEvents(s).filter(e=>!['completada','cancelada'].includes(e.status)).map(e=>({...s.records[e.id],...e,href:e.type==='content'?`#content/${e.id}/publication-${e.publicationId}`:e.href,eventDate:e.date,publicationStatus:e.type==='content'?'pendiente':undefined})),...noteReminders,...renewals,...reminders].sort((a,b)=>a.eventDate.localeCompare(b.eventDate));}
 function normalize(r){required(r.name);if(r.kind==='calculations')calculate(r);if(['quotes','invoices'].includes(r.kind)){if(!r.lines?.length)throw Error('Añade al menos un concepto.');r.lines.forEach(l=>{required(l.description,'Descripción del concepto');if(!finite(l.quantity))throw Error('La cantidad debe ser mayor que cero.');finite(l.price);});totals(r);}if(r.kind==='orders'&&r.lines?.length){r.lines.forEach(l=>{required(l.description,'Descripción del artículo');if(!finite(l.quantity))throw Error('La cantidad debe ser mayor que cero.');finite(l.price);});totals(r);}return r;}
 export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toISOString()}={}){
+ if(cmd.action==='catalog-save'){
+  if(!['products','materials','suppliers','purchases'].includes(cmd.kind))throw Error('Registro de catálogo no válido.');
+  const initial=finite(cmd.initialStock);if(cmd.id&&initial)throw Error('Las existencias iniciales solo se registran al crear el material.');
+  const first=applyCommand(state,{action:'save',kind:cmd.kind,id:cmd.id,data:cmd.data},{id,at});let last=first;
+  if(cmd.kind==='materials'&&initial&&cmd.data.track)last=applyCommand(first.state,{action:'adjustStock',materialId:first.result,quantity:initial,reason:'Existencia inicial'},{id:id+'-initial',at});
+  if(cmd.kind==='purchases'&&cmd.receive)last=applyCommand(first.state,{action:'purchase',id:first.result},{id:id+'-receive',at});
+  const changed=[...new Set([...first.changed,...last.changed])];last.state.version=state.version+1;
+  return {state:last.state,changed,result:first.result,history:{id,action:cmd.action,target:first.result,at,changed,before:Object.fromEntries(changed.filter(k=>state.records[k]).map(k=>[k,state.records[k]])),after:Object.fromEntries(changed.map(k=>[k,last.state.records[k]]))}};
+ }
  const s=structuredClone(state), changes=[], put=r=>{s.records[r.id]=r;changes.push(r.id);return r;};
  const create=(kind,data,recordId=id)=>put({...data,id:recordId,kind,createdAt:at,updatedAt:at});
  const update=(r,data)=>put({...r,...data,updatedAt:at});
