@@ -204,3 +204,10 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 Registrar movimiento conserva el nodo del formulario al redibujar la pantalla, incluidos Ingreso/Gasto, estado del pago y comprobante. Salir o cerrar sesión con cambios solicita confirmación; recargar activa el aviso del navegador. No se permite abandonar el formulario durante el guardado. Un envío completado no se repite desde el mismo formulario; tras un error se conservan campos y se reutiliza el comprobante ya subido al reintentar. No se guardan borradores en almacenamiento local.
 
 Verificación: 119 pruebas automáticas; navegador local con datos ficticios para cancelar una salida, conservar un gasto pendiente, guardarlo y abrir un formulario nuevo. Las validaciones de fechas y la revisión integral de Finanzas quedan para los siguientes bloques.
+
+
+### 2026-11-04 · Finanzas, bloque 2
+
+Los ingresos y gastos independientes validan fechas reales de calendario, incluida la fecha efectiva del pago y la prevista cuando corresponda. Cobros, anticipos, pagos y reembolsos rechazan fechas inválidas; un reembolso no puede ser anterior a su pago original. Se conserva el valor predeterminado de hoy cuando un comando antiguo omite la fecha, sin aceptar una fecha vacía explícita. No se modifican registros históricos.
+
+Verificación: 124 pruebas aprobadas. Los nuevos casos cubren fechas imposibles y años bisiestos, rechazo sin mutaciones, devoluciones acumuladas, saldos parciales y finales, anticipos aplicados una vez al facturar, facturas anuladas con efectivo conservado, compras y gastos entre meses distintos, filtros y CSV. Los meses con solo reembolsos muestran actividad neta negativa. Revisión integral en navegador y móvil pendiente del bloque 3.

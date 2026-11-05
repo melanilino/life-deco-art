@@ -10,6 +10,12 @@ export const money = cents => new Intl.NumberFormat('es-DO',{style:'currency',cu
 export const cents = value => Math.round(finite(value)*100);
 export function finite(v,min=0) { const n=Number(v||0); if(!Number.isFinite(n)||n<min||n>1e12) throw Error('Revisa los importes y cantidades: deben ser números válidos.'); return n; }
 export function required(v,label='Nombre') { if(!String(v||'').trim()) throw Error(`${label} es obligatorio.`); return String(v).trim(); }
+function financialDate(value,label='Fecha'){
+ required(value,label);
+ const date=new Date(`${value}T12:00:00Z`);
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(value)||value.startsWith('0000')||!Number.isFinite(+date)||date.toISOString().slice(0,10)!==value)throw Error(`${label}: selecciona una fecha válida.`);
+ return value;
+}
 export function emptyState(){ return {version:0,counters:{quotes:0,orders:0,invoices:0,purchases:0},settings:{name:'Life Deco Art',currency:'DOP',timezone:'America/Santo_Domingo',dateFormat:'DD/MM/AAAA',validDays:0,hourly:0,terms:'',paymentInstructions:''},records:{}}; }
 export function list(s,kind,archived=false){return Object.values(s.records).filter(r=>r.kind===kind&&!r.deleted&&(archived||!r.archived));}
 export function get(s,id){const r=s.records[id];if(!r)throw Error('No se encontró el registro. Actualiza el panel.');return r;}
@@ -111,11 +117,12 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const d=cmd.data||{},amount=cents(d.amount),direction=d.direction;
   if(!['income','expense'].includes(direction)||!amount)throw Error('Indica un importe mayor que cero.');
   required(d.name,'Concepto');required(d.category,'Categoría');required(d.date,'Fecha');
-  if(!/^\d{4}-\d{2}-\d{2}$/.test(d.date))throw Error('Selecciona una fecha válida.');
+  financialDate(d.date);
   if(d.orderId&&get(s,d.orderId).kind!=='orders')throw Error('Selecciona un pedido válido.');
   const isPaid=direction==='income'||d.paymentState==='paid';
   if(direction==='expense'&&!['paid','pending'].includes(d.paymentState))throw Error('Selecciona el estado del pago.');
-  if(isPaid){required(d.method,'Método');required(direction==='income'?d.date:d.paymentDate,'Fecha de pago');}
+  if(isPaid){required(d.method,'Método');financialDate(direction==='income'?d.date:d.paymentDate,'Fecha de pago');}
+  if(!isPaid&&d.expectedDate)financialDate(d.expectedDate,'Fecha prevista');
   result=create('expenses',{name:d.name.trim(),category:d.category.trim(),amount:amount/100,date:d.date,direction,recordType:'finance-entry',paymentState:isPaid?'paid':'pending',person:d.person||'',orderId:d.orderId||'',notes:d.notes||'',expectedDate:!isPaid?d.expectedDate||'':'',status:'activo'});
   if(d.receipt){const resource=create('resources',{...d.receipt,name:d.receipt.fileName,recordType:'finance-receipt',sourceId:result.id},`${id}-receipt`);update(result,{resourceIds:[resource.id]});}
   if(isPaid)create('payments',{name:d.name.trim(),target:result.id,type:'payment',direction,amount,date:direction==='income'?d.date:d.paymentDate,method:d.method,reference:''},`${id}-payment`);
@@ -158,15 +165,17 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   result=create('invoices',{...r,number:number('invoices'),status:'borrador',replacesId:r.id,quoteId:null,issuedAt:null},id);
  }else if(cmd.action==='payment'){
   const target=get(s,cmd.target),amount=cents(cmd.amount);if(!amount)throw Error('El pago debe ser mayor que cero.');
+  const paymentDate=financialDate(cmd.date===undefined?today():cmd.date,'Fecha de pago');
   if(!['invoices','purchases','orders','expenses'].includes(target.kind)||(target.status==='borrador'||target.status==='cancelado'&&cmd.type!=='refund'))throw Error('Selecciona un registro pendiente válido.');
   if(target.kind==='expenses'&&target.recordType!=='finance-entry')throw Error('Este gasto ya se registró como pagado.');
   if(target.kind==='orders'&&cmd.type!=='refund'&&list(s,'invoices',true).some(i=>!['borrador','anulada'].includes(i.status)&&(i.advanceOrderId===target.id||(target.quoteId&&i.quoteId===target.quoteId))))throw Error('El pedido ya tiene una factura. Registra el cobro desde Ventas.');
   if(cmd.type==='refund'){
    const original=get(s,cmd.originalId);if(original.kind!=='payments'||original.type==='refund'||original.target!==target.id)throw Error('Selecciona el pago original.');
+   if(paymentDate<original.date)throw Error('La fecha del reembolso no puede ser anterior al pago original.');
    const refunded=list(s,'payments',true).filter(p=>p.originalId===original.id).reduce((a,p)=>a+p.amount,0);
    if(amount>original.amount-refunded)throw Error('El reembolso supera el importe disponible del pago.');required(cmd.reason,'Motivo');
   }else{if(target.status==='anulada')throw Error('No se pueden añadir pagos a una factura anulada.');if(amount>balance(s,target))throw Error('El pago supera el saldo pendiente.');}
-  result=create('payments',{name:cmd.type==='refund'?'Reembolso':target.kind==='orders'?'Anticipo':'Pago',target:target.id,type:cmd.type==='refund'?'refund':'payment',direction:['invoices','orders'].includes(target.kind)||target.direction==='income'?'income':'expense',amount,date:cmd.date||today(),method:cmd.method||'',reference:cmd.reference||'',reason:cmd.reason||'',originalId:cmd.originalId||null});
+  result=create('payments',{name:cmd.type==='refund'?'Reembolso':target.kind==='orders'?'Anticipo':'Pago',target:target.id,type:cmd.type==='refund'?'refund':'payment',direction:['invoices','orders'].includes(target.kind)||target.direction==='income'?'income':'expense',amount,date:paymentDate,method:cmd.method||'',reference:cmd.reference||'',reason:cmd.reason||'',originalId:cmd.originalId||null});
  }else if(cmd.action==='purchase'){
   const r=get(s,cmd.id);if(r.kind!=='purchases'||r.confirmed)throw Error('Esta compra ya fue registrada o no es válida.');
   const items=r.items?.length?r.items:[{materialId:r.materialId,quantity:r.quantity,subtotal:r.total}],base=items.reduce((sum,item)=>sum+finite(item.subtotal),0),shared=finite(r.shipping)+finite(r.other),allocations=[];let index=0;
