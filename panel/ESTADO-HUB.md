@@ -211,3 +211,10 @@ Verificación: 119 pruebas automáticas; navegador local con datos ficticios par
 Los ingresos y gastos independientes validan fechas reales de calendario, incluida la fecha efectiva del pago y la prevista cuando corresponda. Cobros, anticipos, pagos y reembolsos rechazan fechas inválidas; un reembolso no puede ser anterior a su pago original. Se conserva el valor predeterminado de hoy cuando un comando antiguo omite la fecha, sin aceptar una fecha vacía explícita. No se modifican registros históricos.
 
 Verificación: 124 pruebas aprobadas. Los nuevos casos cubren fechas imposibles y años bisiestos, rechazo sin mutaciones, devoluciones acumuladas, saldos parciales y finales, anticipos aplicados una vez al facturar, facturas anuladas con efectivo conservado, compras y gastos entre meses distintos, filtros y CSV. Los meses con solo reembolsos muestran actividad neta negativa. Revisión integral en navegador y móvil pendiente del bloque 3.
+
+
+### 2026-11-04 · Finanzas, bloque 3
+
+Revisión en navegador local con adaptador de datos ficticios: escritorio y viewport móvil de 390 × 844. Se comprobaron búsqueda, Tipo, cambio de mes, pendientes globales, navegación al origen, CSV descargado con una sola fila filtrada, formulario Ingreso/Gasto y pago parcial desde el detalle del gasto. Un ingreso de 25 aumentó Recibido de 154 a 179; un gasto pendiente de 100 no generó movimiento hasta pagar 40, dejando 60 por pagar y una sola salida de 40.
+
+Se corrigió el salto de línea dentro de los importes de los indicadores, ajustando la tipografía móvil. Las cifras excepcionalmente largas conservan todos sus dígitos con desplazamiento dentro del importe. Se confirmó ausencia de desbordamiento horizontal de la página a 390 px y ausencia de errores de consola. Las 124 pruebas siguen aprobadas. Evidencias locales en .impeccable/review/finanzas-movil-20261104.png y finanzas-escritorio-20261104.png. No se alteraron registros reales ni integraciones; subida/descarga privada de comprobantes con Firebase real no ejercitada.

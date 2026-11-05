@@ -573,7 +573,7 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 .finance-metric-pair>div{display:flex;flex-direction:column;align-items:center;gap:10px;padding:8px 12px;min-width:0}
 .finance-metric-pair>div+div{border-left:1px solid var(--border)}
 .finance-metric-pair h2{font-size:16px;margin:0}
-.finance-metric-pair strong{font-size:clamp(20px,2vw,28px);font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;line-height:1.3}
+.finance-metric-pair strong{font-size:clamp(20px,2vw,28px);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;max-width:100%;overflow-x:auto;line-height:1.3}
 .finance-metric-pair span,.finance-metric-pair a,.finance-metric-card>p{font-size:13px;color:var(--brown)}
 .finance-metric-card>p{text-align:center;margin:16px 0 0;max-width:none}
 .finance-panel>h2{font-size:20px;margin:0 0 16px}
@@ -697,6 +697,7 @@ select{appearance:none;padding-right:50px;background-image:url("data:image/svg+x
 .finance-movements-empty strong{color:var(--black);font-size:16px;font-weight:500}
 .finance-movements-empty span{font-size:13px}
 @media(max-width:700px){.finance-metric-heading{gap:8px}.finance-metric-heading h2,.finance-metric-heading span{font-size:12px}.finance-movements .finance-table-footer{flex-wrap:wrap}}
+@media(max-width:700px){.finance-metric-pair>div{padding-inline:6px}.finance-metric-pair strong{font-size:20px}}
 
 /* Pedidos: vista única de lista. */
 @media(min-width:1401px){.order-toolbar{grid-template-columns:minmax(240px,1fr) minmax(170px,.4fr) minmax(170px,.4fr) auto}}
