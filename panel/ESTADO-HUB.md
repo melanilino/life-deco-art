@@ -239,3 +239,10 @@ Verificación: 130 pruebas aprobadas y comprobación en navegador local con dato
 El gráfico reserva márgenes para los importes del eje y alinea las etiquetas de los extremos hacia dentro. Los textos pasan a 12 px y el ancho aumenta con los meses para evitar superposiciones; el desplazamiento horizontal queda dentro del gráfico y admite teclado. Las consultas por mes conservan sus registros. Los detalles de puntos se muestran con cursor, foco y toque sobre el punto; tocar otro cambia el detalle y repetir el toque lo cierra.
 
 Verificación: 131 pruebas aprobadas. Navegador local con datos ficticios: escritorio y móvil de 390 × 844, período marzo–junio, etiquetas completas y detalle de junio con RD$700 y 1 venta. Sin desbordamiento horizontal de la página móvil. Evidencias en .impeccable/review/estadisticas-grafico-escritorio-20261105.png y estadisticas-grafico-movil-20261105.png. Los tres bloques previstos de Estadísticas quedan completados; no se usaron registros reales ni se modificaron integraciones.
+
+
+### Contenido · movimiento de tarjetas
+
+El tablero permite mover tarjetas entre Ideas, En preparación y Listo mediante arrastre o el selector Mover a. Guarda la etapa con el mismo flujo que la ficha y conserva las publicaciones por plataforma. Publicado sigue dependiendo de sus confirmaciones.
+
+Se verificaron en navegador el arrastre, el selector con publicación parcial y el rechazo de un arrastre a Publicado con datos ficticios. Pasaron las 131 pruebas del Hub. La persistencia tras recargar con Firebase real sigue pendiente.
