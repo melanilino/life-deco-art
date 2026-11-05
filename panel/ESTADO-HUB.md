@@ -225,3 +225,10 @@ Se corrigió el salto de línea dentro de los importes de los indicadores, ajust
 Lo más vendido reparte el importe neto después del descuento en centavos enteros por factura, antes de agrupar productos. Los centavos restantes se asignan a los renglones con mayor parte fraccionaria y, en empate, según su orden. El cálculo del bruto de cada renglón coincide con el de la factura. Impuestos y envío siguen fuera de esta clasificación; no se modifican documentos emitidos ni cantidades vendidas.
 
 Verificación: 128 pruebas aprobadas. Regresión de tres artículos de 100 con descuento de 1: el neto de 29900 centavos se distribuye como 9967, 9967 y 9966. Casos adicionales de agrupación entre facturas, cantidades fraccionadas, redondeo de precios, descuentos porcentuales y totales, artículos gratuitos e impuestos/envío. Pendientes: conservación de filtros y presentación del gráfico.
+
+
+### 2026-11-04 · Estadísticas, bloque 2
+
+El período Desde/Hasta, la comparación y la clasificación Cantidad/Importe se mantienen en memoria durante la sesión. Guardar notas, actualizar los datos o visitar otra sección y volver no reinicia estos controles. Cada reconstrucción usa los datos actuales con la selección conservada. Un rango incompleto conserva su mensaje de validación. Al cerrar sesión se restablecen los valores predeterminados; no se escribe en almacenamiento del navegador ni se promete persistencia al recargar la pestaña.
+
+Verificación: 130 pruebas aprobadas y comprobación en navegador local con datos ficticios. Marzo–junio 2026, comparación activada e Importe permanecieron tras guardar una nota y tras ir a Finanzas y volver. Evidencia en .impeccable/review/estadisticas-filtros-20261104.png. La presentación del gráfico queda para el bloque 3.
