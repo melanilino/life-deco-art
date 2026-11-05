@@ -218,3 +218,10 @@ Verificación: 124 pruebas aprobadas. Los nuevos casos cubren fechas imposibles 
 Revisión en navegador local con adaptador de datos ficticios: escritorio y viewport móvil de 390 × 844. Se comprobaron búsqueda, Tipo, cambio de mes, pendientes globales, navegación al origen, CSV descargado con una sola fila filtrada, formulario Ingreso/Gasto y pago parcial desde el detalle del gasto. Un ingreso de 25 aumentó Recibido de 154 a 179; un gasto pendiente de 100 no generó movimiento hasta pagar 40, dejando 60 por pagar y una sola salida de 40.
 
 Se corrigió el salto de línea dentro de los importes de los indicadores, ajustando la tipografía móvil. Las cifras excepcionalmente largas conservan todos sus dígitos con desplazamiento dentro del importe. Se confirmó ausencia de desbordamiento horizontal de la página a 390 px y ausencia de errores de consola. Las 124 pruebas siguen aprobadas. Evidencias locales en .impeccable/review/finanzas-movil-20261104.png y finanzas-escritorio-20261104.png. No se alteraron registros reales ni integraciones; subida/descarga privada de comprobantes con Firebase real no ejercitada.
+
+
+### 2026-11-04 · Estadísticas, bloque 1
+
+Lo más vendido reparte el importe neto después del descuento en centavos enteros por factura, antes de agrupar productos. Los centavos restantes se asignan a los renglones con mayor parte fraccionaria y, en empate, según su orden. El cálculo del bruto de cada renglón coincide con el de la factura. Impuestos y envío siguen fuera de esta clasificación; no se modifican documentos emitidos ni cantidades vendidas.
+
+Verificación: 128 pruebas aprobadas. Regresión de tres artículos de 100 con descuento de 1: el neto de 29900 centavos se distribuye como 9967, 9967 y 9966. Casos adicionales de agrupación entre facturas, cantidades fraccionadas, redondeo de precios, descuentos porcentuales y totales, artículos gratuitos e impuestos/envío. Pendientes: conservación de filtros y presentación del gráfico.

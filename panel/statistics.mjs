@@ -1,4 +1,4 @@
-import {list,totals,money,today} from './domain.mjs';
+import {list,totals,money,today,cents} from './domain.mjs';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const iso=d=>d.toISOString().slice(0,10);
 const day=86400000;
@@ -10,6 +10,20 @@ export function statisticsRange(from,to,now=today()){
  return {start,end,previousStart,previousEnd,days};
 }
 export function confirmedSales(state){return list(state,'invoices',true).filter(r=>!['borrador','anulada','cancelada','cancelado'].includes(r.status)&&r.status).map(r=>({...r,saleDate:dateValue(r.date||r.issuedAt),amount:totals(r).total}));}
+function saleLineAmounts(sale){
+ const {subtotal,discount}=totals(sale),net=subtotal-discount;
+ if(!subtotal)return (sale.lines||[]).map(()=>0);
+ // Allocate whole cents per invoice, then assign leftover cents to the largest
+ // fractional shares. Ties follow line order, so totals stay exact and stable.
+ const shares=sale.lines.map((line,index)=>{
+  const gross=Math.round(Number(line.quantity)*cents(line.price)),numerator=BigInt(gross)*BigInt(net),denominator=BigInt(subtotal);
+  return {index,amount:Number(numerator/denominator),remainder:numerator%denominator};
+ });
+ const amounts=shares.map(s=>s.amount),remaining=net-amounts.reduce((sum,amount)=>sum+amount,0);
+ shares.sort((a,b)=>a.remainder===b.remainder?a.index-b.index:a.remainder>b.remainder?-1:1);
+ for(let i=0;i<remaining;i++)amounts[shares[i].index]++;
+ return amounts;
+}
 export function statisticsData(state,from,to,now=today()){
  const range=statisticsRange(from,to,now),all=confirmedSales(state),inside=(d,start=range.start,end=range.end)=>Boolean(d)&&d>=start&&d<=end;
  const sales=all.filter(r=>inside(r.saleDate)),previous=all.filter(r=>inside(r.saleDate,range.previousStart,range.previousEnd));
@@ -17,7 +31,7 @@ export function statisticsData(state,from,to,now=today()){
  const buyers=[...new Set(sales.map(r=>r.clientId).filter(Boolean))].map(id=>{const profile=state.records[id]||sales.find(r=>r.clientId===id)?.client||{};return {...profile,id,name:profile.name||'Cliente sin perfil',recurrent:all.some(r=>r.clientId===id&&r.saleDate&&r.saleDate<range.start)};});
  const orders=list(state,'orders',true).filter(r=>r.status==='entregado'&&inside(dateValue(r.deliveredAt)));
  const months=[];for(let d=new Date(range.start+'T12:00:00Z');iso(d).slice(0,7)<=to;d.setUTCMonth(d.getUTCMonth()+1)){const key=iso(d).slice(0,7),rows=sales.filter(r=>r.saleDate.startsWith(key));months.push({key,label:new Intl.DateTimeFormat('es-DO',{month:'short',year:'numeric',timeZone:'UTC'}).format(d),sales:rows,amount:rows.reduce((n,r)=>n+r.amount,0)});}
- const products=new Map();for(const sale of sales){const t=totals(sale);for(const line of sale.lines||[]){const name=String(line.description||'Sin descripción').trim(),key=line.productId?`id:${line.productId}`:`text:${name.toLocaleLowerCase('es')}`,item=products.get(key)||{key,name,quantity:0,amount:0,sales:[]};item.quantity+=Number(line.quantity)||0;const gross=Math.round(Number(line.quantity)*Number(line.price)*100);item.amount+=t.subtotal?gross*(t.subtotal-t.discount)/t.subtotal:0;if(!item.sales.some(r=>r.id===sale.id))item.sales.push(sale);products.set(key,item);}}
+ const products=new Map();for(const sale of sales){const amounts=saleLineAmounts(sale);for(const [index,line] of (sale.lines||[]).entries()){const name=String(line.description||'Sin descripción').trim(),key=line.productId?`id:${line.productId}`:`text:${name.toLocaleLowerCase('es')}`,item=products.get(key)||{key,name,quantity:0,amount:0,sales:[]};item.quantity+=Number(line.quantity)||0;item.amount+=amounts[index];if(!item.sales.some(r=>r.id===sale.id))item.sales.push(sale);products.set(key,item);}}
  const group=fn=>{const map=new Map();for(const buyer of buyers){const label=fn(buyer)||'Sin especificar';if(!map.has(label))map.set(label,[]);map.get(label).push(buyer);}return [...map].map(([label,clients])=>({label,clients}));};
  return {range,sales,revenue,previous,previousRevenue,comparison:previousRevenue>0&&range.days>0?(revenue-previousRevenue)/previousRevenue*100:null,orders,buyers,newBuyers:buyers.filter(b=>!b.recurrent),recurrentBuyers:buyers.filter(b=>b.recurrent),average:sales.length?revenue/sales.length:null,months,products:[...products.values()].map(p=>({...p,amount:Math.round(p.amount)})),origins:group(b=>String(b.source||'').trim()),ages:group(b=>b.clientType==='company'?'':b.ageRange),genders:group(b=>b.clientType==='company'?'':b.gender),missingDates:all.filter(r=>!r.saleDate).length,missingDeliveryDates:list(state,'orders',true).filter(r=>r.status==='entregado'&&!r.deliveredAt).length};
 }
