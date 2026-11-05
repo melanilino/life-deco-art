@@ -184,3 +184,10 @@ La aclaración final de Estadísticas aprovecha todo el ancho de la sección ant
 - Guardado de material con existencias iniciales y compra con recepción en una sola operación de estado e historial. Un error no conserva un registro parcial ni adelanta contadores. Reintentos disponibles al fallar y doble envío bloqueado tras éxito.
 - Verificación: sintaxis y 107 pruebas automáticas, incluidos cambio de tipo, cancelación de salida, fallo/reintento y operaciones compuestas. Revisión visual en navegador y recorrido con Firebase real pendientes.
 - Los cambios de costos e historial de precios del bloque 2 permanecen pendientes.
+
+
+## Catálogo · bloque 2 · 4 de noviembre de 2026
+- Costo pendiente distinto de cero confirmado por compra o configuración explícita. Una composición vacía sin configurar no se presenta como costo conocido. La tarifa cero de una tarea se conserva al editar.
+- Cambiar rendimiento o costo de un material marca sus productos relacionados para revisar, conservando el precio vigente y el costo de la versión anterior. Se preservan los costos positivos históricos sin presentación registrada.
+- Historial centralizado para cambios de precio desde ficha y calculadora, con precio, costo disponible y composición anterior. Guardar sin cambios no duplica versiones. La revisión de costos actualiza la referencia sin modificar documentos emitidos. Los costos anteriores desconocidos se muestran Sin configurar.
+- Verificación: 111 pruebas automáticas, sintaxis y diferencias. Navegador autenticado y revisión visual pendientes; sin cambios en integraciones ni datos reales.
