@@ -31,11 +31,22 @@ export function adminMutation(s,cmd,{put,at,id}){
  if(cmd.action==='admin-charge'){
  const r=find(),sub=subscription(r),d=cmd.data;date(d.period,'el período cobrado');date(d.date,'la fecha del cobro');if((r.charges||[]).some(c=>c.period===d.period))throw Error('Este período ya tiene un cobro vinculado. Abre el gasto existente.');if(!['new','existing'].includes(d.mode))throw Error('Selecciona cómo vincular el gasto.');const sourceAmount=amount(d.amount);if(!sourceAmount)throw Error('El importe debe ser mayor que cero.');let dopAmount=Math.round(sourceAmount*100)/100,rate=1;if(sub.currency!=='DOP'){rate=amount(d.rate);if(!rate)throw Error('Indica la tasa de conversión a DOP.');date(d.rateDate,'la fecha de conversión');dopAmount=Math.round(sourceAmount*rate*100)/100;}const inCents=Math.round(dopAmount*100);if(!Number.isSafeInteger(inCents)||inCents<=0||dopAmount>1e12)throw Error('Revisa el importe convertido a DOP.');let expenseId;
  if(d.mode==='existing'){
- const e=s.records[d.expenseId];if(!e||e.kind!=='expenses'||e.recordType!=='finance-entry'||e.direction!=='expense'||e.subscriptionId||Math.round(Number(e.amount)*100)!==inCents)throw Error('Selecciona un gasto independiente pagado con el mismo importe en DOP.');const paid=Object.values(s.records).filter(p=>p.kind==='payments'&&p.target===e.id).reduce((sum,p)=>sum+(p.type==='refund'?-p.amount:p.amount),0);if(paid!==inCents)throw Error('El gasto elegido debe estar completamente pagado.');expenseId=e.id;write(e,{subscriptionId:r.id,subscriptionPeriod:d.period});
+ const e=s.records[d.expenseId];if(!e||e.kind!=='expenses'||e.recordType!=='finance-entry'||e.direction!=='expense'||e.subscriptionId||Math.round(Number(e.amount)*100)!==inCents)throw Error('Selecciona un gasto independiente pagado con el mismo importe en DOP.');
+ const payments=Object.values(s.records).filter(p=>p.kind==='payments'&&p.target===e.id&&!p.deleted);
+ const paid=payments.reduce((sum,p)=>sum+(p.type==='refund'?-p.amount:p.amount),0);
+ if(paid!==inCents)throw Error('El gasto elegido debe estar completamente pagado.');
+ const paymentDate=payments.filter(p=>p.type!=='refund').map(p=>p.date).sort().at(-1);
+ if(d.date!==paymentDate)throw Error('La fecha efectiva debe coincidir con la del último pago del gasto en Finanzas'+(paymentDate?' ('+paymentDate+').':'.'));
+ expenseId=e.id;write(e,{subscriptionId:r.id,subscriptionPeriod:d.period});
  }else{
  required(d.method,'Método de pago');expenseId=id+'-expense';put({id:expenseId,kind:'expenses',createdAt:at,updatedAt:at,name:r.name+' · '+d.period,category:'Suscripciones',amount:dopAmount,date:d.date,direction:'expense',recordType:'finance-entry',paymentState:'paid',person:r.name,notes:d.notes||'',status:'activo',subscriptionId:r.id,subscriptionPeriod:d.period});put({id:id+'-payment',kind:'payments',createdAt:at,updatedAt:at,name:r.name,target:expenseId,type:'payment',direction:'expense',amount:inCents,date:d.date,method:d.method});
  }
- const next=d.nextRenewal||nextRenewal(d.period,sub.frequency);if(next){date(next,'la próxima renovación');if(next<=d.period)throw Error('La próxima renovación debe ser posterior al período cobrado.');}
+ const next=d.nextRenewal||(d.period>=sub.renewal||!sub.renewal?nextRenewal(d.period,sub.frequency):'');
+ if(next){
+  date(next,'la próxima renovación');
+  if(next<=d.period)throw Error('La próxima renovación debe ser posterior al período cobrado.');
+  if(sub.renewal&&next<sub.renewal)throw Error('La próxima renovación no puede retroceder desde la fecha vigente.');
+ }
  return write(r,{charges:[...(r.charges||[]),{id,period:d.period,date:d.date,amount:sourceAmount,currency:sub.currency,rate,rateDate:sub.currency!=='DOP'?d.rateDate:'',dopAmount,expenseId,at}],renewal:next||r.renewal||''});
  }
  throw Error('Acción de Administración no válida.');

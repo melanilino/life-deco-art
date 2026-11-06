@@ -256,3 +256,8 @@ Día y Semana muestran entregas y tareas sin hora en una fila alineada por fecha
 ### Tareas · filtro de canceladas
 
 El tablero muestra Canceladas al elegir ese estado y las incluye en Todas cuando hay coincidencias. La columna sirve para consultar y abrir sus fichas. Verificado en navegador con datos ficticios y 132 pruebas aprobadas.
+
+
+### Suscripciones · fechas de cobros
+
+Un cobro histórico conserva la próxima renovación vigente salvo que se indique una posterior. Al vincular un gasto existente, la fecha debe coincidir con la del último pago en Finanzas. Las pruebas cubren el rechazo, el reintento y la ausencia de duplicados.

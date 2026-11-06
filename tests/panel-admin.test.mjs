@@ -9,3 +9,25 @@ test('vincular gasto ya pagado conserva un único movimiento',()=>{const x=setup
 test('costo sin configurar y cero explícito; bloques guardan solo sus claves',()=>{const x=setup();x.run({action:'admin-settings',group:'costs',data:{hourly:''}});assert.equal(x.s.settings.hourlyConfigured,false);x.run({action:'admin-settings',group:'costs',data:{hourly:0,name:'No cambiar'}});assert.equal(x.s.settings.hourlyConfigured,true);assert.equal(x.s.settings.hourly,0);assert.equal(x.s.settings.name,'Life Deco Art');});
 test('configuración no altera documentos emitidos y se conserva el método/datos de pago',()=>{const x=setup(),client=x.run({action:'save',kind:'clients',data:{name:'Cliente prueba'}}),doc=x.run({action:'save',kind:'quotes',data:{name:'Prueba',clientId:client,lines:[{description:'Prueba',quantity:1,price:100}]}});x.run({action:'issue',id:doc});const snapshot=JSON.stringify(x.s.records[doc]);x.run({action:'admin-settings',group:'payments',data:{paymentMethods:'Transferencia',paymentDetails:'Datos de prueba',paymentInstructions:'Instrucción de prueba'}});x.run({action:'admin-settings',group:'business',data:{name:'Negocio de prueba'}});assert.equal(JSON.stringify(x.s.records[doc]),snapshot);assert.equal(x.s.settings.paymentDetails,'Datos de prueba');});
 test('revisión de recuperación solo planifica faltantes y no muta ni sobrescribe',()=>{const x=setup(),id=x.run(sub()),backup={format:'life-deco-art-panel',schema:1,owner:'owner',state:structuredClone(x.s),files:[]};const state=emptyState();const plan=planRecovery(state,backup,'owner');assert.equal(plan.records.length,1);assert.equal(Object.keys(state.records).length,0);assert.equal(planRecovery(x.s,backup,'owner').records.length,0);assert.throws(()=>planRecovery(state,backup,'otro'));});
+
+test('un cobro histórico conserva la renovación vigente',()=>{
+ const x=setup(),id=x.run(sub({frequency:'mensual'}));
+ const data={mode:'new',period:'2026-08-28',date:'2026-09-01',amount:1200,method:'Tarjeta'};
+ assert.throws(()=>x.run({action:'admin-charge',id,data:{...data,nextRenewal:'2026-09-28'}}),/no puede retroceder/);
+ assert.equal(list(x.s,'expenses').length,0);
+ x.run({action:'admin-charge',id,data});
+ assert.equal(x.s.records[id].renewal,'2026-10-28');
+ assert.equal(x.s.records[id].charges.length,1);
+});
+
+test('vincular usa la fecha del pago en Finanzas y permite reintentar sin duplicados',()=>{
+ const x=setup(),id=x.run(sub());
+ const expenseId=x.run({action:'finance-entry',data:{name:'Gasto ficticio',category:'Prueba',amount:1200,direction:'expense',date:'2026-10-10',paymentState:'paid',paymentDate:'2026-10-28',method:'Tarjeta'}});
+ const data={mode:'existing',expenseId,period:'2026-10-28',date:'2026-10-10',amount:1200};
+ assert.throws(()=>x.run({action:'admin-charge',id,data}),/último pago.*2026-10-28/);
+ assert.equal(x.s.records[expenseId].subscriptionId,undefined);
+ x.run({action:'admin-charge',id,data:{...data,date:'2026-10-28'}});
+ assert.equal(x.s.records[id].charges[0].date,'2026-10-28');
+ assert.equal(list(x.s,'expenses').length,1);
+ assert.equal(list(x.s,'payments').length,1);
+});
