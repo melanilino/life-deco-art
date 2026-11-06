@@ -266,3 +266,8 @@ Un cobro histórico conserva la próxima renovación vigente salvo que se indiqu
 ### Configuración · vista previa y costos de pedidos
 
 Las vistas previas de borradores usan los datos vigentes del negocio, tal como se aplican al emitirlos. El formulario de costos de un pedido respeta una tarifa de cero y usa la tarifa general cuando falta el valor.
+
+
+### Seguridad · recuperación de registros
+
+La revisión de copias comprueba que los adjuntos referenciados existan como recursos en el Hub o en la copia. La recuperación fija la cuenta de origen y comprueba que la sesión siga activa durante las subidas y la transacción. Se verificaron ambos casos con datos ficticios.

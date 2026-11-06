@@ -20,5 +20,12 @@ export function planRecovery(current,backup,owner){
  for(const r of records){if(['quotes','invoices','orders'].includes(r.kind)){const number=Number(String(r.number).split('-').pop());if(!Number.isSafeInteger(number)||number<1)throw Error('Documento sin número válido.');counters[r.kind]=Math.max(counters[r.kind],number);}}
  const files=[];for(const file of backup.files||[]){const r=records.find(r=>r.id===file.resourceId);if(!r)continue;if(file.path!==r.path||!/^data:(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|application\/pdf);base64,[A-Za-z0-9+/=]+$/.test(file.data)||file.data.length>21*1024*1024)throw Error('Un adjunto de la copia no es válido.');files.push(file);}
  const combined={...current.records,...Object.fromEntries(records.map(r=>[r.id,r]))};for(const r of records){for(const refKey of ['clientId','materialId','quoteId','orderId','advanceOrderId','target','originalId','calculationId','campaignId','contentId','relatedId','subscriptionId'])if(r[refKey]&&!combined[r[refKey]])throw Error('La copia contiene referencias incompletas; requiere revisión administrativa.');if(r.kind==='accounts'&&r.charges){if(!Array.isArray(r.charges)||r.charges.some(c=>!combined[c.expenseId]||combined[c.expenseId].kind!=='expenses'))throw Error('La copia contiene cobros de suscripciones sin su gasto vinculado.');}}
+ for(const record of records){
+  const ids=record.resourceIds;
+  if(ids===undefined)continue;
+  if(!Array.isArray(ids)||ids.some(id=>typeof id!=='string'||!Object.hasOwn(combined,id)||combined[id].kind!=='resources'||combined[id].deleted)){
+   throw Error('La copia contiene referencias a adjuntos inexistentes o no válidos.');
+  }
+ }
  return {records,counters,files};
 }

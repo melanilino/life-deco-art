@@ -65,14 +65,31 @@ export async function exportBackup(includeFiles=true){
 }
 export async function restoreBackup(backup){
  // Restore missing records only: never overwrite current invoices or financial history.
- const state=await load(),plan=planRecovery(state,backup,user.uid),missing=plan.records;
+ const base=root(),active=session,actor={uid:user.uid,email:user.email||''};
+ const checkSession=()=>{if(active!==session)throw Error('La sesión cambió. Vuelve a iniciar la recuperación.');};
+ const state=await load();
+ checkSession();
+ const plan=planRecovery(state,backup,actor.uid),missing=plan.records;
  // Each restored blob receives a new private path: current files are never overwritten.
- const restoredPaths=new Map();for(const f of plan.files){const blob=await(await fetch(f.data)).blob(),uploaded=await upload(new File([blob],f.fileName||'archivo',{type:blob.type}));Object.assign(missing.find(r=>r.id===f.resourceId),uploaded);restoredPaths.set(f.path,uploaded.path);}
+ const restoredPaths=new Map();
+ for(const f of plan.files){
+  const blob=await(await fetch(f.data)).blob();
+  checkSession();
+  const uploaded=await upload(new File([blob],f.fileName||'archivo',{type:blob.type}));
+  checkSession();
+  Object.assign(missing.find(r=>r.id===f.resourceId),uploaded);
+  restoredPaths.set(f.path,uploaded.path);
+ }
  for(const r of missing)if(r.issuer?.logoPath&&restoredPaths.has(r.issuer.logoPath))r.issuer.logoPath=restoredPaths.get(r.issuer.logoPath);
  await runTransaction(db,async tx=>{
-  const metaRef=doc(db,root(),'meta','state'),meta=await tx.get(metaRef);if((meta.data()?.version||0)!==state.version)throw Error('Los datos cambiaron. Repite la recuperación.');
+  checkSession();
+  const metaRef=doc(db,base,'meta','state'),meta=await tx.get(metaRef);
+  checkSession();
+  if((meta.data()?.version||0)!==state.version)throw Error('Los datos cambiaron. Repite la recuperación.');
   const {records,...head}=state;tx.set(metaRef,{...head,counters:plan.counters,version:state.version+1});
-  for(const r of missing)tx.set(doc(db,root(),'records',r.id),r);
-  const id=crypto.randomUUID();tx.set(doc(db,root(),'history',id),{id,at:new Date().toISOString(),action:'restore-missing',actor:{uid:user.uid,email:user.email||''},target:'',changed:missing.map(r=>r.id)});
- });return {count:missing.length,state:await load()};
+  for(const r of missing)tx.set(doc(db,base,'records',r.id),r);
+  const id=crypto.randomUUID();tx.set(doc(db,base,'history',id),{id,at:new Date().toISOString(),action:'restore-missing',actor,target:'',changed:missing.map(r=>r.id)});
+ });
+ checkSession();
+ return {count:missing.length,state:await load()};
 }

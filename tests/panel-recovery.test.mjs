@@ -4,3 +4,14 @@ test('restaurar solo faltantes conserva registros actuales',()=>{const s=emptySt
 test('rechaza copia de otro usuario, campos corruptos y enlaces remotos de adjuntos',()=>{assert.throws(()=>planRecovery(emptyState(),backup({}),'other'),/válida/);assert.throws(()=>planRecovery(emptyState(),backup({a:{id:'a',kind:'payments',amount:'<script>',type:'payment',direction:'income'}}),owner),/pago/);const b=backup({r:{id:'r',kind:'resources',name:'R',path:`panel-private/${owner}/file`}});b.files=[{resourceId:'r',path:`panel-private/${owner}/file`,data:'https://example.invalid/file'}];assert.throws(()=>planRecovery(emptyState(),b,owner),/adjunto/);});
 test('recuperación mantiene secuencias por encima de los documentos',()=>{const b=backup({c:{id:'c',kind:'clients',name:'Prueba'},q:{id:'q',kind:'quotes',name:'Q',clientId:'c',number:'COT-0042',lines:[{description:'Concepto',quantity:1,price:2}]}});assert.equal(planRecovery(emptyState(),b,owner).counters.quotes,42);});
 test('rechaza relaciones incompletas',()=>{const b=backup({p:{id:'p',kind:'payments',name:'Pago',amount:100,type:'payment',direction:'income',target:'inexistente'}});assert.throws(()=>planRecovery(emptyState(),b,owner),/referencias/);});
+
+test('los adjuntos deben existir como recursos en la copia o en el panel',()=>{
+ const c={id:'c',kind:'content',name:'Pieza ficticia',resourceIds:['r']};
+ assert.throws(()=>planRecovery(emptyState(),backup({c}),owner),/adjuntos inexistentes/);
+ assert.throws(()=>planRecovery(emptyState(),backup({c,r:{id:'r',kind:'clients',name:'Cliente'}}),owner),/adjuntos inexistentes/);
+ const r={id:'r',kind:'resources',name:'Adjunto'};
+ assert.equal(planRecovery(emptyState(),backup({c,r}),owner).records.length,2);
+ const current=emptyState();
+ current.records.r=r;
+ assert.deepEqual(planRecovery(current,backup({c}),owner).records.map(record=>record.id),['c']);
+});
