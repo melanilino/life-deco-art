@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {emptyState,totals,list} from '../panel/domain.mjs';
+import {emptyState,totals,list,applyCommand} from '../panel/domain.mjs';
 import {salesPreviewRecord,salesPreviewHtml} from '../panel/sales-preview.mjs';
 import {clientPageRows} from '../panel/client-model.mjs';
 test('vista previa usa datos sin guardar y no asigna número ni modifica el estado',()=>{
@@ -14,4 +14,25 @@ test('vista previa conserva número y versión del borrador, usando condiciones 
 test('paginación real de ventas conserva todos los resultados para CSV y limita cada página',()=>{
  const source=fs.readFileSync(new URL('../panel/app.mjs',import.meta.url),'utf8'),line=source.split('\n').find(l=>l.startsWith('function salesTable(')),footer=source.split('\n').find(l=>l.startsWith('function salesFooter('));let pageNumber=3;const rows=Array.from({length:23},(_,i)=>({id:'q'+i,number:'COT-'+i,kind:'quotes',name:'Trabajo '+i,clientId:'c',lines:[]}));
  const render=new Function('clientPageRows','salesRows','state','esc','money','totals','salesDateLabel','salesStatus','salesStatusLabel','paid','balance','downloadIcon',`let route='quotes',salesPageNumber=${pageNumber},search='',filter='',salesDate='all';${footer}\n${line};return salesTable();`);const html=render(clientPageRows,()=>rows,{records:{c:{name:'Cliente'}}},String,String,()=>({total:0}),()=>'',()=>'',String,()=>0,()=>0,'');assert.equal((html.match(/<tr>/g)||[]).length,4);assert.ok(html.includes('Mostrando 21–23 de 23 cotizaciones'));assert.ok(html.includes('data-action="sales-page"'));assert.ok(html.includes('aria-current="page"'));assert.ok(html.includes('data-action="sales-csv"'));assert.equal(rows.length,23);assert.equal(clientPageRows([],9).page,1);
+});
+
+test('la vista previa de una revisión usa la configuración vigente al emitir',()=>{
+ let state=emptyState(), sequence=0;
+ const run=command=>{
+  const change=applyCommand(state,command,{id:'preview-'+(++sequence)});
+  state=change.state;
+  return change.result;
+ };
+ const clientId=run({action:'save',kind:'clients',data:{name:'Cliente ficticio'}});
+ const quote=run({action:'save',kind:'quotes',data:{name:'Cotización ficticia',clientId,date:'2026-11-05',validUntil:'2026-11-20',lines:[{description:'Prueba',quantity:1,price:100}]}});
+ run({action:'issue',id:quote});
+ run({action:'admin-settings',group:'business',data:{name:'Negocio actualizado'}});
+ const revision=run({action:'revise',id:quote});
+ const draft=state.records[revision];
+ const preview=salesPreviewRecord(state,'quotes',draft,draft);
+ run({action:'save',kind:'quotes',id:revision,data:{validUntil:'2026-11-20'}});
+ run({action:'issue',id:revision});
+ assert.equal(preview.issuer.name,'Negocio actualizado');
+ assert.equal(preview.issuer.name,state.records[revision].issuer.name);
+ assert.equal(state.records[quote].issuer.name,'Life Deco Art');
 });

@@ -2,7 +2,7 @@ import {totals,money,cents} from './domain.mjs';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // A transient document: previewing never reserves a number or writes a record.
 export function salesPreviewRecord(state,kind,data,existing={}){
- return structuredClone({...existing,...data,kind,number:existing.number||'Sin número asignado',status:'borrador',issuer:existing.issuer||state.settings,client:state.records[data.clientId]||existing.client||{}});
+ return structuredClone({...existing,...data,kind,number:existing.number||'Sin número asignado',status:'borrador',issuer:state.settings,client:state.records[data.clientId]||existing.client||{}});
 }
 export function salesPreviewHtml(record){
  const t=totals(record),issuer=record.issuer||{},client=record.client||{},quote=record.kind==='quotes';

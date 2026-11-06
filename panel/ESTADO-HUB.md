@@ -261,3 +261,8 @@ El tablero muestra Canceladas al elegir ese estado y las incluye en Todas cuando
 ### Suscripciones · fechas de cobros
 
 Un cobro histórico conserva la próxima renovación vigente salvo que se indique una posterior. Al vincular un gasto existente, la fecha debe coincidir con la del último pago en Finanzas. Las pruebas cubren el rechazo, el reintento y la ausencia de duplicados.
+
+
+### Configuración · vista previa y costos de pedidos
+
+Las vistas previas de borradores usan los datos vigentes del negocio, tal como se aplican al emitirlos. El formulario de costos de un pedido respeta una tarifa de cero y usa la tarifa general cuando falta el valor.
