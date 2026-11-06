@@ -251,3 +251,8 @@ Se verificaron en navegador el arrastre, el selector con publicación parcial y 
 ### Agenda · fechas y compromisos sin hora
 
 Día y Semana muestran entregas y tareas sin hora en una fila alineada por fecha. Las flechas de Mes conservan el día de referencia y lo ajustan cuando el mes es más corto. Se verificó en navegador con datos ficticios y pasaron 132 pruebas.
+
+
+### Tareas · filtro de canceladas
+
+El tablero muestra Canceladas al elegir ese estado y las incluye en Todas cuando hay coincidencias. La columna sirve para consultar y abrir sus fichas. Verificado en navegador con datos ficticios y 132 pruebas aprobadas.
