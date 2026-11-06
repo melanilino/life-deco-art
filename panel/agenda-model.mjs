@@ -3,6 +3,12 @@ export const ZONE='America/Santo_Domingo';
 export const DAY=86400000;
 export const dateKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:ZONE,year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
 export const shiftDate=(date,days)=>new Date(Date.parse(date+'T12:00:00Z')+days*DAY).toISOString().slice(0,10);
+export function shiftAgendaMonth(date,months,day=Number(date.slice(8))){
+ const target=new Date(date.slice(0,8)+'01T12:00:00Z');
+ target.setUTCMonth(target.getUTCMonth()+months+1,0);
+ target.setUTCDate(Math.min(day,target.getUTCDate()));
+ return target.toISOString().slice(0,10);
+}
 export const stamp=value=>Date.parse(value+(value.length===10?'T00:00':'')+':00-04:00');
 export const local=value=>new Date(value-4*3600000).toISOString().slice(0,16);
 export const minutes=value=>Number(value.slice(11,13))*60+Number(value.slice(14,16));

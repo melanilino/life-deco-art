@@ -246,3 +246,8 @@ Verificación: 131 pruebas aprobadas. Navegador local con datos ficticios: escri
 El tablero permite mover tarjetas entre Ideas, En preparación y Listo mediante arrastre o el selector Mover a. Guarda la etapa con el mismo flujo que la ficha y conserva las publicaciones por plataforma. Publicado sigue dependiendo de sus confirmaciones.
 
 Se verificaron en navegador el arrastre, el selector con publicación parcial y el rechazo de un arrastre a Publicado con datos ficticios. Pasaron las 131 pruebas del Hub. La persistencia tras recargar con Firebase real sigue pendiente.
+
+
+### Agenda · fechas y compromisos sin hora
+
+Día y Semana muestran entregas y tareas sin hora en una fila alineada por fecha. Las flechas de Mes conservan el día de referencia y lo ajustan cuando el mes es más corto. Se verificó en navegador con datos ficticios y pasaron 132 pruebas.
