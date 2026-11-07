@@ -238,3 +238,5 @@ El pie conserva la frase de 12 px a la izquierda y un lapicito accesible con nom
 
 ### Mis frases · tarjetas individuales
 El panel guarda una frase por envío con el botón Guardar, sin subrayado en hover. Cada frase existente se conserva en su propia tarjeta; buscador con lupa y edición individual. Se mantiene el lápiz actual hasta que la propietaria elija entre las opciones visuales.
+
+La propietaria eligió el lápiz Como el favicon: mismo trazado de favicon.svg, color heredado del control del Hub y sin cambiar el favicon de la web.
