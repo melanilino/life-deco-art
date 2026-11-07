@@ -61,6 +61,11 @@
   padding-right: 44px;
 }
 
+.clients-pilot .clients-toolbar select {
+  grid-row: auto;
+  grid-column: auto;
+}
+
 .clients-pilot .client-create-button {
   padding: 0 16px;
   border: 1px solid transparent;
