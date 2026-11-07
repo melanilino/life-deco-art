@@ -1,3 +1,5 @@
+html{overflow-y:auto;scrollbar-gutter:stable}
+@supports not (scrollbar-gutter:stable){html{overflow-y:scroll}}
 @font-face{font-family:Montserrat;src:url('/fonts/montserrat-normal-400-5.woff2') format('woff2');font-weight:400;font-display:swap}
 @font-face{font-family:Montserrat;src:url('/fonts/montserrat-normal-300-5.woff2') format('woff2');font-weight:300;font-display:swap}
 @font-face{font-family:Montserrat;src:url('/fonts/montserrat-normal-500-5.woff2') format('woff2');font-weight:500 800;font-display:swap}

@@ -271,3 +271,7 @@ Las vistas previas de borradores usan los datos vigentes del negocio, tal como s
 ### Seguridad · recuperación de registros
 
 La revisión de copias comprueba que los adjuntos referenciados existan como recursos en el Hub o en la copia. La recuperación fija la cuenta de origen y comprueba que la sesión siga activa durante las subidas y la transacción. Se verificaron ambos casos con datos ficticios.
+
+## Cabecera uniforme · 7 de noviembre de 2026
+
+Todas las páginas, incluidas Finanzas, Estadísticas y el formulario de clientes, muestran Vista actual junto a Notas. La flecha se conserva en las secciones con subpáginas. El documento reserva el espacio de la barra vertical para mantener los márgenes al navegar entre páginas de distinta altura.
