@@ -281,3 +281,7 @@ Todas las páginas, incluidas Finanzas, Estadísticas y el formulario de cliente
 El listado y el formulario completo de Clientes prueban una jerarquía con énfasis selectivo en títulos, etiquetas y cifras, texto auxiliar de mayor contraste, controles de 44 px y espacios interiores uniformes. La barra de filtros conserva el orden del documento y sitúa Nuevo cliente al final del grupo. Los campos de Persona y Empresa y las acciones existentes se conservan. El estilo vive en clients-pilot.css y solo se activa en esas dos pantallas, pendiente de valoración de la propietaria antes de extenderlo a otras secciones del Hub.
 
 El piloto de Clientes ajusta su tipografía a Inicio por indicación de la propietaria. Título ligero, cifras de 22 px con peso 500 y títulos de sección de 18 px con peso 500. Las etiquetas del formulario y de indicadores conservan peso regular.
+
+## Unificación visual · 7 de noviembre de 2026
+
+Se extendieron las reglas comunes de legibilidad, acciones, filtros, formularios y tablas. Se mantienen la amplitud y la tipografía ligera aprobadas. Campañas y Recursos recuperan Notas y el regreso en las altas. La implementación visual no modifica los datos ni sus integraciones.

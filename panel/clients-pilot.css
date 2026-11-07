@@ -132,7 +132,7 @@
 
 .clients-pilot .client-page-form .field > span,
 .clients-pilot .client-interests legend {
-  color: var(--brown);
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: var(--font-regular);
 }

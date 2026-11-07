@@ -1,0 +1,333 @@
+/* Reglas comunes por función. Conservan la amplitud del Hub. */
+:root {
+  --text-muted: #75634d;
+  --toolbar-height: 44px;
+  --form-padding: 24px;
+  --form-gap: 20px;
+}
+
+/* Acciones de creación y guardado. */
+button.primary,
+.finance-save,
+.catalog-primary,
+.content-save,
+.agenda-save,
+.admin-save {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+  font-weight: var(--font-medium);
+}
+button.primary:hover,
+button.primary:focus-visible,
+.finance-save:hover,
+.catalog-primary:hover,
+.content-save:hover,
+.agenda-save:hover,
+.admin-save:hover {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.sales-create-button,
+.client-create-button,
+.catalog-toolbar button,
+.catalog-toolbar-link,
+.finance-register,
+.finance-toolbar .finance-register,
+.content-new,
+.admin-new {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--toolbar-height);
+  height: var(--toolbar-height);
+  padding: 10px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--surface-radius);
+  background: var(--brown-soft);
+  color: var(--black);
+  font-size: var(--font-body);
+  font-weight: var(--font-regular);
+  text-decoration: none;
+}
+.sales-create-button:hover,
+.client-create-button:hover,
+.catalog-toolbar button:hover,
+.catalog-toolbar-link:hover,
+.finance-register:hover,
+.content-new:hover,
+.admin-new:hover {
+  background: rgba(139,121,94,.16);
+  border-color: transparent;
+  color: var(--black);
+}
+
+/* Las barras admiten salto de fila sin cambiar el orden de sus controles. */
+.sales-toolbar,
+.clients-pilot .clients-toolbar,
+.catalog-toolbar,
+.finance-toolbar,
+.content-toolbar-table-only,
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.sales-toolbar > *,
+.clients-pilot .clients-toolbar > *,
+.catalog-toolbar > *,
+.finance-toolbar > *,
+.content-toolbar-table-only > *,
+.admin-toolbar > * {
+  min-width: 0;
+  grid-column: auto;
+  grid-row: auto;
+}
+.sales-toolbar > :is(.sales-search,.clients-search),
+.clients-pilot .clients-toolbar > .clients-search,
+.catalog-toolbar > .sales-search,
+.finance-toolbar > label:first-child,
+.content-toolbar-table-only > .content-search,
+.admin-toolbar > .admin-search {
+  flex: 1 1 280px;
+}
+.sales-toolbar > select,
+.clients-pilot .clients-toolbar > select,
+.catalog-toolbar > select,
+.content-toolbar-table-only > select,
+.admin-toolbar > select {
+  flex: 1 1 180px;
+  width: auto;
+}
+.finance-toolbar > label:not(:first-child) {
+  flex: 1 1 140px;
+}
+.finance-toolbar > label:nth-child(3) {
+  flex-basis: 210px;
+}
+.finance-toolbar > .finance-register {
+  margin-left: auto;
+}
+.sales-toolbar :is(input,select),
+.clients-pilot .clients-toolbar select,
+.catalog-toolbar :is(input,select),
+.finance-toolbar :is(input,select),
+.content-toolbar-table-only :is(input,select),
+.admin-toolbar :is(input,select) {
+  height: var(--toolbar-height);
+  min-height: var(--toolbar-height);
+  margin: 0;
+}
+.sales-search,
+.clients-search {
+  height: var(--toolbar-height);
+  min-height: var(--toolbar-height);
+}
+.sales-search input,
+.clients-pilot .clients-search input {
+  height: 42px;
+  min-height: 42px;
+}
+.sales-toolbar > :is(button,.catalog-toolbar-link),
+.clients-pilot .clients-toolbar > button,
+.content-toolbar-table-only > .content-new,
+.admin-toolbar > .admin-new {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+/* Campos y jerarquía de los formularios completos. */
+select,
+.sales-toolbar select,
+.clients-pilot .clients-toolbar select,
+.clients-pilot .client-page-form select,
+.finance-main select,
+.finance-payment-history select {
+  background-position: right 16px center;
+  background-size: 16px;
+  padding-right: 44px;
+}
+.sales-editor-sheet,
+.sales-editor-summary,
+.clients-pilot .client-data-card,
+.clients-pilot .client-save-summary,
+.catalog-form-card,
+.catalog-summary-card,
+#content-form,
+#agenda-form,
+.finance-form,
+.admin-panel:has(.admin-fields) {
+  padding: var(--form-padding);
+}
+.sales-editor-sheet h2,
+.sales-editor-summary h2,
+.catalog-form-card h2,
+.catalog-summary-card h2,
+#content-form h2,
+#agenda-form h2,
+.finance-form h2,
+.admin-panel h2,
+.admin-block summary strong {
+  font-size: var(--font-section-title);
+  font-weight: var(--font-medium);
+}
+.sales-general-grid,
+.sales-notes-grid,
+.client-page-form .client-form-grid,
+.clients-pilot .client-page-form .client-form-grid,
+.catalog-form-grid,
+.content-fields,
+.agenda-fields,
+.finance-fields,
+.admin-fields {
+  gap: var(--form-gap) 24px;
+}
+.field,
+.clients-pilot .client-page-form .field {
+  gap: 8px;
+}
+.field > span,
+.clients-pilot .client-page-form .field > span,
+.finance-fields .field > span {
+  color: var(--text-muted);
+  font-size: var(--font-body);
+  font-weight: var(--font-regular);
+}
+.client-page-form input:not([type=checkbox]),
+.clients-pilot .client-page-form input:not([type=checkbox]),
+.client-page-form select,
+.clients-pilot .client-page-form select {
+  height: var(--control-height);
+  min-height: var(--control-height);
+}
+
+/* Cada pie pertenece a su formulario, con espacio y acciones consistentes. */
+.sales-editor-actions,
+.clients-pilot .client-page-actions,
+.catalog-form-actions {
+  margin: 28px calc(-1 * var(--form-padding)) calc(-1 * var(--form-padding));
+  padding: 20px var(--form-padding);
+}
+.form-actions,
+.content-form-actions,
+.agenda-form-actions,
+.finance-form-footer,
+.admin-form-actions {
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.sales-editor-actions,
+.client-page-actions,
+.catalog-form-actions,
+.content-form-actions,
+.agenda-form-actions,
+.finance-form-footer,
+.admin-form-actions {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.form-actions > a,
+.catalog-form-actions > a,
+.content-form-actions .button,
+.agenda-form-actions .button,
+.finance-form-footer .button,
+.admin-form-actions .button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--surface-radius);
+  background: var(--white);
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+/* Tablas comparables, con espacio para las filas de varias líneas. */
+.sales-table th,
+.clients-table th,
+.admin-table th,
+.finance-table th {
+  padding: 14px;
+  background: var(--brown-soft);
+  color: var(--black);
+  font-size: 12px;
+  font-weight: var(--font-medium);
+  letter-spacing: 0;
+}
+.sales-table td,
+.clients-table td,
+.admin-table td,
+.finance-table td {
+  height: 64px;
+  padding: 14px;
+}
+.sales-table td:has(.finance-movements-empty) {
+  height: auto;
+}
+.table-export,
+.content-footer .table-export,
+.admin-footer button {
+  min-height: 44px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 700px) {
+  :root { --form-padding: 18px; }
+  .sales-toolbar,
+  .clients-pilot .clients-toolbar,
+  .catalog-toolbar,
+  .finance-toolbar,
+  .content-toolbar-table-only,
+  .admin-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .sales-toolbar > *,
+  .clients-pilot .clients-toolbar > *,
+  .catalog-toolbar > *,
+  .finance-toolbar > *,
+  .content-toolbar-table-only > *,
+  .admin-toolbar > * {
+    flex: 0 0 auto;
+    width: 100%;
+    margin-left: 0;
+  }
+  .clients-pilot .clients-toolbar .clients-search,
+  .sales-toolbar > .sales-search,
+  .catalog-toolbar > .sales-search,
+  .finance-toolbar > label:first-child,
+  .finance-toolbar > label:not(:first-child),
+  .content-toolbar-table-only > .content-search,
+  .admin-toolbar > .admin-search,
+  .clients-pilot .clients-toolbar > select,
+  .clients-pilot .clients-toolbar > button,
+  .sales-toolbar > select,
+  .content-toolbar-table-only > select,
+  .admin-toolbar > select,
+  .content-toolbar-table-only > .content-new,
+  .admin-toolbar > .admin-new {
+    flex: 0 0 auto;
+  }
+  .sales-editor-actions button { min-width: 0; }
+  .content-form-actions > div,
+  .finance-form-footer > div,
+  .admin-form-actions {
+    width: 100%;
+  }
+  .content-form-actions > div > *,
+  .finance-form-footer > div > *,
+  .admin-form-actions > * {
+    flex: 1 1 140px;
+    white-space: normal;
+  }
+}
