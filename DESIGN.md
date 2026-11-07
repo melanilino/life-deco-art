@@ -231,3 +231,5 @@ Requiere atención usa franjas de fondo brown-soft sin contorno, con un check ci
 
 ### Inicio · frases personales
 La frase diaria aparece al pie de Inicio sobre el fondo crema, sin tarjeta propia. Administrar frases despliega un editor compacto con una frase por línea, Guardar y Cancelar. No se precargan frases de ejemplo.
+
+El pie de frases se separa con una línea fina de ancho completo, igual a la del encabezado; frase a la izquierda y Administrar frases a la derecha. El desplegable no conserva la línea propia de los details genéricos. En móvil se apilan conservando el enlace a la derecha.
