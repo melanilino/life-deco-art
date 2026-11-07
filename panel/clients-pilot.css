@@ -37,7 +37,7 @@
 }
 
 .clients-pilot .clients-toolbar {
-  grid-template-columns: minmax(220px, 1fr) 154px 118px 164px auto;
+  grid-template-columns: minmax(220px, 1fr) 180px 134px 192px auto;
   gap: 12px;
   margin-bottom: 20px;
 }
