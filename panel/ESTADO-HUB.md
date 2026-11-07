@@ -293,3 +293,5 @@ Inicio: la zona inferior usa dos columnas equivalentes. Próximos compromisos oc
 Inicio: Todo está al día usa el mismo fondo brown-soft del mensaje Sin próximos compromisos.
 
 Inicio: el mensaje Todo está al día conserva el fondo suave y se muestra sin borde exterior. Las filas de alertas conservan sus separadores.
+
+Inicio: se retira el sombreado de Todo está al día para mantener el fondo blanco en el estado vacío de Requiere atención, coherente con la muestra de alertas. Se conserva la ausencia de borde del mensaje vacío.
