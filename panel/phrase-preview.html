@@ -1,7 +1,0 @@
-<!doctype html>
-<html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prueba del panel de frases</title><link rel="stylesheet" href="/panel/panel.css"><link rel="stylesheet" href="/panel/shared.css"><main style="padding:32px"><h1>Inicio · comprobación visual</h1><p>Datos ficticios de prueba, sin conexión con registros reales.</p><div id="phrase-preview"></div></main><script type="module">
-import {homePhrasesHtml,bindHomePhrases} from './home-phrases.mjs';
-const settings={timezone:'America/Santo_Domingo',homePhrases:{items:['Frase de ejemplo para comprobar tamaño y alineación.'],startDate:'2026-11-07'}};
-document.querySelector('#phrase-preview').innerHTML=homePhrasesHtml(settings);
-bindHomePhrases({getSettings:()=>settings,execute:async command=>{settings.homePhrases.items=command.text.split('\n').filter(Boolean);return {};},notice:()=>{}});
-</script></html>
