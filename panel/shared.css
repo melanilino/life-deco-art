@@ -1,9 +1,155 @@
 /* Reglas comunes por función. Conservan la amplitud del Hub. */
 :root {
-  --text-muted: #75634d;
+  --text-muted: #68645d;
+  --hub-metric-height: 148px;
   --toolbar-height: 44px;
   --form-padding: 24px;
   --form-gap: 20px;
+}
+
+/* Jerarquía aprobada: crema exterior, blanco de trabajo y texto neutro. */
+.home-shell {
+  --home-muted: var(--text-muted);
+}
+.home-header .home-welcome h1 {
+  font-weight: var(--font-regular);
+}
+.metrics-row,
+.client-metrics,
+.sales-metrics,
+.stats-metrics,
+.admin-metrics {
+  align-items: stretch;
+}
+.view-header-controls .home-notes-trigger,
+.view-header-controls .home-notes-trigger:hover,
+.view-header-controls .home-notes-trigger:focus-visible {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+.view-header-controls .home-notes-trigger:hover {
+  border-color: var(--brown);
+  color: var(--black);
+}
+.view-header-controls .home-notes-trigger svg {
+  color: var(--brown);
+}
+.metric-card,
+.client-metric,
+.sales-metric,
+.stats-metric,
+.admin-metrics > article {
+  position: relative;
+  display: block;
+  min-height: var(--hub-metric-height);
+  padding: 20px;
+}
+.clients-pilot .client-metric {
+  padding: 20px;
+}
+.metric-card > .metric-icon,
+.client-metric > span,
+.sales-metric > span,
+.stats-metric > .stats-icon,
+.admin-metrics > article > .admin-symbol {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--brown);
+}
+.metric-card .metric-icon svg,
+.client-metric > span svg,
+.sales-metric > span svg,
+.stats-metric .stats-icon svg,
+#admin-root .admin-metrics .admin-symbol svg {
+  width: 18px;
+  height: 18px;
+}
+.metric-card > div > small,
+.client-metric > div > small,
+.sales-metric > div > small,
+.stats-metric h2,
+.admin-metrics > article > div > span {
+  display: block;
+  min-height: 32px;
+  padding-right: 26px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: var(--font-regular);
+  line-height: 1.4;
+}
+.metric-card strong,
+.clients-pilot .client-metric strong,
+.sales-metric strong,
+.stats-metric strong,
+.admin-metrics > article strong {
+  display: block;
+  margin: 5px 0 8px;
+  color: var(--black);
+  font-size: 26px;
+  font-weight: var(--font-medium);
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  font-variant-numeric: tabular-nums;
+}
+.metric-card .trend,
+.client-metric p,
+.sales-metric p,
+.admin-metrics small {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.attention-clear {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.empty-today > div {
+  background: transparent;
+}
+
+/* Tablero: las columnas comparten blanco, sin franjas de distintos cremas. */
+#content-page.content-panel {
+  padding: 0;
+  background: transparent;
+}
+#content-page > .content-toolbar {
+  padding: 20px;
+  background: var(--white);
+  border-radius: var(--surface-radius);
+  margin-bottom: 20px;
+}
+#content-page .content-column {
+  background: var(--white);
+  border: 0;
+  border-radius: var(--surface-radius);
+}
+#content-page .content-column > header {
+  background: transparent;
+  border-bottom: 1px solid var(--border);
+  padding: 18px 16px;
+}
+#content-page .content-column h2 {
+  color: var(--black);
+  font-weight: var(--font-medium);
+}
+#content-page .content-column > header > span,
+#content-page .content-column-empty {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+#content-page .content-footer {
+  border: 0;
+  padding: 0 2px;
 }
 
 .metric-card .trend {
@@ -40,6 +186,7 @@ button.primary:focus-visible,
 
 .sales-create-button,
 .client-create-button,
+.clients-pilot .client-create-button,
 .catalog-toolbar button,
 .catalog-toolbar-link,
 .finance-register,
@@ -53,24 +200,25 @@ button.primary:focus-visible,
   min-height: var(--toolbar-height);
   height: var(--toolbar-height);
   padding: 10px 16px;
-  border: 1px solid transparent;
+  border: 1px solid var(--black);
   border-radius: var(--surface-radius);
-  background: var(--brown-soft);
-  color: var(--black);
+  background: var(--black);
+  color: var(--white);
   font-size: var(--font-body);
-  font-weight: var(--font-regular);
+  font-weight: var(--font-medium);
   text-decoration: none;
 }
 .sales-create-button:hover,
 .client-create-button:hover,
+.clients-pilot .client-create-button:hover,
 .catalog-toolbar button:hover,
 .catalog-toolbar-link:hover,
 .finance-register:hover,
 .content-new:hover,
 .admin-new:hover {
-  background: rgba(139,121,94,.16);
-  border-color: transparent;
-  color: var(--black);
+  background: #37332d;
+  border-color: #37332d;
+  color: var(--white);
 }
 
 /* Las barras admiten salto de fila sin cambiar el orden de sus controles. */
@@ -205,7 +353,7 @@ select,
 .field > span,
 .clients-pilot .client-page-form .field > span,
 .finance-fields .field > span {
-  color: var(--text-muted);
+  color: var(--black);
   font-size: var(--font-body);
   font-weight: var(--font-regular);
 }
