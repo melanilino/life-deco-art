@@ -22,20 +22,23 @@ export function dailyPhrase(settings,now=new Date()){
  return items[elapsed%items.length];
 }
 export function homePhrasesHtml(settings){
- return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><details class="home-phrases-editor"><summary>Administrar frases</summary><form id="home-phrases-form"><label class="field"><span>Mis frases · una por línea</span><textarea name="phrases" rows="6" maxlength="50000" aria-describedby="home-phrases-help">${escapeHtml((settings.homePhrases?.items||[]).join('\n'))}</textarea></label><p id="home-phrases-help">Se muestra una frase cada día, en este orden. Al terminar, vuelven a empezar. Puedes agregar o editar las líneas y cambiar su orden.</p><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar frases</button></div><p class="home-phrases-status" role="status"></p></form></details></section>`;
+ return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14l-1 7Z"/></svg></button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span>Una frase por línea</span><textarea name="phrases" rows="8" maxlength="50000" aria-describedby="home-phrases-help">${escapeHtml((settings.homePhrases?.items||[]).join('\n'))}</textarea></label><p id="home-phrases-help">Se muestra una frase cada día, en este orden. Al terminar, vuelven a empezar. Puedes agregar o editar las líneas y cambiar su orden.</p><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar frases</button></div><p class="home-phrases-status" role="status"></p></form></div></dialog>`;
 }
-export function bindHomePhrases({getSettings,execute,notice}){
+export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  const form=document.querySelector('#home-phrases-form');if(!form)return;
- const details=form.closest('details'),message=form.querySelector('[role=status]');
- if(draft?.dirty){form.elements.phrases.value=draft.text;details.open=true;}
+ const panel=form.closest('dialog'),trigger=document.querySelector('.home-phrases-trigger'),message=form.querySelector('[role=status]');
+ if(draft?.dirty)form.elements.phrases.value=draft.text;
+ trigger.addEventListener('click',()=>{onOpen();panel.showModal();trigger.setAttribute('aria-expanded','true');form.elements.phrases.focus();});
+ panel.addEventListener('close',()=>{trigger.setAttribute('aria-expanded','false');trigger.focus();});
+ panel.querySelector('[data-phrases-close]').addEventListener('click',()=>{if(!saving)panel.close();});
+ panel.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
  form.elements.phrases.addEventListener('input',()=>{draft={text:form.elements.phrases.value,dirty:form.elements.phrases.value!==(getSettings().homePhrases?.items||[]).join('\n')};});
  let saving=false;
  const setBusy=value=>{saving=value;form.querySelectorAll('button,textarea').forEach(node=>node.disabled=value);};
- details.addEventListener('toggle',()=>{if(!details.open&&!saving&&!draft?.dirty){form.elements.phrases.value=(getSettings().homePhrases?.items||[]).join('\n');message.textContent='';}});
- form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{draft=null;form.elements.phrases.value=(getSettings().homePhrases?.items||[]).join('\n');details.open=false;});
+ form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{draft=null;form.elements.phrases.value=(getSettings().homePhrases?.items||[]).join('\n');message.textContent='';panel.close();});
  form.addEventListener('submit',async event=>{
   event.preventDefault();event.stopPropagation();if(saving)return;
-  try{normalizePhrases(form.elements.phrases.value);setBusy(true);message.setAttribute('role','status');message.textContent='Guardando…';await execute({action:'home-phrases',text:form.elements.phrases.value});draft=null;document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());message.textContent='';details.open=false;notice('Frases guardadas.');}
+  try{normalizePhrases(form.elements.phrases.value);setBusy(true);message.setAttribute('role','status');message.textContent='Guardando…';await execute({action:'home-phrases',text:form.elements.phrases.value});draft=null;document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());message.textContent='';panel.close();notice('Frases guardadas.');}
   catch(error){message.textContent=error.message;message.setAttribute('role','alert');}
   finally{setBusy(false);}
  });

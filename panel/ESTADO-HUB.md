@@ -302,3 +302,6 @@ Requiere atención: se recupera un indicador circular de estado, check cuando no
 
 ### Frases diarias · 07/11/2026
 Inicio permite guardar frases personales al pie de la página. Una por línea; rotación diaria en el orden guardado según la zona horaria del Hub, con repetición al terminar. Persistencia mediante las transacciones existentes, sin modificar integraciones. Líneas retiradas se conservan archivadas en la configuración. Evita doble envío, conserva el texto al fallar y al navegar durante la sesión; avisa al recargar con cambios sin guardar. Sin frases precargadas.
+
+### Frases · panel lateral
+El lapicito Administrar sustituye el enlace y abre el editor en un panel lateral como Notas. Frase de 12 px. Conserva Guardar, Cancelar, borradores y mensajes de error; el diálogo gestiona el foco y Escape. No modifica la rotación ni los datos guardados.

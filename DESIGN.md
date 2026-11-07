@@ -233,3 +233,5 @@ Requiere atención usa franjas de fondo brown-soft sin contorno, con un check ci
 La frase diaria aparece al pie de Inicio sobre el fondo crema, sin tarjeta propia. Administrar frases despliega un editor compacto con una frase por línea, Guardar y Cancelar. No se precargan frases de ejemplo.
 
 El pie de frases se separa con una línea fina de ancho completo, igual a la del encabezado; frase a la izquierda y Administrar frases a la derecha. El desplegable no conserva la línea propia de los details genéricos. En móvil se apilan conservando el enlace a la derecha.
+
+El pie conserva la frase de 12 px a la izquierda y un lapicito accesible con nombre Administrar a la derecha. El editor abre un panel lateral con la superficie, anchura y encabezado de Notas; en móvil ocupa el ancho disponible.
