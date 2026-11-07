@@ -178,6 +178,9 @@ select,
   font-size: var(--font-section-title);
   font-weight: var(--font-medium);
 }
+#record-form .field-group-title {
+  font-size: var(--font-section-title);
+}
 .sales-general-grid,
 .sales-notes-grid,
 .client-page-form .client-form-grid,
@@ -281,6 +284,12 @@ select,
   color: var(--text-muted);
 }
 
+@media (min-width: 701px) and (max-width: 1350px) {
+  .clients-pilot .clients-toolbar > .clients-search {
+    flex-basis: 100%;
+  }
+}
+
 @media (max-width: 700px) {
   :root { --form-padding: 18px; }
   .sales-toolbar,
@@ -329,5 +338,13 @@ select,
   .admin-form-actions > * {
     flex: 1 1 140px;
     white-space: normal;
+  }
+  .finance-table-empty th {
+    padding: 12px 4px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .finance-table-empty td {
+    padding: 0;
   }
 }
