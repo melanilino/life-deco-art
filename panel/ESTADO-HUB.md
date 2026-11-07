@@ -305,3 +305,6 @@ Inicio permite guardar frases personales al pie de la página. Una por línea; r
 
 ### Frases · panel lateral
 El lapicito Administrar sustituye el enlace y abre el editor en un panel lateral como Notas. Frase de 12 px. Conserva Guardar, Cancelar, borradores y mensajes de error; el diálogo gestiona el foco y Escape. No modifica la rotación ni los datos guardados.
+
+### Mis frases · guardado individual
+Nueva frase se agrega a la colección sin reemplazar las anteriores. Tarjetas de frases guardadas con edición y buscador que ignora acentos y mayúsculas. Guardar mantiene el panel abierto y limpia el editor. El formato previo de frases se conserva sin migraciones ni pérdida de registros; rotación diaria y fecha inicial preservadas. Duplicados y cambios concurrentes se validan antes de escribir.

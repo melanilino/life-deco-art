@@ -235,3 +235,6 @@ La frase diaria aparece al pie de Inicio sobre el fondo crema, sin tarjeta propi
 El pie de frases se separa con una línea fina de ancho completo, igual a la del encabezado; frase a la izquierda y Administrar frases a la derecha. El desplegable no conserva la línea propia de los details genéricos. En móvil se apilan conservando el enlace a la derecha.
 
 El pie conserva la frase de 12 px a la izquierda y un lapicito accesible con nombre Administrar a la derecha. El editor abre un panel lateral con la superficie, anchura y encabezado de Notas; en móvil ocupa el ancho disponible.
+
+### Mis frases · tarjetas individuales
+El panel guarda una frase por envío con el botón Guardar, sin subrayado en hover. Cada frase existente se conserva en su propia tarjeta; buscador con lupa y edición individual. Se mantiene el lápiz actual hasta que la propietaria elija entre las opciones visuales.

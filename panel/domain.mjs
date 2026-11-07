@@ -1,5 +1,5 @@
 import {catalogCostOf} from './catalog-cost.mjs';
-import {normalizePhrases,phraseDate} from './home-phrases.mjs';
+import {normalizePhrases,singlePhrase,phraseDate} from './home-phrases.mjs';
 import {orderStageOf,orderProgressPatch} from './order-state.mjs';
 import {adminMutation} from './admin-model.mjs';
 import {agendaMutation,agendaEvents} from './agenda-model.mjs';
@@ -127,6 +127,12 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   result=create('expenses',{name:d.name.trim(),category:d.category.trim(),amount:amount/100,date:d.date,direction,recordType:'finance-entry',paymentState:isPaid?'paid':'pending',person:d.person||'',orderId:d.orderId||'',notes:d.notes||'',expectedDate:!isPaid?d.expectedDate||'':'',status:'activo'});
   if(d.receipt){const resource=create('resources',{...d.receipt,name:d.receipt.fileName,recordType:'finance-receipt',sourceId:result.id},`${id}-receipt`);update(result,{resourceIds:[resource.id]});}
   if(isPaid)create('payments',{name:d.name.trim(),target:result.id,type:'payment',direction,amount,date:direction==='income'?d.date:d.paymentDate,method:d.method,reference:''},`${id}-payment`);
+ }else if(cmd.action==='home-phrase-save'){
+  const text=singlePhrase(cmd.text),previous=s.settings.homePhrases||{},items=[...(previous.items||[])],editing=cmd.index!==null&&cmd.index!==undefined;
+  if(editing&&(!Number.isInteger(cmd.index)||items[cmd.index]!==cmd.originalText))throw Error('Esta frase cambió. Vuelve a abrirla antes de guardar.');
+  if(items.some((item,index)=>item===text&&(!editing||index!==cmd.index)))throw Error('Esta frase ya está guardada.');
+  if(editing)items[cmd.index]=text;else{if(items.length>=100)throw Error('Puedes guardar hasta 100 frases.');items.push(text);}
+  s.settings.homePhrases={...previous,items,startDate:previous.startDate||phraseDate(new Date(at),s.settings.timezone)};
  }else if(cmd.action==='home-phrases'){
   const items=normalizePhrases(cmd.text),previous=s.settings.homePhrases||{};
   s.settings.homePhrases={items,startDate:previous.startDate||phraseDate(new Date(at),s.settings.timezone),archived:[...new Set([...(previous.archived||[]),...(previous.items||[]).filter(text=>!items.includes(text))])].filter(text=>!items.includes(text))};

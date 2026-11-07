@@ -14,6 +14,15 @@ export function normalizePhrases(text){
  if(phrases.length>100||phrases.some(value=>value.length>300))throw Error('Utiliza hasta 100 frases de 300 caracteres cada una.');
  return phrases;
 }
+export function singlePhrase(text){
+ if(typeof text!=='string'||!text.trim())throw Error('Escribe una frase antes de guardar.');
+ const value=text.trim();if(value.length>300)throw Error('La frase debe tener hasta 300 caracteres.');return value;
+}
+const searchText=value=>String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+export function phraseCards(settings,query=''){
+ const items=settings.homePhrases?.items||[],needle=searchText(query.trim()),rows=items.map((text,index)=>({text,index})).filter(row=>searchText(row.text).includes(needle));
+ return rows.length?rows.map(({text,index})=>`<article class="home-phrase-card"><p>${escapeHtml(text)}</p><button type="button" data-phrase-edit="${index}" aria-label="Editar frase ${index+1}">Editar</button></article>`).join(''):`<p class="quick-notes-empty">${needle?'No hay frases que coincidan con la búsqueda.':'Todavía no has guardado frases.'}</p>`;
+}
 export function dailyPhrase(settings,now=new Date()){
  const config=settings.homePhrases,items=config?.items||[];
  if(!items.length)return '';
@@ -22,23 +31,29 @@ export function dailyPhrase(settings,now=new Date()){
  return items[elapsed%items.length];
 }
 export function homePhrasesHtml(settings){
- return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14l-1 7Z"/></svg></button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span>Una frase por línea</span><textarea name="phrases" rows="8" maxlength="50000" aria-describedby="home-phrases-help">${escapeHtml((settings.homePhrases?.items||[]).join('\n'))}</textarea></label><p id="home-phrases-help">Se muestra una frase cada día, en este orden. Al terminar, vuelven a empezar. Puedes agregar o editar las líneas y cambiar su orden.</p><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar frases</button></div><p class="home-phrases-status" role="status"></p></form></div></dialog>`;
+ return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l5-1L21 7a2 2 0 0 0-5-5L4 14l-1 7Z"/></svg></button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span data-phrase-label>Nueva frase</span><textarea name="phrases" rows="3" maxlength="300" required aria-describedby="home-phrases-help" placeholder="Escribe una frase…"></textarea></label><p id="home-phrases-help">Las frases guardadas se muestran en Inicio, una cada día.</p><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar</button></div><p class="home-phrases-status" role="status"></p></form><section class="home-phrase-library" aria-label="Frases guardadas"><label class="home-phrase-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" aria-label="Buscar frases" placeholder="Buscar frases…"></label><div class="home-phrase-results" aria-live="polite">${phraseCards(settings)}</div></section></div></dialog>`;
 }
 export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  const form=document.querySelector('#home-phrases-form');if(!form)return;
- const panel=form.closest('dialog'),trigger=document.querySelector('.home-phrases-trigger'),message=form.querySelector('[role=status]');
+ const panel=form.closest('dialog'),trigger=document.querySelector('.home-phrases-trigger'),message=form.querySelector('[role=status]'),search=panel.querySelector('[type=search]'),results=panel.querySelector('.home-phrase-results'),label=form.querySelector('[data-phrase-label]');
+ let editingIndex=draft?.dirty?draft.index:null,originalText=draft?.dirty?draft.originalText:'';
  if(draft?.dirty)form.elements.phrases.value=draft.text;
- trigger.addEventListener('click',()=>{onOpen();panel.showModal();trigger.setAttribute('aria-expanded','true');form.elements.phrases.focus();});
+ const refresh=()=>{results.innerHTML=phraseCards(getSettings(),search.value);};
+ const reset=()=>{draft=null;editingIndex=null;originalText='';form.elements.phrases.value='';label.textContent='Nueva frase';message.textContent='';};
+ if(editingIndex!==null)label.textContent='Editar frase';
+ trigger.addEventListener('click',()=>{onOpen();refresh();panel.showModal();trigger.setAttribute('aria-expanded','true');form.elements.phrases.focus();});
  panel.addEventListener('close',()=>{trigger.setAttribute('aria-expanded','false');trigger.focus();});
  panel.querySelector('[data-phrases-close]').addEventListener('click',()=>{if(!saving)panel.close();});
  panel.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
- form.elements.phrases.addEventListener('input',()=>{draft={text:form.elements.phrases.value,dirty:form.elements.phrases.value!==(getSettings().homePhrases?.items||[]).join('\n')};});
+ form.elements.phrases.addEventListener('input',()=>{draft={text:form.elements.phrases.value,index:editingIndex,originalText,dirty:form.elements.phrases.value!==originalText};});
  let saving=false;
- const setBusy=value=>{saving=value;form.querySelectorAll('button,textarea').forEach(node=>node.disabled=value);};
- form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{draft=null;form.elements.phrases.value=(getSettings().homePhrases?.items||[]).join('\n');message.textContent='';panel.close();});
+ const setBusy=value=>{saving=value;panel.querySelectorAll('button,textarea,input').forEach(node=>node.disabled=value);};
+ search.addEventListener('input',refresh);
+ results.addEventListener('click',event=>{const edit=event.target.closest('[data-phrase-edit]');if(!edit||saving)return;editingIndex=Number(edit.dataset.phraseEdit);originalText=getSettings().homePhrases.items[editingIndex];form.elements.phrases.value=originalText;draft=null;label.textContent='Editar frase';message.textContent='';form.elements.phrases.focus();});
+ form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{const wasEditing=editingIndex!==null;reset();if(!wasEditing)panel.close();});
  form.addEventListener('submit',async event=>{
   event.preventDefault();event.stopPropagation();if(saving)return;
-  try{normalizePhrases(form.elements.phrases.value);setBusy(true);message.setAttribute('role','status');message.textContent='Guardando…';await execute({action:'home-phrases',text:form.elements.phrases.value});draft=null;document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());message.textContent='';panel.close();notice('Frases guardadas.');}
+  try{const text=singlePhrase(form.elements.phrases.value);setBusy(true);message.setAttribute('role','status');message.textContent='Guardando…';await execute({action:'home-phrase-save',text,index:editingIndex,originalText});reset();search.value='';refresh();document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());notice('Frase guardada.');}
   catch(error){message.textContent=error.message;message.setAttribute('role','alert');}
   finally{setBusy(false);}
  });
