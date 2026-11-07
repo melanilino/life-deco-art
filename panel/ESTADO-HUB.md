@@ -285,3 +285,5 @@ El piloto de Clientes ajusta su tipografía a Inicio por indicación de la propi
 ## Unificación visual · 7 de noviembre de 2026
 
 Se extendieron las reglas comunes de legibilidad, acciones, filtros, formularios y tablas. Se mantienen la amplitud y la tipografía ligera aprobadas. Campañas y Recursos recuperan Notas y el regreso en las altas. La implementación visual no modifica los datos ni sus integraciones.
+
+Corrección de Inicio: los textos de comparación admiten varias líneas dentro de las métricas. Se conserva el texto completo y la altura mínima común.

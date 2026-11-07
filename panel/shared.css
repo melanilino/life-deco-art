@@ -6,6 +6,12 @@
   --form-gap: 20px;
 }
 
+.metric-card .trend {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
 /* Acciones de creación y guardado. */
 button.primary,
 .finance-save,
