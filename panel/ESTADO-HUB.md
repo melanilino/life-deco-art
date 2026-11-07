@@ -275,3 +275,7 @@ La revisión de copias comprueba que los adjuntos referenciados existan como rec
 ## Cabecera uniforme · 7 de noviembre de 2026
 
 Todas las páginas, incluidas Finanzas, Estadísticas y el formulario de clientes, muestran Vista actual junto a Notas. La flecha se conserva en las secciones con subpáginas. El documento reserva el espacio de la barra vertical para mantener los márgenes al navegar entre páginas de distinta altura.
+
+## Piloto visual de Clientes · 7 de noviembre de 2026
+
+El listado y el formulario completo de Clientes prueban una jerarquía con énfasis selectivo en títulos, etiquetas y cifras, texto auxiliar de mayor contraste, controles de 44 px y espacios interiores uniformes. La barra de filtros conserva el orden del documento y sitúa Nuevo cliente al final del grupo. Los campos de Persona y Empresa y las acciones existentes se conservan. El estilo vive en clients-pilot.css y solo se activa en esas dos pantallas, pendiente de valoración de la propietaria antes de extenderlo a otras secciones del Hub.

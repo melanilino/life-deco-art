@@ -1,0 +1,224 @@
+/* Piloto visual limitado al listado y al formulario completo de Clientes. */
+.clients-pilot {
+  --brown: #75634d;
+  --font-meta: 12px;
+}
+
+.clients-pilot .home-welcome h1 {
+  font-weight: 500;
+}
+
+.clients-pilot .current-view-control strong,
+.clients-pilot .client-metric small,
+.clients-pilot .clients-table th,
+.clients-pilot .client-create-button {
+  font-weight: 500;
+}
+
+.clients-pilot .client-metric {
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.clients-pilot .client-metric strong {
+  margin: 4px 0;
+  font-size: 26px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.clients-pilot .client-metric small,
+.clients-pilot .client-metric p {
+  white-space: normal;
+}
+
+.clients-pilot .clients-list-panel {
+  padding: 20px;
+}
+
+.clients-pilot .clients-toolbar {
+  grid-template-columns: minmax(220px, 1fr) 154px 118px 164px auto;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.clients-pilot .clients-toolbar > * {
+  grid-column: auto;
+  grid-row: auto;
+  min-width: 0;
+  height: 44px;
+  min-height: 44px;
+}
+
+.clients-pilot .clients-search input {
+  min-height: 42px;
+  height: 42px;
+}
+
+.clients-pilot .clients-toolbar select,
+.clients-pilot .client-page-form select {
+  background-position: right 16px center;
+  padding-right: 44px;
+}
+
+.clients-pilot .client-create-button {
+  padding: 0 16px;
+  border: 1px solid transparent;
+  background: var(--brown-soft);
+}
+
+.clients-pilot .client-create-button:hover {
+  background: rgba(139, 121, 94, .16);
+  font-weight: 500;
+}
+
+.clients-pilot .clients-empty {
+  padding: 64px 24px;
+}
+
+.clients-pilot .clients-empty h2 {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.clients-pilot .clients-footer {
+  margin-top: 4px;
+  padding-top: 16px;
+}
+
+.clients-pilot .client-page-layout {
+  grid-template-columns: minmax(0, 1fr) 256px;
+  gap: 20px;
+}
+
+.clients-pilot .client-data-card,
+.clients-pilot .client-save-summary {
+  padding: 24px;
+}
+
+.clients-pilot .client-data-card > h2,
+.clients-pilot .client-additional-fields > h2,
+.clients-pilot .client-save-summary > h2 {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.clients-pilot .client-page-form .client-type-switch {
+  max-width: none;
+  margin-bottom: 24px;
+}
+
+.clients-pilot .client-type-switch button.active {
+  font-weight: 500;
+}
+
+.clients-pilot .client-page-form .client-form-grid {
+  gap: 20px 24px;
+}
+
+.clients-pilot .client-page-form .field {
+  gap: 8px;
+}
+
+.clients-pilot .client-page-form .field > span,
+.clients-pilot .client-interests legend {
+  color: var(--black);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.clients-pilot .client-page-form input:not([type=checkbox]),
+.clients-pilot .client-page-form select {
+  min-height: 44px;
+  height: 44px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.clients-pilot .client-page-form textarea {
+  min-height: 104px;
+}
+
+.clients-pilot .client-additional-fields {
+  margin-top: 32px;
+}
+
+.clients-pilot .client-save-summary p {
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.clients-pilot .client-page-actions {
+  flex-wrap: wrap;
+  gap: 16px 20px;
+  margin: 28px -24px -24px;
+  padding: 20px 24px;
+}
+
+.clients-pilot .client-page-actions > div {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.clients-pilot .client-page-actions button {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-weight: 400;
+}
+
+.clients-pilot .client-page-actions .client-order-button {
+  font-weight: 500;
+}
+
+@media (max-width: 1350px) and (min-width: 641px) {
+  .clients-pilot .clients-toolbar {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .clients-pilot .clients-toolbar .clients-search {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 1000px) {
+  .clients-pilot .client-page-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .clients-pilot .clients-list-panel,
+  .clients-pilot .client-data-card,
+  .clients-pilot .client-save-summary {
+    padding: 18px;
+  }
+
+  .clients-pilot .clients-toolbar {
+    gap: 12px;
+  }
+
+  .clients-pilot .clients-empty {
+    padding: 40px 8px;
+  }
+
+  .clients-pilot .client-page-form .client-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .clients-pilot .client-page-actions {
+    margin: 24px -18px -18px;
+    padding: 18px;
+  }
+
+  .clients-pilot .client-page-actions > div {
+    margin-left: 0;
+  }
+
+  .clients-pilot .client-page-actions button {
+    min-width: 0;
+    white-space: normal;
+  }
+}
