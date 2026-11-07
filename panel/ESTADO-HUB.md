@@ -291,3 +291,5 @@ Corrección de Inicio: los textos de comparación admiten varias líneas dentro 
 Inicio: la zona inferior usa dos columnas equivalentes. Próximos compromisos ocupa la izquierda; Pedidos por etapa e Inventario mantienen recuadros blancos independientes a la derecha, uno encima del otro. Se retira el subtítulo Hasta cuatro compromisos desde hoy.
 
 Inicio: Todo está al día usa el mismo fondo brown-soft del mensaje Sin próximos compromisos.
+
+Inicio: el mensaje Todo está al día conserva el fondo suave y se muestra sin borde exterior. Las filas de alertas conservan sus separadores.

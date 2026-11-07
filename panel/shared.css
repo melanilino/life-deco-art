@@ -11,6 +11,9 @@
   overflow-wrap: anywhere;
   line-height: 1.45;
 }
+.attention-list:has(> .attention-clear) {
+  border: 0;
+}
 
 /* Acciones de creación y guardado. */
 button.primary,
