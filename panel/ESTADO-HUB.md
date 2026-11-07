@@ -299,3 +299,6 @@ Inicio: se retira el sombreado de Todo está al día para mantener el fondo blan
 Requiere atención: se aplica la propuesta de franjas concisas. Cada fila muestra solo el aviso agregado y su enlace. Se retiran iconos, notas y estados repetidos. Cuando no hay alertas, se muestra Todo al día con No tienes alertas pendientes, sin icono. Los contadores y su actualización conservan la lógica existente.
 
 Requiere atención: se recupera un indicador circular de estado, check cuando no hay pendientes y admiración en las filas pendientes. Los textos permanecen concisos.
+
+### Frases diarias · 07/11/2026
+Inicio permite guardar frases personales al pie de la página. Una por línea; rotación diaria en el orden guardado según la zona horaria del Hub, con repetición al terminar. Persistencia mediante las transacciones existentes, sin modificar integraciones. Líneas retiradas se conservan archivadas en la configuración. Evita doble envío, conserva el texto al fallar y al navegar durante la sesión; avisa al recargar con cambios sin guardar. Sin frases precargadas.
