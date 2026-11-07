@@ -287,3 +287,5 @@ El piloto de Clientes ajusta su tipografía a Inicio por indicación de la propi
 Se extendieron las reglas comunes de legibilidad, acciones, filtros, formularios y tablas. Se mantienen la amplitud y la tipografía ligera aprobadas. Campañas y Recursos recuperan Notas y el regreso en las altas. La implementación visual no modifica los datos ni sus integraciones.
 
 Corrección de Inicio: los textos de comparación admiten varias líneas dentro de las métricas. Se conserva el texto completo y la altura mínima común.
+
+Inicio: la zona inferior usa dos columnas equivalentes. Próximos compromisos ocupa la izquierda; Pedidos por etapa e Inventario comparten una superficie blanca a la derecha. Se retira el subtítulo Hasta cuatro compromisos desde hoy.
