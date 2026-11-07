@@ -108,7 +108,7 @@
   font-size: 12px;
   line-height: 1.45;
 }
-.attention-list > .attention-clear {
+.attention-clear {
   padding: 0;
   border: 0;
   background: transparent;
@@ -219,13 +219,6 @@ button.primary:focus-visible,
   background: #37332d;
   border-color: #37332d;
   color: var(--white);
-}
-.main :is(.content-new,.catalog-toolbar-link,.admin-new,.catalog-primary-link),
-.main :is(.content-new,.catalog-toolbar-link,.admin-new,.catalog-primary-link):hover,
-.main :is(.content-new,.catalog-toolbar-link,.admin-new,.catalog-primary-link):focus-visible {
-  color: var(--white);
-  background: var(--black);
-  border-color: var(--black);
 }
 
 /* Las barras admiten salto de fila sin cambiar el orden de sus controles. */

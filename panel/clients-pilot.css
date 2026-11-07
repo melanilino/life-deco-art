@@ -1,5 +1,6 @@
 /* Piloto visual limitado al listado y al formulario completo de Clientes. */
 .clients-pilot {
+  --brown: #75634d;
   --font-meta: 12px;
 }
 
