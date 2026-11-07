@@ -5,14 +5,17 @@
 }
 
 .clients-pilot .home-welcome h1 {
-  font-weight: 500;
+  font-weight: var(--font-light);
 }
 
 .clients-pilot .current-view-control strong,
 .clients-pilot .client-metric small,
-.clients-pilot .clients-table th,
 .clients-pilot .client-create-button {
-  font-weight: 500;
+  font-weight: var(--font-regular);
+}
+
+.clients-pilot .clients-table th {
+  font-weight: var(--font-medium);
 }
 
 .clients-pilot .client-metric {
@@ -22,8 +25,8 @@
 
 .clients-pilot .client-metric strong {
   margin: 4px 0;
-  font-size: 26px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: var(--font-medium);
   font-variant-numeric: tabular-nums;
 }
 
@@ -74,7 +77,7 @@
 
 .clients-pilot .client-create-button:hover {
   background: rgba(139, 121, 94, .16);
-  font-weight: 500;
+  font-weight: var(--font-regular);
 }
 
 .clients-pilot .clients-empty {
@@ -107,7 +110,7 @@
 .clients-pilot .client-save-summary > h2 {
   margin-bottom: 20px;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: var(--font-medium);
 }
 
 .clients-pilot .client-page-form .client-type-switch {
@@ -129,9 +132,9 @@
 
 .clients-pilot .client-page-form .field > span,
 .clients-pilot .client-interests legend {
-  color: var(--black);
+  color: var(--brown);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: var(--font-regular);
 }
 
 .clients-pilot .client-page-form input:not([type=checkbox]),
