@@ -295,3 +295,5 @@ Inicio: Todo está al día usa el mismo fondo brown-soft del mensaje Sin próxim
 Inicio: el mensaje Todo está al día conserva el fondo suave y se muestra sin borde exterior. Las filas de alertas conservan sus separadores.
 
 Inicio: se retira el sombreado de Todo está al día para mantener el fondo blanco en el estado vacío de Requiere atención, coherente con la muestra de alertas. Se conserva la ausencia de borde del mensaje vacío.
+
+Requiere atención: se aplica la propuesta de franjas concisas. Cada fila muestra solo el aviso agregado y su enlace. Se retiran iconos, notas y estados repetidos. Cuando no hay alertas, se muestra Todo al día con No tienes alertas pendientes, sin icono. Los contadores y su actualización conservan la lógica existente.

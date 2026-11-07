@@ -11,8 +11,86 @@
   overflow-wrap: anywhere;
   line-height: 1.45;
 }
-.attention-list:has(> .attention-clear) {
+.attention-card {
+  padding: 0;
+  background: transparent;
+}
+.attention-card .attention-list {
+  display: grid;
+  gap: 10px;
   border: 0;
+  overflow: visible;
+}
+.attention-card .attention-row {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 12px;
+  min-height: 54px;
+  padding: 14px 18px;
+  border: 0;
+  border-radius: var(--surface-radius);
+  background: var(--brown-soft);
+}
+.attention-card .attention-row > strong {
+  min-width: 0;
+  color: var(--black);
+  font-size: var(--font-body);
+  font-weight: var(--font-medium);
+  overflow-wrap: anywhere;
+}
+.attention-card .attention-row > a {
+  grid-column: auto;
+  padding: 4px 0;
+  min-height: 32px;
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: var(--font-regular);
+}
+.attention-card .attention-row > a:hover,
+.attention-card .attention-row > a:focus-visible {
+  background: transparent;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.attention-card .attention-clear {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 54px;
+  padding: 12px 18px;
+  border-radius: var(--surface-radius);
+  background: var(--brown-soft);
+}
+.attention-card .attention-clear strong {
+  font-size: var(--font-body);
+  font-weight: var(--font-medium);
+}
+.attention-card .attention-clear small {
+  padding-left: 16px;
+  border-left: 1px solid var(--border-strong);
+  color: var(--text-muted);
+  font-size: var(--font-helper);
+}
+@media (max-width: 640px) {
+  .attention-card .attention-row {
+    grid-template-columns: minmax(0,1fr);
+    gap: 4px;
+  }
+  .attention-card .attention-row > a {
+    justify-self: start;
+    min-height: 44px;
+    text-align: left;
+  }
+  .attention-card .attention-clear {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .attention-card .attention-clear small {
+    padding-left: 0;
+    border-left: 0;
+  }
 }
 
 /* Acciones de creación y guardado. */
