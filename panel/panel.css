@@ -301,7 +301,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{border-color:var
 .today-row:hover{border:0;background:transparent}.today-row:hover>div{background:var(--brown-soft)}
 .add-activity{display:flex;align-items:center;gap:11px;margin-left:78px;color:var(--home-muted);font-size:11px;text-decoration:none}
 .add-activity svg{width:27px;height:27px;padding:6px;border-radius:50%;background:var(--brown-soft);color:var(--text-muted);fill:none;stroke:currentColor;stroke-width:1.7}
-.dashboard-side{display:grid;gap:16px;background:var(--white);border-radius:var(--surface-radius)}
+.dashboard-side{display:grid;gap:16px}
 .compact-card{min-height:145px;padding:17px 20px}
 .stage-grid,.inventory-grid{display:grid;margin-top:18px}
 .stage-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.inventory-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
