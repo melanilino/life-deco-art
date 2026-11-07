@@ -23,13 +23,32 @@
 }
 .attention-card .attention-row {
   display: grid;
-  grid-template-columns: minmax(0,1fr) auto;
+  grid-template-columns: 24px minmax(0,1fr) auto;
   gap: 12px;
   min-height: 54px;
   padding: 14px 18px;
   border: 0;
   border-radius: var(--surface-radius);
   background: var(--brown-soft);
+}
+.home-attention-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--brown);
+  color: var(--white);
+}
+.home-attention-mark svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .attention-card .attention-row > strong {
   min-width: 0;
@@ -74,20 +93,22 @@
 }
 @media (max-width: 640px) {
   .attention-card .attention-row {
-    grid-template-columns: minmax(0,1fr);
+    grid-template-columns: 24px minmax(0,1fr);
     gap: 4px;
   }
   .attention-card .attention-row > a {
+    grid-column: 2;
     justify-self: start;
     min-height: 44px;
     text-align: left;
   }
   .attention-card .attention-clear {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 24px minmax(0,1fr);
+    gap: 4px 12px;
   }
   .attention-card .attention-clear small {
+    grid-column: 2;
     padding-left: 0;
     border-left: 0;
   }
