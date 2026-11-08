@@ -64,7 +64,7 @@ export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
    await execute({action:'home-phrase-delete',index,originalText:text});
    if(editingIndex===index)reset();else if(editingIndex!==null&&editingIndex>index){editingIndex--;if(draft)draft.index=editingIndex;}
    refresh();document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());message.textContent='';notice('Frase eliminada.');
-  }catch(error){message.textContent=error.message;message.setAttribute('role','alert');}
+  }catch(error){message.textContent=error.message;message.setAttribute('role','alert');notice(error.message,true);}
   finally{setBusy(false);}
  });
  form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{reset();composer.querySelector('summary').focus();});
