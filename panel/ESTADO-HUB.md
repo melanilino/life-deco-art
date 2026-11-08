@@ -317,3 +317,6 @@ El saludo usa la zona horaria configurada (República Dominicana como respaldo):
 
 ### Paneles de notas y frases · 07/11/2026
 Formularios de creación plegados por defecto, con + junto al buscador; conservan borradores al plegar y se abren al editar. Guardar pliega el formulario y actualiza la colección. Notas usa Guardar negro, preserva campos, vínculos, fijadas, recientes y acciones. Listas agrupadas con separadores, recuentos filtrados y mayor separación entre grupos según referencias de la propietaria.
+
+### Paneles · estabilidad al abrir formularios
+Notas y Mis frases usan el mismo ancho y scrollbar-gutter estable en la zona desplazable; fallback con scroll reservado. El encabezado no se encoge y su altura se sincroniza con la del encabezado principal, sin depender de cuánto se haya desplazado la página. Se recalcula al redimensionar o volver a renderizar.

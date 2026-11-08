@@ -245,3 +245,6 @@ Mis frases coloca la explicación de rotación debajo del título, usa Buscar co
 
 ### Notas y Mis frases · referencia aprobada
 Ambos paneles priorizan la colección: encabezado con explicación, buscador y botón + en una fila, editor plegado que se abre al crear o editar, recuento y lista agrupada en una superficie blanca con divisores. Notas mantiene Todas, Fijadas y Recientes; Guardar usa negro. No se cambian los registros existentes.
+
+### Geometría de Notas y Mis frases
+Ambos paneles comparten ancho, reservan siempre el espacio del scroll interior y mantienen el encabezado sin encogerse. Su divisor toma la altura real del encabezado de Inicio mediante ResizeObserver, también al cambiar el ancho de pantalla. Los formularios se expanden sin desplazar horizontalmente el buscador ni las listas.
