@@ -472,7 +472,7 @@ select,
 .home-phrases-status:empty{display:none}
 .home-phrases-status[role=alert]{color:var(--error)}
 #home-phrases-form button:hover,#home-phrases-form button:focus-visible{ text-decoration:none }
-.home-phrase-library{padding:0 24px 24px}
+.home-phrase-library{padding:0 24px 96px}
 .home-phrase-search{display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius)}
 .home-phrase-search svg{width:18px;height:18px;flex:0 0 18px;stroke:var(--brown);fill:none;stroke-width:1.6}
 .home-phrase-search input{min-width:0;width:100%;border:0;background:transparent;padding:12px 0}
@@ -482,5 +482,5 @@ select,
 .home-phrase-card>p{flex:1;min-width:0;padding-top:5px}
 .home-phrase-menu{margin-left:auto}
 .home-phrase-menu button:hover{text-decoration:none}
-@media(max-width:540px){.home-phrase-library{padding:0 14px 20px}.home-phrase-search input{font-size:16px}}
+@media(max-width:540px){.home-phrase-library{padding:0 14px 96px}.home-phrase-search input{font-size:16px}}
 @media(max-width:540px){#home-phrases-form{margin:14px;padding:16px}.home-phrases-trigger{min-width:44px;min-height:44px}}
