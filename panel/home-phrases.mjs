@@ -23,7 +23,7 @@ export function singlePhrase(text){
 const searchText=value=>String(value).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
 export function phraseCards(settings,query=''){
  const items=settings.homePhrases?.items||[],needle=searchText(query.trim()),rows=items.map((text,index)=>({text,index})).filter(row=>searchText(row.text).includes(needle));
- return rows.length?rows.map(({text,index})=>`<article class="home-phrase-card"><p>${escapeHtml(text)}</p><button type="button" data-phrase-edit="${index}" aria-label="Editar frase ${index+1}">Editar</button></article>`).join(''):`<p class="quick-notes-empty">${needle?'No hay frases que coincidan con la búsqueda.':'Todavía no has guardado frases.'}</p>`;
+ return rows.length?rows.map(({text,index})=>`<article class="home-phrase-card"><p>${escapeHtml(text)}</p><details class="quick-note-menu home-phrase-menu"><summary aria-label="Opciones de frase ${index+1}">⋮</summary><div><button type="button" data-phrase-edit="${index}">Editar</button><button type="button" class="danger" data-phrase-delete="${index}">Eliminar</button></div></details></article>`).join(''):`<p class="quick-notes-empty">${needle?'No hay frases que coincidan con la búsqueda.':'Todavía no has guardado frases.'}</p>`;
 }
 export function dailyPhrase(settings,now=new Date()){
  const config=settings.homePhrases,items=config?.items||[];
@@ -33,7 +33,7 @@ export function dailyPhrase(settings,now=new Date()){
  return items[elapsed%items.length];
 }
 export function homePhrasesHtml(settings){
- return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false">${phrasePencilIcon}</button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span data-phrase-label>Nueva frase</span><textarea name="phrases" rows="3" maxlength="300" required aria-describedby="home-phrases-help" placeholder="Escribe una frase…"></textarea></label><p id="home-phrases-help">Las frases guardadas se muestran en Inicio, una cada día.</p><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar</button></div><p class="home-phrases-status" role="status"></p></form><section class="home-phrase-library" aria-label="Frases guardadas"><label class="home-phrase-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" aria-label="Buscar frases" placeholder="Buscar frases…"></label><div class="home-phrase-results" aria-live="polite">${phraseCards(settings)}</div></section></div></dialog>`;
+ return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false">${phrasePencilIcon}</button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2><p id="home-phrases-help">Las frases guardadas se muestran en Inicio, una cada día.</p></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span data-phrase-label>Nueva frase</span><textarea name="phrases" rows="3" maxlength="300" required aria-describedby="home-phrases-help" placeholder="Escribe una frase…"></textarea></label><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar</button></div><p class="home-phrases-status" role="status"></p></form><section class="home-phrase-library" aria-label="Frases guardadas"><label class="home-phrase-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" aria-label="Buscar" placeholder="Buscar"></label><div class="home-phrase-results" aria-live="polite">${phraseCards(settings)}</div></section></div></dialog>`;
 }
 export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  const form=document.querySelector('#home-phrases-form');if(!form)return;
@@ -51,7 +51,20 @@ export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  let saving=false;
  const setBusy=value=>{saving=value;panel.querySelectorAll('button,textarea,input').forEach(node=>node.disabled=value);};
  search.addEventListener('input',refresh);
- results.addEventListener('click',event=>{const edit=event.target.closest('[data-phrase-edit]');if(!edit||saving)return;editingIndex=Number(edit.dataset.phraseEdit);originalText=getSettings().homePhrases.items[editingIndex];form.elements.phrases.value=originalText;draft=null;label.textContent='Editar frase';message.textContent='';form.elements.phrases.focus();});
+ results.addEventListener('click',async event=>{
+  if(saving)return;
+  const edit=event.target.closest('[data-phrase-edit]'),remove=event.target.closest('[data-phrase-delete]');
+  if(edit){editingIndex=Number(edit.dataset.phraseEdit);originalText=getSettings().homePhrases.items[editingIndex];form.elements.phrases.value=originalText;draft=null;label.textContent='Editar frase';message.textContent='';edit.closest('details').open=false;form.elements.phrases.focus();return;}
+  if(!remove)return;
+  const index=Number(remove.dataset.phraseDelete),text=getSettings().homePhrases.items[index];
+  try{
+   setBusy(true);message.setAttribute('role','status');message.textContent='Eliminando…';
+   await execute({action:'home-phrase-delete',index,originalText:text});
+   if(editingIndex===index)reset();else if(editingIndex!==null&&editingIndex>index){editingIndex--;if(draft)draft.index=editingIndex;}
+   refresh();document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());message.textContent='';notice('Frase eliminada.');
+  }catch(error){message.textContent=error.message;message.setAttribute('role','alert');}
+  finally{setBusy(false);}
+ });
  form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{const wasEditing=editingIndex!==null;reset();if(!wasEditing)panel.close();});
  form.addEventListener('submit',async event=>{
   event.preventDefault();event.stopPropagation();if(saving)return;

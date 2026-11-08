@@ -73,3 +73,25 @@ test('Buscar frases ignora acentos, conserva índices y escapa el texto de las t
  assert.match(phraseCards(settings,'script'),/&lt;script&gt;/);
  assert.match(phraseCards(settings,'ninguna'),/No hay frases que coincidan/);
 });
+
+test('Eliminar retira solo la frase elegida y conserva las demás y el archivo',()=>{
+ const state=emptyState();state.settings.homePhrases={items:['Primera','Segunda','Tercera'],startDate:'2026-11-07',archived:['Anterior']};
+ const deleted=applyCommand(state,{action:'home-phrase-delete',index:1,originalText:'Segunda'},{id:'remove'}).state;
+ assert.deepEqual(deleted.settings.homePhrases.items,['Primera','Tercera']);
+ assert.deepEqual(deleted.settings.homePhrases.archived,['Anterior','Segunda']);
+ assert.equal(deleted.settings.homePhrases.startDate,'2026-11-07');
+ assert.deepEqual(state.settings.homePhrases.items,['Primera','Segunda','Tercera']);
+ assert.throws(()=>applyCommand(deleted,{action:'home-phrase-delete',index:1,originalText:'Segunda'}),/cambió/);
+ assert.throws(()=>applyCommand(deleted,{action:'home-phrase-delete',index:-1}),/cambió/);
+ const empty=applyCommand({...state,settings:{...state.settings,homePhrases:{items:['Única']}}},{action:'home-phrase-delete',index:0,originalText:'Única'}).state;
+ assert.equal(dailyPhrase(empty.settings),'');
+});
+
+test('Mis frases muestra explicación en encabezado y menú de tres puntos por tarjeta',()=>{
+ const html=homePhrasesHtml({homePhrases:{items:['Texto']}});
+ assert.ok(html.indexOf('id="home-phrases-help"')<html.indexOf('<form'));
+ assert.match(html,/aria-label="Buscar" placeholder="Buscar"/);
+ assert.match(html,/<summary aria-label="Opciones de frase 1">⋮<\/summary>/);
+ assert.match(html,/data-phrase-edit="0">Editar/);
+ assert.match(html,/data-phrase-delete="0">Eliminar/);
+});

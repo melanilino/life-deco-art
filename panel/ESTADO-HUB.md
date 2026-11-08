@@ -308,3 +308,6 @@ El lapicito Administrar sustituye el enlace y abre el editor en un panel lateral
 
 ### Mis frases · guardado individual
 Nueva frase se agrega a la colección sin reemplazar las anteriores. Tarjetas de frases guardadas con edición y buscador que ignora acentos y mayúsculas. Guardar mantiene el panel abierto y limpia el editor. El formato previo de frases se conserva sin migraciones ni pérdida de registros; rotación diaria y fecha inicial preservadas. Duplicados y cambios concurrentes se validan antes de escribir.
+
+### Mis frases · menú de opciones
+Explicación bajo el encabezado y buscador Buscar. Tarjetas con menú de tres puntos para Editar y Eliminar. Eliminar retira una frase de la rotación conservando su texto en el archivo interno; valida que no haya cambiado antes de escribir y conserva el resto de la colección. Actualiza la frase de Inicio y la búsqueda; eliminar una frase anterior a la edición ajusta el índice del borrador.

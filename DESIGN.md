@@ -240,3 +240,5 @@ El pie conserva la frase de 12 px a la izquierda y un lapicito accesible con nom
 El panel guarda una frase por envío con el botón Guardar, sin subrayado en hover. Cada frase existente se conserva en su propia tarjeta; buscador con lupa y edición individual. El lápiz elegido es Como el favicon, con el color actual del Hub.
 
 La propietaria eligió el lápiz Como el favicon: mismo trazado de favicon.svg, color heredado del control del Hub y sin cambiar el favicon de la web.
+
+Mis frases coloca la explicación de rotación debajo del título, usa Buscar como texto del buscador y ofrece Editar y Eliminar en un menú de tres puntos de la misma clase visual que Notas, situado en la esquina superior derecha de cada tarjeta.
