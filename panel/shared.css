@@ -206,11 +206,11 @@ button.primary:focus-visible,
 .admin-toolbar > .admin-search {
   flex: 1 1 280px;
 }
-.sales-toolbar > select,
-.clients-pilot .clients-toolbar > select,
-.catalog-toolbar > select,
-.content-toolbar-table-only > select,
-.admin-toolbar > select {
+.sales-toolbar > :is(select,.hub-select),
+.clients-pilot .clients-toolbar > :is(select,.hub-select),
+.catalog-toolbar > :is(select,.hub-select),
+.content-toolbar-table-only > :is(select,.hub-select),
+.admin-toolbar > :is(select,.hub-select) {
   flex: 1 1 180px;
   width: auto;
 }
@@ -426,11 +426,11 @@ select,
   .finance-toolbar > label:not(:first-child),
   .content-toolbar-table-only > .content-search,
   .admin-toolbar > .admin-search,
-  .clients-pilot .clients-toolbar > select,
+  .clients-pilot .clients-toolbar > :is(select,.hub-select),
   .clients-pilot .clients-toolbar > button,
-  .sales-toolbar > select,
-  .content-toolbar-table-only > select,
-  .admin-toolbar > select,
+  .sales-toolbar > :is(select,.hub-select),
+  .content-toolbar-table-only > :is(select,.hub-select),
+  .admin-toolbar > :is(select,.hub-select),
   .content-toolbar-table-only > .content-new,
   .admin-toolbar > .admin-new {
     flex: 0 0 auto;
