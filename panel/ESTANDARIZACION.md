@@ -45,4 +45,6 @@ Portafolio muestra «Nuevo producto o servicio»; Proveedores muestra «Nuevo pr
 
 Suscripciones: «Costo mensual estimado» y «Próximos pagos» muestran cero con la moneda principal configurada cuando no hay importes registrados. Si hay importes, se mantienen separados por moneda; se conservan los avisos de costos sin configurar.
 
+Estadísticas: se oculta el marcador triangular nativo delante de los cuatro «Ver registros» de los indicadores. Se conserva el elemento desplegable y su funcionamiento con teclado; los demás desplegables no cambian.
+
 Verificación: 149 pruebas aprobadas, incluidas dos que protegen la escala y el orden de carga de su hoja canónica. Auditoría de textos visibles en 29 pantallas a 1920, 390 y 320 px (87 comprobaciones): ningún tamaño de texto fuera de la escala, títulos de página de 28 px, indicadores de 122 px y sin desbordamiento horizontal exterior. Notas y Mis frases también se comprobaron abiertas, con títulos de 22 px, descripción de 13 px y metadatos de 12 px. Consola sin errores. No se cambiaron los registros ni las integraciones.

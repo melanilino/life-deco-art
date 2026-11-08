@@ -117,6 +117,8 @@ body .home-main .stats-metric .stats-details summary {
   overflow-wrap: anywhere;
 }
 body .home-main .stats-metric .stats-details { margin-top: 0; }
+body .home-main .stats-metric .stats-details > summary { list-style: none; }
+body .home-main .stats-metric .stats-details > summary::-webkit-details-marker { display: none; }
 body .home-main .sales-metric strong.metric-empty {
   color: var(--text-muted);
   font-size:var(--font-body);
