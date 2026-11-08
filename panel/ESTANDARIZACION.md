@@ -43,4 +43,6 @@ Corrección solicitada: «Saldos pendientes» y «Actividad del mes» de Finanza
 
 Portafolio muestra «Nuevo producto o servicio»; Proveedores muestra «Nuevo proveedor» o «Nueva compra» según la vista seleccionada; Finanzas muestra «Registrar movimiento». El botón de compras abre directamente `purchases/new`, conservando el alternador Proveedor/Compra. Se verificaron los cuatro recorridos con datos sintéticos, las etiquetas sin recortes a 1920, 1024 y 390 px y consola sin errores. Las 149 pruebas pasan. Los archivos de prueba se retiran antes de publicar.
 
+Suscripciones: «Costo mensual estimado» y «Próximos pagos» muestran cero con la moneda principal configurada cuando no hay importes registrados. Si hay importes, se mantienen separados por moneda; se conservan los avisos de costos sin configurar.
+
 Verificación: 149 pruebas aprobadas, incluidas dos que protegen la escala y el orden de carga de su hoja canónica. Auditoría de textos visibles en 29 pantallas a 1920, 390 y 320 px (87 comprobaciones): ningún tamaño de texto fuera de la escala, títulos de página de 28 px, indicadores de 122 px y sin desbordamiento horizontal exterior. Notas y Mis frases también se comprobaron abiertas, con títulos de 22 px, descripción de 13 px y metadatos de 12 px. Consola sin errores. No se cambiaron los registros ni las integraciones.
