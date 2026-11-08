@@ -25,7 +25,7 @@
 
 .clients-pilot .client-metric strong {
   margin: 4px 0;
-  font-size: 22px;
+  font-size:var(--font-metric);
   font-weight: var(--font-medium);
   font-variant-numeric: tabular-nums;
 }
@@ -86,7 +86,7 @@
 
 .clients-pilot .clients-empty h2 {
   margin-bottom: 8px;
-  font-size: 18px;
+  font-size:var(--font-section-title);
   font-weight: 500;
 }
 
@@ -109,7 +109,7 @@
 .clients-pilot .client-additional-fields > h2,
 .clients-pilot .client-save-summary > h2 {
   margin-bottom: 20px;
-  font-size: 18px;
+  font-size:var(--font-section-title);
   font-weight: var(--font-medium);
 }
 
@@ -133,7 +133,7 @@
 .clients-pilot .client-page-form .field > span,
 .clients-pilot .client-interests legend {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size:var(--font-body);
   font-weight: var(--font-regular);
 }
 
@@ -154,7 +154,7 @@
 }
 
 .clients-pilot .client-save-summary p {
-  font-size: 13px;
+  font-size:var(--font-body);
   line-height: 1.65;
 }
 
