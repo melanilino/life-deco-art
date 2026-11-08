@@ -20,3 +20,13 @@ Los archivos temporales de prueba se retiran antes de integrar a producción.
 La envoltura `.hub-select` debe recibir las mismas reglas de distribución que recibía el `select` directo. Sin ellas, su ancho de 100 % apilaba cada filtro también en escritorio. Las reglas compartidas y las de Agenda/Contenido ahora incluyen ambos elementos; en móvil conservan ancho completo y altura de 44 px, sin heredar una base flexible de escritorio. Agenda aplica el relleno al botón interior una sola vez.
 
 Revisión en navegador a 1920, 1366, 1024 y 390 px: barras de Clientes, Cotizaciones, Facturas, Pedidos, Portafolio, Inventario, Proveedores, Finanzas, Contenido, Agenda, Tareas, Suscripciones y Estadísticas. En escritorio amplio se confirmó una sola fila en las barras de filtros principales, sin desbordamiento horizontal. Se comprobó apertura y cierre con Escape, retorno del foco, controles móviles de ancho completo y consola sin errores. Las 147 pruebas automáticas siguen aprobadas.
+
+## Tipografía e indicadores unificados
+
+`typography.css`, cargado al final, es la referencia compartida para la escala de texto y los indicadores. Mantiene Montserrat y las funciones de títulos de página (28 px), panel (22 px), sección (18 px), registro (15 px), cuerpo (13 px), ayuda (12 px) y metadatos (11 px).
+
+Indicadores de Inicio, Clientes, Ventas, Pedidos, Portafolio, Inventario, Estadísticas y Suscripciones: 122 px de alto, cifras de 22 px, etiquetas y ayudas de 12 px, círculo de 48 px e icono de 22 px. Comparten relleno, radio, separación de 16 px, alineación izquierda y centrado vertical. Suscripciones usa el mismo marcado que las demás métricas; «Sin importes registrados» es un estado informativo de 13 px, no una cifra. Las comparaciones de Inicio también usan 12 px.
+
+Finanzas conserva sus dos agrupaciones, separadores y etiquetas debajo de cada importe. Sus cifras y etiquetas usan 22/12 px y alineación izquierda. Los importes excepcionalmente largos permanecen consultables mediante desplazamiento dentro de la cifra, sin ampliar la página ni reducir arbitrariamente el tamaño de letra.
+
+Verificado en navegador a 1920, 1366 y 390 px en las secciones indicadas, y a 320 px con importes sintéticos extremos. Se confirmaron tamaños calculados, alturas de 122 px, iconos de 48/22 px, ausencia de desbordamiento exterior, panel de Notas con título de 22 px y conservación de la barra horizontal de filtros en escritorio. Los importes habituales de Finanzas caben también a 320 px. Las 147 pruebas automáticas pasan. No se modificaron registros reales ni integraciones.
