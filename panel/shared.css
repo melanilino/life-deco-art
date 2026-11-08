@@ -526,3 +526,45 @@ select,
 #quick-notes-panel .quick-notes-scroll,#home-phrases-panel .quick-notes-scroll{scrollbar-gutter:stable both-edges}
 #quick-notes-panel .quick-notes-head>button,#home-phrases-panel .quick-notes-head>button{display:grid;place-items:center;flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:24px;line-height:1;text-decoration:none}
 #quick-notes-panel .quick-notes-head>button:is(:hover,:active,:focus),#home-phrases-panel .quick-notes-head>button:is(:hover,:active,:focus){background:transparent;border:0;box-shadow:none;text-decoration:none}
+/* Controles y proporciones aprobados para todo el Hub (8 noviembre 2026). */
+:root{--hub-aside-width:280px;--hub-segment-height:44px}
+.home-main .dashboard-title{align-items:flex-start}
+.home-main .dashboard-title>a{min-height:27px;align-items:center}
+.home-main :is(.metric-card,.client-metric,.sales-metric,.stats-metric){height:122px;min-height:122px;padding:12px 20px;min-width:0}
+.home-main :is(.metric-card,.client-metric,.sales-metric,.stats-metric)>div{min-width:0}
+.home-main :is(.metric-card,.client-metric,.sales-metric,.stats-metric) :is(p,small){white-space:normal;overflow-wrap:anywhere}
+.home-main .finance-metric-card{height:122px;min-height:122px;padding:12px 20px}
+.home-main .finance-metric-heading{margin-bottom:8px}
+.home-main .finance-metric-pair>div{padding:0 12px}
+.home-main .finance-metric-pair strong{font-size:24px;line-height:29px}
+
+/* Un solo segmentado, compacto y con selección negra. */
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle){display:inline-flex;width:max-content;max-width:100%;height:auto;min-height:var(--hub-segment-height);padding:3px;gap:3px;margin-bottom:20px;border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:visible;align-self:start}
+body :is(.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle){margin-bottom:0}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button{display:flex;flex:1;align-items:center;justify-content:center;gap:8px;width:auto;min-width:0;min-height:36px;padding:7px 16px;border:0;border-radius:4px;background:transparent;color:var(--brown);font-size:13px;line-height:20px;white-space:normal;text-decoration:none;box-shadow:none;transform:none}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]){background:var(--black);color:var(--white)}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:hover{background:var(--brown-soft);color:var(--black);text-decoration:none}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]):hover{background:var(--black);color:var(--white)}
+
+/* El control conserva el select para validación y envío; la lista visible es común. */
+.hub-select{position:relative;display:grid;min-width:0;width:100%;align-self:center}
+body .hub-select-native{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
+body .hub-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;width:100%;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:4px;background:var(--white);color:var(--black);font-size:13px;line-height:22px;font-weight:400;text-align:left;box-shadow:none;text-decoration:none}
+.hub-select-trigger>span:first-child{min-width:0;overflow-wrap:anywhere}
+.hub-select-arrow{width:7px;height:7px;margin:0 4px 4px 0;flex:0 0 7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
+body .hub-select-trigger:hover{background:var(--white);border-color:var(--brown);text-decoration:none}
+.hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}
+.hub-select-menu{position:fixed;z-index:1100;overflow:auto;overscroll-behavior:contain;padding:6px;border:1px solid var(--border);border-radius:6px;background:var(--white);box-shadow:0 12px 24px rgba(28,26,23,.12);scrollbar-gutter:stable}
+body .hub-select-menu>button{display:block;width:100%;min-height:40px;padding:9px 12px;border:0;border-radius:4px;background:var(--white);color:var(--brown);font-size:13px;line-height:20px;text-align:left;font-weight:400;text-decoration:none;box-shadow:none}
+body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){background:var(--brown-soft);color:var(--black)}
+.hub-select-menu>button:disabled{opacity:.5}
+
+/* Una proporción común para formularios nuevos y sus tarjetas laterales. */
+.hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{display:grid;grid-template-columns:minmax(0,1fr) var(--hub-aside-width);gap:20px;align-items:start;min-width:0}
+.hub-form-layout>form{min-width:0;width:100%;margin:0}
+.hub-form-summary{min-width:0;padding:24px;border-radius:6px;background:var(--white)}
+.hub-form-summary h2{margin:0 0 16px;font-size:18px;font-weight:500;line-height:1.4}
+.hub-form-summary p{margin:0;color:var(--brown);font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);font-size:12px;font-weight:500;line-height:20px;border-bottom:1px solid var(--border)}
+@media(max-width:1100px){.hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.content-toolbar>.hub-select,.agenda-toolbar>.hub-select{grid-column:1/-1}.agenda-toolbar>.hub-select{flex:1 1 140px}.hub-form-summary{padding:18px}.home-main .finance-metric-card{padding:10px 12px}.finance-metric-heading span{font-size:11px}}
