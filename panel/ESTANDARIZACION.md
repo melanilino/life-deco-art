@@ -37,4 +37,6 @@ La propietaria aprobó expresamente la muestra visual de seis tamaños: 28 px pa
 
 Los estilos de cada sección ahora referencian esas funciones, sin tamaños variables ni excepciones por página para texto de interfaz. Los alias anteriores resuelven a la misma escala. Las cifras desglosadas por moneda, los resúmenes de etapas/inventario y las comparaciones estadísticas usan 22 px. Los símbolos de cierre/flecha y el logotipo tipográfico preparado se conservan como elementos gráficos, independientes de la escala de texto.
 
+Corrección solicitada: «Saldos pendientes» y «Actividad del mes» de Finanzas usan peso regular (400), conservando tamaño, posición y demás estilos.
+
 Verificación: 149 pruebas aprobadas, incluidas dos que protegen la escala y el orden de carga de su hoja canónica. Auditoría de textos visibles en 29 pantallas a 1920, 390 y 320 px (87 comprobaciones): ningún tamaño de texto fuera de la escala, títulos de página de 28 px, indicadores de 122 px y sin desbordamiento horizontal exterior. Notas y Mis frases también se comprobaron abiertas, con títulos de 22 px, descripción de 13 px y metadatos de 12 px. Consola sin errores. No se cambiaron los registros ni las integraciones.

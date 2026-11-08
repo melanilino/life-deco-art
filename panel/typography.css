@@ -137,7 +137,7 @@ body .home-main .finance-metric-card {
 body .home-main .finance-metric-heading { margin-bottom: 8px; }
 body .home-main .finance-metric-heading h2 {
   font-size:var(--font-body);
-  font-weight: var(--font-medium);
+  font-weight: var(--font-regular);
   line-height: 18px;
 }
 body .home-main .finance-metric-heading > span {
