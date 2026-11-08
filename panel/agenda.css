@@ -22,6 +22,7 @@
 .agenda-toolbar,.agenda-date-header{padding-right:var(--agenda-scrollbar,0px)}
 .agenda-toolbar> :is(select,.hub-select){width:100%;min-height:42px}
 .agenda-toolbar>.agenda-new{min-height:42px}
+.agenda-toolbar>.hub-select{padding:0}
 .agenda-month{text-transform:none}.agenda-month>span{display:inline-block}.agenda-month>span::first-letter{text-transform:uppercase}
 .agenda-event strong,.agenda-event small{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0}
 .agenda-task-group{border:0;padding:0}
