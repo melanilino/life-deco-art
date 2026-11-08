@@ -86,6 +86,7 @@ body .home-main .finance-metric-pair strong {
   overflow-x: auto;
 }
 body .home-main :is(.metric-card,.client-metric,.sales-metric,.stats-metric) p,
+body .home-main .metric-card .trend,
 body .home-main .stats-metric .stats-details summary {
   margin: 0;
   max-width: none;
@@ -97,6 +98,13 @@ body .home-main .stats-metric .stats-details summary {
   overflow-wrap: anywhere;
 }
 body .home-main .stats-metric .stats-details { margin-top: 0; }
+body .home-main .sales-metric strong.metric-empty {
+  color: var(--text-muted);
+  font-size: var(--font-body);
+  font-weight: var(--font-regular);
+  line-height: 18px;
+  white-space: normal;
+}
 
 /* Finanzas conserva agrupaciones, separadores y etiquetas bajo cada cifra. */
 body .home-main .finance-metric-card {
