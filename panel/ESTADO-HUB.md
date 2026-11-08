@@ -311,3 +311,6 @@ Nueva frase se agrega a la colección sin reemplazar las anteriores. Tarjetas de
 
 ### Mis frases · menú de opciones
 Explicación bajo el encabezado y buscador Buscar. Tarjetas con menú de tres puntos para Editar y Eliminar. Eliminar retira una frase de la rotación conservando su texto en el archivo interno; valida que no haya cambiado antes de escribir y conserva el resto de la colección. Actualiza la frase de Inicio y la búsqueda; eliminar una frase anterior a la edición ajusta el índice del borrador.
+
+### Inicio · saludo según hora
+El saludo usa la zona horaria configurada (República Dominicana como respaldo): Buenos días desde las 06:00, Buenas tardes desde las 12:00 y Buenas noches desde las 18:00 hasta las 05:59. Se actualiza al abrir Inicio, cada minuto y al regresar a la pestaña, sin recargar ni alterar formularios abiertos. Se conserva el nombre de la cuenta.
