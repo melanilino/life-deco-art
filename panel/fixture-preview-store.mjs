@@ -94,3 +94,8 @@ export const upload=async()=>{throw Error('Los archivos se verifican contra Fire
 export const downloadFile=async()=>{throw Error('Sin archivos de prueba.');};
 export const exportBackup=async includeFiles=>({format:'life-deco-art-panel',schema:1,owner:'fixture-only',state:structuredClone(state),includesFiles:includeFiles,files:[],history:logs,exportedAt:new Date().toISOString()});
 export const restoreBackup=async backup=>{if(!new URLSearchParams(location.search).has('admin-fixture'))throw Error('La recuperación se verifica con pruebas de almacenamiento.');const plan=planRecovery(state,backup,'fixture-only');state={...state,counters:plan.counters,version:state.version+1,records:{...state.records,...Object.fromEntries(plan.records.map(r=>[r.id,r]))}};sessionStorage.setItem('admin-fixture-state',JSON.stringify(state));return {count:plan.records.length,state:structuredClone(state)};};
+
+// Importes sintéticos extremos, únicamente para revisar el espacio de las cifras.
+if(new URLSearchParams(location.search).has('typography-stress')){
+ for(const kind of ['quotes','invoices']){const id=run({action:'save',kind,data:{name:'Prueba tipográfica',clientId:'test-1',date:today(),validUntil:'2026-12-31',lines:[{description:'Prueba sintética',quantity:1,price:99999999999.99}]}}).result;run({action:'issue',id});}
+}
