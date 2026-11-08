@@ -58,3 +58,5 @@ Cada suscripción conserva Uso y añade una categoría principal elegida por la 
 Los cuatro indicadores son Activas, Costo mensual equivalente, Mayor gasto por categoría y Renovaciones este mes. El costo mensual equivalente normaliza cada frecuencia; las monedas se mantienen separadas. Mayor gasto agrega los equivalentes por categoría y moneda, reconoce empates e indica cuando faltan importes. Sin gasto positivo se muestra Sin datos. Renovaciones este mes cuenta las renovaciones pendientes desde hoy hasta el último día del mes, excluyendo períodos ya cobrados. No registra pagos ni modifica Finanzas.
 
 Verificación: 152 pruebas aprobadas, edición y persistencia de categoría en navegador con datos sintéticos, adaptación móvil sin desbordamiento horizontal e indicadores de 122 px.
+
+Contenido y Suscripciones: se retiran los contornos de las cuatro columnas del tablero, del botón Nueva suscripción y la línea bajo los encabezados de su tabla. Se conservan fondos, dimensiones, separadores de registros y foco de teclado.
