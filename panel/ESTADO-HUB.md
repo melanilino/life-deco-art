@@ -314,3 +314,6 @@ Explicación bajo el encabezado y buscador Buscar. Tarjetas con menú de tres pu
 
 ### Inicio · saludo según hora
 El saludo usa la zona horaria configurada (República Dominicana como respaldo): Buenos días desde las 06:00, Buenas tardes desde las 12:00 y Buenas noches desde las 18:00 hasta las 05:59. Se actualiza al abrir Inicio, cada minuto y al regresar a la pestaña, sin recargar ni alterar formularios abiertos. Se conserva el nombre de la cuenta.
+
+### Paneles de notas y frases · 07/11/2026
+Formularios de creación plegados por defecto, con + junto al buscador; conservan borradores al plegar y se abren al editar. Guardar pliega el formulario y actualiza la colección. Notas usa Guardar negro, preserva campos, vínculos, fijadas, recientes y acciones. Listas agrupadas con separadores, recuentos filtrados y mayor separación entre grupos según referencias de la propietaria.

@@ -484,3 +484,34 @@ select,
 .home-phrase-menu button:hover{text-decoration:none}
 @media(max-width:540px){.home-phrase-library{padding:0 14px 96px}.home-phrase-search input{font-size:16px}}
 @media(max-width:540px){#home-phrases-form{margin:14px;padding:16px}.home-phrases-trigger{min-width:44px;min-height:44px}}
+.panel-composer{margin:24px 24px 0;padding:0;border:0;background:transparent}
+.panel-tools{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:12px}
+.panel-tools>label{min-width:0;width:100%;margin:0;border:1px solid var(--border);background:var(--white)}
+.panel-tools input{width:100%;min-width:0;min-height:46px}
+.panel-tools [data-composer-toggle]{display:grid;place-items:center;width:44px;min-height:44px;padding:8px;border:0;background:transparent;color:var(--brown)}
+.panel-tools [data-composer-toggle]:hover{background:var(--brown-soft);border:0}
+.panel-tools [data-composer-toggle] svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.6}
+.panel-tools [aria-expanded=true] .composer-plus-vertical{display:none}
+.panel-composer [data-composer-body]{margin-top:16px;background:var(--white);border:1px solid var(--border);border-radius:var(--surface-radius)}
+.panel-composer [hidden]{display:none!important}
+#quick-note-composer #quick-note-form,#home-phrase-composer #home-phrases-form{margin:0;padding:20px;border:0;background:transparent}
+.composer-field-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+#quick-note-form .notes-save,#quick-note-form .notes-save:hover,#quick-note-form .notes-save:focus-visible,#quick-note-form .notes-save:active{background:var(--black);color:var(--white);border-color:var(--black);text-decoration:none;font-weight:400}
+#home-phrases-panel .quick-notes-head,#quick-notes-panel .quick-notes-head{padding:24px;border-bottom:1px solid var(--border)}
+#home-phrases-panel .quick-notes-head h2,#quick-notes-panel .quick-notes-head h2{font-size:24px;font-weight:500;margin:0 0 6px}
+#home-phrases-panel .quick-notes-head p,#quick-notes-panel .quick-notes-head p{font-size:13px;line-height:1.6}
+.home-phrase-library,.quick-notes-list{padding:18px 24px 96px}
+.panel-result-count{margin:0;color:var(--text-muted);font-size:12px;white-space:nowrap}
+.home-phrase-results{margin-top:14px;gap:0}
+.home-phrase-results:has(.home-phrase-card),#quick-note-results:has(.quick-note-card){display:block;background:var(--white);border:1px solid var(--border);border-radius:var(--surface-radius)}
+.home-phrase-results .home-phrase-card,#quick-note-results .quick-note-card{margin:0;padding:18px 16px;border:0;border-radius:0;background:transparent}
+.home-phrase-card+.home-phrase-card,#quick-note-results .quick-note-card+.quick-note-card{border-top:1px solid var(--border)}
+#quick-note-results .quick-note-card h3{font-size:15px;font-weight:500;line-height:1.5}
+#quick-note-results .quick-note-card>p{font-size:13px;margin:8px 0}
+#quick-note-results .quick-note-meta{font-size:12px;line-height:1.5}
+.panel-filter-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.panel-filter-row .quick-note-filters{padding:0;gap:6px;min-width:0}
+.panel-filter-row .quick-note-filters button{position:relative;padding:8px;min-height:40px;border:0;border-radius:0;background:transparent}
+.panel-filter-row .quick-note-filters button.active{background:transparent;color:var(--black)}
+.panel-filter-row .quick-note-filters button.active::after{content:"";position:absolute;left:4px;right:4px;bottom:0;height:1px;background:var(--brown)}
+@media(max-width:540px){.panel-composer{margin:18px 18px 0}.home-phrase-library,.quick-notes-list{padding:16px 18px 96px}#home-phrases-panel .quick-notes-head,#quick-notes-panel .quick-notes-head{padding:22px 18px}#quick-note-composer #quick-note-form,#home-phrase-composer #home-phrases-form{padding:16px}.panel-filter-row{gap:6px}.panel-filter-row .quick-note-filters{gap:0}.panel-filter-row .quick-note-filters button{padding:7px}.panel-result-count{font-size:11px}}

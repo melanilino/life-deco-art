@@ -242,3 +242,6 @@ El panel guarda una frase por envío con el botón Guardar, sin subrayado en hov
 La propietaria eligió el lápiz Como el favicon: mismo trazado de favicon.svg, color heredado del control del Hub y sin cambiar el favicon de la web.
 
 Mis frases coloca la explicación de rotación debajo del título, usa Buscar como texto del buscador y ofrece Editar y Eliminar en un menú de tres puntos de la misma clase visual que Notas, situado en la esquina superior derecha de cada tarjeta.
+
+### Notas y Mis frases · referencia aprobada
+Ambos paneles priorizan la colección: encabezado con explicación, buscador y botón + en una fila, editor plegado que se abre al crear o editar, recuento y lista agrupada en una superficie blanca con divisores. Notas mantiene Todas, Fijadas y Recientes; Guardar usa negro. No se cambian los registros existentes.

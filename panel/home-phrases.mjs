@@ -1,3 +1,4 @@
+import {composerHtml,composerIsOpen,setComposerOpen,bindComposers} from './composer.mjs';
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Mismo trazado del favicon; el color y grosor los aporta el control del Hub.
 export const phrasePencilIcon='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg>';
@@ -33,17 +34,18 @@ export function dailyPhrase(settings,now=new Date()){
  return items[elapsed%items.length];
 }
 export function homePhrasesHtml(settings){
- return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false">${phrasePencilIcon}</button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2><p id="home-phrases-help">Las frases guardadas se muestran en Inicio, una cada día.</p></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll"><form id="home-phrases-form"><label class="field"><span data-phrase-label>Nueva frase</span><textarea name="phrases" rows="3" maxlength="300" required aria-describedby="home-phrases-help" placeholder="Escribe una frase…"></textarea></label><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar</button></div><p class="home-phrases-status" role="status"></p></form><section class="home-phrase-library" aria-label="Frases guardadas"><label class="home-phrase-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" aria-label="Buscar" placeholder="Buscar"></label><div class="home-phrase-results" aria-live="polite">${phraseCards(settings)}</div></section></div></dialog>`;
+ return `<section class="home-phrases" aria-label="Frase del día"><p class="home-daily-phrase" aria-live="polite">${escapeHtml(dailyPhrase(settings))}</p><button type="button" class="home-phrases-trigger" aria-label="Administrar" aria-haspopup="dialog" aria-controls="home-phrases-panel" aria-expanded="false">${phrasePencilIcon}</button></section><dialog id="home-phrases-panel" class="quick-notes-panel home-phrases-panel" aria-labelledby="home-phrases-title"><div class="quick-notes-head"><div><h2 id="home-phrases-title">Mis frases</h2><p id="home-phrases-help">Cada día verás una de tus frases en Inicio.</p></div><button type="button" data-phrases-close aria-label="Cerrar frases">×</button></div><div class="quick-notes-scroll">${composerHtml({id:'home-phrase-composer',title:'Nueva frase',search:`<label class="home-phrase-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><input type="search" aria-label="Buscar" placeholder="Buscar"></label>`,content:`<form id="home-phrases-form"><label class="field"><span data-phrase-label class="composer-field-label">Nueva frase</span><textarea name="phrases" rows="3" maxlength="300" required aria-describedby="home-phrases-help" placeholder="Escribe una frase…"></textarea></label><div class="actions"><button type="button" data-phrases-cancel>Cancelar</button><button type="submit" class="primary">Guardar</button></div><p class="home-phrases-status" role="status"></p></form>`})}<section class="home-phrase-library" aria-label="Frases guardadas"><p class="panel-result-count" data-phrase-count>${(settings.homePhrases?.items||[]).length} ${(settings.homePhrases?.items||[]).length===1?'frase':'frases'}</p><div class="home-phrase-results" aria-live="polite">${phraseCards(settings)}</div></section></div></dialog>`;
 }
 export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  const form=document.querySelector('#home-phrases-form');if(!form)return;
  const panel=form.closest('dialog'),trigger=document.querySelector('.home-phrases-trigger'),message=form.querySelector('[role=status]'),search=panel.querySelector('[type=search]'),results=panel.querySelector('.home-phrase-results'),label=form.querySelector('[data-phrase-label]');
+ const composer=form.closest('.panel-composer'),composerTitle=composer.querySelector('.composer-title');bindComposers(panel);
  let editingIndex=draft?.dirty?draft.index:null,originalText=draft?.dirty?draft.originalText:'';
- if(draft?.dirty)form.elements.phrases.value=draft.text;
- const refresh=()=>{results.innerHTML=phraseCards(getSettings(),search.value);};
- const reset=()=>{draft=null;editingIndex=null;originalText='';form.elements.phrases.value='';label.textContent='Nueva frase';message.textContent='';};
- if(editingIndex!==null)label.textContent='Editar frase';
- trigger.addEventListener('click',()=>{onOpen();refresh();panel.showModal();trigger.setAttribute('aria-expanded','true');form.elements.phrases.focus();});
+ if(draft?.dirty){form.elements.phrases.value=draft.text;setComposerOpen(composer,true);}
+ const refresh=()=>{results.innerHTML=phraseCards(getSettings(),search.value);const count=panel.querySelector('[data-phrase-count]');if(count){const number=results.querySelectorAll('.home-phrase-card').length;count.textContent=number+' '+(number===1?'frase':'frases');}};
+ const reset=()=>{draft=null;editingIndex=null;originalText='';form.elements.phrases.value='';label.textContent='Nueva frase';composerTitle.textContent='Nueva frase';message.textContent='';setComposerOpen(composer,false);};
+ if(editingIndex!==null){label.textContent='Editar frase';composerTitle.textContent='Editar frase';}
+ trigger.addEventListener('click',()=>{onOpen();refresh();panel.showModal();trigger.setAttribute('aria-expanded','true');if(composerIsOpen(composer))form.elements.phrases.focus();else composer.querySelector('[data-composer-toggle]').focus();});
  panel.addEventListener('close',()=>{trigger.setAttribute('aria-expanded','false');trigger.focus();});
  panel.querySelector('[data-phrases-close]').addEventListener('click',()=>{if(!saving)panel.close();});
  panel.addEventListener('cancel',event=>{if(saving)event.preventDefault();});
@@ -54,7 +56,7 @@ export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
  results.addEventListener('click',async event=>{
   if(saving)return;
   const edit=event.target.closest('[data-phrase-edit]'),remove=event.target.closest('[data-phrase-delete]');
-  if(edit){editingIndex=Number(edit.dataset.phraseEdit);originalText=getSettings().homePhrases.items[editingIndex];form.elements.phrases.value=originalText;draft=null;label.textContent='Editar frase';message.textContent='';edit.closest('details').open=false;form.elements.phrases.focus();return;}
+  if(edit){editingIndex=Number(edit.dataset.phraseEdit);originalText=getSettings().homePhrases.items[editingIndex];form.elements.phrases.value=originalText;draft=null;label.textContent='Editar frase';composerTitle.textContent='Editar frase';message.textContent='';edit.closest('details').open=false;composer.open=true;form.elements.phrases.focus();return;}
   if(!remove)return;
   const index=Number(remove.dataset.phraseDelete),text=getSettings().homePhrases.items[index];
   try{
@@ -65,7 +67,7 @@ export function bindHomePhrases({getSettings,execute,notice,onOpen=()=>{}}){
   }catch(error){message.textContent=error.message;message.setAttribute('role','alert');}
   finally{setBusy(false);}
  });
- form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{const wasEditing=editingIndex!==null;reset();if(!wasEditing)panel.close();});
+ form.querySelector('[data-phrases-cancel]').addEventListener('click',()=>{reset();composer.querySelector('summary').focus();});
  form.addEventListener('submit',async event=>{
   event.preventDefault();event.stopPropagation();if(saving)return;
   try{const text=singlePhrase(form.elements.phrases.value);setBusy(true);message.setAttribute('role','status');message.textContent='Guardando…';await execute({action:'home-phrase-save',text,index:editingIndex,originalText});reset();search.value='';refresh();document.querySelector('.home-daily-phrase').textContent=dailyPhrase(getSettings());notice('Frase guardada.');}
