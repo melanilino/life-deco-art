@@ -1,11 +1,29 @@
 import {validDate,shiftDate} from './agenda-model.mjs';
 export const currencies=['DOP','USD','EUR','CAD','GBP','MXN'];
 export const frequencies=['mensual','anual','trimestral','semestral','semanal','gratis','otro'];
+export const subscriptionCategories=['Diseño y contenido','Organización y almacenamiento','Marketing y comunicación','Administración y finanzas','Web y tecnología'];
 export const moneyIn=(amount,currency='DOP')=>new Intl.NumberFormat('es-DO',{style:'currency',currency}).format(Number(amount)||0);
-export const subscription=r=>({...r,usage:r.usage??r.category??'',plan:r.plan??r.subscription??'',currency:r.currency||'DOP',frequency:r.frequency||r.billing||'otro',knownCost:r.costConfigured??(r.cost!==undefined&&r.cost!==''&&r.cost!==null),cost:Number(r.cost)||0});
+export const subscription=r=>({...r,subscriptionCategory:r.subscriptionCategory||'',usage:r.usage??r.category??'',plan:r.plan??r.subscription??'',currency:r.currency||'DOP',frequency:r.frequency||r.billing||'otro',knownCost:r.costConfigured??(r.cost!==undefined&&r.cost!==''&&r.cost!==null),cost:Number(r.cost)||0});
 export function subscriptions(s){return Object.values(s.records).filter(r=>r.kind==='accounts'&&!r.archived&&!r.deleted).map(subscription);}
-export function subscriptionMetrics(s,date){const active=subscriptions(s).filter(r=>r.status==='activo'),monthly={},upcoming={};let unknown=0;for(const r of active){const divisor={mensual:1,anual:12,trimestral:3,semestral:6,semanal:12/52,gratis:1}[r.frequency];if(r.knownCost&&r.renewal>=date&&r.renewal.slice(0,7)===date.slice(0,7)&&!(r.charges||[]).some(c=>c.period===r.renewal))upcoming[r.currency]=(upcoming[r.currency]||0)+r.cost;if(!r.knownCost||!divisor){unknown++;continue;}monthly[r.currency]=(monthly[r.currency]||0)+(r.frequency==='gratis'?0:r.cost/divisor);}
- return {active:active.length,monthly,upcoming,unknown,renewals:active.filter(r=>r.renewal>=date&&r.renewal<=shiftDate(date,30)).length};}
+export function subscriptionMetrics(s,date){
+ const active=subscriptions(s).filter(r=>r.status==='activo'),monthly={},upcoming={},byCategory={};let unknown=0,renewalsThisMonth=0;
+ for(const r of active){
+  const divisor={mensual:1,anual:12,trimestral:3,semestral:6,semanal:12/52,gratis:1}[r.frequency];
+  if(r.renewal>=date&&r.renewal.slice(0,7)===date.slice(0,7)&&!(r.charges||[]).some(c=>c.period===r.renewal)){
+   renewalsThisMonth++;if(r.knownCost)upcoming[r.currency]=(upcoming[r.currency]||0)+r.cost;
+  }
+  if((!r.knownCost&&r.frequency!=='gratis')||!divisor){unknown++;continue;}
+  const equivalent=r.frequency==='gratis'?0:r.cost/divisor,category=r.subscriptionCategory||'Sin categorizar';
+  monthly[r.currency]=(monthly[r.currency]||0)+equivalent;
+  byCategory[r.currency]??={};byCategory[r.currency][category]=(byCategory[r.currency][category]||0)+equivalent;
+ }
+ const topCategories=Object.fromEntries(Object.entries(byCategory).flatMap(([currency,categories])=>{
+  const amount=Math.max(...Object.values(categories));if(amount<=0)return [];
+  const names=Object.keys(categories).filter(name=>Math.abs(categories[name]-amount)<0.005);
+  return [[currency,{categories:names,amount}]];
+ }));
+ return {active:active.length,monthly,upcoming,unknown,byCategory,topCategories,renewalsThisMonth,renewals:active.filter(r=>r.renewal>=date&&r.renewal<=shiftDate(date,30)).length};
+}
 export const settingsGroups={business:['name','email','phone','address','logoResourceId'],costs:['hourly','hourlyConfigured'],preferences:['currency','timezone','dateFormat'],documents:['validDays','terms'],payments:['paymentMethods','paymentDetails','paymentInstructions']};
 function amount(v){const n=Number(v);if(!Number.isFinite(n)||n<0||n>1e10)throw Error('Revisa el importe.');return n;}
 function required(v,label){if(!String(v||'').trim())throw Error(label+' es obligatorio.');return String(v).trim();}
@@ -24,7 +42,8 @@ export function adminMutation(s,cmd,{put,at,id}){
  if(cmd.action==='admin-backup'){s.settings.lastBackup={at,type:cmd.data.type,records:cmd.data.records,files:cmd.data.files};return null;}
  if(cmd.action==='admin-subscription'){
  const old=cmd.id?find():null,d=cmd.data,name=required(d.name,'Plataforma');if(!currencies.includes(d.currency)||!frequencies.includes(d.frequency)||!['activo','prueba','pausado','cancelado'].includes(d.status))throw Error('Revisa moneda, frecuencia y estado.');if(d.renewal)date(d.renewal,'la renovación');for(const key of ['url','managerUrl'])if(d[key]&&!/^https?:\/\//i.test(d[key]))throw Error('Los enlaces deben comenzar por https:// o http://.');const days=amount(d.reminderDays||0);if(!Number.isInteger(days)||days>365)throw Error('Revisa el aviso previo.');const known=d.cost!==''&&d.cost!=null,cost=known?amount(d.cost):0;
- const data={name,usage:d.usage||'',plan:d.plan||'',subscription:d.plan||'',cost,costConfigured:known,currency:d.currency,frequency:d.frequency,billing:d.frequency,renewal:d.renewal||'',autoRenew:Boolean(d.autoRenew),reminderDays:days,username:d.username||'',url:d.url||'',managerUrl:d.managerUrl||'',notes:d.notes||'',status:d.status};
+ const category=d.subscriptionCategory??old?.subscriptionCategory??'';if(category&&!subscriptionCategories.includes(category))throw Error('Selecciona una categoría disponible.');
+ const data={name,subscriptionCategory:category,usage:d.usage||'',plan:d.plan||'',subscription:d.plan||'',cost,costConfigured:known,currency:d.currency,frequency:d.frequency,billing:d.frequency,renewal:d.renewal||'',autoRenew:Boolean(d.autoRenew),reminderDays:days,username:d.username||'',url:d.url||'',managerUrl:d.managerUrl||'',notes:d.notes||'',status:d.status};
  const oldValue=old?subscription(old):null,history=[...(old?.planHistory||[])];if(!old||['plan','cost','currency','frequency','knownCost'].some(k=>oldValue[k]!==({...data,knownCost:known})[k])){if(old&&!history.length)history.push({at:old.updatedAt||old.createdAt||at,plan:oldValue.plan,cost:oldValue.cost,currency:oldValue.currency,frequency:oldValue.frequency,knownCost:oldValue.knownCost});history.push({at,plan:data.plan,cost,currency:d.currency,frequency:d.frequency,knownCost:known});}
  return write(old||{id,kind:'accounts',createdAt:at},{...data,planHistory:history});
  }
@@ -51,4 +70,4 @@ export function adminMutation(s,cmd,{put,at,id}){
  }
  throw Error('Acción de Administración no válida.');
 }
-export function subscriptionCsv(rows){const cell=v=>'"'+String(v??'').replace(/^[=+\-@\t\r]/,"'$&").replaceAll('"','""')+'"';return new Blob(['\ufeff'+[['Plataforma','Uso','Plan','Importe','Moneda','Frecuencia','Próxima renovación','Estado'],...rows.map(r=>[r.name,r.usage,r.plan,r.knownCost?r.cost:'',r.currency,r.frequency,r.renewal,r.status])].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});}
+export function subscriptionCsv(rows){const cell=v=>'"'+String(v??'').replace(/^[=+\-@\t\r]/,"'$&").replaceAll('"','""')+'"';return new Blob(['\ufeff'+[['Plataforma','Uso','Categoría','Plan','Importe','Moneda','Frecuencia','Próxima renovación','Estado'],...rows.map(r=>[r.name,r.usage,r.subscriptionCategory||'Sin categorizar',r.plan,r.knownCost?r.cost:'',r.currency,r.frequency,r.renewal,r.status])].map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});}

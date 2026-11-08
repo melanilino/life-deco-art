@@ -1,4 +1,4 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {emptyState,applyCommand,cashflow,list} from '../panel/domain.mjs';import {subscriptionMetrics,subscription} from '../panel/admin-model.mjs';import {planRecovery} from '../panel/recovery.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {emptyState,applyCommand,cashflow,list} from '../panel/domain.mjs';import {subscriptionMetrics,subscription,subscriptionCsv} from '../panel/admin-model.mjs';import {planRecovery} from '../panel/recovery.mjs';
 function setup(){let state=emptyState(),i=0;return {get s(){return state},run(cmd){const r=applyCommand(state,cmd,{id:'record-'+(++i),at:'2026-10-24T12:'+String(i).padStart(2,'0')+':00Z'});state=r.state;return r.result;}};}
 const sub=(extra={})=>({action:'admin-subscription',data:{name:'Prueba',usage:'Prueba local',plan:'Plan inicial',cost:'1200',currency:'DOP',frequency:'anual',renewal:'2026-10-28',status:'activo',...extra}});
 test('suscripciones anuales se mensualizan; monedas separadas y renovación no es pago',()=>{const x=setup();x.run(sub());x.run(sub({cost:10,currency:'USD',frequency:'mensual'}));const m=subscriptionMetrics(x.s,'2026-10-24');assert.equal(m.monthly.DOP,100);assert.equal(m.monthly.USD,10);assert.equal(m.upcoming.DOP,1200);assert.equal(m.active,2);assert.equal(cashflow(x.s).expense,0);});
@@ -30,4 +30,36 @@ test('vincular usa la fecha del pago en Finanzas y permite reintentar sin duplic
  assert.equal(x.s.records[id].charges[0].date,'2026-10-28');
  assert.equal(list(x.s,'expenses').length,1);
  assert.equal(list(x.s,'payments').length,1);
+});
+
+
+test('categorías conservan uso legado y edición no altera historial de precios',async()=>{
+ const x=setup(),id=x.run(sub({subscriptionCategory:'Diseño y contenido'}));
+ assert.equal(x.s.records[id].subscriptionCategory,'Diseño y contenido');
+ const count=x.s.records[id].planHistory.length;
+ x.run({...sub({subscriptionCategory:'Web y tecnología'}),id});
+ assert.equal(x.s.records[id].usage,'Prueba local');assert.equal(x.s.records[id].planHistory.length,count);
+ x.run({...sub(),id});assert.equal(x.s.records[id].subscriptionCategory,'Web y tecnología');
+ assert.equal(subscription({category:'Uso antiguo'}).usage,'Uso antiguo');assert.equal(subscription({category:'Uso antiguo'}).subscriptionCategory,'');
+ assert.throws(()=>x.run(sub({subscriptionCategory:'Inventada'})),/categoría/);
+ const csv=await subscriptionCsv([subscription(x.s.records[id])]).text();assert.match(csv,/Categoría/);assert.match(csv,/Web y tecnología/);
+});
+test('mayor gasto suma equivalentes por categoría y moneda, identifica empates y omisiones',()=>{
+ const x=setup();x.run(sub({subscriptionCategory:'Diseño y contenido'}));
+ x.run(sub({subscriptionCategory:'Diseño y contenido',cost:50,frequency:'mensual'}));
+ x.run(sub({subscriptionCategory:'Web y tecnología',cost:150,frequency:'mensual'}));
+ x.run(sub({subscriptionCategory:'Web y tecnología',cost:5,currency:'USD',frequency:'mensual'}));
+ x.run(sub({cost:'',frequency:'otro'}));x.run(sub({cost:9000,status:'pausado'}));
+ const m=subscriptionMetrics(x.s,'2026-10-24');assert.equal(m.monthly.DOP,300);assert.equal(m.monthly.USD,5);
+ assert.deepEqual(m.topCategories.DOP,{categories:['Diseño y contenido','Web y tecnología'],amount:150});
+ assert.deepEqual(m.topCategories.USD,{categories:['Web y tecnología'],amount:5});assert.equal(m.unknown,1);
+ const y=setup();y.run(sub());assert.deepEqual(subscriptionMetrics(y.s,'2026-10-24').topCategories.DOP.categories,['Sin categorizar']);
+ const z=setup();z.run(sub({frequency:'gratis',cost:''}));assert.equal(subscriptionMetrics(z.s,'2026-10-24').monthly.DOP,0);assert.deepEqual(subscriptionMetrics(z.s,'2026-10-24').topCategories,{});
+});
+test('renovaciones del mes cuenta solo pendientes desde hoy, incluso sin importe',()=>{
+ const x=setup();for(const renewal of ['2026-10-23','2026-10-24','2026-10-31','2026-11-01'])x.run(sub({renewal,cost:''}));
+ const id=x.run(sub({renewal:'2026-10-28',frequency:'gratis'}));
+ x.s.records[id].charges=[{period:'2026-10-28'}];
+ assert.equal(subscriptionMetrics(x.s,'2026-10-24').renewalsThisMonth,2);
+ assert.equal(subscriptionMetrics(emptyState(),'2026-10-24').renewalsThisMonth,0);
 });
