@@ -248,3 +248,5 @@ Ambos paneles priorizan la colección: encabezado con explicación, buscador y b
 
 ### Geometría de Notas y Mis frases
 Ambos paneles comparten ancho, reservan siempre el espacio del scroll interior y mantienen el encabezado sin encogerse. Su divisor toma la altura real del encabezado de Inicio mediante ResizeObserver, también al cambiar el ancho de pantalla. Los formularios se expanden sin desplazar horizontalmente el buscador ni las listas.
+
+Notas y Mis frases reservan el espacio del scroll en ambos bordes para que sus márgenes sean simétricos. El encabezado reserva el mismo espacio y usa un botón de cerrar de 44 px, centrado en el mismo eje que +. Cerrar no se subraya ni cambia su fondo al interactuar; conserva el foco de teclado.

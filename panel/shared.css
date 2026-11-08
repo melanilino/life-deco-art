@@ -522,3 +522,7 @@ select,
 #quick-notes-panel .quick-notes-scroll,#home-phrases-panel .quick-notes-scroll{flex:1;min-height:0;scrollbar-gutter:stable}
 @supports not (scrollbar-gutter:stable){#quick-notes-panel .quick-notes-scroll,#home-phrases-panel .quick-notes-scroll{overflow-y:scroll}}
 @media(max-width:540px){#quick-notes-panel .quick-notes-head,#home-phrases-panel .quick-notes-head{padding:18px}}
+#quick-notes-panel .quick-notes-head,#home-phrases-panel .quick-notes-head{overflow:hidden;scrollbar-gutter:stable both-edges}
+#quick-notes-panel .quick-notes-scroll,#home-phrases-panel .quick-notes-scroll{scrollbar-gutter:stable both-edges}
+#quick-notes-panel .quick-notes-head>button,#home-phrases-panel .quick-notes-head>button{display:grid;place-items:center;flex:0 0 44px;width:44px;min-height:44px;padding:0;font-size:24px;line-height:1;text-decoration:none}
+#quick-notes-panel .quick-notes-head>button:is(:hover,:active,:focus),#home-phrases-panel .quick-notes-head>button:is(:hover,:active,:focus){background:transparent;border:0;box-shadow:none;text-decoration:none}
