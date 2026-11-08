@@ -50,3 +50,11 @@ Estadísticas: se oculta el marcador triangular nativo delante de los cuatro «V
 Agenda: el selector de vista reserva 12 px de separación antes de «Nueva actividad» en la cuadrícula de escritorio. Se conserva la separación adaptable existente en tableta y móvil.
 
 Verificación: 149 pruebas aprobadas, incluidas dos que protegen la escala y el orden de carga de su hoja canónica. Auditoría de textos visibles en 29 pantallas a 1920, 390 y 320 px (87 comprobaciones): ningún tamaño de texto fuera de la escala, títulos de página de 28 px, indicadores de 122 px y sin desbordamiento horizontal exterior. Notas y Mis frases también se comprobaron abiertas, con títulos de 22 px, descripción de 13 px y metadatos de 12 px. Consola sin errores. No se cambiaron los registros ni las integraciones.
+
+## Categorías de suscripciones · 8 noviembre 2026
+
+Cada suscripción conserva Uso y añade una categoría principal elegida por la propietaria: Diseño y contenido, Organización y almacenamiento, Marketing y comunicación, Administración y finanzas o Web y tecnología. Los registros anteriores permanecen Sin categorizar; el campo histórico category continúa siendo un respaldo de Uso. La categoría se conserva en el detalle, las exportaciones y la recuperación sin alterar el historial de precios.
+
+Los cuatro indicadores son Activas, Costo mensual equivalente, Mayor gasto por categoría y Renovaciones este mes. El costo mensual equivalente normaliza cada frecuencia; las monedas se mantienen separadas. Mayor gasto agrega los equivalentes por categoría y moneda, reconoce empates e indica cuando faltan importes. Sin gasto positivo se muestra Sin datos. Renovaciones este mes cuenta las renovaciones pendientes desde hoy hasta el último día del mes, excluyendo períodos ya cobrados. No registra pagos ni modifica Finanzas.
+
+Verificación: 152 pruebas aprobadas, edición y persistencia de categoría en navegador con datos sintéticos, adaptación móvil sin desbordamiento horizontal e indicadores de 122 px.
