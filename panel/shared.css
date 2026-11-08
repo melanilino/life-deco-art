@@ -435,6 +435,7 @@ select,
   .content-toolbar-table-only > .content-new,
   .admin-toolbar > .admin-new {
     flex: 0 0 auto;
+    width: 100%;
   }
   .sales-editor-actions button { min-width: 0; }
   .content-form-actions > div,
