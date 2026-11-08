@@ -551,6 +551,7 @@ body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switc
 body .hub-select-native{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
 body .hub-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;width:100%;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:4px;background:var(--white);color:var(--black);font-size:13px;line-height:22px;font-weight:400;text-align:left;box-shadow:none;text-decoration:none}
 .hub-select-trigger>span:first-child{min-width:0;overflow-wrap:anywhere}
+body .field .hub-select-trigger{min-height:var(--control-height);height:var(--control-height)}
 .hub-select-arrow{width:7px;height:7px;margin:0 4px 4px 0;flex:0 0 7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
 body .hub-select-trigger:hover{background:var(--white);border-color:var(--brown);text-decoration:none}
 .hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}

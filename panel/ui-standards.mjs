@@ -56,7 +56,7 @@ function open(select){
   if(event.key==='Home')index=0;if(event.key==='End')index=items.length-1;
   if(index!==undefined){event.preventDefault();items[index]?.focus();}
   if(event.key==='Escape'){event.preventDefault();close(true);}
-  if(event.key==='Tab')close();
+  if(event.key==='Tab')close(true);
   if(event.key.length===1&&!event.ctrlKey&&!event.metaKey){const candidates=items.slice(current+1).concat(items.slice(0,current+1));candidates.find(b=>b.textContent.toLocaleLowerCase().startsWith(event.key.toLocaleLowerCase()))?.focus();}
  });
 }
