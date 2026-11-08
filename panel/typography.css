@@ -134,6 +134,7 @@ body .home-main .finance-metric-pair > div {
   text-align: left;
 }
 body .home-main .finance-metric-pair > div:first-child { padding-left: 0; }
+body .home-main .finance-metric-pair > div:last-child { padding-right: 0; }
 body .home-main .finance-metric-pair :is(a,span) {
   font-size: var(--font-helper);
   font-weight: var(--font-regular);
