@@ -568,6 +568,13 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .hub-form-summary{min-width:0;padding:24px;border-radius:6px;background:var(--white)}
 .hub-form-summary h2{margin:0 0 16px;font-size:var(--font-section-title);font-weight:500;line-height:1.4}
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
-body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);font-size:var(--font-helper);font-weight:500;line-height:20px;border-bottom:1px solid var(--border)}
+body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);line-height:20px;border-bottom:1px solid var(--border)}
+
+body .home-main table th,
+body .home-main .agenda-task-head {
+  font-size: var(--font-body);
+  font-weight: var(--font-regular);
+  letter-spacing: normal;
+}
 @media(max-width:1100px){.hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.content-toolbar>.hub-select,.agenda-toolbar>.hub-select{grid-column:1/-1}.agenda-toolbar>.hub-select{flex:1 1 140px}.hub-form-summary{padding:18px}.home-main .finance-metric-card{padding:10px 12px}.finance-metric-heading span{font-size:var(--font-helper)}}

@@ -60,3 +60,5 @@ Los cuatro indicadores son Activas, Costo mensual equivalente, Mayor gasto por c
 Verificación: 152 pruebas aprobadas, edición y persistencia de categoría en navegador con datos sintéticos, adaptación móvil sin desbordamiento horizontal e indicadores de 122 px.
 
 Contenido y Suscripciones: se retiran los contornos de las cuatro columnas del tablero, del botón Nueva suscripción y la línea bajo los encabezados de su tabla. Se conservan fondos, dimensiones, separadores de registros y foco de teclado.
+
+Los encabezados de las tablas del Hub y de la lista de Tareas usan la tipografía aprobada en Suscripciones: 13 px y peso regular, igual que los botones de creación.
