@@ -488,7 +488,7 @@ select,
 @media(max-width:540px){#home-phrases-form{margin:14px;padding:16px}.home-phrases-trigger{min-width:44px;min-height:44px}}
 .panel-composer{margin:24px 24px 0;padding:0;border:0;background:transparent}
 .panel-tools{display:grid;grid-template-columns:minmax(0,1fr) 44px;align-items:center;gap:12px}
-.panel-tools>label{min-width:0;width:100%;margin:0;border:1px solid var(--border);background:var(--white)}
+.panel-tools>label{min-width:0;width:100%;margin:0;border:1px solid var(--border);border-radius:var(--control-radius);background:var(--white)}
 .panel-tools input{width:100%;min-width:0;min-height:46px}
 .panel-tools [data-composer-toggle]{display:grid;place-items:center;width:44px;min-height:44px;padding:8px;border:0;background:transparent;color:var(--brown)}
 .panel-tools [data-composer-toggle]:hover{background:var(--brown-soft);border:0}
@@ -551,12 +551,12 @@ body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switc
 /* El control conserva el select para validación y envío; la lista visible es común. */
 .hub-select{position:relative;display:grid;min-width:0;width:100%;align-self:center}
 body .hub-select-native{position:absolute!important;width:1px!important;height:1px!important;min-height:0!important;padding:0!important;margin:0!important;opacity:0;pointer-events:none;clip-path:inset(50%)}
-body .hub-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;width:100%;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:4px;background:var(--white);color:var(--black);font-size:var(--font-body);line-height:22px;font-weight:400;text-align:left;box-shadow:none;text-decoration:none}
+body .hub-select-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;min-width:0;width:100%;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:var(--control-radius);background:var(--white);color:var(--black);font-size:var(--font-body);line-height:22px;font-weight:400;text-align:left;box-shadow:none;text-decoration:none}
 .hub-select-trigger>span:first-child{min-width:0;overflow-wrap:anywhere}
 body .field .hub-select-trigger{min-height:var(--control-height);height:var(--control-height)}
 .hub-select-arrow{width:7px;height:7px;margin:0 4px 4px 0;flex:0 0 7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
-body .hub-select-trigger:hover{background:var(--white);border-color:var(--brown);text-decoration:none}
-.hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}
+body .hub-select-trigger:is(:hover,:focus-visible){background:var(--white);border-color:var(--border-strong);text-decoration:none}
+body .hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}
 .hub-select-menu{position:fixed;z-index:1100;overflow:auto;overscroll-behavior:contain;padding:6px;border:1px solid var(--border);border-radius:6px;background:var(--white);box-shadow:0 12px 24px rgba(28,26,23,.12);scrollbar-gutter:stable}
 body .hub-select-menu>button{display:block;width:100%;min-height:40px;padding:9px 12px;border:0;border-radius:4px;background:var(--white);color:var(--brown);font-size:var(--font-body);line-height:20px;text-align:left;font-weight:400;text-decoration:none;box-shadow:none}
 body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){background:var(--brown-soft);color:var(--black)}
@@ -569,6 +569,20 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .hub-form-summary h2{margin:0 0 16px;font-size:var(--font-section-title);font-weight:500;line-height:1.4}
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
 body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);line-height:20px;border-bottom:1px solid var(--border)}
+
+/* Listas de registros: un marco exterior y separadores horizontales. */
+body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) {
+  border: 1px solid var(--border);
+  border-radius: var(--surface-radius);
+}
+
+body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+body .home-main :is(.agenda-task-head, .agenda-task-group summary, .content-column, .admin-panel .button) {
+  border-radius: var(--surface-radius);
+}
 
 body .home-main table th,
 body .home-main .agenda-task-head {
