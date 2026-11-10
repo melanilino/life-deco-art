@@ -1,0 +1,5 @@
+// Trazado del lápiz de Mis frases, basado en el favicon del Hub.
+export const pencilIcon = `<svg viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+  <path d="M15 5l4 4"/>
+</svg>`;

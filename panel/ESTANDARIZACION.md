@@ -64,3 +64,5 @@ Contenido y Suscripciones: se retiran los contornos de las cuatro columnas del t
 Los encabezados de las tablas del Hub y de la lista de Tareas usan la tipografía aprobada en Suscripciones: 13 px y peso regular, igual que los botones de creación.
 
 Las tablas, tarjetas y acciones rectangulares usan el radio de superficie de 6 px. Los campos de búsqueda y desplegables usan el radio de control de 4 px. El ajuste de esquinas conserva el grosor, el color y los separadores existentes.
+
+Los encabezados de tablas y de la lista de Tareas conservan 13 px y usan Montserrat en negrita. Mis frases y Configuración comparten el mismo icono de lápiz. Los botones de cierre de Mis frases y Notas comparten el tono al pasar el cursor, y el foco de teclado usa un tono marrón visible.
