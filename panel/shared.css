@@ -555,8 +555,8 @@ body .hub-select-trigger{display:flex;align-items:center;justify-content:space-b
 .hub-select-trigger>span:first-child{min-width:0;overflow-wrap:anywhere}
 body .field .hub-select-trigger{min-height:var(--control-height);height:var(--control-height)}
 .hub-select-arrow{width:7px;height:7px;margin:0 4px 4px 0;flex:0 0 7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg)}
-body .hub-select-trigger:is(:hover,:focus-visible){background:var(--white);border-color:var(--border-strong);text-decoration:none}
-body .hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}
+body .hub-select-trigger:hover{background:var(--white);border-color:var(--brown);text-decoration:none}
+.hub-select-trigger[aria-invalid="true"]{border-color:var(--error)}
 .hub-select-menu{position:fixed;z-index:1100;overflow:auto;overscroll-behavior:contain;padding:6px;border:1px solid var(--border);border-radius:6px;background:var(--white);box-shadow:0 12px 24px rgba(28,26,23,.12);scrollbar-gutter:stable}
 body .hub-select-menu>button{display:block;width:100%;min-height:40px;padding:9px 12px;border:0;border-radius:4px;background:var(--white);color:var(--brown);font-size:var(--font-body);line-height:20px;text-align:left;font-weight:400;text-decoration:none;box-shadow:none}
 body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){background:var(--brown-soft);color:var(--black)}
@@ -570,17 +570,8 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
 body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);line-height:20px;border-bottom:1px solid var(--border)}
 
-/* Listas de registros: un marco exterior y separadores horizontales. */
+/* El contenedor redondea las esquinas visibles de la tabla al recortar su fondo. */
 body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) {
-  border: 1px solid var(--border);
-  border-radius: var(--surface-radius);
-}
-
-body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) tbody > tr:last-child > td {
-  border-bottom: 0;
-}
-
-body .home-main :is(.agenda-task-head, .agenda-task-group summary, .content-column, .admin-panel .button) {
   border-radius: var(--surface-radius);
 }
 

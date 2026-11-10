@@ -63,4 +63,4 @@ Contenido y Suscripciones: se retiran los contornos de las cuatro columnas del t
 
 Los encabezados de las tablas del Hub y de la lista de Tareas usan la tipografía aprobada en Suscripciones: 13 px y peso regular, igual que los botones de creación.
 
-Las tablas de registros comparten un marco fino y esquinas de 6 px, con separadores horizontales y sin duplicar la línea del pie. Los campos de búsqueda y desplegables comparten el radio de 4 px. Los bordes de foco y error siguen señalando el estado del control. Las superficies y acciones que se aprobaron sin contorno conservan ese estilo, igual que el encabezado sin línea inferior de Suscripciones.
+Las tablas, tarjetas y acciones rectangulares usan el radio de superficie de 6 px. Los campos de búsqueda y desplegables usan el radio de control de 4 px. El ajuste de esquinas conserva el grosor, el color y los separadores existentes.
