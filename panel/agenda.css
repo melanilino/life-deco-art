@@ -41,35 +41,17 @@
   padding: var(--agenda-inset);
 }
 
-html:has(#agenda-page) { scrollbar-color: #b8b8b8 transparent; }
-
 #agenda-results {
   min-height: 0;
   margin-inline-end: calc(-1 * var(--agenda-inset));
   padding-inline-end: var(--agenda-inset);
   overflow: auto;
   overscroll-behavior: contain;
-  scrollbar-color: #b8b8b8 transparent;
-  scrollbar-width: thin;
 }
 
 #agenda-results:focus-visible {
   outline: 2px solid var(--brown);
   outline-offset: -2px;
-}
-
-@supports selector(::-webkit-scrollbar) {
-  #agenda-results {
-    scrollbar-color: auto;
-    scrollbar-width: auto;
-  }
-
-  #agenda-results::-webkit-scrollbar { width: 8px; height: 8px; }
-  #agenda-results::-webkit-scrollbar-track,
-  #agenda-results::-webkit-scrollbar-corner { background: transparent; }
-  #agenda-results::-webkit-scrollbar-button { display: none; }
-  #agenda-results::-webkit-scrollbar-thumb { background: #b8b8b8; border-radius: 8px; }
-  #agenda-results::-webkit-scrollbar-thumb:hover { background: #919191; }
 }
 
 @media (max-width: 700px) {
