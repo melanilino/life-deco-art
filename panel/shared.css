@@ -578,7 +578,7 @@ body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .conten
 body .home-main table th,
 body .home-main .agenda-task-head {
   font-size: var(--font-body);
-  font-weight: 600;
+  font-weight: var(--font-medium);
   letter-spacing: normal;
 }
 @media(max-width:1100px){.hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{grid-template-columns:1fr}}
