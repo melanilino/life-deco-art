@@ -23,6 +23,23 @@
 .agenda-toolbar>.hub-select{padding:0}
 .agenda-navigate{column-gap:0}
 .agenda-navigate button:first-child{margin-inline-end:6px}
+.agenda-navigate button:is([data-agenda="prev"], [data-agenda="next"]) {
+  inline-size: 36px;
+  padding-inline: 0;
+}
+.agenda-tools button[aria-expanded="true"] {
+  background: var(--brown-soft);
+}
+.agenda-search {
+  margin-bottom: 18px;
+  padding: 14px;
+  background: var(--brown-soft);
+  border-radius: var(--surface-radius);
+}
+.agenda-search input { background: var(--white); }
+@media (max-width: 700px) {
+  .agenda-search { padding: 12px; }
+}
 @media (min-width: 1251px) {
   .agenda-toolbar {
     /* Deja libre el ancho de la barra fina del calendario. */
