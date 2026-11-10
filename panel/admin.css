@@ -12,4 +12,4 @@ body .home-main .sales-metric.admin-category-metric strong>.admin-category-amoun
 
 /* Contornos retirados en la lista de suscripciones, conservando sus medidas. */
 body .home-main .admin-toolbar > .admin-new,body .home-main .admin-toolbar > .admin-new:hover{border-color:transparent}
-body .home-main #subscription-results .admin-table th{border-bottom-color:transparent}
+body .home-main #subscription-results .admin-table th{border-bottom-color:transparent;font-size:var(--font-body);font-weight:var(--font-regular)}
