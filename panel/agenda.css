@@ -21,6 +21,8 @@
 .agenda-toolbar> :is(select,.hub-select){width:100%;min-height:42px}
 .agenda-toolbar>.agenda-new{min-height:42px;white-space:nowrap}
 .agenda-toolbar>.hub-select{padding:0}
+.agenda-navigate{column-gap:0}
+.agenda-navigate button:first-child{margin-inline-end:6px}
 @media (min-width: 1251px) {
   .agenda-toolbar {
     /* Deja libre el ancho de la barra fina del calendario. */
