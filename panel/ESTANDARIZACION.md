@@ -47,7 +47,7 @@ Suscripciones: «Costo mensual estimado» y «Próximos pagos» muestran cero co
 
 Estadísticas: se oculta el marcador triangular nativo delante de los cuatro «Ver registros» de los indicadores. Se conserva el elemento desplegable y su funcionamiento con teclado; los demás desplegables no cambian.
 
-Agenda: el selector de vista reserva 12 px de separación antes de «Nueva actividad» en la cuadrícula de escritorio. Se conserva la separación adaptable existente en tableta y móvil.
+Agenda: en escritorio, «Hoy» ocupa el ancho de la columna de horas y el mes se centra entre las flechas y los iconos de la derecha. «Nueva actividad» se alinea con el extremo de la cuadrícula y queda a 12 px del selector de vista. En tableta y móvil, los controles se redistribuyen.
 
 Verificación: 149 pruebas aprobadas, incluidas dos que protegen la escala y el orden de carga de su hoja canónica. Auditoría de textos visibles en 29 pantallas a 1920, 390 y 320 px (87 comprobaciones): ningún tamaño de texto fuera de la escala, títulos de página de 28 px, indicadores de 122 px y sin desbordamiento horizontal exterior. Notas y Mis frases también se comprobaron abiertas, con títulos de 22 px, descripción de 13 px y metadatos de 12 px. Consola sin errores. No se cambiaron los registros ni las integraciones.
 

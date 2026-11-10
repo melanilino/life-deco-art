@@ -21,7 +21,28 @@
 .agenda-toolbar> :is(select,.hub-select){width:100%;min-height:42px}
 .agenda-toolbar>.agenda-new{min-height:42px}
 .agenda-toolbar>.hub-select{padding:0}
-@media(min-width:1251px){.agenda-toolbar> :is(select,.hub-select){width:calc(100% - 12px)}}
+@media (min-width: 1251px) {
+  .agenda-toolbar {
+    /* Deja libre el ancho de la barra fina del calendario. */
+    margin-inline-end: 10px;
+    --agenda-action-width: max(136px, calc((100% - 64px) / 7 - 12px));
+    grid-template-columns: max-content minmax(0, 1fr) max-content repeat(2, var(--agenda-action-width));
+    column-gap: 12px;
+  }
+  .agenda-navigate { grid-column: 1; padding-right: 0; }
+  .agenda-navigate button:first-child { width: 64px; }
+  .agenda-month {
+    grid-column: 2;
+    width: fit-content;
+    max-width: 100%;
+    justify-self: center;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .agenda-tools { grid-column: 3; padding-right: 0; }
+  .agenda-toolbar > :is(select, .hub-select) { grid-column: 4; }
+  .agenda-toolbar > .agenda-new { grid-column: 5; }
+}
 .agenda-month{text-transform:none}.agenda-month>span{display:inline-block}.agenda-month>span::first-letter{text-transform:uppercase}
 .agenda-event strong,.agenda-event small{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0}
 .agenda-task-group{border:0;padding:0}
