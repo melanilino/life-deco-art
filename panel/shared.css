@@ -156,22 +156,22 @@ button.primary:focus-visible,
   padding: 10px 16px;
   border: 1px solid transparent;
   border-radius: var(--surface-radius);
-  background: var(--brown-soft);
-  color: var(--black);
   font-size:var(--font-body);
   font-weight: var(--font-regular);
   text-decoration: none;
 }
-.sales-create-button:hover,
-.client-create-button:hover,
-.catalog-toolbar button:hover,
-.catalog-toolbar-link:hover,
-.finance-register:hover,
-.content-new:hover,
-.admin-new:hover {
+
+.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button, .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new) {
+  background: var(--brown-soft);
+  border-color: transparent;
+  color: var(--black);
+}
+
+.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button, .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new):is(:hover, :focus-visible) {
   background: rgba(139,121,94,.16);
   border-color: transparent;
   color: var(--black);
+  text-decoration: none;
 }
 
 /* Las barras admiten salto de fila sin cambiar el orden de sus controles. */
