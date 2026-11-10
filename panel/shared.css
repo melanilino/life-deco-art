@@ -568,12 +568,26 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .hub-form-summary{min-width:0;padding:24px;border-radius:6px;background:var(--white)}
 .hub-form-summary h2{margin:0 0 16px;font-size:var(--font-section-title);font-weight:500;line-height:1.4}
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
-body .home-main table th{padding:14px;background:var(--brown-soft);color:var(--black);line-height:20px;border-bottom:1px solid var(--border)}
+body .home-main table th {
+  padding: 14px;
+  background: var(--brown-soft);
+  color: var(--black);
+  line-height: 20px;
+  border: 0;
+}
 
 /* El contenedor redondea las esquinas visibles de la tabla al recortar su fondo. */
 body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) {
+  border: 0;
   border-radius: var(--surface-radius);
 }
+
+body .home-main :is(.table-wrap, .sales-table-wrap, .clients-table-wrap, .content-table-wrap, .admin-table-scroll) tbody > tr:last-child > td {
+  border-bottom: 0;
+}
+
+body .home-main .content-table td + td { border-left: 0; }
+body .home-main .agenda-task-head { border-bottom: 0; }
 
 body .home-main table th,
 body .home-main .agenda-task-head {

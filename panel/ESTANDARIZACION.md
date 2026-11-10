@@ -70,3 +70,5 @@ Los encabezados de tablas y de la lista de Tareas usan Montserrat de 13 px en pe
 Las acciones que abren un formulario desde las listas y fichas usan fondo beige, con texto e ícono negros, tanto en enlaces como en botones. Guardar y Confirmar usan fondo negro.
 
 Agenda usa un único desplazamiento vertical al borde derecho del calendario, con una barra gris fina. Las fechas y los controles permanecen visibles cuando la ventana tiene espacio suficiente. En ventanas bajas se usa el desplazamiento de página para dejar accesibles los controles.
+
+Las tablas comparables del Hub siguen el acabado de Suscripciones. Tienen encabezado beige de esquinas redondeadas y peso 500, sin marco exterior ni línea bajo los títulos. Las filas conservan separadores horizontales entre registros.
