@@ -68,3 +68,5 @@ Las tablas, tarjetas y acciones rectangulares usan el radio de superficie de 6 p
 Los encabezados de tablas y de la lista de Tareas usan Montserrat de 13 px en peso medio (500). Mis frases y Configuración comparten el mismo icono de lápiz. Los botones de cierre de Mis frases y Notas comparten el tono al pasar el cursor, y el foco de teclado usa un tono marrón visible. Los botones con fondo de color mantienen su texto sin subrayado al pasar el cursor.
 
 Las acciones que abren un formulario desde las listas y fichas usan fondo beige, con texto e ícono negros, tanto en enlaces como en botones. Guardar y Confirmar usan fondo negro.
+
+Agenda usa un único desplazamiento vertical al borde derecho del calendario, con una barra gris fina. Las fechas y los controles permanecen visibles cuando la ventana tiene espacio suficiente. En ventanas bajas se usa el desplazamiento de página para dejar accesibles los controles.
