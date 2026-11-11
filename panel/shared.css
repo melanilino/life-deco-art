@@ -568,6 +568,100 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .hub-form-summary{min-width:0;padding:24px;border-radius:6px;background:var(--white)}
 .hub-form-summary h2{margin:0 0 16px;font-size:var(--font-section-title);font-weight:500;line-height:1.4}
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
+
+/* Los formularios de creación comparten un pie alineado con sus campos. */
+:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
+  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
+      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions) {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--border);
+  background: transparent;
+}
+
+:is(form[data-id=""], #finance-form)
+  :is(.client-page-actions, .content-form-actions, .agenda-form-actions, .finance-form-footer) > div {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-inline-start: auto;
+  min-inline-size: 0;
+}
+
+:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
+  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
+      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions)
+  :is(button, a) {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  margin: 0;
+  white-space: normal;
+}
+
+:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
+  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
+      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions)
+  :is(a, [data-action="client-cancel"], [data-action="sales-preview"]) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
+  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
+      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions)
+  :is(a, [data-action="client-cancel"], [data-action="sales-preview"]):is(:hover, :focus-visible) {
+  background: transparent;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.creation-panel #record-form.sheet[data-id=""] > .form-section { border-bottom: 0; }
+.creation-panel #record-form.sheet[data-id=""] > .form-actions {
+  margin-inline: 20px;
+  padding-inline: 0;
+}
+.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action {
+  border: 0;
+  background: transparent;
+}
+.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action:is(:hover, :focus-visible) {
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.sales-editor .sales-editor-divider,
+.order-editor[data-id=""] .order-editor-sheet > hr,
+.catalog-editor[data-id=""] .catalog-form-card > hr,
+#catalog-purchase-form .catalog-form-card > hr {
+  display: none;
+}
+
+.sales-editor .sales-editor-divider + :is(h2, .sales-notes-grid),
+.order-editor[data-id=""] .order-editor-sheet > hr + h2,
+.catalog-editor[data-id=""] .catalog-form-card > hr + h2,
+#catalog-purchase-form .catalog-form-card > hr + h2 {
+  margin-top: 24px;
+}
+
+.sales-editor .sales-lines-head { border-radius: var(--surface-radius) var(--surface-radius) 0 0; }
+.sales-editor .sales-line-row { border: 0; }
+.sales-line-actions { display: flex; justify-content: flex-end; }
 body .home-main table th {
   padding: 14px;
   background: var(--brown-soft);
