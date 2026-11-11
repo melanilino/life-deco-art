@@ -834,9 +834,10 @@ class Component extends DCLogic {
       spotlightTopPad: m ? '35px' : '78px',
       spotlightBottomPad: m ? '142px' : '172px',
       spotlightMarginTop: m ? '56px' : gap + 'px',
-      spotlightNegMargin: m ? '-111px' : '-88px',
+      // Extend the desktop card upward by the same amount added to its vertical padding.
+      spotlightNegMargin: m ? '-111px' : '-112px',
       spotlightDir: m ? 'column' : 'row',
-      spotlightCardPad: m ? '48px 28px' : '100px 56px',
+      spotlightCardPad: m ? '48px 28px' : '112px 56px',
       spotlightImgMinH: m ? '260px' : '0',
       spotlightImgAspect: m ? '4/3' : 'auto',
       spotlightCardOrder: m ? '1' : '0',
