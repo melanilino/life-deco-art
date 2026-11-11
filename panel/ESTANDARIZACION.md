@@ -74,3 +74,7 @@ Los formularios de creación llevan una sola línea divisoria sobre las acciones
 Agenda usa un único desplazamiento vertical al borde derecho del calendario, con la barra fina marrón sobre el mismo fondo blanco del calendario. La selección de horas usa el fondo suave y las esquinas redondeadas de «Nueva actividad». Las fechas y los controles permanecen visibles cuando la ventana tiene espacio suficiente. En ventanas bajas se usa el desplazamiento de página para dejar accesibles los controles.
 
 Las tablas comparables del Hub siguen el acabado de Suscripciones. Tienen encabezado beige de esquinas redondeadas y peso 500, sin marco exterior ni línea bajo los títulos. Las filas conservan separadores horizontales entre registros.
+
+Las tarjetas laterales arrancan a la altura del formulario en escritorio y pasan debajo en móvil. En Nuevo pedido, el importe y la guía «Al crear el pedido» ocupan tarjetas distintas. La nota de campos obligatorios queda alineada a la izquierda del pie.
+
+Contenido y Tareas comparten el fondo suave y el radio de superficie en sus columnas. En Tareas, Lista y Tablero se eligen en un desplegable con la misma altura que los filtros. Los desplegables de Portafolio usan el borde y el fondo de los campos. Agenda muestra las herramientas como iconos con nombres accesibles.

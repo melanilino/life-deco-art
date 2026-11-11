@@ -141,7 +141,7 @@ button.primary:focus-visible,
 
 .sales-create-button,
 .client-create-button,
-.catalog-toolbar button,
+.catalog-toolbar button:where(:not(.hub-select-trigger)),
 .catalog-toolbar-link,
 .finance-register,
 .finance-toolbar .finance-register,
@@ -161,13 +161,13 @@ button.primary:focus-visible,
   text-decoration: none;
 }
 
-.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button, .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new) {
+.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button:where(:not(.hub-select-trigger)), .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new) {
   background: var(--brown-soft);
   border-color: transparent;
   color: var(--black);
 }
 
-.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button, .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new):is(:hover, :focus-visible) {
+.main :is(.sales-create-button, .client-create-button, .catalog-toolbar button:where(:not(.hub-select-trigger)), .catalog-toolbar-link, .catalog-primary-link, .finance-register, .content-new, .admin-new, .agenda-new):is(:hover, :focus-visible) {
   background: rgba(139,121,94,.16);
   border-color: transparent;
   color: var(--black);
@@ -541,12 +541,12 @@ select,
 .home-main .finance-metric-pair strong{font-size:var(--font-metric);line-height:29px}
 
 /* Un solo segmentado, compacto y con selección negra. */
-body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle){display:inline-flex;width:max-content;max-width:100%;height:auto;min-height:var(--hub-segment-height);padding:3px;gap:3px;margin-bottom:20px;border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:visible;align-self:start}
-body :is(.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle){margin-bottom:0}
-body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button{display:flex;flex:1;align-items:center;justify-content:center;gap:8px;width:auto;min-width:0;min-height:36px;padding:7px 16px;border:0;border-radius:4px;background:transparent;color:var(--brown);font-size:var(--font-body);line-height:20px;white-space:normal;text-decoration:none;box-shadow:none;transform:none}
-body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]){background:var(--black);color:var(--white)}
-body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:hover{background:var(--brown-soft);color:var(--black);text-decoration:none}
-body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.agenda-task-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]):hover{background:var(--black);color:var(--white)}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.order-view-toggle){display:inline-flex;width:max-content;max-width:100%;height:auto;min-height:var(--hub-segment-height);padding:3px;gap:3px;margin-bottom:20px;border:1px solid var(--border);border-radius:6px;background:var(--white);overflow:visible;align-self:start}
+body :is(.stats-switch,.content-toggle,.order-view-toggle){margin-bottom:0}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.order-view-toggle)>button{display:flex;flex:1;align-items:center;justify-content:center;gap:8px;width:auto;min-width:0;min-height:36px;padding:7px 16px;border:0;border-radius:4px;background:transparent;color:var(--brown);font-size:var(--font-body);line-height:20px;white-space:normal;text-decoration:none;box-shadow:none;transform:none}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]){background:var(--black);color:var(--white)}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.order-view-toggle)>button:hover{background:var(--brown-soft);color:var(--black);text-decoration:none}
+body :is(.client-type-switch,.catalog-create-switch,.finance-switch,.stats-switch,.content-toggle,.order-view-toggle)>button:is(.active,[aria-pressed="true"]):hover{background:var(--black);color:var(--white)}
 
 /* El control conserva el select para validación y envío; la lista visible es común. */
 .hub-select{position:relative;display:grid;min-width:0;width:100%;align-self:center}
@@ -565,6 +565,9 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 /* Una proporción común para formularios nuevos y sus tarjetas laterales. */
 .hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{display:grid;grid-template-columns:minmax(0,1fr) var(--hub-aside-width);gap:20px;align-items:start;min-width:0}
 .hub-form-layout>form{min-width:0;width:100%;margin:0}
+.hub-form-layout > :is(#content-form, #agenda-form) { margin-block-start: 0; }
+.sales-back + .hub-form-layout:has(> :is(#content-form, #agenda-form)) { margin-top: 18px; }
+.order-editor-sidebar { display: grid; gap: 16px; min-width: 0; }
 .hub-form-summary{min-width:0;padding:24px;border-radius:6px;background:var(--white)}
 .hub-form-summary h2{margin:0 0 16px;font-size:var(--font-section-title);font-weight:500;line-height:1.4}
 .hub-form-summary p{margin:0;color:var(--brown);font-size:var(--font-body);line-height:1.65;overflow-wrap:anywhere}
@@ -662,6 +665,19 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .sales-editor .sales-lines-head { border-radius: var(--surface-radius) var(--surface-radius) 0 0; }
 .sales-editor .sales-line-row { border: 0; }
 .sales-line-actions { display: flex; justify-content: flex-end; }
+
+.form-required-note {
+  margin: 0 auto 0 0;
+  color: var(--text-muted);
+  font-size: var(--font-helper);
+}
+.form-required-note > span { color: var(--pink); }
+
+.agenda-task-toolbar > .agenda-task-search input,
+.agenda-task-toolbar > .agenda-new {
+  min-height: var(--toolbar-height);
+  height: var(--toolbar-height);
+}
 body .home-main table th {
   padding: 14px;
   background: var(--brown-soft);
