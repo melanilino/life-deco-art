@@ -674,9 +674,46 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 .form-required-note > span { color: var(--pink); }
 
 .agenda-task-toolbar > .agenda-task-search input,
+.agenda-task-toolbar > .hub-select > .hub-select-trigger,
 .agenda-task-toolbar > .agenda-new {
   min-height: var(--toolbar-height);
   height: var(--toolbar-height);
+}
+
+@media (min-width: 701px) and (max-width: 1250px) {
+  .agenda-task-toolbar { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .agenda-task-toolbar > .agenda-task-search { grid-column: 1 / 3; }
+  .agenda-task-toolbar > .agenda-new { grid-area: 1 / 3; justify-self: end; }
+}
+
+@media (min-width: 1251px) {
+  .agenda-task-toolbar {
+    grid-template-columns: minmax(180px, 1fr) minmax(136px, 160px)
+      minmax(150px, 190px) minmax(104px, 126px) max-content;
+  }
+}
+
+.list-panel > .content-record-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px) max-content;
+  gap: 12px;
+}
+.content-record-toolbar > .sr-search { width: 100%; max-width: none; margin: 0; }
+.content-record-toolbar > .sr-search input {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+}
+.content-record-toolbar > .sr-search input,
+.content-record-toolbar > button:last-child {
+  height: var(--toolbar-height);
+  min-height: var(--toolbar-height);
+}
+.content-record-toolbar > button:last-child { white-space: nowrap; }
+@media (max-width: 700px) {
+  .list-panel > .content-record-toolbar { grid-template-columns: minmax(0, 1fr) max-content; }
+  .content-record-toolbar > .sr-search { grid-column: 1 / -1; }
 }
 body .home-main table th {
   padding: 14px;
