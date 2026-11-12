@@ -211,36 +211,6 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     .lda-editorial-services-card image-slot,.lda-editorial-services-copy{transition:none!important;transform:none!important;opacity:1!important;}
   }
 </style>
-<style id="lda-process-styles">
-  .lda-process{background:#F3EEE4;margin-top:50px;padding:clamp(56px,8vw,96px) 48px}
-  .lda-process-inner{max-width:1240px;margin:auto}
-  .lda-process h2{max-width:650px;margin:0 0 28px;color:#000;font-size:clamp(24px,3vw,38px);font-weight:300;line-height:1.35}
-  .lda-process h2 span{font-family:'Camelia Beauty',cursive;font-weight:400}
-  .lda-process-figure{width:min(100%,755px);margin:0 auto}
-  .lda-process-compare{--lda-split:50%;position:relative;isolation:isolate;aspect-ratio:740/500;overflow:hidden;border-radius:8px;background:#E4DCCB}
-  .lda-process-photo,.lda-process-photo img{position:absolute;inset:0;width:100%;height:100%}
-  .lda-process-photo img{object-fit:cover}
-  .lda-process-before{background:#EEE7D8;clip-path:inset(0 calc(100% - var(--lda-split)) 0 0)}
-  .lda-process-tag{position:absolute;bottom:12px;padding:5px 10px;border-radius:4px;background:#322820;color:#fff;font-size:11px}
-  .lda-process-tag-before{left:12px}
-  .lda-process-tag-after{right:12px}
-  .lda-process-divider{position:absolute;inset-block:0;left:clamp(20px,var(--lda-split),calc(100% - 20px));width:2px;background:#fff;transform:translateX(-50%);pointer-events:none}
-  .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755;font:22px/1 Arial,sans-serif;white-space:nowrap}
-  .lda-process-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
-  .lda-process-compare:has(.lda-process-range:focus-visible) .lda-process-divider span{outline:2px solid #4C3928;outline-offset:3px}
-  .lda-process figcaption,.lda-process-steps p{color:var(--lda-text-secondary,#756348);font-size:13px;line-height:1.55}
-  .lda-process figcaption{margin-top:8px}
-  .lda-process-steps{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:26px 0 0;padding:0}
-  .lda-process-steps li{border-top:1px solid #DCD2BC;padding-top:11px}
-  .lda-process-number{color:var(--lda-text-secondary,#756348);font-size:12px;font-weight:600}
-  .lda-process-steps h3{margin:4px 0 6px;font-size:17px;font-weight:500;line-height:1.35}
-  .lda-process-steps p{margin:0 0 8px}
-  @media(max-width:859px){
-    .lda-process{margin-top:56px;padding-inline:26px}
-    .lda-process-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-  }
-  @media(max-width:380px){.lda-process-steps{grid-template-columns:1fr}}
-</style>
 </helmet>
 
 <div class="lda-nav-spacer" aria-hidden="true"></div>
@@ -414,36 +384,64 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </sc-if>
 
 <!-- 5. CÓMO TRABAJAMOS -->
-<section class="lda-process" aria-labelledby="lda-process-title">
-  <div class="lda-process-inner">
-    <div class="lda-section-eyebrow">Cómo trabajamos</div>
-    <h2 id="lda-process-title">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long">garantías reales</span>.</h2>
-    <figure class="lda-process-figure">
-      <div class="lda-process-compare" data-process-compare="">
-        <div class="lda-process-photo lda-process-after">
-          <sc-if value="{{ cwCompareAfterUrl }}"><img src="{{ cwCompareAfterUrl }}" alt="Pieza personalizada terminada" loading="lazy" decoding="async"></sc-if>
-        </div>
-        <div class="lda-process-photo lda-process-before">
-          <sc-if value="{{ cwCompareBeforeUrl }}"><img src="{{ cwCompareBeforeUrl }}" alt="Boceto de la misma pieza personalizada" loading="lazy" decoding="async"></sc-if>
-        </div>
-        <span class="lda-process-tag lda-process-tag-before">Boceto</span>
-        <span class="lda-process-tag lda-process-tag-after">Pieza terminada</span>
-        <span class="lda-process-divider" aria-hidden="true"><span>‹ ›</span></span>
-        <input class="lda-process-range" type="range" min="0" max="100" aria-label="Comparar el boceto con la pieza terminada" aria-describedby="lda-process-help">
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+  <div style="background: #F3EEE4; margin-top: 50px; padding: {{ timelineBlockPad }};">
+  <div style="max-width: 1240px; margin: 0 auto; padding: 0; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 80px;">
+    <div>
+    <div style="position:sticky;top:150px;">
+      <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Cómo trabajamos</div>
+      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; max-width: 426px; margin: 0;">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long" style="font-weight: 400; font-family: 'Camelia Beauty', cursive;">garantías reales</span>.</h2>
+    </div>
+    </div>
+    <div style="padding-left:40px;">
+      <div style="position:sticky;top:150px;z-index:1;background:#F3EEE4;padding:20px 0;border-top:1px solid #DCD2BC;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:var(--lda-text-secondary,#756348);">01.</span><span style="font-size:16px;font-weight:500;color:#000000;">Cuéntame tu idea</span></div>
+        <p style="font-size:13.5px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:0 0 14px;">Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-cuentame" shape="rect" fit="cover" alt="{{ cwCuentameAlt }}" view-scale="{{ cwCuentameScale }}" view-x="{{ cwCuentameX }}" view-y="{{ cwCuentameY }}" style="width:100%;height:100%;" src="{{ cwCuentameUrl }}" placeholder="foto: mensaje/nota inicial"></image-slot></div>
       </div>
-      <figcaption id="lda-process-help">Mueve la línea para comparar el boceto con la pieza terminada.</figcaption>
-    </figure>
-    <ol class="lda-process-steps">
-      <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
-        <li>
-          <span class="lda-process-number">{{ p.n }}</span>
-          <h3>{{ p.title }}</h3>
-          <p>{{ p.desc }}</p>
-        </li>
-      </sc-for>
-    </ol>
+      <div style="height:34vh;"></div>
+      <div style="position:sticky;top:188px;z-index:2;background:#F3EEE4;padding:20px 0;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:var(--lda-text-secondary,#756348);">02.</span><span style="font-size:16px;font-weight:500;color:#000000;">Boceto y aprobación</span></div>
+        <p style="font-size:13.5px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:0 0 14px;">Te comparto un boceto digital antes de empezar a producir.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-boceto" shape="rect" fit="cover" alt="{{ cwBocetoAlt }}" view-scale="{{ cwBocetoScale }}" view-x="{{ cwBocetoX }}" view-y="{{ cwBocetoY }}" style="width:100%;height:100%;" src="{{ cwBocetoUrl }}" placeholder="foto: boceto a lápiz"></image-slot></div>
+      </div>
+      <div style="height:34vh;"></div>
+      <div style="position:sticky;top:226px;z-index:3;background:#F3EEE4;padding:20px 0;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:var(--lda-text-secondary,#756348);">03.</span><span style="font-size:16px;font-weight:500;color:#000000;">Trazo a mano</span></div>
+        <p style="font-size:13.5px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:0 0 14px;">Cada letra se dibuja con cuidado, cuidando cada detalle.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-trazo" shape="rect" fit="cover" alt="{{ cwTrazoAlt }}" view-scale="{{ cwTrazoScale }}" view-x="{{ cwTrazoX }}" view-y="{{ cwTrazoY }}" style="width:100%;height:100%;" src="{{ cwTrazoUrl }}" placeholder="foto: trazo a mano en proceso"></image-slot></div>
+      </div>
+      <div style="height:34vh;"></div>
+      <div style="position:sticky;top:264px;z-index:4;background:#F3EEE4;padding:20px 0;border-bottom:1px solid #DCD2BC;">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;"><span style="font-size:16px;font-weight:600;color:var(--lda-text-secondary,#756348);">04.</span><span style="font-size:16px;font-weight:500;color:#000000;">Entrega</span></div>
+        <p style="font-size:13.5px;color:var(--lda-text-secondary,#756348);font-weight:300;line-height:1.6;margin:0 0 14px;">Recibes tu pieza lista, empacada con el mismo cuidado con que se hizo.</p>
+        <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;"><image-slot id="cw-final" shape="rect" fit="cover" alt="{{ cwFinalAlt }}" view-scale="{{ cwFinalScale }}" view-x="{{ cwFinalX }}" view-y="{{ cwFinalY }}" style="width:100%;height:100%;" src="{{ cwFinalUrl }}" placeholder="foto: pieza final terminada"></image-slot></div>
+      </div>
+      <div style="height:38vh;"></div>
+    </div>
   </div>
-</section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <div style="background:#F3EEE4;margin-top:56px;padding:56px 26px;">
+    <div style="max-width: 1240px; margin: 0 auto; padding: 0;">
+      <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Cómo trabajamos</div>
+      <h2 style="font-size:22px;line-height:1.35;color:#000000;font-weight:300;margin:0 0 24px;">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long" style="font-weight: 400; font-family: 'Camelia Beauty', cursive;">garantías reales</span>.</h2>
+      <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
+        <div style="padding:18px 0;border-top:1px solid #E4DCCB;">
+          <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="display:flex;gap:16px;cursor:pointer;width:100%;min-height:44px;border:0;background:transparent;padding:0;text-align:left;font-family:'Montserrat',sans-serif;color:inherit;">
+            <div style="font-size:18px;font-weight:600;color:var(--lda-text-secondary,#756348);width:32px;flex-shrink:0;">{{ p.n }}</div>
+            <div style="flex:1;"><div style="font-size:15px;font-weight:500;color:#000000;margin-bottom:4px;">{{ p.title }}</div><p style="font-size: 13px; color: var(--lda-text-secondary,#756348); font-weight: 300; line-height: 1.6; margin: 0; font-family: Montserrat">{{ p.desc }}</p></div>
+            <span style="font-size:20px;color:var(--lda-text-secondary,#756348);line-height:1;flex-shrink:0;">{{ p.icon }}</span>
+          </button>
+          <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+            <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;margin:14px 0 0 48px;max-width:520px;"><image-slot id="{{ p.imgId }}" shape="rect" fit="cover" view-scale="{{ p.viewScale }}" view-x="{{ p.viewX }}" view-y="{{ p.viewY }}" style="width:100%;height:100%;" src="{{ p.imgUrl }}" placeholder="{{ p.placeholder }}"></image-slot></div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
 
 <!-- 6. LA PRUEBA — CITA -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
@@ -532,7 +530,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;sectionGap&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:96,&quot;min&quot;:40,&quot;max&quot;:200,&quot;step&quot;:8,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Espaciado&quot;}}">
 class Component extends DCLogic {
-  state = { content: {}, tiendaProducts: {}, aprendeContent: {}, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, heroVideoReady: false };
+  state = { content: {}, tiendaProducts: {}, aprendeContent: {}, isMobile: typeof window !== 'undefined' && window.innerWidth < 860, cwOpen: null, heroVideoReady: false };
   checkMobile = () => this.setState({ isMobile: window.innerWidth < 860 });
   syncHomeNav = () => {
     document.body.classList.toggle('lda-home-at-top', window.scrollY <= 4);
@@ -713,9 +711,9 @@ class Component extends DCLogic {
   };
   PASOS = [
     { n: '01', title: 'Cuéntame tu idea', desc: 'Escríbeme qué quieres celebrar o regalar, y a quién va dirigido.', imgKey: 'cwCuentameUrl', imgId: 'cw-cuentame', placeholder: 'foto: mensaje/nota inicial' },
-    { n: '02', title: 'Boceto y aprobación', desc: 'Ves tu boceto antes de que yo toque el material. Si no te enamora, lo ajustamos.', imgKey: 'cwBocetoUrl', imgId: 'cw-boceto', placeholder: 'foto: boceto a lápiz' },
-    { n: '03', title: 'Trazo a mano', desc: 'Dibujo cada letra a mano. Nada de plantillas ni impresos.', imgKey: 'cwTrazoUrl', imgId: 'cw-trazo', placeholder: 'foto: trazo a mano en proceso' },
-    { n: '04', title: 'Entrega', desc: 'Tu pieza llega empacada como un regalo, lista para dar.', imgKey: 'cwFinalUrl', imgId: 'cw-final', placeholder: 'foto: pieza final terminada' },
+    { n: '02', title: 'Boceto y aprobación', desc: 'Te comparto un boceto digital antes de empezar a producir.', imgKey: 'cwBocetoUrl', imgId: 'cw-boceto', placeholder: 'foto: boceto a lápiz' },
+    { n: '03', title: 'Trazo a mano', desc: 'Cada letra se dibuja con cuidado, cuidando cada detalle.', imgKey: 'cwTrazoUrl', imgId: 'cw-trazo', placeholder: 'foto: trazo a mano en proceso' },
+    { n: '04', title: 'Entrega', desc: 'Recibes tu pieza lista, empacada con el mismo cuidado con que se hizo.', imgKey: 'cwFinalUrl', imgId: 'cw-final', placeholder: 'foto: pieza final terminada' },
   ];
   componentWillUnmount() {
     window.removeEventListener('resize', this.checkMobile);
@@ -827,6 +825,7 @@ class Component extends DCLogic {
       closingBtnSize: m ? '13.5px' : '14px',
       servCols: m ? '1fr' : 'repeat(2,1fr)',
       servHeight: m ? '320px' : '560px',
+      timelineBlockPad: m ? '64px 24px 64px' : '120px 48px 96px',
       sidePad: m ? '24px' : '48px',
       quoteSize: m ? '20px' : '26px',
       piezasCols: m ? 'repeat(2,1fr)' : 'repeat(4,1fr)',
@@ -880,14 +879,25 @@ class Component extends DCLogic {
       servSouvenirsSrcset: imageSrcset('servSouvenirsUrl'),
       servSouvenirsAlt: (c.imageAlts && c.imageAlts.servSouvenirsUrl) || 'Souvenirs personalizados',
       servSouvenirsScale: imageAdjustment('servSouvenirsUrl').scale, servSouvenirsX: imageAdjustment('servSouvenirsUrl').x, servSouvenirsY: imageAdjustment('servSouvenirsUrl').y,
-      // Las dos fotos del comparador se cargan por separado para poder usar tomas alineadas.
-      cwCompareBeforeUrl: c.cwCompareBeforeUrl || '',
-      cwCompareAfterUrl: c.cwCompareAfterUrl || '',
-      pasos: this.PASOS.map(p => ({
+      cwCuentameUrl: c.cwCuentameUrl || '',
+      cwCuentameAlt: (c.imageAlts && c.imageAlts.cwCuentameUrl) || 'Mensaje inicial de un proyecto personalizado',
+      cwCuentameScale: imageAdjustment('cwCuentameUrl').scale, cwCuentameX: imageAdjustment('cwCuentameUrl').x, cwCuentameY: imageAdjustment('cwCuentameUrl').y,
+      cwBocetoUrl: c.cwBocetoUrl || '',
+      cwBocetoAlt: (c.imageAlts && c.imageAlts.cwBocetoUrl) || 'Boceto inicial realizado a lápiz',
+      cwBocetoScale: imageAdjustment('cwBocetoUrl').scale, cwBocetoX: imageAdjustment('cwBocetoUrl').x, cwBocetoY: imageAdjustment('cwBocetoUrl').y,
+      cwTrazoUrl: c.cwTrazoUrl || '',
+      cwTrazoAlt: (c.imageAlts && c.imageAlts.cwTrazoUrl) || 'Proceso de trazado a mano',
+      cwTrazoScale: imageAdjustment('cwTrazoUrl').scale, cwTrazoX: imageAdjustment('cwTrazoUrl').x, cwTrazoY: imageAdjustment('cwTrazoUrl').y,
+      cwFinalUrl: c.cwFinalUrl || '',
+      cwFinalAlt: (c.imageAlts && c.imageAlts.cwFinalUrl) || 'Pieza personalizada terminada',
+      cwFinalScale: imageAdjustment('cwFinalUrl').scale, cwFinalX: imageAdjustment('cwFinalUrl').x, cwFinalY: imageAdjustment('cwFinalUrl').y,
+      pasos: this.PASOS.map((p, i) => ({
         n: p.n, title: p.title, desc: p.desc, imgId: p.imgId, placeholder: p.placeholder,
         imgUrl: c[p.imgKey] || '',
-        imgAlt: (c.imageAlts && c.imageAlts[p.imgKey]) || p.title,
         viewScale: imageAdjustment(p.imgKey).scale, viewX: imageAdjustment(p.imgKey).x, viewY: imageAdjustment(p.imgKey).y,
+        open: this.state.cwOpen === i,
+        icon: this.state.cwOpen === i ? '−' : '+',
+        onToggle: () => this.setState({ cwOpen: this.state.cwOpen === i ? null : i }),
       })),
       spotlightHref,
       spotlightEyebrow: spotlightItem ? (spotlightTypeEyebrow[spotlightType] || c.spotlightEyebrow || spotlightDefaults.eyebrow) : (c.spotlightEyebrow || spotlightDefaults.eyebrow),
@@ -943,13 +953,6 @@ class Component extends DCLogic {
   addEventListener('load',()=>setTimeout(scan,700));
   setTimeout(scan,1200);
 })();
-</script>
-<script>
-document.addEventListener('input', (event) => {
-  const slider = event.target;
-  if (!slider.matches('.lda-process-range')) return;
-  slider.closest('[data-process-compare]').style.setProperty('--lda-split', slider.value + '%');
-});
 </script>
 </body>
 </html>
