@@ -228,15 +228,13 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755;font:22px/1 Arial,sans-serif;white-space:nowrap}
   .lda-process-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
   .lda-process-compare:has(.lda-process-range:focus-visible) .lda-process-divider span{outline:2px solid #4C3928;outline-offset:3px}
-  .lda-process figcaption,.lda-process-steps p,.lda-process-example{color:var(--lda-text-secondary,#756348);font-size:13px;line-height:1.55}
+  .lda-process figcaption,.lda-process-steps p{color:var(--lda-text-secondary,#756348);font-size:13px;line-height:1.55}
   .lda-process figcaption{margin-top:8px}
   .lda-process-steps{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:26px 0 0;padding:0}
   .lda-process-steps li{border-top:1px solid #DCD2BC;padding-top:11px}
   .lda-process-number{color:var(--lda-text-secondary,#756348);font-size:12px;font-weight:600}
   .lda-process-steps h3{margin:4px 0 6px;font-size:17px;font-weight:500;line-height:1.35}
   .lda-process-steps p{margin:0 0 8px}
-  .lda-process-example summary{cursor:pointer;width:fit-content}
-  .lda-process-example image-slot{display:block;aspect-ratio:16/9;margin-top:8px;border-radius:6px;overflow:hidden}
   @media(max-width:859px){
     .lda-process{margin-top:56px;padding-inline:26px}
     .lda-process-steps{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
@@ -419,7 +417,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 <section class="lda-process" aria-labelledby="lda-process-title">
   <div class="lda-process-inner">
     <div class="lda-section-eyebrow">Cómo trabajamos</div>
-    <h2 id="lda-process-title">Cada pieza empieza como una idea y termina como <span class="lda-camelia-accent">algo tuyo</span>.</h2>
+    <h2 id="lda-process-title">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long">garantías reales</span>.</h2>
     <figure class="lda-process-figure">
       <div class="lda-process-compare" data-process-compare="">
         <div class="lda-process-photo lda-process-after">
@@ -441,10 +439,6 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
           <span class="lda-process-number">{{ p.n }}</span>
           <h3>{{ p.title }}</h3>
           <p>{{ p.desc }}</p>
-          <details class="lda-process-example">
-            <summary>Ver imagen del paso</summary>
-            <image-slot id="{{ p.imgId }}" shape="rect" fit="cover" alt="{{ p.imgAlt }}" view-scale="{{ p.viewScale }}" view-x="{{ p.viewX }}" view-y="{{ p.viewY }}" src="{{ p.imgUrl }}" placeholder="{{ p.placeholder }}"></image-slot>
-          </details>
         </li>
       </sc-for>
     </ol>
