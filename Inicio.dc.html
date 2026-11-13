@@ -212,18 +212,31 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   }
 </style>
 <style id="lda-process-comparison-styles">
-  .lda-process-figure{margin:0}
-  .lda-process-compare{--lda-split:50%;position:relative;isolation:isolate;aspect-ratio:820/730;overflow:hidden;border-radius:8px;background:#E4DCCB}
+  #lda-comparador-completo{--nav:80px;--open:0;--title-alpha:1;height:calc(230svh - var(--nav));background:#F3EEE4;scroll-margin-top:var(--nav)}
+  .lda-expansion-stage{position:sticky;top:var(--nav);width:100%;height:calc(100svh - var(--nav));min-height:330px;overflow:hidden;isolation:isolate}
+  .lda-process-heading{position:absolute;top:18%;inset-inline:18px;z-index:2;text-align:center;opacity:var(--title-alpha);pointer-events:none}
+  .lda-process-heading h2{max-width:700px;margin:0 auto;color:#1C1A17;font-size:clamp(24px,3.6vw,48px);font-weight:400;line-height:1.21;letter-spacing:-.035em;text-wrap:balance}
+  #lda-completo-titulo .lda-camelia-long{display:inline-block;letter-spacing:normal;font-kerning:normal;white-space:nowrap}
+  .lda-process-compare{--lda-split:50%;--start-w:min(75vw,760px);--start-h:min(23svh,190px);position:absolute;left:50%;top:calc(75% - 25% * var(--open));transform:translate(-50%,-50%);width:calc(var(--start-w) + (100% - var(--start-w)) * var(--open));height:calc(var(--start-h) + (100% - var(--start-h)) * var(--open));margin:0;isolation:isolate;overflow:hidden;border-radius:calc(5px * (1 - var(--open)));background:#E4DCCB}
   .lda-process-photo,.lda-process-photo img{position:absolute;inset:0;width:100%;height:100%}
-  .lda-process-photo img{object-fit:cover}
+  .lda-process-photo img{object-fit:cover;object-position:50% 58%}
   .lda-process-before{background:#EEE7D8;clip-path:inset(0 calc(100% - var(--lda-split)) 0 0)}
-  .lda-process-tag{position:absolute;bottom:12px;padding:5px 10px;border-radius:4px;background:#322820;color:#fff;font-size:11px}
-  .lda-process-tag-before{left:12px}
-  .lda-process-tag-after{right:12px}
-  .lda-process-divider{position:absolute;inset-block:0;left:clamp(20px,var(--lda-split),calc(100% - 20px));width:2px;background:#fff;transform:translateX(-50%);pointer-events:none}
-  .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755;font:22px/1 Arial,sans-serif;white-space:nowrap}
+  .lda-process-tag{position:absolute;bottom:8px;padding:3px 6px;border-radius:3px;background:#322820;color:#fff;font-size:11px;opacity:var(--open);pointer-events:none}
+  .lda-process-tag-before{left:8px}
+  .lda-process-tag-after{right:8px}
+  .lda-process-divider{position:absolute;inset-block:0;left:var(--lda-split);width:2px;background:#fff;transform:translateX(-50%);pointer-events:none}
+  .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755;font:19px/1 Arial,sans-serif;white-space:nowrap}
   .lda-process-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
   .lda-process-compare:has(.lda-process-range:focus-visible) .lda-process-divider span{outline:2px solid #4C3928;outline-offset:3px}
+  body:has(#lda-comparador-completo[data-full-comparison]) #lda-whatsapp-fab-static{visibility:hidden}
+  @media(max-width:859px){#lda-comparador-completo{--nav:64px}}
+  @media(prefers-reduced-motion:reduce),(max-height:420px){
+    #lda-comparador-completo{height:auto}
+    .lda-expansion-stage{position:relative;top:auto;height:auto;min-height:0;padding:32px 0}
+    .lda-process-heading{position:static;padding:0 18px 20px;opacity:1}
+    .lda-process-compare{position:relative;top:auto;left:auto;transform:none;width:100%;height:auto;aspect-ratio:1.8;border-radius:0}
+    .lda-process-tag{opacity:1}
+  }
 </style>
 </helmet>
 
@@ -398,54 +411,26 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   </sc-if>
 
 <!-- 5. CÓMO TRABAJAMOS -->
-  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
-  <div style="background: #F3EEE4; margin-top: 50px; padding: {{ timelineBlockPad }};">
-  <div style="max-width: 1240px; margin: 0 auto; padding: 0; display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 80px;">
-    <div>
-    <div style="position:sticky;top:150px;">
-      <div class="lda-section-eyebrow" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:16px;">Cómo trabajamos</div>
-      <h2 style="font-size: {{ h2Size }}; line-height: 1.3; color: #000000; font-weight: 300; max-width: 426px; margin: 0;">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long" style="font-weight: 400; font-family: 'Camelia Beauty', cursive;">garantías reales</span>.</h2>
-    </div>
-    </div>
-    <div style="padding-left:40px;">
-<figure class="lda-process-figure">
-      <div class="lda-process-compare" data-process-compare="">
-        <div class="lda-process-photo lda-process-after">
-          <sc-if value="{{ cwCompareAfterUrl }}"><img src="{{ cwCompareAfterUrl }}" alt="Pieza personalizada terminada" loading="lazy" decoding="async"></sc-if>
-        </div>
-        <div class="lda-process-photo lda-process-before">
-          <sc-if value="{{ cwCompareBeforeUrl }}"><img src="{{ cwCompareBeforeUrl }}" alt="Boceto de la misma pieza personalizada" loading="lazy" decoding="async"></sc-if>
-        </div>
-        <span class="lda-process-tag lda-process-tag-before">Boceto</span>
-        <span class="lda-process-tag lda-process-tag-after">Pieza terminada</span>
-        <span class="lda-process-divider" aria-hidden="true"><span>‹ ›</span></span>
-        <input class="lda-process-range" type="range" min="0" max="100" aria-label="Comparar el boceto con la pieza terminada">
+<section id="lda-comparador-completo" aria-labelledby="lda-completo-titulo">
+  <div class="lda-expansion-stage">
+    <header class="lda-process-heading">
+      <div class="lda-section-eyebrow">Cómo trabajamos</div>
+      <h2 id="lda-completo-titulo">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long">garantías reales</span>.</h2>
+    </header>
+    <figure class="lda-process-compare" data-process-compare="">
+      <div class="lda-process-photo">
+        <sc-if value="{{ cwCompareAfterUrl }}"><img src="{{ cwCompareAfterUrl }}" alt="Pieza personalizada terminada" loading="lazy" decoding="async"></sc-if>
       </div>
+      <div class="lda-process-photo lda-process-before">
+        <sc-if value="{{ cwCompareBeforeUrl }}"><img src="{{ cwCompareBeforeUrl }}" alt="Boceto de la misma pieza personalizada" loading="lazy" decoding="async"></sc-if>
+      </div>
+      <span class="lda-process-tag lda-process-tag-before">Boceto</span>
+      <span class="lda-process-tag lda-process-tag-after">Pieza terminada</span>
+      <span class="lda-process-divider" aria-hidden="true"><span>‹ ›</span></span>
+      <input class="lda-process-range" type="range" min="0" max="100" aria-label="Comparar el boceto con la pieza terminada">
     </figure>
-    </div>
   </div>
-  </div>
-  </sc-if>
-  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
-  <div style="background:#F3EEE4;margin-top:56px;padding:56px 26px;">
-    <div style="max-width: 1240px; margin: 0 auto; padding: 0;">
-      <div class="lda-section-eyebrow" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Cómo trabajamos</div>
-      <h2 style="font-size:22px;line-height:1.35;color:#000000;font-weight:300;margin:0 0 24px;">Un proceso artesanal, respaldado por <span class="lda-camelia-accent lda-camelia-long" style="font-weight: 400; font-family: 'Camelia Beauty', cursive;">garantías reales</span>.</h2>
-      <sc-for list="{{ pasos }}" as="p" hint-placeholder-count="4">
-        <div style="padding:18px 0;border-top:1px solid #E4DCCB;">
-          <button type="button" onClick="{{ p.onToggle }}" aria-expanded="{{ p.open }}" style="display:flex;gap:16px;cursor:pointer;width:100%;min-height:44px;border:0;background:transparent;padding:0;text-align:left;font-family:'Montserrat',sans-serif;color:inherit;">
-            <div style="font-size:18px;font-weight:600;color:var(--lda-text-secondary,#756348);width:32px;flex-shrink:0;">{{ p.n }}</div>
-            <div style="flex:1;"><div style="font-size:15px;font-weight:500;color:#000000;margin-bottom:4px;">{{ p.title }}</div><p style="font-size: 13px; color: var(--lda-text-secondary,#756348); font-weight: 300; line-height: 1.6; margin: 0; font-family: Montserrat">{{ p.desc }}</p></div>
-            <span style="font-size:20px;color:var(--lda-text-secondary,#756348);line-height:1;flex-shrink:0;">{{ p.icon }}</span>
-          </button>
-          <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
-            <div style="border-radius:8px;overflow:hidden;aspect-ratio:16/9;background:#e8e0d0;margin:14px 0 0 48px;max-width:520px;"><image-slot id="{{ p.imgId }}" shape="rect" fit="cover" view-scale="{{ p.viewScale }}" view-x="{{ p.viewX }}" view-y="{{ p.viewY }}" style="width:100%;height:100%;" src="{{ p.imgUrl }}" placeholder="{{ p.placeholder }}"></image-slot></div>
-          </sc-if>
-        </div>
-      </sc-for>
-    </div>
-  </div>
-  </sc-if>
+</section>
 
 <!-- 6. LA PRUEBA — CITA -->
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
@@ -966,6 +951,37 @@ document.addEventListener('input', (event) => {
   if (!slider.matches('.lda-process-range')) return;
   slider.closest('[data-process-compare]').style.setProperty('--lda-split', slider.value + '%');
 });
+</script>
+<script>
+(() => {
+  const staticView = matchMedia('(prefers-reduced-motion: reduce), (max-height:420px)');
+  let frame = 0;
+  function update() {
+    frame = 0;
+    const section = document.getElementById('lda-comparador-completo');
+    const stage = section?.querySelector('.lda-expansion-stage');
+    if (!stage) return;
+    const top = parseFloat(getComputedStyle(stage).top) || 0;
+    const progress = Math.max(0, Math.min(1, (top - section.getBoundingClientRect().top) / Math.max(1, stage.clientHeight * .82)));
+    section.style.setProperty('--open', progress * progress * (3 - 2 * progress));
+    section.style.setProperty('--title-alpha', Math.max(0, 1 - progress * 3));
+    section.toggleAttribute('data-full-comparison', !staticView.matches && progress === 1 && stage.getBoundingClientRect().top >= top - 1);
+  }
+  function schedule() {
+    if (!frame) frame = requestAnimationFrame(update);
+  }
+  window.addEventListener('scroll', schedule, {passive:true});
+  window.addEventListener('resize', schedule);
+  staticView.addEventListener('change', schedule);
+  const observer = new MutationObserver(() => {
+    if (document.getElementById('lda-comparador-completo')) {
+      observer.disconnect();
+      schedule();
+    }
+  });
+  if (!document.getElementById('lda-comparador-completo')) observer.observe(document.body, {childList:true, subtree:true});
+  schedule();
+})();
 </script>
 </body>
 </html>
