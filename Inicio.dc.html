@@ -882,8 +882,8 @@ class Component extends DCLogic {
       cwFinalUrl: c.cwFinalUrl || '',
       cwFinalAlt: (c.imageAlts && c.imageAlts.cwFinalUrl) || 'Pieza personalizada terminada',
       cwFinalScale: imageAdjustment('cwFinalUrl').scale, cwFinalX: imageAdjustment('cwFinalUrl').x, cwFinalY: imageAdjustment('cwFinalUrl').y,
-      cwCompareBeforeUrl: c.cwCompareBeforeUrl || '',
-      cwCompareAfterUrl: c.cwCompareAfterUrl || '',
+      cwCompareBeforeUrl: c.cwCompareBeforeUrl || '/imagenes-proceso/boceto.jpg',
+      cwCompareAfterUrl: c.cwCompareAfterUrl || '/imagenes-proceso/pieza-terminada.jpg',
       pasos: this.PASOS.map((p, i) => ({
         n: p.n, title: p.title, desc: p.desc, imgId: p.imgId, placeholder: p.placeholder,
         imgUrl: c[p.imgKey] || '',
