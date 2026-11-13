@@ -84,6 +84,19 @@ x-dc{display:none!important}
   a:hover { color: var(--cms-ink); }
   /* Regla tipográfica del CMS: cuatro tamaños y tres pesos. */
   input, textarea, select, button { font-family:'Montserrat',sans-serif; font-size:var(--cms-type-ui); font-weight:var(--cms-weight-regular); }
+  /* Botones operativos compartidos con el Hub. */
+  .cms-button { display:inline-flex;align-items:center;justify-content:center;min-height:44px;box-sizing:border-box;padding:0 18px;border:1px solid var(--cms-border);border-radius:6px;background:var(--cms-white);color:var(--cms-ink);font-family:'Montserrat',sans-serif;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-regular);line-height:1.2;cursor:pointer;transition:background-color .16s ease,border-color .16s ease,color .16s ease,opacity .16s ease; }
+  .cms-button:hover, .cms-button:focus-visible { background:var(--cms-brown-soft);border-color:var(--cms-border-strong);color:var(--cms-ink);outline:0;box-shadow:none; }
+  .cms-button--primary { background:var(--cms-cyan);border-color:var(--cms-cyan);color:var(--cms-white);font-weight:var(--cms-weight-medium); }
+  .cms-button--primary:hover, .cms-button--primary:focus-visible { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white); }
+  .cms-button--dark { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white);font-weight:var(--cms-weight-medium); }
+  .cms-button--dark:hover, .cms-button--dark:focus-visible { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white);opacity:.86; }
+  .cms-button--danger { color:var(--cms-error); }
+  .cms-button--danger:hover, .cms-button--danger:focus-visible { background:var(--cms-error-bg);border-color:var(--cms-error);color:var(--cms-error); }
+  .cms-button--danger-solid { background:var(--cms-error);border-color:var(--cms-error);color:var(--cms-white);font-weight:var(--cms-weight-medium); }
+  .cms-button--danger-solid:hover, .cms-button--danger-solid:focus-visible { background:var(--cms-error);border-color:var(--cms-error);color:var(--cms-white);opacity:.86; }
+  .cms-button:active { transform:none; }
+  .cms-button:disabled { opacity:.5;cursor:wait; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column; }
@@ -105,7 +118,7 @@ x-dc{display:none!important}
     <sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}">
       <div style="font-size:var(--cms-type-ui);color:var(--cms-error);margin-bottom:16px;">{{ error }}</div>
     </sc-if>
-    <button onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;background:var(--cms-ink);color:var(--cms-white);border:none;padding:14px;border-radius:4px;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-medium);cursor:pointer;font-family:Montserrat;" style-hover="background:var(--cms-ink);">{{ loginBtnText }}</button>
+    <button class="cms-button cms-button--dark" onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;">{{ loginBtnText }}</button>
   </div>
 </div>
 </sc-if>
@@ -132,7 +145,7 @@ x-dc{display:none!important}
       <div style="font-size:var(--cms-type-title);font-weight:var(--cms-weight-light);color:var(--cms-ink);margin-bottom:6px;">{{ currentPageLabel }}</div>
       <sc-if value="{{ hasSaveAction }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;gap:12px;">
-          <span onClick="{{ onSave }}" style="background: var(--cms-cyan); color: var(--cms-white); padding: 10px 20px; border-radius: 8px; font-size:var(--cms-type-ui); font-weight:var(--cms-weight-regular); cursor: pointer; overflow: visible">{{ saveBtnText }}</span>
+          <button type="button" class="cms-button cms-button--primary" onClick="{{ onSave }}" disabled="{{ saving }}" aria-busy="{{ saving }}">{{ saveBtnText }}</button>
           <sc-if value="{{ showSaved }}" hint-placeholder-val="{{ false }}"><span style="font-size:var(--cms-type-ui);color:var(--cms-success);">Guardado ✓</span></sc-if>
         </div>
       </sc-if>
@@ -153,7 +166,7 @@ x-dc{display:none!important}
         <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
           <div style="width:84px;height:84px;overflow:hidden;border-radius:8px;background:var(--cms-cream);display:flex;align-items:center;justify-content:center;"><image-slot id="cms-config-favicon" shape="rect" fit="contain" style="width:100%;height:100%;" src="{{ configFaviconUrl }}" placeholder="favicon"></image-slot></div>
           <label style="display:inline-flex;align-items:center;padding:10px 16px;border:1px solid var(--cms-border);color:var(--cms-brown);border-radius:4px;font-size:var(--cms-type-ui);cursor:pointer;">Subir<input type="file" accept="image/png,image/svg+xml,image/x-icon,image/vnd.microsoft.icon,image/webp" onChange="{{ onConfigFaviconUpload }}" style="display:none;"></label>
-          <sc-if value="{{ configHasFavicon }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ onConfigFaviconRemove }}" style="display:inline-flex;align-items:center;gap:7px;padding:10px 14px;border:1px solid var(--cms-border);background:var(--cms-white);color:var(--cms-error);border-radius:4px;font-family:Montserrat;font-size:var(--cms-type-ui);cursor:pointer;">Eliminar</button></sc-if>
+          <sc-if value="{{ configHasFavicon }}" hint-placeholder-val="{{ false }}"><button type="button" class="cms-button cms-button--danger" onClick="{{ onConfigFaviconRemove }}">Eliminar</button></sc-if>
           <sc-if value="{{ configFaviconUploading }}" hint-placeholder-val="{{ false }}"><span style="font-size:var(--cms-type-ui);color:var(--cms-brown);">Subiendo…</span></sc-if>
         </div>
       </div>
@@ -700,8 +713,8 @@ x-dc{display:none!important}
       <div id="cms-confirm-title" style="font-size:22px;line-height:1.3;font-weight:var(--cms-weight-light);color:var(--cms-ink);margin-bottom:4px;">{{ confirmTitle }}</div>
       <div style="font-size:var(--cms-type-ui);font-weight:var(--cms-weight-light);line-height:1.55;color:var(--cms-brown);margin-bottom:20px;">{{ confirmMessage }}</div>
       <div style="display:flex;justify-content:flex-end;gap:10px;">
-        <button onClick="{{ onConfirmCancel }}" style="height:40px;padding:0 18px;border:1px solid var(--cms-border);border-radius:5px;background:var(--cms-white);color:var(--cms-brown);font-family:Montserrat;font-size:var(--cms-type-ui);cursor:pointer;">Cancelar</button>
-        <button onClick="{{ onConfirmAccept }}" style="height:40px;padding:0 20px;border:1px solid var(--cms-error);border-radius:5px;background:var(--cms-error);color:var(--cms-white);font-family:Montserrat;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-medium);cursor:pointer;">Eliminar</button>
+        <button type="button" class="cms-button" onClick="{{ onConfirmCancel }}">Cancelar</button>
+        <button type="button" class="cms-button cms-button--danger-solid" onClick="{{ onConfirmAccept }}">Eliminar</button>
       </div>
     </div>
   </div>
