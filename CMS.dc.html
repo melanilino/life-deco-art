@@ -930,6 +930,21 @@ class Component extends DCLogic {
   ];
 
   async componentDidMount() {
+    this._onTransientPointerDown = (event) => {
+      const transientOpen = this.state.expanded.imageMenu || this.state.expanded.imageAlt;
+      if (!transientOpen) return;
+      const target = event.target;
+      const insideTransient = this.isInsideImageTransient(target);
+      if (insideTransient) return;
+      this.closeTransientControls();
+    };
+    this._onTransientKeyDown = (event) => {
+      if (event.key !== 'Escape') return;
+      if (!this.state.expanded.imageMenu && !this.state.expanded.imageAlt) return;
+      this.closeTransientControls();
+    };
+    document.addEventListener('pointerdown', this._onTransientPointerDown);
+    window.addEventListener('keydown', this._onTransientKeyDown);
     const cms = await import('./cms.js');
     this.setState({ cms });
     this.loadLegalUpdatedDates();
@@ -975,7 +990,29 @@ class Component extends DCLogic {
     });
   }
 
-  componentWillUnmount() { this.releasePageScrollLock(); }
+  componentWillUnmount() {
+    document.removeEventListener('pointerdown', this._onTransientPointerDown);
+    window.removeEventListener('keydown', this._onTransientKeyDown);
+    this.releasePageScrollLock();
+  }
+
+  closeTransientControls() {
+    const expanded = this.state.expanded || {};
+    if (!expanded.imageMenu && !expanded.imageAlt) return;
+    this.setState({ expanded: { ...expanded, imageMenu: null, imageAlt: null } });
+  }
+
+  isInsideImageTransient(target) {
+    if (!target || !target.closest) return false;
+    const triggerSelector = '[aria-label="Opciones de imagen"]';
+    if (target.closest(triggerSelector)) return true;
+    let element = target;
+    while (element && element !== document.body) {
+      if (element.previousElementSibling && element.previousElementSibling.matches(triggerSelector)) return true;
+      element = element.parentElement;
+    }
+    return false;
+  }
 
   releasePageScrollLock() {
     if (!this._pageScrollLocked) return;
