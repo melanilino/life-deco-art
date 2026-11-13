@@ -227,7 +227,8 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   .lda-process-tag-before{left:8px}
   .lda-process-tag-after{right:8px}
   .lda-process-divider{position:absolute;inset-block:0;left:var(--lda-split);width:2px;background:#fff;transform:translateX(-50%);pointer-events:none}
-  .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755;font:19px/1 Arial,sans-serif;white-space:nowrap}
+  .lda-process-divider span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;color:#1C1A17;box-shadow:0 2px 8px #241E1755}
+  .lda-process-divider svg{display:block;width:18px;height:18px}
   .lda-process-range{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize;touch-action:pan-y}
   .lda-process-compare:has(.lda-process-range:focus-visible) .lda-process-divider span{outline:2px solid #4C3928;outline-offset:3px}
   body:has(#lda-comparador-completo[data-full-comparison]) #lda-whatsapp-fab-static{visibility:hidden}
@@ -428,7 +429,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
       </div>
       <span class="lda-process-tag lda-process-tag-before">Boceto</span>
       <span class="lda-process-tag lda-process-tag-after">Pieza terminada</span>
-      <span class="lda-process-divider" aria-hidden="true"><span>‹ ›</span></span>
+      <span class="lda-process-divider" aria-hidden="true"><span><svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M6.5 5.5 3 9l3.5 3.5m5-7L15 9l-3.5 3.5"></path></svg></span></span>
       <input class="lda-process-range" type="range" min="0" max="100" aria-label="Comparar el boceto con la pieza terminada">
     </figure>
   </div>
