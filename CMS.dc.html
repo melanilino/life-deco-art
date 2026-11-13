@@ -29,6 +29,7 @@ try{
   --cms-white:#FFFFFF;
   --cms-cream:#F5EFE5;
   --cms-brown:#8B795E;
+  --cms-text-muted:#75634D;
   --cms-pink:#F65091;
   --cms-cyan:#0CC0DF;
   --cms-ink:#1C1A17;
@@ -87,8 +88,8 @@ x-dc{display:none!important}
   /* Botones operativos compartidos con el Hub. */
   .cms-button { display:inline-flex;align-items:center;justify-content:center;min-height:44px;box-sizing:border-box;padding:0 18px;border:1px solid var(--cms-border);border-radius:6px;background:var(--cms-white);color:var(--cms-ink);font-family:'Montserrat',sans-serif;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-regular);line-height:1.2;cursor:pointer;transition:background-color .16s ease,border-color .16s ease,color .16s ease,opacity .16s ease; }
   .cms-button:hover, .cms-button:focus-visible { background:var(--cms-brown-soft);border-color:var(--cms-border-strong);color:var(--cms-ink);outline:0;box-shadow:none; }
-  .cms-button--primary { background:var(--cms-cyan);border-color:var(--cms-cyan);color:var(--cms-white);font-weight:var(--cms-weight-medium); }
-  .cms-button--primary:hover, .cms-button--primary:focus-visible { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white); }
+  .cms-button--primary { background:var(--cms-brown-soft);border-color:transparent;color:var(--cms-text-muted);font-weight:var(--cms-weight-regular); }
+  .cms-button--primary:hover, .cms-button--primary:focus-visible { background:rgba(139,121,94,.16);border-color:transparent;color:var(--cms-ink);font-weight:var(--cms-weight-regular);outline:0;box-shadow:none; }
   .cms-button--dark { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white);font-weight:var(--cms-weight-medium); }
   .cms-button--dark:hover, .cms-button--dark:focus-visible { background:var(--cms-ink);border-color:var(--cms-ink);color:var(--cms-white);opacity:.86; }
   .cms-button--danger { color:var(--cms-error); }
@@ -99,7 +100,19 @@ x-dc{display:none!important}
   .cms-button:disabled { opacity:.5;cursor:wait; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
-  .cms-sidebar { position:sticky;top:0;height:100vh;box-sizing:border-box;overflow-y:auto;display:flex;flex-direction:column; }
+  .cms-surface-card { background:var(--cms-white);border:0;border-radius:6px;box-shadow:none; }
+  .cms-aprende-card { display:flex;flex-direction:column;min-height:160px;box-sizing:border-box;padding:22px;cursor:pointer;transition:background-color .16s ease; }
+  .cms-aprende-card:hover, .cms-aprende-card:focus-visible { background:rgba(139,121,94,.06);outline:2px solid var(--cms-cyan);outline-offset:2px;box-shadow:none;transform:none; }
+  .cms-sidebar { position:sticky;top:0;width:250px;height:100vh;box-sizing:border-box;overflow:hidden;display:flex;flex:0 0 250px;flex-direction:column;padding:32px 24px 20px;background:var(--cms-ink);color:var(--cms-white); }
+  .cms-sidebar-brand { margin-bottom:6px;color:var(--cms-cyan);font-size:var(--cms-type-ui);font-weight:var(--cms-weight-medium);line-height:normal;letter-spacing:.14em;text-transform:uppercase; }
+  .cms-sidebar-context { margin-bottom:20px;color:var(--cms-white);font-size:var(--cms-type-heading);font-weight:var(--cms-weight-light);line-height:normal; }
+  .cms-sidebar-nav { padding-top:16px;border-top:1px solid var(--cms-border); }
+  .cms-sidebar-item { display:flex;align-items:center;gap:12px;min-height:44px;box-sizing:border-box;margin-bottom:3px;padding:11px 14px;border-radius:4px;color:var(--cms-white);font-size:var(--cms-type-ui);font-weight:var(--cms-weight-regular);cursor:pointer; }
+  .cms-sidebar-item:hover { background:rgba(255,255,255,.08)!important; }
+  .cms-sidebar-item[aria-current="page"], .cms-sidebar-item[aria-current="page"]:hover { background:var(--cms-pink)!important;color:var(--cms-white)!important; }
+  .cms-sidebar-footer { margin-top:16px;padding-top:8px;border-top:1px solid var(--cms-border); }
+  .cms-sidebar-logout { width:100%;min-height:44px;box-sizing:border-box;padding:0;border:0;background:transparent;color:var(--cms-white);font-size:var(--cms-type-ui);font-weight:var(--cms-weight-light);line-height:1.4;text-align:left;cursor:pointer; }
+  .cms-sidebar-logout:hover, .cms-sidebar-logout:focus-visible { color:var(--cms-white);background:transparent;outline:2px solid var(--cms-cyan);outline-offset:2px;box-shadow:none; }
   body:has(.cms-contained-editor) { overflow:hidden; }
   @media(max-width:859px){ .cms-aprende-sections, .cms-community-overview, .cms-spotlight-grid { grid-template-columns:1fr!important; } .cms-contained-editor { inset:0!important;padding:20px 24px 40px!important; } .cms-frame-hint { left:50%;max-width:calc(100vw - 32px);box-sizing:border-box;white-space:normal;text-align:center; } }
 </style>
@@ -125,19 +138,19 @@ x-dc{display:none!important}
 
 <sc-if value="{{ showDashboard }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;min-height:100vh;">
-  <div class="cms-sidebar" style="width:250px;background:var(--cms-ink);color:var(--cms-white);padding:32px 24px;flex-shrink:0;">
-    <div style="font-size:var(--cms-type-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--cms-cyan);font-weight:var(--cms-weight-medium);margin-bottom:6px;">Life Deco Art</div>
-    <div style="font-size:20px;font-weight:var(--cms-weight-light);margin-bottom:20px;">CMS — Web</div>
-    <div style="border-top:1px solid rgba(255,255,255,.15);padding-top:16px;">
+  <div class="cms-sidebar">
+    <div class="cms-sidebar-brand">Life Deco Art</div>
+    <div class="cms-sidebar-context">CMS — Web</div>
+    <div class="cms-sidebar-nav">
     <sc-for list="{{ pages }}" as="p" hint-placeholder-count="5">
-      <div onClick="{{ p.onSelect }}" style="min-height:44px;box-sizing:border-box;padding:11px 14px;border-radius:4px;font-size:var(--cms-type-ui);margin-bottom:3px;cursor:pointer;background:{{ p.bg }};color:{{ p.color }};display:flex;align-items:center;gap:12px;">
+      <div class="cms-sidebar-item" onClick="{{ p.onSelect }}" aria-current="{{ p.ariaCurrent }}" style="background:{{ p.bg }};color:{{ p.color }};">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:18px;height:18px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="{{ p.iconPath }}"></path></svg>
         <span>{{ p.label }}</span>
       </div>
     </sc-for>
     </div>
-    <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,.15);padding-top:8px;">
-      <button type="button" onClick="{{ onLogout }}" style="width:100%;min-height:44px;box-sizing:border-box;background:transparent;border:none;color:rgba(255,255,255,.75);padding:0;font-family:Montserrat,sans-serif;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-light);line-height:1.4;text-align:left;cursor:pointer;" style-hover="color:var(--cms-white);">Cerrar sesión</button>
+    <div class="cms-sidebar-footer">
+      <button type="button" class="cms-sidebar-logout" onClick="{{ onLogout }}">Cerrar sesión</button>
     </div>
   </div>
   <div style="flex: 1; padding: 26px 56px 48px; background-color: var(--cms-cream); position: relative;">
@@ -552,7 +565,7 @@ x-dc{display:none!important}
       <sc-if value="{{ showAprendeSections }}" hint-placeholder-val="{{ true }}">
         <div class="cms-aprende-sections">
         <sc-for list="{{ aprendeSectionCards }}" as="section" hint-placeholder-count="6">
-          <div onClick="{{ section.onSelect }}" onKeyDown="{{ section.onKeyDown }}" role="button" tabindex="0" style="display:flex;flex-direction:column;min-height:160px;box-sizing:border-box;padding:22px;background:var(--cms-white);border:1px solid var(--cms-border);border-radius:10px;cursor:pointer;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-2px);border-color:var(--cms-brown);box-shadow:0 8px 24px rgba(28,26,23,.07);">
+          <div class="cms-surface-card cms-aprende-card" onClick="{{ section.onSelect }}" onKeyDown="{{ section.onKeyDown }}" role="button" tabindex="0">
             <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px;"><div style="font-size:var(--cms-type-heading);font-weight:var(--cms-weight-medium);color:var(--cms-ink);">{{ section.label }}</div><span style="color:var(--cms-brown);font-size:18px;line-height:1;">→</span></div>
             <div style="font-size:var(--cms-type-ui);line-height:1.55;color:var(--cms-brown);flex:1;">{{ section.description }}</div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:18px;font-size:var(--cms-type-meta);"><span style="padding:6px 9px;border-radius:999px;background:var(--cms-cream);color:var(--cms-brown);">{{ section.countLabel }}</span><sc-if value="{{ section.hasDrafts }}" hint-placeholder-val="{{ false }}"><span style="padding:6px 9px;border-radius:999px;background:var(--cms-error-bg);color:var(--cms-error);">{{ section.draftLabel }}</span></sc-if></div>
@@ -570,7 +583,7 @@ x-dc{display:none!important}
       <sc-if value="{{ showCommunityOverviewCards }}" hint-placeholder-val="{{ false }}">
         <div class="cms-community-overview" style="margin-bottom:24px;">
           <sc-for list="{{ communityOverviewCards }}" as="card" hint-placeholder-count="4">
-            <div style="border:1px solid var(--cms-border);border-radius:8px;background:var(--cms-white);overflow:hidden;">
+            <div class="cms-surface-card" style="overflow:hidden;">
               <div onClick="{{ card.onToggle }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px;cursor:pointer;">
                 <div style="min-width:0;"><div style="font-size:var(--cms-type-meta);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cms-brown);margin-bottom:6px;">{{ card.label }}</div><div style="font-size:16px;font-weight:var(--cms-weight-regular);color:var(--cms-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ card.title }}</div></div>
                 <span aria-label="Abrir o cerrar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;flex:0 0 32px;color:var(--cms-brown);transform:{{ card.arrow }};transition:transform .2s;"><svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5"></path></svg></span>
@@ -1924,7 +1937,8 @@ class Component extends DCLogic {
       label: p.label, onSelect: () => this.loadPage(p.id),
       iconPath: pageIconPaths[p.id] || pageIconPaths.config,
       bg: p.id === s.page ? 'var(--cms-pink)' : 'transparent',
-      color: p.id === s.page ? 'var(--cms-white)' : 'rgba(255,255,255,.75)'
+      color: 'var(--cms-white)',
+      ariaCurrent: p.id === s.page ? 'page' : 'false'
     }));
     const currentPage = this.pageList.find((p) => p.id === s.page);
 
