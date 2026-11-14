@@ -1553,11 +1553,9 @@ class Component extends DCLogic {
       { key: 'servPackagingUrl', label: 'Packaging' },
       { key: 'servSouvenirsUrl', label: 'Souvenirs' },
     ] },
-    { label: 'Cómo trabajamos', aspect: '16/9', columns: 'repeat(2,minmax(0,1fr))', fields: [
-      { key: 'cwCuentameUrl', label: 'Cuéntame' },
-      { key: 'cwBocetoUrl', label: 'Boceto' },
-      { key: 'cwTrazoUrl', label: 'Trazo' },
-      { key: 'cwFinalUrl', label: 'Entrega final' },
+    { label: 'Cómo trabajamos · comparador', aspect: '16/9', columns: 'repeat(2,minmax(0,1fr))', fields: [
+      { key: 'cwCompareBeforeUrl', label: 'Boceto', defaultUrl: '/imagenes-proceso/boceto.jpg' },
+      { key: 'cwCompareAfterUrl', label: 'Pieza terminada', defaultUrl: '/imagenes-proceso/pieza-terminada.jpg' },
     ] },
   ];
   INICIO_WORKSHOP_GROUP = { label: 'Anuncio de Aprende', aspect: '4/3', fields: [{ key: 'cursoSpotlightUrl', label: 'Anuncio de Aprende' }] };
@@ -1919,7 +1917,7 @@ class Component extends DCLogic {
       const adjustment = ((s.content && s.content.imageAdjustments) || {})[p.key] || { zoom: 100, x: 0, y: 0 };
       return {
         key: p.key, label: p.label,
-        url: (s.content && s.content[p.key]) || '',
+        url: (s.content && s.content[p.key]) || p.defaultUrl || '',
         alt: (s.content && s.content.imageAlts && s.content.imageAlts[p.key]) || '',
         altCount: ((s.content && s.content.imageAlts && s.content.imageAlts[p.key]) || '').length,
         altCountColor: (((s.content && s.content.imageAlts && s.content.imageAlts[p.key]) || '').length > 160) ? 'var(--cms-error)' : 'var(--cms-brown)',
