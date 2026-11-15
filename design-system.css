@@ -583,17 +583,15 @@ html.sc-dc-streaming .sc-interp.sc-missing {
   inset-inline: 0;
   inset-block-start: calc(100% + var(--lda-underline-offset));
   block-size: var(--lda-underline-thickness);
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform var(--lda-underline-duration) cubic-bezier(.23, 1, .32, 1);
+  background: linear-gradient(currentColor, currentColor) left center / 0% 100% no-repeat;
+  transition: background-size var(--lda-underline-duration) cubic-bezier(.23, 1, .32, 1);
   pointer-events: none;
 }
 a:is(.lda-active, .lda-underline-persistent, :focus-visible) > .lda-underline-label::after {
-  transform: scaleX(1);
+  background-size: 100% 100%;
 }
 @media (hover: hover) and (pointer: fine) {
-  a:hover > .lda-underline-label::after { transform: scaleX(1); }
+  a:hover > .lda-underline-label::after { background-size: 100% 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lda-underline-label::after { transition: none; }
