@@ -103,6 +103,10 @@ x-dc{display:none!important}
   .cms-text-action:hover::after, .cms-text-action:focus-visible::after { transform:scaleX(1); }
   .cms-text-action:focus-visible { outline:0; }
   .cms-text-action:disabled { opacity:.5;cursor:wait; }
+  .cms-login-confirmation { margin-top:18px;text-align:center; }
+  .cms-login-confirmation__title { display:flex;align-items:center;justify-content:center;gap:7px;color:var(--cms-success);font-size:var(--cms-type-ui);font-weight:var(--cms-weight-regular);line-height:1.35; }
+  .cms-login-confirmation__title svg { width:16px;height:16px;flex:0 0 auto; }
+  .cms-login-confirmation__detail { margin-top:7px;color:var(--cms-brown);font-size:var(--cms-type-meta);font-weight:var(--cms-weight-regular);line-height:1.5; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-surface-card { background:var(--cms-white);border:0;border-radius:6px;box-shadow:none; }
@@ -143,9 +147,17 @@ x-dc{display:none!important}
       <div style="font-size:var(--cms-type-ui);color:var(--cms-error);margin-bottom:16px;">{{ error }}</div>
     </sc-if>
     <button class="cms-button cms-button--dark" onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;">{{ loginBtnText }}</button>
-    <button class="cms-text-action" onClick="{{ onRecoverAccess }}" disabled="{{ recoveringAccess }}">{{ recoverAccessBtnText }}</button>
+    <sc-if value="{{ showRecoverAccess }}" hint-placeholder-val="{{ true }}">
+      <button class="cms-text-action" onClick="{{ onRecoverAccess }}" disabled="{{ recoveringAccess }}">{{ recoverAccessBtnText }}</button>
+    </sc-if>
     <sc-if value="{{ hasLoginNotice }}" hint-placeholder-val="{{ false }}">
-      <div role="status" style="font-size:var(--cms-type-ui);color:var(--cms-success);line-height:1.5;margin-top:14px;">{{ loginNotice }}</div>
+      <div class="cms-login-confirmation" role="status">
+        <div class="cms-login-confirmation__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Solicitud enviada</span>
+        </div>
+        <div class="cms-login-confirmation__detail">{{ loginNotice }}</div>
+      </div>
     </sc-if>
   </div>
 </div>
@@ -1182,7 +1194,7 @@ class Component extends DCLogic {
     this.setState({ recoveringAccess: true, loginError: '', loginNotice: '' });
     try {
       await this.state.cms.sendPasswordResetEmail(this.state.cms.auth, email);
-      this.setState({ recoveringAccess: false, loginNotice: 'Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.' });
+      this.setState({ recoveringAccess: false, loginNotice: 'Si el correo está registrado, recibirás el enlace en unos minutos.' });
     } catch (error) {
       const invalidEmail = error && error.code === 'auth/invalid-email';
       this.setState({
@@ -2184,6 +2196,7 @@ class Component extends DCLogic {
       loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
       onRecoverAccess: this.handleRecoverAccess, recoveringAccess: s.recoveringAccess,
       recoverAccessBtnText: s.recoveringAccess ? 'Enviando enlace...' : 'Recuperar acceso',
+      showRecoverAccess: !s.loginNotice,
       hasLoginNotice: !!s.loginNotice, loginNotice: s.loginNotice,
       onLogout: this.handleLogout,
       pages,
