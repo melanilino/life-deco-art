@@ -1869,8 +1869,6 @@ class Component extends DCLogic {
         return { key: d.key, label: d.label, isLines: true, value: Array.isArray(item[d.key]) ? item[d.key].join('\n') : '', placeholder: d.placeholder || '', onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value.split('\n')) };
       }
       if (d.type === 'richtext') {
-        const status = itemForFields.status;
-        const summaryMetaIsStatus = !item.price && !item.format;
         return {
           key: d.key, label: d.label, isRichtext: true,
           dangerousHtml: { __html: item[d.key] || '' },
@@ -2093,6 +2091,8 @@ class Component extends DCLogic {
           buildCommunityCard('signup', 'Suscripción', 'signupEyebrow', ['signupEyebrow', 'signupButtonLabel', 'signupPrivacy', 'successMessage']),
           buildCommunityCard('testimonial', 'Testimonio', 'testimonialAuthor', ['testimonial', 'testimonialAuthor'])
         ];
+        const status = itemForFields.status;
+        const summaryMetaIsStatus = !item.price && !item.format;
         return {
           id: item.id, fields: itemFields, communityContentCards, emptySection: !availableSections.has(activeEditorTab), showCourseTabs: usesTabbedEditor, courseTabs, onRemove: () => this.removeAprendeItem(s.aprendeTab, item.id),
           showDragHandle: s.aprendeTab !== 'comunidad', canRemove: s.aprendeTab !== 'comunidad',
