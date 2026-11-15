@@ -98,6 +98,11 @@ x-dc{display:none!important}
   .cms-button--danger-solid:hover, .cms-button--danger-solid:focus-visible { background:var(--cms-error);border-color:var(--cms-error);color:var(--cms-white);opacity:.86; }
   .cms-button:active { transform:none; }
   .cms-button:disabled { opacity:.5;cursor:wait; }
+  .cms-text-action { position:relative;display:block;width:max-content;margin:16px auto 0;padding:2px 0 5px;border:0;background:transparent;color:var(--cms-ink);font-family:'Montserrat',sans-serif;font-size:var(--cms-type-ui);font-weight:var(--cms-weight-regular);line-height:1.2;cursor:pointer; }
+  .cms-text-action::after { content:'';position:absolute;right:0;bottom:0;left:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:center;transition:transform .16s ease; }
+  .cms-text-action:hover::after, .cms-text-action:focus-visible::after { transform:scaleX(1); }
+  .cms-text-action:focus-visible { outline:0; }
+  .cms-text-action:disabled { opacity:.5;cursor:wait; }
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-surface-card { background:var(--cms-white);border:0;border-radius:6px;box-shadow:none; }
@@ -138,7 +143,7 @@ x-dc{display:none!important}
       <div style="font-size:var(--cms-type-ui);color:var(--cms-error);margin-bottom:16px;">{{ error }}</div>
     </sc-if>
     <button class="cms-button cms-button--dark" onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;">{{ loginBtnText }}</button>
-    <button class="cms-button" onClick="{{ onRecoverAccess }}" disabled="{{ recoveringAccess }}" style="width:100%;margin-top:10px;background:var(--cms-cream);">{{ recoverAccessBtnText }}</button>
+    <button class="cms-text-action" onClick="{{ onRecoverAccess }}" disabled="{{ recoveringAccess }}">{{ recoverAccessBtnText }}</button>
     <sc-if value="{{ hasLoginNotice }}" hint-placeholder-val="{{ false }}">
       <div role="status" style="font-size:var(--cms-type-ui);color:var(--cms-success);line-height:1.5;margin-top:14px;">{{ loginNotice }}</div>
     </sc-if>
