@@ -1,0 +1,31 @@
+/* The line follows the text label, independently of the hit area. */
+:root {
+  --lda-underline-offset: 4px;
+  --lda-underline-thickness: 1px;
+  --lda-underline-duration: 220ms;
+}
+.lda-underline-label {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+.lda-underline-label::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(100% + var(--lda-underline-offset));
+  block-size: 0;
+  border-block-start: var(--lda-underline-thickness) solid currentColor;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--lda-underline-duration) cubic-bezier(.23, 1, .32, 1);
+  pointer-events: none;
+}
+:is(a, button, summary):not(:disabled):is(.lda-active, .lda-underline-persistent, :focus-visible) > .lda-underline-label::after {
+  clip-path: inset(0);
+}
+@media (hover: hover) and (pointer: fine) {
+  :is(a, button, summary):hover:not(:disabled) > .lda-underline-label::after { clip-path: inset(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lda-underline-label::after { transition: none; }
+}

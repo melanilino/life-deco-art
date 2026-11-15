@@ -1,3 +1,5 @@
+@import url("/link-underline.css");
+
 /* Reglas comunes por función. Conservan la amplitud del Hub. */
 :root {
   --text-muted: #75634d;
@@ -69,8 +71,6 @@
 .attention-card .attention-row > a:focus-visible {
   background: transparent;
   color: var(--black);
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 .attention-card .attention-clear {
   display: flex;
@@ -629,8 +629,6 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
   :is(a, [data-action="client-cancel"], [data-action="sales-preview"]):is(:hover, :focus-visible) {
   background: transparent;
   color: var(--black);
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
 .creation-panel #record-form.sheet[data-id=""] > .form-section { border-bottom: 0; }
@@ -644,8 +642,6 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
 }
 .creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action:is(:hover, :focus-visible) {
   color: var(--black);
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
 .sales-editor .sales-editor-divider,
@@ -744,3 +740,9 @@ body .home-main .agenda-task-head {
 }
 @media(max-width:1100px){.hub-form-layout,body .sales-editor-grid,body .client-page-layout,body .clients-pilot .client-page-layout,body .order-editor-grid,body .catalog-cost-grid{grid-template-columns:1fr}}
 @media(max-width:700px){.content-toolbar>.hub-select,.agenda-toolbar>.hub-select{grid-column:1/-1}.agenda-toolbar>.hub-select{flex:1 1 140px}.hub-form-summary{padding:18px}.home-main .finance-metric-card{padding:10px 12px}.finance-metric-heading span{font-size:var(--font-helper)}}
+
+/* Keep text actions as the pointer target for delegated clicks. */
+#app .lda-underline-label { pointer-events: none; }
+#app .hub-login .hub-login-recover:hover:not(:disabled):has(> .lda-underline-label) {
+  text-decoration: none;
+}

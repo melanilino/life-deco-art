@@ -684,7 +684,7 @@ x-dc{display:none!important}
                     </sc-if>
                     <sc-if value="{{ f.isFile }}" hint-placeholder-val="{{ false }}">
                       <div style="display:flex;align-items:center;gap:12px;">
-                        <sc-if value="{{ f.value }}" hint-placeholder-val="{{ false }}"><a href="{{ f.value }}" target="_blank" style="font-size:var(--cms-type-ui);color:var(--cms-cyan);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.fileName }}</a></sc-if>
+                        <sc-if value="{{ f.value }}" hint-placeholder-val="{{ false }}"><a href="{{ f.value }}" target="_blank" style="font-size:var(--cms-type-ui);color:var(--cms-cyan);max-width:220px;text-decoration:none;"><span class="lda-underline-label" style="max-width:100%;"><span style="display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.fileName }}</span></span></a></sc-if>
                         <label style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid var(--cms-border);color:var(--cms-brown);border-radius:4px;font-size:var(--cms-type-ui);font-family:Montserrat;cursor:pointer;white-space:nowrap;">
                           Subir documento
                           <input type="file" onChange="{{ f.onUpload }}" style="display:none;">

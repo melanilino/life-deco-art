@@ -87,8 +87,34 @@ function enhanceForms(root){
   form.before(layout);layout.append(form,aside);
  });
 }
+const textActions = [
+ '.dashboard-title > a',
+ '.attention-card .attention-row > a',
+ '.content-related a',
+ '.finance-metric-pair a',
+ '.stats-details summary',
+ '.agenda-feedback button',
+ ':is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor) ' +
+   ':is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions, .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions) ' +
+   ':is(a, [data-action="client-cancel"], [data-action="sales-preview"])',
+ '.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action'
+].join(',');
+
+function enhanceTextActions(root) {
+ for (const action of root.querySelectorAll(textActions)) {
+  const text = Array.from(action.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+  if (!text || action.querySelector(':scope > .lda-underline-label')) continue;
+  const label = document.createElement('span');
+  label.className = 'lda-underline-label';
+  text.before(label);
+  label.append(text);
+  if (action.matches('.agenda-feedback button')) action.classList.add('lda-underline-persistent');
+ }
+}
+
 export function syncHubUI(root=document){
  if(owner&&!owner.isConnected)close();
+ enhanceTextActions(root);
  enhanceForms(root);root.querySelectorAll('select').forEach(enhanceSelect);
  if(!observer){
   let pending=false;

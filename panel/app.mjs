@@ -61,6 +61,9 @@ function loginScreen(message=''){
  const {email,password}=form.elements;
  const submit=form.querySelector('[type="submit"]');
  const recover=form.querySelector('.hub-login-recover');
+ const recoverLabel=document.createElement('span');
+ recoverLabel.className='lda-underline-label';
+ recover.replaceChildren(recoverLabel);
  const toggle=form.querySelector('[data-password-toggle]');
  const error=form.querySelector('.hub-login-error');
  const confirmation=form.querySelector('.hub-login-confirmation');
@@ -72,7 +75,7 @@ function loginScreen(message=''){
 
  function setPending(action=''){
   submit.textContent=action==='login'?'Ingresando…':'Ingresar';
-  recover.textContent=action==='recover'?'Enviando enlace…':'Recuperar acceso';
+  recoverLabel.textContent=action==='recover'?'Enviando enlace…':'Recuperar acceso';
   submit.disabled=recover.disabled=Boolean(action)||!store;
   toggle.disabled=action==='login';
   email.readOnly=password.readOnly=action==='login';
