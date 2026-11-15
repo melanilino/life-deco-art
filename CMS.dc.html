@@ -138,6 +138,10 @@ x-dc{display:none!important}
       <div style="font-size:var(--cms-type-ui);color:var(--cms-error);margin-bottom:16px;">{{ error }}</div>
     </sc-if>
     <button class="cms-button cms-button--dark" onClick="{{ onLogin }}" disabled="{{ loggingIn }}" style="width:100%;">{{ loginBtnText }}</button>
+    <button class="cms-button" onClick="{{ onRecoverAccess }}" disabled="{{ recoveringAccess }}" style="width:100%;margin-top:10px;background:var(--cms-cream);">{{ recoverAccessBtnText }}</button>
+    <sc-if value="{{ hasLoginNotice }}" hint-placeholder-val="{{ false }}">
+      <div role="status" style="font-size:var(--cms-type-ui);color:var(--cms-success);line-height:1.5;margin-top:14px;">{{ loginNotice }}</div>
+    </sc-if>
   </div>
 </div>
 </sc-if>
@@ -744,7 +748,7 @@ x-dc{display:none!important}
 class Component extends DCLogic {
   state = {
     cms: null, user: null, authChecked: false,
-    email: '', password: '', error: '', loginError: '', loggingIn: false, showPassword: false,
+    email: '', password: '', error: '', loginError: '', loginNotice: '', loggingIn: false, recoveringAccess: false, showPassword: false,
     page: 'inicio', content: {}, saving: false, saved: false,
     tiendaData: null, tiendaLoaded: false,
     aprendeData: null, aprendeLoaded: false, aprendeTab: 'esenciales', aprendeSectionOpen: false,
@@ -1157,11 +1161,29 @@ class Component extends DCLogic {
   }
 
   handleLogin = async () => {
-    this.setState({ loggingIn: true, loginError: '' });
+    this.setState({ loggingIn: true, loginError: '', loginNotice: '' });
     try {
       await this.state.cms.signInWithEmailAndPassword(this.state.cms.auth, this.state.email, this.state.password);
     } catch (e) {
       this.setState({ loginError: 'Correo o contraseña incorrectos.', loggingIn: false });
+    }
+  };
+  handleRecoverAccess = async () => {
+    const email = String(this.state.email || '').trim();
+    if (!email) {
+      this.setState({ loginError: 'Escribe tu correo para recuperar el acceso.', loginNotice: '' });
+      return;
+    }
+    this.setState({ recoveringAccess: true, loginError: '', loginNotice: '' });
+    try {
+      await this.state.cms.sendPasswordResetEmail(this.state.cms.auth, email);
+      this.setState({ recoveringAccess: false, loginNotice: 'Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.' });
+    } catch (error) {
+      const invalidEmail = error && error.code === 'auth/invalid-email';
+      this.setState({
+        recoveringAccess: false,
+        loginError: invalidEmail ? 'Escribe un correo válido.' : 'No se pudo enviar el enlace. Inténtalo nuevamente.'
+      });
     }
   };
   handleLogout = () => { this.state.cms.signOut(this.state.cms.auth); };
@@ -2145,7 +2167,7 @@ class Component extends DCLogic {
       showLogin: s.authChecked && !s.user,
       showDashboard: s.authChecked && !!s.user,
       email: s.email, password: s.password,
-      onEmailChange: (e) => this.setState({ email: e.target.value }),
+      onEmailChange: (e) => this.setState({ email: e.target.value, loginNotice: '' }),
       onPasswordChange: (e) => this.setState({ password: e.target.value }),
       hasError: !!s.loginError, hasLoadError: !!s.error && s.authChecked, error: s.loginError || s.error,
       hasImageNotice: !!s.imageNotice, imageNotice: s.imageNotice,
@@ -2155,6 +2177,9 @@ class Component extends DCLogic {
       toggleShowPassword: () => this.setState({ showPassword: !s.showPassword }),
       onLogin: this.handleLogin, loggingIn: s.loggingIn,
       loginBtnText: s.loggingIn ? 'Ingresando...' : 'Ingresar',
+      onRecoverAccess: this.handleRecoverAccess, recoveringAccess: s.recoveringAccess,
+      recoverAccessBtnText: s.recoveringAccess ? 'Enviando enlace...' : 'Recuperar acceso',
+      hasLoginNotice: !!s.loginNotice, loginNotice: s.loginNotice,
       onLogout: this.handleLogout,
       pages,
       currentPageLabel: s.page === 'aprende' && s.aprendeSectionOpen ? (this.APRENDE_TAB_LABELS[s.aprendeTab] || 'Aprende') : (currentPage ? currentPage.label : ''),
