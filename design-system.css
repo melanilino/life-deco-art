@@ -545,7 +545,6 @@ html.sc-dc-streaming .sc-interp.sc-missing {
     box-sizing:border-box !important;
     display:inline-flex !important;
     align-items:center !important;
-    background-image:linear-gradient(#000000,#000000) !important;
   }
   html body .lda-closing-cta-panel--store {
     max-width:1144px !important;
@@ -565,8 +564,37 @@ html.sc-dc-streaming .sc-interp.sc-missing {
   html body .lda-closing-cta-panel--learn .lda-closing-cta-secondary {
     color:#FFFFFF !important;
   }
-  html body .lda-closing-cta-panel--store .lda-closing-cta-secondary,
-  html body .lda-closing-cta-panel--learn .lda-closing-cta-secondary {
-    background-image:linear-gradient(#FFFFFF,#FFFFFF) !important;
-  }
+}
+
+/* Public text links use the label's baseline, independent of the hit area. */
+:root {
+  --lda-underline-offset: 4px;
+  --lda-underline-thickness: 1px;
+  --lda-underline-duration: 220ms;
+}
+.lda-underline-label {
+  position: relative;
+  display: inline-block;
+  line-height: 1;
+}
+.lda-underline-label::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: calc(100% + var(--lda-underline-offset));
+  block-size: var(--lda-underline-thickness);
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--lda-underline-duration) cubic-bezier(.23, 1, .32, 1);
+  pointer-events: none;
+}
+a:is(.lda-active, .lda-underline-persistent, :focus-visible) > .lda-underline-label::after {
+  transform: scaleX(1);
+}
+@media (hover: hover) and (pointer: fine) {
+  a:hover > .lda-underline-label::after { transform: scaleX(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lda-underline-label::after { transition: none; }
 }

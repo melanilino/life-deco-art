@@ -93,9 +93,7 @@ body{margin:0;background:#1a1a1a}
 #lda-static-nav a{text-decoration:none;color:#000}
 #lda-static-nav .lda-brand{font:400 30px/1 'Camelia Beauty',cursive;letter-spacing:.13px;white-space:nowrap;transition:color .3s ease}
 #lda-static-nav .lda-desktop{display:flex;align-items:center;gap:32px}
-#lda-static-nav .lda-link{font-size:14px;font-weight:400;letter-spacing:.01em;padding-bottom:6px;background-repeat:no-repeat;background-position:left bottom;background-size:0 1px;transition:background-size .25s ease,color .25s ease}
-#lda-static-nav .lda-link:hover{background-size:100% 1px}
-#lda-static-nav .lda-link.lda-active{background-size:100% 1px}
+#lda-static-nav .lda-link{font-size:14px;font-weight:400;letter-spacing:.01em;padding-bottom:6px;transition:color .25s ease}
 #lda-static-nav .lda-mobile{display:none}
 #lda-static-nav summary{list-style:none;cursor:pointer;padding:10px;display:flex;flex-direction:column;justify-content:center;gap:5px;min-width:44px;min-height:44px;box-sizing:border-box}
 #lda-static-nav summary::-webkit-details-marker{display:none}
@@ -108,7 +106,7 @@ body.lda-home-nav-overlay .lda-nav-spacer{display:none}
 body.lda-home-nav-overlay #lda-static-nav{transition:background-color .3s ease,box-shadow .3s ease,color .3s ease}
 body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav{background-color:transparent!important;box-shadow:none}
 body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav .lda-brand{color:rgba(255,255,255,.9)!important;background-image:none!important;font-size:30px}
-body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav .lda-desktop .lda-link{color:#fff!important;background-image:linear-gradient(#fff,#fff)!important}
+body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav .lda-desktop .lda-link{color:#fff!important}
 body.lda-home-nav-overlay.lda-home-at-top #lda-static-nav .lda-burger{background:#fff}
 body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color:#fff!important;box-shadow:0 1px 0 rgba(43,36,32,.06)}
 #lda-whatsapp-fab-static{position:fixed;bottom:40px;right:24px;z-index:2147483000;width:56px;height:56px;border-radius:999px;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(0,0,0,.25);transition:transform .25s ease}
@@ -132,7 +130,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
 </div>
 <nav id="lda-static-nav" aria-label="Navegación principal">
   <a href="/" class="lda-brand">Life Deco Art</a>
-  <div class="lda-desktop"><a class="lda-link lda-active" href="/" style="color:#8B795E;background-image:linear-gradient(#8B795E,#8B795E)">Inicio</a><a class="lda-link" href="/sobre-mi" style="color:#000000;background-image:linear-gradient(#000000,#000000)">Sobre Mí</a><a class="lda-link" href="/tienda" style="color:#000000;background-image:linear-gradient(#000000,#000000)">Tienda</a><a class="lda-link" href="/aprende" style="color:#000000;background-image:linear-gradient(#000000,#000000)">Aprende</a><a class="lda-link" href="/contacto" style="color:#000000;background-image:linear-gradient(#000000,#000000)">Contacto</a></div>
+  <div class="lda-desktop"><a class="lda-link lda-active" href="/" style="color:#8B795E;"><span class="lda-underline-label">Inicio</span></a><a class="lda-link" href="/sobre-mi" style="color:#000000;"><span class="lda-underline-label">Sobre Mí</span></a><a class="lda-link" href="/tienda" style="color:#000000;"><span class="lda-underline-label">Tienda</span></a><a class="lda-link" href="/aprende" style="color:#000000;"><span class="lda-underline-label">Aprende</span></a><a class="lda-link" href="/contacto" style="color:#000000;"><span class="lda-underline-label">Contacto</span></a></div>
   <details class="lda-mobile">
     <summary aria-label="Abrir menú"><span class="lda-burger lda-b1"></span><span class="lda-burger lda-b2"></span><span class="lda-burger lda-b3"></span></summary>
     <div class="lda-mobile-panel"><a href="/" style="color:#8B795E">Inicio</a><a href="/sobre-mi" style="color:#000000">Sobre Mí</a><a href="/tienda" style="color:#000000">Tienda</a><a href="/aprende" style="color:#000000">Aprende</a><a href="/contacto" style="color:#000000">Contacto</a></div>
@@ -456,7 +454,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
     <div class="lda-section-eyebrow lda-eyebrow-del-estudio" style="font-size:12px;letter-spacing:0.2em;text-transform:uppercase;color:#8B795E;font-weight:500;margin-bottom:12px;">Del estudio</div>
     <div class="lda-del-estudio-title-row" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:28px;flex-wrap:wrap;">
       <div style="font-size: {{ h2Size }}; font-weight: 300; color: #000000">Piezas <span class="lda-camelia-accent" style="font-weight: 400; font-family: 'Camelia Beauty', cursive;">recientes</span></div>
-      <a href="/tienda" style="text-decoration:none;font-size:13px;font-weight:500;color:#F65091;border-bottom:1px solid #F65091;padding-bottom:2px;">Ver la tienda</a>
+      <a href="/tienda" style="text-decoration:none;font-size:13px;font-weight:500;color:#F65091;padding-bottom:2px;" class="lda-underline-persistent"><span class="lda-underline-label">Ver la tienda</span></a>
     </div>
     <div style="display:grid;grid-template-columns:{{ piezasCols }};gap:{{ piezasGap }};min-width:0;">
       <sc-for list="{{ recentProducts }}" as="piece" hint-placeholder-count="4">
@@ -511,7 +509,7 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
       <p class="lda-closing-cta-text" style="font-size:{{ closingTextSize }};color:var(--lda-text-secondary,#756348);font-weight:300;margin:0 0 {{ closingTextActionGap }};line-height:1.7;">Hagamos una pieza 100% a medida,<br>creada desde cero para ti.</p>
       <div class="lda-closing-cta-actions" style="display:flex;gap:{{ closingBtnGap }};justify-content:center;flex-wrap:wrap;flex-direction:{{ closingBtnDir }};align-items:center;">
         <a class="lda-closing-cta-primary" href="/encargo-personalizado" style="text-decoration:none;background:#000000;color:#FFFFFF;padding:{{ closingBtnPad }};border-radius:4px;font-size:{{ closingBtnSize }};font-weight:500;letter-spacing:0.02em;display:flex;align-items:center;gap:10px;transition:transform .25s ease,background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">Crear encargo</a>
-        <a class="lda-closing-cta-secondary" href="/contacto" style="text-decoration:none;color:#000000;font-size:{{ closingBtnSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;background-image:linear-gradient(#000,#000);background-repeat:no-repeat;background-position:left bottom;background-size:0% 1px;transition:background-size .3s ease;" style-hover="background-size:100% 1px;">Correo</a>
+        <a class="lda-closing-cta-secondary" href="/contacto" style="text-decoration:none;color:#000000;font-size:{{ closingBtnSize }};font-weight:500;letter-spacing:0.02em;padding:6px 0;"><span class="lda-underline-label">Correo</span></a>
       </div>
     </div>
   </div>

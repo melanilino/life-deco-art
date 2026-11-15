@@ -6,7 +6,7 @@
   <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
     <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;">
       <sc-for list="{{ links }}" as="link" hint-placeholder-count="5">
-        <a href="{{ link.href }}" style="text-decoration:none;font-size:14px;font-weight:400;letter-spacing:.01em;color:{{ link.color }};padding-bottom:6px;background-image:linear-gradient({{ link.color }},{{ link.color }});background-repeat:no-repeat;background-position:left bottom;background-size:{{ link.bgSize }} 1px;transition:color .25s ease,background-size .25s ease;" style-hover="background-size:100% 1px;">{{ link.label }}</a>
+        <a href="{{ link.href }}" style="text-decoration:none;font-size:14px;font-weight:400;letter-spacing:.01em;color:{{ link.color }};padding-bottom:6px;transition:color .25s ease;" class="{{ link.underlineClass }}"><span class="lda-underline-label">{{ link.label }}</span></a>
       </sc-for>
     </div>
   </sc-if>
@@ -76,7 +76,7 @@ class Component extends DCLogic {
       { id:'contacto',label:global.navContacto || 'Contacto',href:'/contacto' }
     ];
     const sectionColors = { tienda:'#F65091', aprende:'#0CC0DF' };
-    const links = items.map(it => ({ href:it.href,label:it.label,color:it.id===active?(sectionColors[it.id]||accentColor):'#000000',bgSize:it.id===active?'100%':'0%' }));
+    const links = items.map(it => ({ href:it.href,label:it.label,color:it.id===active?(sectionColors[it.id]||accentColor):'#000000',underlineClass:it.id===active?'lda-underline-persistent':'' }));
     return { siteName: global.siteName || 'Life Deco Art', accentColor,links,isMobile:this.state.isMobile,isDesktop:!this.state.isMobile,navHeight:this.state.isMobile?'64px':'80px',navPadding:this.state.isMobile?'0 20px':'0 48px',menuOpen:this.state.isMobile&&this.state.menuOpen,menuLabel:this.state.menuOpen?'Cerrar menú':'Abrir menú',toggleMenu:()=>this.setState({ menuOpen:!this.state.menuOpen }) };
   }
 }
