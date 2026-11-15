@@ -102,6 +102,8 @@ x-dc{display:none!important}
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-surface-card { background:var(--cms-white);border:0;border-radius:6px;box-shadow:none; }
   .cms-status-badge { display:inline-flex;align-items:center;flex:0 0 auto;padding:3px 8px;border-radius:3px;font-size:var(--cms-type-meta);font-weight:600;line-height:1.35;letter-spacing:.03em;text-transform:uppercase; }
+  .cms-product-image-frame { width:100%;aspect-ratio:4/5;box-sizing:border-box;padding:14px;background:var(--cms-white);overflow:hidden; }
+  .cms-product-image-frame image-slot { border-radius:4px;overflow:hidden; }
   .cms-aprende-card { display:flex;flex-direction:column;min-height:160px;box-sizing:border-box;padding:22px;cursor:pointer;transition:background-color .16s ease; }
   .cms-aprende-card:hover, .cms-aprende-card:focus, .cms-aprende-card:focus-visible { background:var(--cms-cream);outline:none;box-shadow:none;transform:none; }
   .cms-sidebar { position:sticky;top:0;width:250px;height:100vh;box-sizing:border-box;overflow:hidden;display:flex;flex:0 0 250px;flex-direction:column;padding:32px 24px 20px;background:var(--cms-ink);color:var(--cms-white); }
@@ -446,7 +448,7 @@ x-dc{display:none!important}
           <sc-for list="{{ tiendaProducts }}" as="item" hint-placeholder-count="6">
             <div data-reorder-group="{{ item.dragGroup }}" data-reorder-id="{{ item.id }}" onClick="{{ item.onSelect }}" style="position:relative;background:var(--cms-white);border:1px solid var(--cms-white);border-radius:8px;overflow:hidden;cursor:pointer;">
               <span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="position:absolute;top:8px;left:8px;z-index:3;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--cms-white);border:1px solid var(--cms-border);border-radius:4px;color:var(--cms-brown);cursor:grab;touch-action:none;font-size:16px;user-select:none;box-shadow:0 2px 8px rgba(28,26,23,.1);">⠿</span>
-              <div style="width:100%;aspect-ratio:4/5;overflow:hidden;"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto"></image-slot></div>
+              <div class="cms-product-image-frame"><image-slot id="cms-tienda-{{ item.id }}" shape="rect" fit="cover" style="width:100%;height:100%;" src="{{ item.imageUrl }}" placeholder="foto del producto"></image-slot></div>
               <div style="padding:12px 14px;">
                 <div style="font-size:var(--cms-type-ui);color:var(--cms-ink);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.name }}</div>
                 <div style="display:flex;justify-content:space-between;align-items:center;">
