@@ -250,3 +250,7 @@ Ambos paneles priorizan la colección: encabezado con explicación, buscador y b
 Ambos paneles comparten ancho, reservan siempre el espacio del scroll interior y mantienen el encabezado sin encogerse. Su divisor toma la altura real del encabezado de Inicio mediante ResizeObserver, también al cambiar el ancho de pantalla. Los formularios se expanden sin desplazar horizontalmente el buscador ni las listas.
 
 Notas y Mis frases reservan el espacio del scroll en ambos bordes para que sus márgenes sean simétricos. El encabezado reserva el mismo espacio y usa un botón de cerrar de 44 px, centrado en el mismo eje que +. Cerrar no se subraya ni cambia su fondo al interactuar; conserva el foco de teclado.
+
+### Acceso al Hub
+
+Replica la tarjeta de acceso del CMS con el título «HUB — gestión», Montserrat y Camelia. Por fidelidad al CMS, conserva su título de 26 px, la caligrafía de 42 px y el radio exterior de 8 px. La confirmación de recuperación se muestra en la tarjeta. Al ingresar, el botón muestra «Ingresando…» hasta que se pueda abrir la vista solicitada.

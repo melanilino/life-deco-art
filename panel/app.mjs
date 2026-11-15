@@ -55,7 +55,75 @@ function tableFooter(label,action,aria='Exportar CSV'){return `<div class="table
 function displayField(f,value){if(f.type!=='select')return value;const option=f.options.find(o=>Array.isArray(o)?o[0]===value:o===value);return Array.isArray(option)?option[1]:value;}
 const link=(kind,r)=>kind==='movements'?esc(r.name):`<a href="#${kind}/${r.id}">${esc(r.number||r.name)}</a>`;
 const badge=status=>`<span class="badge ${['pagada','aprobada','entregado','completada'].includes(status)?'good':['vencida','pendiente','alta'].includes(status)?'warn':''}">${esc(status)}</span>`;
-function loginScreen(message=''){$('#app').innerHTML=`<main id="main" class="login"><section class="login-card"><h1 class="brand-script">Life Deco Art</h1><h2>Tu espacio de trabajo</h2><p class="muted">Entra con tu cuenta privada del hub.</p><form id="login-form"><label>Correo<input type="email" name="email" autocomplete="username" required></label><label>Contraseña<input type="password" name="password" autocomplete="current-password" required></label><button class="primary" type="submit">Entrar al panel</button>${btn('Recuperar acceso','reset')}</form><div id="login-error" ${message?'class="error" role="alert"':''}>${esc(message)}</div><p class="sensitive-note section-space">Solo tú tienes acceso a la información de tu negocio.</p></section></main>`;}
+function loginScreen(message=''){
+ const fragment=$('#hub-login-template').content.cloneNode(true);
+ const form=fragment.querySelector('form');
+ const {email,password}=form.elements;
+ const submit=form.querySelector('[type="submit"]');
+ const recover=form.querySelector('.hub-login-recover');
+ const toggle=form.querySelector('[data-password-toggle]');
+ const error=form.querySelector('.hub-login-error');
+ const confirmation=form.querySelector('.hub-login-confirmation');
+
+ function showError(text){
+  error.textContent=text;
+  error.hidden=!text;
+ }
+
+ function setPending(action=''){
+  submit.textContent=action==='login'?'Ingresando…':'Ingresar';
+  recover.textContent=action==='recover'?'Enviando enlace…':'Recuperar acceso';
+  submit.disabled=recover.disabled=Boolean(action)||!store;
+  toggle.disabled=action==='login';
+  email.readOnly=password.readOnly=action==='login';
+ }
+
+ toggle.addEventListener('click',()=>{
+  const show=password.type==='password';
+  password.type=show?'text':'password';
+  toggle.textContent=show?'Ocultar':'Mostrar';
+  toggle.setAttribute('aria-label',show?'Ocultar contraseña':'Mostrar contraseña');
+ });
+
+ form.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(submit.disabled)return;
+  showError('');
+  confirmation.hidden=true;
+  recover.hidden=false;
+  setPending('login');
+  try{
+   await store.login(email.value.trim(),password.value);
+  }catch(error){
+   showError(error?.code==='auth/network-request-failed'?'No se pudo conectar. Comprueba tu conexión e inténtalo nuevamente.':'Correo o contraseña incorrectos.');
+   setPending();
+  }
+ });
+
+ recover.addEventListener('click',async()=>{
+  const address=email.value.trim();
+  if(!address||!email.validity.valid){
+   showError(address?'Escribe un correo válido.':'Escribe tu correo para recuperar el acceso.');
+   email.focus();
+   return;
+  }
+  showError('');
+  setPending('recover');
+  try{
+   await store.resetPassword(address);
+   recover.hidden=true;
+   confirmation.hidden=false;
+  }catch(error){
+   showError(error?.code==='auth/invalid-email'?'Escribe un correo válido.':'No se pudo enviar el enlace. Inténtalo nuevamente.');
+  }finally{
+   setPending();
+  }
+ });
+
+ showError(message);
+ setPending();
+ $('#app').replaceChildren(fragment);
+}
 function parseRoute(){catalogPage=1;if(location.hash==='#purchases/new')catalogSupplierCreateKind='purchase';orderPage=1;clientPage=1;salesPageNumber=1;const parts=location.hash.slice(1).split('/');route=parts[0]||'home';recordId=parts[1]||'';mode=parts[2]||'';if(recordId==='new'){recordId='';mode='edit';}search='';filter='';}
 function quickNotes(){return Object.values(state.records).filter(r=>r.kind==='resources'&&r.recordType==='quick-note'&&!r.archived).sort((a,b)=>Number(Boolean(b.pinned))-Number(Boolean(a.pinned))||String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||'')));}
 function noteTime(value){if(!value)return '';const date=new Date(value);return Number.isNaN(+date)?'':new Intl.DateTimeFormat('es-DO',{dateStyle:'medium',timeStyle:'short',timeZone:'America/Santo_Domingo'}).format(date);}
@@ -340,7 +408,6 @@ document.addEventListener('click',async event=>{const button=event.target.closes
   if(action==='delete-note'){let draft=captureNoteDraft();const note=get(state,button.dataset.id);if(note.kind!=='resources'||note.recordType!=='quick-note')throw Error('No se encontró esta nota.');if(!await ask('¿Eliminar esta nota?'))return;await execute({action:'archive',id:note.id});notesOpen=true;if(editingNoteId===note.id){editingNoteId='';draft=null;}render();restoreNoteDraft(draft);notice('Nota eliminada.');return;}
   if(action==='toggle-note-pin'){const draft=captureNoteDraft(),note=get(state,button.dataset.id);if(note.kind!=='resources'||note.recordType!=='quick-note')throw Error('No se encontró esta nota.');await execute({action:'save',kind:'resources',id:note.id,data:{pinned:!note.pinned}});notesOpen=true;render();restoreNoteDraft(draft);notice(note.pinned?'Nota desfijada.':'Nota fijada.');return;}
   if(action==='note-to-task'){const draft=captureNoteDraft(),note=get(state,button.dataset.id);if(note.kind!=='resources'||note.recordType!=='quick-note')throw Error('No se encontró esta nota.');await execute({action:'note-task',id:note.id});notesOpen=true;render();restoreNoteDraft(draft);notice('Nota convertida en tarea.');return;}
-  if(action==='reset'){const email=$('#login-form [name=email]').value;if(!email)throw Error('Escribe tu correo para recuperar el acceso.');await store.resetPassword(email);notice('Si el correo corresponde a una cuenta, recibirás instrucciones para recuperar el acceso.');return;}
   if(action==='refresh'){state=await store.load();render();notice('Información actualizada.');return;}
   if(action==='csv'){download(csv(exportRows()),`${route}-${today()}.csv`);return;}
   if(action==='sales-csv'){download(csv(salesRows()),`${route}-${today()}.csv`);return;}
@@ -366,9 +433,8 @@ document.addEventListener('click',async event=>{const button=event.target.closes
 });
 document.addEventListener('input',e=>{if(e.target.id==='finance-search'){search=e.target.value;financeResults();}if(e.target.id==='search'){search=e.target.value;$('#list-results').innerHTML=listResults();hydrateImages();}if(e.target.id==='sales-search'){salesPageNumber=1;search=e.target.value;$('#sales-results').innerHTML=salesTable();}if(e.target.id==='order-search'){orderPage=1;search=e.target.value;$('#orders-results').innerHTML=ordersResults();}if(e.target.id==='client-search'){clientPage=1;search=e.target.value;$('#client-results').innerHTML=clientsResults();}if(e.target.id==='catalog-search'){catalogPage=1;search=e.target.value;$('#catalog-results').innerHTML=route==='products'?catalogProductsResults():route==='materials'?catalogMaterialsResults():catalogSuppliersResults();}if(e.target.id==='quick-note-search'){noteQuery=e.target.value;refreshQuickNotesList();}if(e.target.closest('#client-form')&&['personPhone','personEmail','companyPhone','companyEmail'].includes(e.target.name)){clientDuplicateOverride=false;refreshClientDuplicate();}if(e.target.closest('#catalog-cost-form'))refreshCatalogCost();if(e.target.closest('#order-form'))refreshOrderAmounts();if(e.target.closest('#record-form'))recalculate();});
 document.addEventListener('change',e=>{if(e.target.id==='filter'){filter=e.target.value;$('#list-results').innerHTML=listResults();hydrateImages();}if(e.target.classList.contains('hub-view-select')){filter='';search='';salesDate='all';location.hash=e.target.value;return;}if(e.target.id==='catalog-type'){catalogPage=1;filter=e.target.value;$('#catalog-results').innerHTML=catalogProductsResults();}if(e.target.id==='catalog-supplier-view'){catalogPage=1;catalogSupplierMode=e.target.value==='purchases'?'purchases':'suppliers';search='';render();return;}if(e.target.id==='sales-status'){salesPageNumber=1;filter=e.target.value;$('#sales-results').innerHTML=salesTable();}if(e.target.id==='sales-date'){salesPageNumber=1;salesDate=e.target.value;$('#sales-results').innerHTML=salesTable();}if(e.target.id==='order-status'){orderPage=1;filter=e.target.value;$('#orders-results').innerHTML=ordersResults();}if(e.target.id==='order-date'){orderPage=1;orderDate=e.target.value;$('#orders-results').innerHTML=ordersResults();}if(e.target.name==='quoteId'&&e.target.closest('#order-form'))applyOrderQuote(e.target.value);if(e.target.id==='sales-sort'){salesPageNumber=1;salesSort=e.target.value;$('#sales-results').innerHTML=salesTable();}if(e.target.id==='client-type-filter'){clientPage=1;clientTypeFilter=e.target.value;$('#client-results').innerHTML=clientsResults();}if(e.target.id==='client-tag-filter'){clientPage=1;clientTagFilter=e.target.value;$('#client-results').innerHTML=clientsResults();}if(e.target.id==='client-sort'){clientPage=1;clientSort=e.target.value;$('#client-results').innerHTML=clientsResults();}if(e.target.id==='calendar-mode'){calendarMode=e.target.value;render();}if(e.target.id==='calendar-date'&&e.target.value){calendarDate=e.target.value;render();}if(e.target.id==='finance-month'){if(e.target.value)financeMonth=e.target.value;else e.target.value=financeMonth;financeResults();}if(e.target.id==='finance-type')financeResults();if(e.target.name==='paymentState'&&e.target.closest('#finance-form'))syncFinanceForm($('#finance-form'),$('#finance-form').dataset.direction);if(e.target.dataset.line==='materialId'){const m=state.records[e.target.value],row=e.target.closest('.line-row');if(m){row.querySelector('[data-line=unitCost]').value=m.unitCost||0;row.querySelector('[data-line=description]').value=m.name;}recalculate();}if(e.target.id==='add-product'&&e.target.value){const p=get(state,e.target.value),cost=catalogCost(p),composition={recipe:p.recipe||[],labor:p.labor||[],cost:cost.cost,suggested:cost.suggested,price:p.price||0,capturedAt:new Date().toISOString()};$('#lines').insertAdjacentHTML('beforeend',e.target.closest('.sales-editor')?salesLineRow({description:p.name,quantity:1,price:p.price||0,productId:p.id,composition}):lineRow({description:p.name,quantity:1,price:p.price||0}));e.target.value='';recalculate();}if(e.target.closest('#catalog-cost-form'))refreshCatalogCost();if(e.target.closest('#record-form'))recalculate();});
-document.addEventListener('submit',event=>{event.preventDefault();const form=event.target;protect(async()=>{
+document.addEventListener('submit',event=>{if(event.target.id==='hub-login-form')return;event.preventDefault();const form=event.target;protect(async()=>{
  if(form.id==='finance-form'){const result=await saveFinanceForm(form,{upload:file=>store.upload(file),execute});if(!result)return;financeGuard.saved();location.hash='finance';notice(result.direction==='income'?'Ingreso guardado.':'Gasto guardado.');return;}
- if(form.id==='login-form'){const fd=new FormData(form);await store.login(String(fd.get('email')),String(fd.get('password')));return;}
  if(form.id==='quick-note-form'){const fd=new FormData(form),note=String(fd.get('note')||'').trim(),title=String(fd.get('title')||'').trim(),relation=String(fd.get('relation')||''),[relatedKind='',relatedId='']=relation.split(':');if(!note)throw Error('Escribe la nota antes de guardarla.');const name=(title||note.split(/\r?\n/).find(line=>line.trim())?.trim()||'Nota').slice(0,80);await execute({action:'save',kind:'resources',id:form.dataset.id||undefined,data:{name,title:title.slice(0,80),note,relatedKind,relatedId,reminderDate:String(fd.get('reminderDate')||''),pinned:fd.has('pinned'),recordType:'quick-note',status:'activo'}});editingNoteId='';notesOpen=true;render();notice(form.dataset.id?'Nota actualizada.':'Nota guardada.');return;}
  if(form.id==='client-form'){if(form.dataset.saved)return;const data=clientData(new FormData(form)),id=form.dataset.id||undefined,duplicate=clientDuplicateFromForm();if(duplicate&&!clientDuplicateOverride){refreshClientDuplicate();throw Error('Revisa la coincidencia antes de continuar.');}const result=await execute({action:'save',kind:'clients',id,data}),intent=event.submitter?.value||'save';form.dataset.saved='true';clientGuard.saved();clientPanelOpen=false;clientDuplicateOverride=false;if(intent==='order'||pendingOrderDraft){pendingOrderClientId=result.result;location.hash=pendingOrderReturnHash||'orders/new';notice(id?'Cliente actualizado. Completa ahora el pedido.':'Cliente creado correctamente. Completa ahora el pedido.');}else{location.hash=id?'clients/'+id:'clients';notice(id?'Cliente actualizado correctamente.':'Cliente creado correctamente.');}return;}
  if(form.id==='order-form'){if(form.dataset.saved)return;const id=form.dataset.id||undefined,old=id?get(state,id):null,intent=event.submitter?.value||'draft',data=orderSaveData(state,readOrderDraft(form,old||{}),old,intent),result=await saveOrderDraft(form,data,execute,file=>store.upload(file));if(!result)return;orderGuard.saved();pendingOrderClientId='';pendingOrderDraft=null;pendingOrderReturnHash='';location.hash=`orders/${result.result}`;notice(data.status==='borrador'?'Borrador guardado. Aún no es un pedido activo.':'Pedido guardado.');return;}
@@ -397,7 +463,34 @@ window.addEventListener('keydown',e=>{const client=$('#client-panel');if(clientP
 window.addEventListener('resize',()=>{if(['home','clients'].includes(route))syncNotesPanelState();if(route==='clients')syncClientPanelState();});
 window.addEventListener('offline',()=>notice('Sin conexión. Espera a recuperar internet antes de guardar.',true));
 window.addEventListener('online',()=>notice('Conexión recuperada. Actualiza antes de continuar.'));
-try{store=await import('./store.mjs');store.observeAuth(async u=>{user=u;if(!u){statisticsSelection=createStatisticsSelection();state=emptyState();loginScreen();return;}shell(head('Abriendo tu espacio…','Comprobando acceso privado y cargando registros.'));try{const loaded=await store.load();if(user!==u)return;state=loaded;parseRoute();render();}catch(e){if(user!==u)return;shell(head('Acceso privado pendiente')+`<p class="error">${esc(errorMessage(e))}</p><p>La sesión está iniciada, pero todavía no se pueden abrir los registros privados. Reintenta después de habilitar el acceso.</p>${btn('Volver a comprobar','refresh')}`);}});}catch(e){loginScreen('No se pudo conectar con el servicio de acceso. Comprueba tu conexión y recarga la página.');}
+let authRevision=0;
+try{
+ store=await import('./store.mjs');
+ store.observeAuth(async account=>{
+  const revision=++authRevision;
+  user=null;
+  if(!account){
+   statisticsSelection=createStatisticsSelection();
+   state=emptyState();
+   loginScreen();
+   return;
+  }
+  try{
+   const loaded=await store.load();
+   if(revision!==authRevision)return;
+   state=loaded;
+   user=account;
+   parseRoute();
+   render();
+  }catch(error){
+   if(revision!==authRevision)return;
+   user=account;
+   shell(head('Acceso privado pendiente')+`<p class="error">${esc(errorMessage(error))}</p><p>La sesión está iniciada, pero todavía no se pueden abrir los registros privados. Reintenta después de habilitar el acceso.</p>${btn('Volver a comprobar','refresh')}`);
+  }
+ });
+}catch{
+ loginScreen('No se pudo conectar con el servicio de acceso. Comprueba tu conexión y recarga la página.');
+}
 
 window.addEventListener('beforeunload',e=>{if(financeGuard.dirty||catalogGuard.dirty||orderGuard.dirty||clientGuard.dirty||salesGuard.dirty){e.preventDefault();e.returnValue='';}});
 

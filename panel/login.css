@@ -1,0 +1,146 @@
+.hub-login {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  min-height: 100vh;
+  padding: 24px;
+  line-height: normal;
+}
+
+.hub-login-card {
+  width: min(100%, 460px);
+  padding: 48px clamp(20px, 7vw, 40px);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: 0 4px 24px rgba(28,26,23,.06);
+}
+
+.hub-login-brand {
+  margin: 0 0 8px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--brown);
+  font-size: var(--font-interface);
+  font-weight: var(--font-medium);
+}
+
+.hub-login #hub-login-title {
+  margin: 0 0 28px;
+  text-align: center;
+  font-size: 26px;
+  line-height: 33px;
+  font-weight: var(--font-light);
+}
+
+.hub-login #hub-login-title span {
+  font: 42px/33px Camelia, cursive;
+}
+
+.hub-login-card input {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 13px 14px;
+  line-height: normal;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--white);
+  font-size: var(--font-interface);
+}
+
+.hub-login-card input[type="email"] {
+  margin-bottom: 12px;
+}
+
+.hub-login-password {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.hub-login-password input {
+  padding-right: 84px;
+}
+
+.hub-login-password [data-password-toggle],
+.hub-login .hub-login-recover {
+  border: 0;
+  background: transparent;
+}
+
+.hub-login-password [data-password-toggle] {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  padding: 0 14px;
+  color: var(--brown);
+  font-weight: var(--font-light);
+}
+
+.hub-login .hub-login-submit {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 18px;
+  border-color: var(--black);
+  border-radius: var(--radius);
+  background: var(--black);
+  color: var(--white);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+}
+
+.hub-login .hub-login-submit:hover:not(:disabled) {
+  opacity: .86;
+}
+
+.hub-login button:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+.hub-login .hub-login-recover:not([hidden]) {
+  display: block;
+  width: max-content;
+  min-height: 0;
+  margin: 16px auto 0;
+  padding: 2px 0 5px;
+  line-height: 1.2;
+  color: var(--black);
+}
+
+.hub-login .hub-login-recover:hover:not(:disabled) {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+.hub-login-error {
+  margin: 0 0 16px;
+  color: var(--error);
+}
+
+.hub-login-confirmation {
+  max-width: 340px;
+  margin: 18px auto 0;
+  text-align: center;
+}
+
+.hub-login-confirmation div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--success);
+  line-height: 1.35;
+}
+
+.hub-login-confirmation svg {
+  width: 16px;
+  height: 16px;
+}
+
+.hub-login-confirmation p {
+  max-width: 320px;
+  margin: 22px auto 0;
+  color: var(--brown);
+  line-height: 1.5;
+}
