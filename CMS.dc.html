@@ -101,6 +101,7 @@ x-dc{display:none!important}
   .cms-aprende-sections { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px; }
   .cms-community-overview { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start; }
   .cms-surface-card { background:var(--cms-white);border:0;border-radius:6px;box-shadow:none; }
+  .cms-status-badge { display:inline-flex;align-items:center;flex:0 0 auto;padding:3px 8px;border-radius:3px;font-size:var(--cms-type-meta);font-weight:600;line-height:1.35;letter-spacing:.03em;text-transform:uppercase; }
   .cms-aprende-card { display:flex;flex-direction:column;min-height:160px;box-sizing:border-box;padding:22px;cursor:pointer;transition:background-color .16s ease; }
   .cms-aprende-card:hover, .cms-aprende-card:focus, .cms-aprende-card:focus-visible { background:var(--cms-cream);outline:none;box-shadow:none;transform:none; }
   .cms-sidebar { position:sticky;top:0;width:250px;height:100vh;box-sizing:border-box;overflow:hidden;display:flex;flex:0 0 250px;flex-direction:column;padding:32px 24px 20px;background:var(--cms-ink);color:var(--cms-white); }
@@ -451,7 +452,7 @@ x-dc{display:none!important}
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                   <div style="font-size:var(--cms-type-ui);color:var(--cms-brown);">{{ item.price }}</div>
                   <div style="display:flex;align-items:center;gap:6px;">
-                    <span style="font-size:var(--cms-type-meta);font-weight:600;text-transform:uppercase;letter-spacing:.03em;padding:3px 8px;border-radius:3px;background:{{ item.statusBg }};color:{{ item.statusColor }};">{{ item.status }}</span>
+                    <span class="cms-status-badge" style="background:{{ item.statusBg }};color:{{ item.statusColor }};">{{ item.status }}</span>
                     <svg class="cms-edit-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg>
                   </div>
                 </div>
@@ -604,7 +605,8 @@ x-dc{display:none!important}
               <sc-if value="{{ item.showDragHandle }}" hint-placeholder-val="{{ true }}"><span onPointerDown="{{ item.onDragStart }}" onPointerMove="{{ item.onDragMove }}" onPointerUp="{{ item.onDragEnd }}" onPointerCancel="{{ item.onDragCancel }}" onClick="{{ stopPropagation }}" title="Arrastrar para cambiar el orden" aria-label="Arrastrar para cambiar el orden" style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:32px;flex:0 0 22px;color:var(--cms-brown);cursor:grab;touch-action:none;font-size:16px;line-height:1;user-select:none;">⠿</span></sc-if>
               <image-slot id="cms-aprende-{{ item.id }}" shape="rect" fit="cover" style="display:{{ item.summaryDisplay }};width:{{ item.summaryImageWidth }};height:{{ item.summaryImageHeight }};border-radius:6px;flex-shrink:0;" src="{{ item.imageUrl }}" placeholder="foto"></image-slot>
               <input type="text" value="{{ item.name }}" onChange="{{ item.onNameChange }}" onClick="{{ stopPropagation }}" style="flex:1;border:{{ item.nameFieldBorder }};border-radius:4px;padding:10px;background:transparent;font-size:var(--cms-type-ui);color:var(--cms-ink);font-family:Montserrat;outline:none;" style-focus="outline:none;">
-              <div style="display:{{ item.summaryDisplay }};font-size:var(--cms-type-ui);color:var(--cms-brown);flex-shrink:0;">{{ item.price }}</div>
+              <div style="display:{{ item.summaryValueDisplay }};font-size:var(--cms-type-ui);color:var(--cms-brown);flex-shrink:0;">{{ item.price }}</div>
+              <span class="cms-status-badge" style="display:{{ item.summaryStatusDisplay }};background:{{ item.statusBg }};color:{{ item.statusColor }};">{{ item.status }}</span>
               <svg class="cms-edit-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="M15 5l4 4"/></svg>
             </div>
             <sc-if value="{{ item.isSelected }}" hint-placeholder-val="{{ false }}">
@@ -1867,6 +1869,8 @@ class Component extends DCLogic {
         return { key: d.key, label: d.label, isLines: true, value: Array.isArray(item[d.key]) ? item[d.key].join('\n') : '', placeholder: d.placeholder || '', onChange: (e) => this.updateItem(listKey, item.id, d.key, e.target.value.split('\n')) };
       }
       if (d.type === 'richtext') {
+        const status = itemForFields.status;
+        const summaryMetaIsStatus = !item.price && !item.format;
         return {
           key: d.key, label: d.label, isRichtext: true,
           dangerousHtml: { __html: item[d.key] || '' },
@@ -2095,10 +2099,15 @@ class Component extends DCLogic {
           onMoveUp: () => this.moveItem(s.aprendeTab, item.id, -1), onMoveDown: () => this.moveItem(s.aprendeTab, item.id, 1),
           dragGroup: 'aprende-item:' + s.aprendeTab,
           onDragStart: (e) => this.beginPointerReorder('aprende-item:' + s.aprendeTab, item.id, e), onDragMove: (e) => this.trackPointerReorder(e), onDragEnd: (e) => this.finishPointerReorder(e), onDragCancel: (e) => this.cancelPointerReorder(e),
-          name: item.name || item.title || 'Sin título', price: item.price || item.format || itemForFields.status || '', imageUrl: s.aprendeTab === 'gratis' && Array.isArray(item.gallery) && item.gallery.length ? (typeof item.gallery[0] === 'string' ? item.gallery[0] : item.gallery[0].url) : item.imageUrl || '', noImage: s.aprendeTab === 'gratis' ? !(Array.isArray(item.gallery) && item.gallery.length) : !item.imageUrl,
+          name: item.name || item.title || 'Sin título', price: item.price || item.format || '', status,
+          statusBg: status === 'Activo' ? 'var(--cms-success-soft)' : status === 'Borrador' ? 'var(--cms-cream)' : 'var(--cms-error-bg)',
+          statusColor: status === 'Activo' ? 'var(--cms-success)' : status === 'Borrador' ? 'var(--cms-brown)' : 'var(--cms-error)',
+          imageUrl: s.aprendeTab === 'gratis' && Array.isArray(item.gallery) && item.gallery.length ? (typeof item.gallery[0] === 'string' ? item.gallery[0] : item.gallery[0].url) : item.imageUrl || '', noImage: s.aprendeTab === 'gratis' ? !(Array.isArray(item.gallery) && item.gallery.length) : !item.imageUrl,
           onNameChange: nameKey ? (e) => this.updateItem(s.aprendeTab, item.id, nameKey, e.target.value) : null,
           nameFieldBorder: isSelected ? '1px solid var(--cms-border)' : '1px solid transparent',
           summaryDisplay: isSelected ? 'none' : 'block',
+          summaryValueDisplay: !isSelected && !summaryMetaIsStatus ? 'block' : 'none',
+          summaryStatusDisplay: !isSelected && summaryMetaIsStatus ? 'inline-flex' : 'none',
           summaryImageWidth: s.aprendeTab === 'esenciales' ? '64px' : '80px',
           summaryImageHeight: s.aprendeTab === 'esenciales' ? '64px' : '52px',
           isSelected, onSelect: () => this.setState({ expanded: { [s.aprendeTab]: item.id }, courseTab: 'info', resourceTab: 'info', communityContentCard: null }),
