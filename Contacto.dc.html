@@ -21,7 +21,7 @@ try{
 <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-normal-400-5.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="/fonts/montserrat-normal-500-5.woff2" crossorigin>
 <!-- /LDA local font preloads -->
-<link rel="stylesheet" href="/design-system.css?v=20260903camelia9">
+<link rel="stylesheet" href="/design-system.css?v=20261115-contacto-crema">
 <style id="dc-critical-boot">
 x-dc{display:none!important}
 #dc-boot-fallback{position:fixed;inset:0;z-index:2147482999;background:#fff;font-family:Montserrat,Arial,sans-serif;color:#000}
@@ -106,6 +106,16 @@ body{margin:0;background:#fff}
   a:hover { color: var(--lda-text-secondary, #756348); }
 </style>
 <style>
+  .lda-contact-card { min-width: 0; background: #F3EEE4; border-radius: 8px; }
+  .lda-contact-card :is(input, select, textarea) {
+    min-width: 0;
+    background-color: #FFFFFF;
+    border: 0;
+  }
+  .lda-contact-card :is(input, select, textarea):focus-visible {
+    outline: 2px solid #000000;
+    outline-offset: 2px;
+  }
   input, textarea, select { font-family: 'Montserrat', sans-serif; }
   input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset; -webkit-text-fill-color: #000000; transition: background-color 9999s ease-in-out 0s; }
 </style>
@@ -149,7 +159,7 @@ body{margin:0;background:#fff}
       <p style="font-size: 14px; color: var(--lda-text-secondary,#756348); font-weight: 300; line-height: 1.8; margin-top: 20px; max-width: 380px">{{ introText }}</p>
     </div>
 
-    <div style="background: #FFFFFF; border: {{ formBorder }}; border-radius: 8px; padding: {{ formPad }}; border-color: #E4DDCC">
+    <div class="lda-contact-card" style="padding: {{ formPad }}">
       <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
         <div role="status" aria-live="polite" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:340px;text-align:center;">
           <div style="font-size:34px;color:#000000;font-weight:400;">¡<span class="lda-script-section" style="font-family:'Camelia Beauty', cursive;font-weight:400;font-size:59px;">Gracias</span>!</div>
@@ -161,22 +171,22 @@ body{margin:0;background:#fff}
           <div style="display:grid;grid-template-columns:{{ nameEmailCols }};gap:16px;min-width:0;">
             <div style="display:flex;flex-direction:column;gap:6px;">
               <label for="contact-name" style="font-size:11px;font-weight:500;color:#000000;">{{ nameLabel }}</label>
-              <input id="contact-name" type="text" name="name" autocomplete="name" aria-required="true" value="{{ form.name }}" onChange="{{ onNameChange }}" placeholder="Tu nombre" style="min-height:44px;box-sizing:border-box;padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6" style-focus="border-color:#000000;">
+              <input id="contact-name" type="text" name="name" autocomplete="name" aria-required="true" value="{{ form.name }}" onChange="{{ onNameChange }}" placeholder="Tu nombre" style="min-height:44px;box-sizing:border-box;padding: 11px 14px; border-radius: 4px; font-size: 14px; font-weight: 300">
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
               <label for="contact-email" style="font-size:11px;font-weight:500;color:#000000;">{{ emailLabel }}</label>
-              <input id="contact-email" type="email" name="email" autocomplete="email" aria-required="true" value="{{ form.email }}" onChange="{{ onEmailChange }}" placeholder="tu@email.com" style="min-height:44px;box-sizing:border-box;padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6EB" style-focus="border-color:#000000;">
+              <input id="contact-email" type="email" name="email" autocomplete="email" aria-required="true" value="{{ form.email }}" onChange="{{ onEmailChange }}" placeholder="tu@email.com" style="min-height:44px;box-sizing:border-box;padding: 11px 14px; border-radius: 4px; font-size: 14px; font-weight: 300">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <label for="contact-project" style="font-size:11px;font-weight:500;color:#000000;">{{ projectLabel }}</label>
-            <select id="contact-project" value="{{ form.type }}" onChange="{{ onTypeChange }}" style="min-height:44px;box-sizing:border-box;color:#000000; padding: 11px 36px 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; background: #FFFFFF url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%228%22%20viewBox%3D%220%200%2014%208%22%3E%3Cpath%20d%3D%22M1%201L7%207L13%201%22%20stroke%3D%22%23000000%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E') no-repeat right 14px center; font-weight: 300; transition: border-color .25s ease; appearance: none; -webkit-appearance: none; border-color: #F0EEE6" style-focus="border-color:#000000;">
+            <select id="contact-project" value="{{ form.type }}" onChange="{{ onTypeChange }}" style="min-height:44px;box-sizing:border-box;color:#000000; padding: 11px 36px 11px 14px; border-radius: 4px; font-size: 14px; background: #FFFFFF url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2214%22%20height%3D%228%22%20viewBox%3D%220%200%2014%208%22%3E%3Cpath%20d%3D%22M1%201L7%207L13%201%22%20stroke%3D%22%23000000%22%20stroke-width%3D%221.5%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E') no-repeat right 14px center; font-weight: 300; appearance: none; -webkit-appearance: none">
               <sc-for list="{{ projectTypes }}" as="type" hint-placeholder-count="5"><option value="{{ type.value }}">{{ type.label }}</option></sc-for>
             </select>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px;">
             <label for="contact-message" style="font-size:11px;font-weight:500;color:#000000;">{{ messageLabel }}</label>
-            <textarea id="contact-message" name="message" rows="5" aria-required="true" value="{{ form.message }}" onChange="{{ onMessageChange }}" placeholder="Describe lo que tienes en mente..." style="padding: 11px 14px; border-radius: 4px; border: 1px solid #E4DCCB; font-size: 14px; outline: none; resize: vertical; font-family: 'Montserrat',sans-serif; font-weight: 300; transition: border-color .25s ease; border-color: #F0EEE6" style-focus="border-color:#000000;"></textarea>
+            <textarea id="contact-message" name="message" rows="5" aria-required="true" value="{{ form.message }}" onChange="{{ onMessageChange }}" placeholder="Describe lo que tienes en mente..." style="padding: 11px 14px; border-radius: 4px; font-size: 14px; resize: vertical; font-family: 'Montserrat',sans-serif; font-weight: 300"></textarea>
           </div>
           <button type="button" onClick="{{ onSubmit }}" disabled="{{ submitting }}" style="min-height:44px;box-sizing:border-box;cursor: pointer; margin-top: 8px; background: #000000; color: #FFFFFF; padding: 13px 26px; border-radius: 4px; font-size: 13px; font-weight: 500; border: none; font-family: Montserrat; transition: transform .25s ease, background .25s ease;" style-hover="transform:translateY(-3px);background:#2a2a2a;">{{ submitLabel }}</button>
           <sc-if value="{{ submitError }}" hint-placeholder-val="{{ false }}"><p id="contact-form-error" role="alert" style="font-size:12px;color:#B3261E;font-weight:400;line-height:1.5;margin:0;">{{ submitError }}</p></sc-if>
@@ -246,8 +256,7 @@ class Component extends DCLogic {
       heroCols: m ? '1fr' : '0.9fr 1.1fr',
       heroGap: m ? '20px' : '56px',
       h1Size: m ? '26px' : '44px',
-      formBorder: m ? 'none' : '1px solid #E4DCCB',
-      formPad: m ? '0' : '40px',
+      formPad: m ? '20px' : '40px',
       nameEmailCols: m ? '1fr' : '1fr 1fr',
       formGap: m ? '14px' : '18px',
       form,
