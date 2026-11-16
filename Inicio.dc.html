@@ -1008,11 +1008,18 @@ document.addEventListener('input', (event) => {
       const heading = stage.querySelector('.lda-process-heading');
       if (heading) section.style.setProperty('--compact-image-top', (heading.offsetTop + heading.offsetHeight + 28) + 'px');
     }
-    const start = compact ? top + 96 : top;
-    const travel = compact ? 186 : stage.clientHeight * .82;
+    const start = compact ? top + 128 : top;
+    const travel = compact ? 248 : stage.clientHeight * .82;
     const progress = Math.max(0, Math.min(1, (start - sectionTop) / Math.max(1, travel)));
-    section.style.setProperty('--open', progress * progress * (3 - 2 * progress));
-    section.style.setProperty('--title-alpha', Math.max(0, 1 - progress * 3));
+    const opening = compact
+      ? progress ** 3 * (progress * (6 * progress - 15) + 10)
+      : progress * progress * (3 - 2 * progress);
+    const titleProgress = Math.min(1, progress / .42);
+    const titleAlpha = compact
+      ? 1 - titleProgress * titleProgress * (3 - 2 * titleProgress)
+      : Math.max(0, 1 - progress * 3);
+    section.style.setProperty('--open', opening);
+    section.style.setProperty('--title-alpha', titleAlpha);
     const comparisonVisible = stage.getBoundingClientRect().top >= top - 1;
     section.toggleAttribute('data-full-comparison', !staticView.matches && progress === 1 && comparisonVisible);
   }
