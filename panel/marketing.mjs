@@ -11,14 +11,13 @@ export function marketingView(view) {
   const pages = {
     marketing: ['Suscriptores', 'Gestiona las suscripciones de la comunidad.'],
     'marketing-automation': ['Automatizaciones', 'Configura el correo de bienvenida de la comunidad.'],
-    'marketing-campaigns': ['Campañas de Marketing', 'Aquí podrás organizar tus campañas de correo en una próxima etapa.'],
   };
   return pages[view];
 }
 
 export function bindMarketing(view, user) {
   const root = document.querySelector('#marketing-view');
-  if (!root || view === 'marketing-campaigns') return;
+  if (!root) return;
   const result = root.querySelector('[data-marketing-result]');
   const feedback = root.querySelector('[role=status]');
   async function request(action, body, page = '') {
@@ -185,7 +184,5 @@ export function marketingPage(view) {
   const content = view === 'marketing'
     ? `<div class="toolbar"><input type="search" aria-label="Buscar suscriptor" placeholder="Buscar por nombre o correo"><select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activas</option><option value="cancelled">Canceladas</option></select><select name="source" aria-label="Origen"><option value="">Todos los orígenes</option><option value="footer">Footer</option><option value="community">Comunidad</option></select></div>`
     : '<h2>Bienvenida a la comunidad</h2><p class="muted" data-marketing-state></p>';
-  return `<section class="card" id="marketing-view">${view === 'marketing-campaigns'
-    ? '<p>Las campañas y newsletters forman parte de una próxima etapa.</p>'
-    : `${content}<p class="muted" role="status" hidden></p><div data-marketing-result></div>`}</section>`;
+  return `<section class="card" id="marketing-view">${content}<p class="muted" role="status" hidden></p><div data-marketing-result></div></section>`;
 }
