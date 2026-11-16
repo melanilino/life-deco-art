@@ -1,4 +1,4 @@
-const db = require('../marketing/firestore.cjs');
+const { project, forIdentity } = require('../marketing/firestore.cjs');
 const gmail = require('../marketing/gmail.cjs');
 const core = require('../marketing/core.cjs');
 const { service, settingsPath, subscribers } = require('../marketing/service.cjs');
@@ -6,13 +6,13 @@ const { service, settingsPath, subscribers } = require('../marketing/service.cjs
 const site = 'https://lifedecoart.com';
 const unsubscribePattern = /^[a-f0-9]{64}\.[a-f0-9]{64}$/;
 
-async function owner(req) {
+async function owner(req, db) {
   const idToken = req.headers.authorization?.match(/^Bearer ([\w.-]+)$/)?.[1];
   if (!idToken || idToken.length > 5000) return false;
   let claims;
   try { claims = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64url')); }
   catch { return false; }
-  if (claims.aud !== db.project || claims.iss !== `https://securetoken.google.com/${db.project}`) return false;
+  if (claims.aud !== project || claims.iss !== `https://securetoken.google.com/${project}`) return false;
   const { firebaseConfig } = await import('../panel/firebase-config.mjs');
   const response = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseConfig.apiKey}`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }),
@@ -31,8 +31,8 @@ function publicPage(res, title, body) {
   return res.end(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>body{background:#f5efe5;color:#1c1a17;font:16px system-ui;margin:0;padding:24px}main{max-width:480px;margin:10vh auto;background:white;padding:28px;border-radius:8px}button{background:#1c1a17;color:white;border:0;border-radius:6px;padding:12px 18px;cursor:pointer;font:inherit}</style></head><body><main><h1>${title}</h1>${body}</main></body></html>`);
 }
 
-async function admin(req, res, url, action, marketing) {
-  if (!await owner(req)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
+async function admin(req, res, url, action, marketing, db) {
+  if (!await owner(req, db)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
   if (req.method === 'GET' && action === 'subscribers') {
     const page = await db.list(subscribers, url.searchParams.get('page') || '');
     return res.json({ next: page.next, rows: page.rows.map(({ data }) => ({
@@ -96,11 +96,11 @@ module.exports = async function handler(req, res) {
     const action = url.searchParams.get('action');
     const secret = process.env.MARKETING_SECRET;
     if (!secret || secret.length < 32) return res.status(503).json({ error: 'Marketing todavía necesita configuración.' });
+    const db = forIdentity(req.headers['x-vercel-oidc-token']);
     const marketing = service(db, gmail, secret, site);
     if (action === 'subscribe') {
       if (req.method !== 'POST') return res.status(405).end();
       if (req.headers.origin !== site) return res.status(403).end();
-      if (!gmail.configured()) return res.status(503).json({ error: 'El registro está temporalmente indisponible.' });
       const { body } = req;
       if (body?.website) return res.status(202).json({ ok: true });
       const signup = core.subscription(body || {});
@@ -138,7 +138,7 @@ module.exports = async function handler(req, res) {
       await marketing.drain();
       return res.json({ ok: true });
     }
-    return await admin(req, res, url, action, marketing);
+    return await admin(req, res, url, action, marketing, db);
   } catch {
     return res.status(503).json({ error: 'No pudimos completar la operación. Inténtalo nuevamente.' });
   }

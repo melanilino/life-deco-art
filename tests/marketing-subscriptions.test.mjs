@@ -2,10 +2,44 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import core from '../marketing/core.cjs';
 import { service, settingsPath } from '../marketing/service.cjs';
+import { forIdentity } from '../marketing/firestore.cjs';
 
 const secret = 'only used by the local marketing tests';
 const consent = { consent: true, consentVersion: core.consentVersion };
 const origin = 'https://lifedecoart.com';
+
+test('Firestore usa la identidad de Vercel y no reutiliza el permiso con otra identidad', async t => {
+  const key = 'MARKETING_FIREBASE_PROVIDER';
+  const previous = process.env[key];
+  process.env[key] = '//iam.googleapis.com/projects/123/locations/global/workloadIdentityPools/test/providers/vercel';
+  t.after(() => {
+    if (previous === undefined) delete process.env[key];
+    else process.env[key] = previous;
+  });
+  const exchanges = [];
+  t.mock.method(globalThis, 'fetch', async (input, options) => {
+    const url = new URL(input);
+    if (url.hostname === 'sts.googleapis.com') {
+      assert.equal(options.body.get('audience'), process.env[key]);
+      const identity = options.body.get('subject_token');
+      exchanges.push(identity);
+      return identity === 'vercel-production-test'
+        ? Response.json({ access_token: 'short-lived-test', expires_in: 3600 })
+        : Response.json({}, { status: 400 });
+    }
+    assert.equal(url.hostname, 'firestore.googleapis.com');
+    assert.equal(options.headers.Authorization, 'Bearer short-lived-test');
+    return Response.json({ name: `documents/${settingsPath}`, fields: {
+      record: { stringValue: '{"enabled":false}' },
+    } });
+  });
+  const store = forIdentity('vercel-production-test');
+  assert.equal((await store.read(settingsPath)).data.enabled, false);
+  await store.read(settingsPath);
+  await assert.rejects(forIdentity('untrusted-test').read(settingsPath), /authentication failed/);
+  await assert.rejects(forIdentity().read(settingsPath), /not configured/);
+  assert.deepEqual(exchanges, ['vercel-production-test', 'untrusted-test']);
+});
 
 function fixture(send) {
   const rows = new Map([[settingsPath, { enabled: true, published: core.templateOf(core.defaultDraft) }]]);
