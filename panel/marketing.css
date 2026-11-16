@@ -1,0 +1,151 @@
+/* Marketing shares the Hub palette. The pale work area frames the email itself. */
+#marketing-view {
+  --mkt-muted: var(--text-muted, #6f604e);
+  --mkt-stage: #f4f0ea;
+  --mkt-line: var(--border);
+  min-width: 0;
+}
+#marketing-view h2, #marketing-view h3, #marketing-view p { margin: 0; }
+#marketing-view h3 { font-size: 14px; font-weight: 500; }
+#marketing-view button { min-height: 40px; white-space: normal; }
+#marketing-view button:focus-visible { outline: 2px solid var(--brown); outline-offset: 2px; }
+#marketing-view button:disabled { opacity: .55; cursor: not-allowed; }
+#marketing-view input:not([type=checkbox]), #marketing-view select { min-height: 42px; min-width: 0; width: 100%; }
+#marketing-view label { min-width: 0; }
+#marketing-view input[type=checkbox] { width: auto; min-height: 0; accent-color: var(--brown); }
+#marketing-view .mkt-feedback { padding: 10px 14px; margin-bottom: 12px; color: var(--mkt-muted); background: var(--white); border-radius: var(--radius); }
+#marketing-view .mkt-feedback.is-error { color: #8b2f24; }
+#marketing-view.mkt-contacts, .mkt-overview, .mkt-editor { background: var(--white); border-radius: var(--radius); }
+.mkt-contact-controls { padding: 0 22px; }
+.mkt-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--mkt-line); }
+#marketing-view .mkt-tabs button {
+  padding: 14px 2px 12px; background: none; border: 0; border-bottom: 2px solid transparent;
+  border-radius: 0; color: var(--mkt-muted);
+}
+#marketing-view .mkt-tabs button[aria-pressed=true] { border-color: var(--black); color: var(--black); }
+#marketing-view .mkt-tabs button:hover { color: var(--black); }
+.mkt-filters { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 204px); gap: 12px; padding: 17px 0; }
+.mkt-contacts .mkt-feedback { margin-inline: 22px; }
+.mkt-table-scroll { overflow-x: auto; }
+.mkt-table { width: 100%; border-collapse: collapse; text-align: left; }
+.mkt-table th, .mkt-table td { padding: 13px 14px; border-bottom: 1px solid var(--mkt-line); }
+.mkt-table :is(th,td):first-child { padding-left: 22px; }
+.mkt-table :is(th,td):last-child { padding-right: 22px; }
+.mkt-table th { background: var(--mkt-stage); color: var(--black); font-weight: 500; white-space: nowrap; }
+.mkt-table th:first-child { width: 31%; }
+.mkt-table td { font-size: 13px; vertical-align: middle; }
+.mkt-table tbody tr:hover { background: #faf8f5; }
+#marketing-view .mkt-contact-name {
+  display: block; text-align: left; padding: 2px 0; min-height: 28px; max-width: 100%;
+  border: 0; background: transparent; color: var(--black); overflow-wrap: anywhere; font-weight: 500;
+}
+#marketing-view .mkt-contact-name:hover { text-decoration: underline; text-underline-offset: 4px; }
+.mkt-email, .mkt-contact-data small, .mkt-consents small { display: block; color: var(--mkt-muted); font-size: 12px; overflow-wrap: anywhere; }
+.mkt-status {
+  display: inline-flex; gap: 7px; align-items: center; width: max-content;
+  font-size: 12px; line-height: 1.4; padding: 5px 9px; border-radius: 4px;
+  color: #5d503b; background: var(--mkt-stage); font-weight: 500;
+}
+.mkt-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.mkt-status.is-active { color: #215a3a; background: var(--success-soft); }
+.mkt-table .mkt-table-empty { height: 124px; text-align: center; color: var(--mkt-muted); }
+.mkt-table-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 58px; padding: 8px 22px; color: var(--mkt-muted); }
+.mkt-reload { margin: 0 22px 22px; }
+.mkt-contact-dialog {
+  position: fixed; inset: 0 0 0 auto; margin: 0; width: min(420px, 100%); height: 100%;
+  max-height: 100%; max-width: 100%; border: 0; padding: 22px;
+  color: var(--black); background: var(--white);
+}
+.mkt-contact-dialog::backdrop { background: var(--overlay); }
+.mkt-contact-dialog header { display: flex; justify-content: flex-end; margin-bottom: 18px; }
+.mkt-contact-dialog h2 { overflow-wrap: anywhere; }
+.mkt-contact-data { margin: 22px 0 25px; }
+.mkt-contact-data div { display: grid; grid-template-columns: 43% 1fr; gap: 8px; padding: 10px 0; border-top: 1px solid var(--mkt-line); }
+.mkt-contact-data dt { color: var(--mkt-muted); }
+.mkt-contact-data dd { margin: 0; overflow-wrap: anywhere; }
+.mkt-consents { padding: 0; margin: 8px 0; list-style: none; }
+.mkt-consents li { padding: 10px 0; border-bottom: 1px solid var(--mkt-line); }
+.mkt-consents li > span { display: block; }
+
+.mkt-overview { max-width: 880px; padding: 24px; }
+.mkt-overview header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.mkt-overview header p, .mkt-flow p { color: var(--mkt-muted); overflow-wrap: anywhere; }
+.mkt-flow { list-style: none; margin: 22px 0 0; padding: 0; }
+.mkt-flow li {
+  display: grid; grid-template-columns: 12px minmax(0,1fr) auto;
+  position: relative; align-items: center; min-height: 78px; gap: 14px;
+  padding: 12px 16px; background: var(--mkt-stage); border-radius: var(--radius);
+}
+.mkt-flow li + li { margin-top: 9px; }
+.mkt-flow li:not(:last-child)::after { content: ""; position: absolute; bottom: -9px; left: 21px; height: 9px; border-left: 1px solid var(--brown); }
+.mkt-flow-mark { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--brown); background: var(--white); }
+.mkt-flow li:last-child .mkt-flow-mark { background: var(--brown); }
+.mkt-overview footer { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--mkt-line); }
+
+.mkt-editor-header, .mkt-editor-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.mkt-editor-header { justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--mkt-line); }
+.mkt-subject { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px 18px; }
+.mkt-editor-grid { display: grid; grid-template-columns: minmax(115px, .7fr) minmax(0, 3fr) minmax(162px, 1.2fr); border-block: 1px solid var(--mkt-line); }
+.mkt-editor-grid > * { min-width: 0; }
+.mkt-palette, .mkt-inspector { padding: 16px; }
+.mkt-palette-actions { display: grid; gap: 7px; margin: 12px 0; }
+#marketing-view .mkt-palette-actions button { background: var(--mkt-stage); border-color: transparent; text-align: left; }
+#marketing-view .mkt-palette-actions button:hover { border-color: var(--border-strong); }
+.mkt-stage { display: flex; flex-direction: column; min-width: 0; background: var(--mkt-stage); }
+.mkt-preview-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; }
+.mkt-preview-tools [role=group] { display: flex; flex-wrap: wrap; gap: 3px; }
+#marketing-view .mkt-preview-tools [data-device] { border-color: transparent; background: transparent; padding-inline: 9px; }
+#marketing-view .mkt-preview-tools [data-device][aria-pressed=true] { background: var(--white); border-color: var(--mkt-line); }
+.mkt-preview-tools label { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; }
+.mkt-stage-scroll { padding: 12px 13px 16px; flex: 1; }
+.mkt-email-paper { width: min(100%, 600px); margin: 0 auto; background: var(--white); color: var(--black); font: 16px/1.55 Arial, sans-serif; padding-bottom: 22px; }
+.mkt-email-paper.is-mobile { max-width: 360px; }
+.mkt-email-intro, .mkt-email-footer { padding: 17px 21px 10px; }
+#marketing-view .mkt-email-intro p { margin: 12px 0 5px; }
+.mkt-email-footer { padding-block: 0; font-size: 13px; }
+#marketing-view .mkt-block {
+  display: block; width: 100%; min-height: 34px; margin-inline: 0; padding: 6px 20px; font-size: 16px;
+  border-radius: 0; border: 1px solid transparent; background: var(--white);
+  white-space: pre-wrap; overflow-wrap: anywhere; cursor: grab;
+}
+#marketing-view .mkt-block:hover, #marketing-view .mkt-block[aria-pressed=true] { border-color: var(--brown); background: #fcfaf7; }
+#marketing-view .mkt-block:active { cursor: grabbing; }
+.mkt-block img { display: inline-block; vertical-align: middle; max-width: 100%; }
+.mkt-divider { display: block; border-top: 1px solid var(--mkt-line); }
+.mkt-image-empty { display: block; padding: 18px 4px; text-align: center; color: var(--mkt-muted); background: var(--mkt-stage); font-size: 13px; }
+.mkt-email-button { display: inline-block; padding: 10px 15px; color: #fff; }
+.mkt-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.mkt-email-paper.is-mobile .mkt-columns { grid-template-columns: 1fr; }
+.mkt-stage-footer { padding: 0 12px 12px; text-align: center; }
+.mkt-fields { display: grid; gap: 10px; margin: 12px 0; }
+.mkt-fields label, .mkt-template-tools label { display: grid; gap: 4px; }
+.mkt-fields textarea { width: 100%; min-height: 94px; resize: vertical; }
+#marketing-view .mkt-fields [type=color] { padding: 4px; }
+.mkt-block-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+#marketing-view .mkt-block-actions button { padding: 6px 8px; }
+.mkt-templates { padding: 10px 18px; border: 0; }
+.mkt-template-tools { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px; padding: 5px 0 8px; }
+.mkt-template-tools label { flex: 1 1 170px; }
+.mkt-preview-dialog { width: min(720px, calc(100% - 30px)); }
+.mkt-preview-dialog header { text-align: right; }
+.mkt-preview-dialog iframe { display: block; width: min(100%, 640px); height: 360px; margin: 12px auto 0; border: 0; }
+.mkt-preview-dialog iframe.is-mobile { max-width: 360px; }
+
+@media (max-width: 1050px) {
+  .mkt-editor-grid { grid-template-columns: minmax(0, 2fr) minmax(170px, 1fr); }
+  .mkt-palette { grid-column: 1/-1; border-bottom: 1px solid var(--mkt-line); padding: 12px; }
+  .mkt-palette-actions { display: inline-flex; flex-wrap: wrap; margin: 7px 8px 0 0; }
+}
+@media (max-width: 630px) {
+  .mkt-contact-controls { padding-inline: 14px; }
+  .mkt-filters { grid-template-columns: 1fr; gap: 8px; }
+  .mkt-table { min-width: 620px; }
+  .mkt-table-footer, .mkt-overview, .mkt-editor-header, .mkt-subject { padding-inline: 14px; }
+  .mkt-flow li { grid-template-columns: 10px minmax(0, 1fr); gap: 8px; }
+  .mkt-flow li button { grid-column: 2; justify-self: start; }
+  .mkt-editor-grid { grid-template-columns: 1fr; }
+  .mkt-inspector { border-top: 1px solid var(--mkt-line); }
+  .mkt-stage-scroll { padding-inline: 10px; }
+  .mkt-editor-actions { gap: 6px; }
+  #marketing-view .mkt-editor-actions button { padding-inline: 10px; }
+}
