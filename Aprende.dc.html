@@ -287,8 +287,11 @@ body{margin:0;background:#fff}
             <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #FFFFFF; text-align: center">{{ community.signupEyebrow }}</div>
             <label for="comunidad-name" class="lda-sr-only">Tu nombre</label>
             <input id="comunidad-name" type="text" name="name" autocomplete="name" class="comunidad-input" value="{{ comunidadName }}" onChange="{{ onComunidadNameChange }}" placeholder="Tu nombre" style="min-height:44px;box-sizing:border-box;margin-top:26px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
+            <label for="comunidad-surname" class="lda-sr-only">Tu apellido (opcional)</label>
+            <input id="comunidad-surname" type="text" name="surname" autocomplete="family-name" class="comunidad-input" value="{{ comunidadSurname }}" onChange="{{ onComunidadSurnameChange }}" placeholder="Tu apellido (opcional)" style="min-height:44px;box-sizing:border-box;margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:Montserrat,sans-serif;background:transparent;color:#FFFFFF;">
             <label for="comunidad-email" class="lda-sr-only">Tu correo</label>
             <input id="comunidad-email" type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="min-height:44px;box-sizing:border-box;margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
+            <div style="margin-top:16px;font-size:12px;color:#FFFFFF"><label><input type="checkbox" onChange="{{ onComunidadConsentChange }}"> Acepto recibir correos de Life Deco Art.</label> <a href="/politica-de-privacidad" style="color:inherit;text-decoration:underline">Privacidad</a></div>
             <button type="button" onClick="{{ onComunidadSubmit }}" disabled="{{ comunidadSubscribing }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border:0;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">{{ comunidadSubmitLabel }}</button>
             <sc-if value="{{ comunidadError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#FFFFFF;font-weight:500;margin:12px 0 0;">{{ comunidadError }}</p></sc-if>
             <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">{{ community.signupPrivacy }}</p>
@@ -557,7 +560,7 @@ class Component extends DCLogic {
       setTimeout(() => { if (this.state.copiedSlug === slug) this.setState({ copiedSlug: null }); }, 1600);
     });
   }
-  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', visiblePages: {}, copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
+  state = { faqOpen: null, category: 'Esenciales', previewItem: null, comunidadName: '', comunidadSurname: '', comunidadConsent: false, comunidadEmail: '', comunidadSubscribed: false, comunidadSubscribing: false, comunidadError: '', recSearch: '', recSort: 'manual', visiblePages: {}, copiedSlug: null, aprendeLive: null, isMobile: typeof window !== 'undefined' && window.innerWidth < 860 };
   TABS = ['Esenciales', 'Cursos', 'Talleres', 'Gratis', 'Blog', 'Comunidad'];
   ALL_COURSES = [
     { id: 'cu1', name: 'Lettering para bodas', level: 'Nivel intermedio · Online', category: 'Cursos', price: '$55 / persona', desc: 'Diseña tu propia papelería: nombres, monogramas y composiciones para invitaciones.', placeholder: 'foto: clase online en vivo' },
@@ -683,8 +686,10 @@ class Component extends DCLogic {
     if (this._resizeHandler) window.removeEventListener('resize', this._resizeHandler);
   }
   renderVals() {
-    const { faqOpen, category, previewItem, comunidadName, comunidadEmail, comunidadSubscribed } = this.state;
+    const { faqOpen, category, previewItem, comunidadName, comunidadSurname, comunidadConsent, comunidadEmail, comunidadSubscribed } = this.state;
     const onComunidadNameChange = (e) => this.setState({ comunidadName: e.target.value });
+    const onComunidadSurnameChange = (e) => this.setState({ comunidadSurname: e.target.value });
+    const onComunidadConsentChange = (e) => this.setState({ comunidadConsent: e.target.checked });
     const onComunidadEmailChange = (e) => this.setState({ comunidadEmail: e.target.value });
     const onComunidadSubmit = () => {
       if (this.state.comunidadSubscribing) return;
@@ -693,11 +698,16 @@ class Component extends DCLogic {
         this.setState({ comunidadError: 'Escribe un correo válido.' });
         return;
       }
+      if (!comunidadConsent) {
+        this.setState({ comunidadError: 'Acepta recibir comunicaciones para suscribirte.' });
+        return;
+      }
       this.setState({ comunidadSubscribing: true, comunidadError: '' });
-      const body = new URLSearchParams({ EMAIL: email, NOMBRE: comunidadName.trim(), email_address_check: '', locale: 'es' });
-      fetch('https://609a15ef.sibforms.com/serve/MUIFABYkJ3zV4ZmuXq0wI1xofCtu54f0qje7AviXsK0ELf3L8lnhQLfXGqmBjFUSKu4rAO32OrrDSjlBV8sIFp22kmIP0a6KvEC375enbcIgskP6er2NpLUz461sDaZV4uOy_GrbGjxgzN8U_aN8NIIxZxXHqjHETpGCTeRham7DljtmDVYYjHabqeuvOeo72D_uFuAIdT5tbiVcWA==', {
-        method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body.toString(),
-      }).then(() => {
+      const body = { email, source: 'community', name: comunidadName, surname: comunidadSurname, consent: comunidadConsent, consentVersion: 'community-email-v1' };
+      fetch('/api/marketing?action=subscribe', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      }).then(response => {
+        if (!response.ok) throw new Error('Subscription request failed');
         this.setState({ comunidadSubscribed: true, comunidadSubscribing: false });
       }).catch((e) => {
         console.error('No se pudo completar la suscripción.', e);
@@ -732,8 +742,8 @@ class Component extends DCLogic {
     };
     const imageProps = (item, fallback) => ({ imageSrcset: (item.imageMeta && item.imageMeta.imageUrl && item.imageMeta.imageUrl.srcset) || '', imageAlt: (item.imageAlts && item.imageAlts.imageUrl) || item.name || item.title || fallback });
     const communitySource = publishedOrPlaceholders(live.comunidad, [{}]);
-    const community = { challengeEyebrow: 'Reto de este mes', challengeTitle: '"Tu nombre en 3 estilos"', challengeDescription: 'Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: 'Sesión de preguntas y práctica', eventDescription: 'Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Solicitud enviada. Revisa tu correo para recibir la bienvenida.', testimonial: '"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."', testimonialAuthor: '— Miembro de la comunidad', ...(communitySource[0] || {}) };
-    if (community.successMessage === 'Solicitud enviada. Revisa tu correo para confirmar la suscripción.') community.successMessage = 'Solicitud enviada. Revisa tu correo para recibir la bienvenida.';
+    const community = { challengeEyebrow: 'Reto de este mes', challengeTitle: '"Tu nombre en 3 estilos"', challengeDescription: 'Practica el ejercicio y comparte tu resultado respondiendo el correo del reto — lo compartimos con toda la comunidad.', eventEyebrow: 'Próximo encuentro en vivo', eventTitle: 'Sesión de preguntas y práctica', eventDescription: 'Una vez al mes, por videollamada — el enlace llega por correo a quienes están en la comunidad.', signupEyebrow: 'Suscríbete gratis', signupButtonLabel: 'Quiero unirme a la comunidad', signupPrivacy: 'Puedes darte de baja cuando quieras.', successMessage: 'Gracias por unirte a la comunidad.', testimonial: '"Participar en los retos me ayudó a no rendirme — ver el progreso de otras alumnas es súper motivante."', testimonialAuthor: '— Miembro de la comunidad', ...(communitySource[0] || {}) };
+    if (['Solicitud enviada. Revisa tu correo para confirmar la suscripción.', 'Solicitud enviada. Revisa tu correo para recibir la bienvenida.'].includes(community.successMessage)) community.successMessage = 'Gracias por unirte a la comunidad.';
     const showCommunityContent = isComunidad;
     const coursesSource = publishedOrPlaceholders(live.cursos, this.ALL_COURSES).map(c => ({ ...c, category: 'Cursos', placeholder: c.placeholder || 'foto del curso' }));
     const courses = (isCursos ? coursesSource : []).map((c,i) => { const rawLevel = String(c.level || ''), hasCombined = rawLevel.includes('·'), level = hasCombined ? rawLevel : [rawLevel ? `Nivel ${rawLevel.toLowerCase()}` : '', c.modality || ''].filter(Boolean).join(' · '); return { ...c, ...imageProps(c, 'Curso de lettering'), level, imageView: imageView(c), detailHref:`/aprende/curso?id=${encodeURIComponent(c.id || ('cu'+(i+1)))}`, whatsappUrl: `https://wa.me/${live.whatsappNumber || '18495390410'}?text=${encodeURIComponent('Hola! Me interesa reservar plaza en el curso: ' + c.name + ' (' + c.price + ').')}` }; });
@@ -843,6 +853,7 @@ class Component extends DCLogic {
       ctaWaPad: m ? '13px 26px' : '15px 30px',
       ctaWaSize: m ? '13.5px' : '14px',
       comunidadName,
+      comunidadSurname,
       community,
       comunidadEmail,
       comunidadSubscribed,
@@ -851,6 +862,8 @@ class Component extends DCLogic {
       comunidadError: this.state.comunidadError,
       comunidadSubmitLabel: this.state.comunidadSubscribing ? 'Enviando…' : community.signupButtonLabel,
       onComunidadNameChange,
+      onComunidadSurnameChange,
+      onComunidadConsentChange,
       onComunidadEmailChange,
       onComunidadSubmit,
       faqs,

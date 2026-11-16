@@ -1,5 +1,8 @@
 {
   "trailingSlash": false,
+  "crons": [
+    {"path": "/api/marketing?action=queue", "schedule": "0 9 * * *"}
+  ],
   "headers": [
     {
       "source": "/panel",
