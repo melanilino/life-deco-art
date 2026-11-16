@@ -231,6 +231,31 @@ body.lda-home-nav-overlay:not(.lda-home-at-top) #lda-static-nav{background-color
   .lda-process-compare:has(.lda-process-range:focus-visible) .lda-process-divider span{outline:2px solid #4C3928;outline-offset:3px}
   body:has(#lda-comparador-completo[data-full-comparison]) #lda-whatsapp-fab-static{visibility:hidden}
   @media(max-width:859px){#lda-comparador-completo{--nav:64px}}
+  @media (max-width:859px) and (min-height:421px) and (prefers-reduced-motion:no-preference) {
+    #lda-comparador-completo {
+      height:auto;
+      background:#fff;
+      --compact-heading-top:clamp(28px,7svh,56px);
+      --compact-image-top:calc(var(--compact-heading-top) + 158px);
+    }
+    #lda-comparador-completo::after { content:""; display:block; height:clamp(200px,39svh,340px); }
+    .lda-expansion-stage { background:transparent; }
+    .lda-expansion-stage::before {
+      content:"";
+      position:absolute;
+      inset:0 0 auto;
+      height:calc(var(--compact-image-top) + min(49vw,32svh) + 28px);
+      background:#F3EEE4;
+      pointer-events:none;
+    }
+    .lda-process-heading { top:var(--compact-heading-top); }
+    .lda-process-compare {
+      --start-w:88%;
+      --start-h:min(49vw,32svh);
+      top:calc(var(--compact-image-top) * (1 - var(--open)));
+      transform:translateX(-50%);
+    }
+  }
   @media(prefers-reduced-motion:reduce),(max-height:420px){
     #lda-comparador-completo{height:auto}
     .lda-expansion-stage{position:relative;top:auto;height:auto;min-height:0;padding:32px 0}
@@ -969,17 +994,27 @@ document.addEventListener('input', (event) => {
 <script>
 (() => {
   const staticView = matchMedia('(prefers-reduced-motion: reduce), (max-height:420px)');
+  const compactView = matchMedia('(max-width:859px) and (min-height:421px) and (prefers-reduced-motion:no-preference)');
   let frame = 0;
   function update() {
     frame = 0;
     const section = document.getElementById('lda-comparador-completo');
     const stage = section?.querySelector('.lda-expansion-stage');
     if (!stage) return;
-    const top = parseFloat(getComputedStyle(stage).top) || 0;
-    const progress = Math.max(0, Math.min(1, (top - section.getBoundingClientRect().top) / Math.max(1, stage.clientHeight * .82)));
+    const compact = compactView.matches;
+    const top = parseFloat(getComputedStyle(section).getPropertyValue('--nav')) || 0;
+    const sectionTop = section.getBoundingClientRect().top;
+    if (compact) {
+      const heading = stage.querySelector('.lda-process-heading');
+      if (heading) section.style.setProperty('--compact-image-top', (heading.offsetTop + heading.offsetHeight + 28) + 'px');
+    }
+    const start = compact ? top + 96 : top;
+    const travel = compact ? 186 : stage.clientHeight * .82;
+    const progress = Math.max(0, Math.min(1, (start - sectionTop) / Math.max(1, travel)));
     section.style.setProperty('--open', progress * progress * (3 - 2 * progress));
     section.style.setProperty('--title-alpha', Math.max(0, 1 - progress * 3));
-    section.toggleAttribute('data-full-comparison', !staticView.matches && progress === 1 && stage.getBoundingClientRect().top >= top - 1);
+    const comparisonVisible = stage.getBoundingClientRect().top >= top - 1;
+    section.toggleAttribute('data-full-comparison', !staticView.matches && progress === 1 && comparisonVisible);
   }
   function schedule() {
     if (!frame) frame = requestAnimationFrame(update);
@@ -987,13 +1022,19 @@ document.addEventListener('input', (event) => {
   window.addEventListener('scroll', schedule, {passive:true});
   window.addEventListener('resize', schedule);
   staticView.addEventListener('change', schedule);
-  const observer = new MutationObserver(() => {
-    if (document.getElementById('lda-comparador-completo')) {
-      observer.disconnect();
-      schedule();
-    }
-  });
-  if (!document.getElementById('lda-comparador-completo')) observer.observe(document.body, {childList:true, subtree:true});
+  compactView.addEventListener('change', schedule);
+  document.fonts.ready.then(schedule);
+  function observeComparison() {
+    const stage = document.querySelector('#dc-root .lda-expansion-stage');
+    const heading = stage?.querySelector('.lda-process-heading');
+    if (!heading) return;
+    observer.disconnect();
+    new ResizeObserver(schedule).observe(heading);
+    schedule();
+  }
+  const observer = new MutationObserver(observeComparison);
+  observer.observe(document.body, {childList:true, subtree:true});
+  observeComparison();
   schedule();
 })();
 </script>
