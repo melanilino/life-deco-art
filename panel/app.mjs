@@ -32,7 +32,7 @@ const nav=[
  ['products','Catálogo','catalog',['products','calculations','materials','suppliers','purchases']],
  ['finance','Finanzas','money',['finance','expenses']],
  ['statistics','Estadísticas','statistics',['statistics']],
- ['content','Contenido','image',['content','campaigns','resources']],
+ ['content','Marketing','image',['content','campaigns','resources']],
  ['tasks','Agenda','calendar',['tasks']],
  ['accounts','Administración','settings',['accounts','settings','security']]
 ];
