@@ -94,10 +94,7 @@ const textActions = [
  '.finance-metric-pair a',
  '.stats-details summary',
  '.agenda-feedback button',
- ':is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor) ' +
-   ':is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions, .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions) ' +
-   ':is(a, [data-action="client-cancel"], [data-action="sales-preview"])',
- '.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action'
+ '[data-form-action="text"]'
 ].join(',');
 
 function enhanceTextActions(root) {

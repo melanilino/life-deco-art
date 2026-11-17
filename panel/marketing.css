@@ -63,17 +63,6 @@
 .mkt-contact-footer p:not(:empty) { margin-bottom: 8px; }
 .mkt-contact-footer p.is-error { color: #8b2f24; }
 .mkt-contact-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; }
-#marketing-view .mkt-contact-buttons button { min-height: 44px; }
-#marketing-view .mkt-contact-buttons .secondary {
-  background: var(--white); border-color: var(--border); color: var(--text-muted);
-}
-#marketing-view .mkt-contact-buttons .secondary:is(:hover, :focus-visible):enabled {
-  background: rgba(139, 121, 94, .16); color: var(--black);
-}
-#marketing-view .mkt-contact-buttons .primary {
-  background: var(--black); border-color: var(--black); color: var(--white);
-}
-#marketing-view .mkt-contact-buttons .primary:disabled { opacity: 1; }
 .mkt-contact-data { margin: 22px 0 26px; }
 .mkt-contact-data div { display: grid; grid-template-columns: 43% 1fr; align-items: start; gap: 8px; padding: 10px 0; border-top: 1px solid var(--mkt-line); }
 .mkt-contact-data dt { color: var(--mkt-muted); }

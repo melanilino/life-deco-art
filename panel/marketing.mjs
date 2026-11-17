@@ -39,7 +39,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-action-styles">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-hub-form-actions">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
@@ -174,8 +174,8 @@ function bindContacts(root, result, request, report, ask) {
       <footer class="mkt-contact-footer">
         <p role="status" data-contact-feedback></p>
         <div class="mkt-contact-buttons">${editingContact
-          ? '<button type="button" class="secondary" data-discard-contact>Cancelar</button><button type="submit" class="primary" form="mkt-contact-form" disabled>Guardar cambios</button>'
-          : `${active ? '<button type="button" class="secondary" data-cancel-subscription>Dar de baja</button>' : ''}<button type="button" class="primary" data-edit-contact>Editar</button>`}</div>
+          ? '<button type="button" data-form-action="secondary" data-discard-contact>Cancelar</button><button type="submit" class="primary" data-form-action="primary" form="mkt-contact-form" disabled>Guardar cambios</button>'
+          : `${active ? '<button type="button" data-form-action="secondary" data-cancel-subscription>Dar de baja</button>' : ''}<button type="button" class="primary" data-form-action="primary" data-edit-contact>Editar</button>`}</div>
       </footer>`;
   }
 
@@ -324,8 +324,8 @@ function bindWelcome(result, request, report) {
     }
     result.innerHTML = `<section class="mkt-editor" aria-label="Editor del correo de bienvenida">
       <header class="mkt-editor-header"><button type="button" data-edit="back">Volver al flujo</button>
-        <div class="mkt-editor-actions"><button type="button" data-request="test" ${settings.mailReady ? '' : 'disabled'}>Enviar prueba</button>
-          <button type="button" data-request="draft">Guardar borrador</button><button type="button" class="primary" data-request="publish">Publicar plantilla</button></div></header>
+        <div class="mkt-editor-actions"><button type="button" data-request="test" data-form-action="text" ${settings.mailReady ? '' : 'disabled'}>Enviar prueba</button>
+          <button type="button" data-request="draft" data-form-action="secondary">Guardar borrador</button><button type="button" class="primary" data-request="publish" data-form-action="primary">Publicar plantilla</button></div></header>
       <label class="mkt-subject">Asunto<input maxlength="150" data-subject value="${escape(template.subject)}"></label>
       <div class="mkt-editor-grid">
         <aside class="mkt-palette"><h3>Agregar bloque</h3><div class="mkt-palette-actions">${Object.entries(blockLabels).map(([kind,label]) => `<button type="button" draggable="true" data-add="${kind}" ${template.blocks.length >= 30 ? 'disabled' : ''}>${label}</button>`).join('')}</div>

@@ -609,39 +609,50 @@ body .hub-select-menu>button:is([aria-selected="true"],:hover,:focus-visible){ba
   white-space: normal;
 }
 
-:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
-  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
-      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions)
-  :is(a, [data-action="client-cancel"], [data-action="sales-preview"]) {
+#app :is(a, button)[data-form-action] {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 44px;
-  padding: 8px;
-  border: 0;
-  background: transparent;
-  color: var(--text-muted);
+  text-align: center;
   text-decoration: none;
 }
 
-:is(form[data-id=""], #finance-form, #catalog-purchase-form, form.sales-editor)
-  :is(.sales-editor-actions, .client-page-actions, .order-editor-actions, .catalog-form-actions,
-      .content-form-actions, .agenda-form-actions, .finance-form-footer, .admin-form-actions, .form-actions)
-  :is(a, [data-action="client-cancel"], [data-action="sales-preview"]):is(:hover, :focus-visible) {
+#app :is(a, button)[data-form-action="text"] {
+  padding-inline: 8px;
+  border: 1px solid transparent;
   background: transparent;
+  color: var(--text-muted);
+}
+
+#app :is(a, button)[data-form-action="secondary"] {
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text-muted);
+}
+
+#app :is(a, button)[data-form-action="text"]:not(:disabled):is(:hover, :focus-visible) {
   color: var(--black);
+}
+
+#app :is(a, button)[data-form-action="secondary"]:not(:disabled):is(:hover, :focus-visible) {
+  background: rgba(139, 121, 94, .16);
+  color: var(--black);
+}
+
+#app :is(a, button)[data-form-action="primary"],
+#app :is(a, button)[data-form-action="primary"]:is(:hover, :focus-visible, :active, :disabled) {
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--white);
+  font-weight: var(--font-medium);
+  opacity: 1;
 }
 
 .creation-panel #record-form.sheet[data-id=""] > .form-section { border-bottom: 0; }
 .creation-panel #record-form.sheet[data-id=""] > .form-actions {
   margin-inline: 20px;
   padding-inline: 0;
-}
-.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action {
-  border: 0;
-  background: transparent;
-}
-.creation-panel #record-form.sheet[data-id=""] > .form-actions .cancel-action:is(:hover, :focus-visible) {
-  color: var(--black);
 }
 
 .sales-editor .sales-editor-divider,

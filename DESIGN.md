@@ -128,6 +128,7 @@ El saludo es fijo: «Buenos días, Melani»; no varía según la hora ni los dat
 ### Regla de interacción para futuras páginas
 
 - El peso tipográfico no cambia entre reposo, hover, foco, apertura o selección; los botones de interfaz permanecen en 400, salvo una acción primaria expresamente definida en 500.
+- En los formularios con tres acciones, la primera es texto sin recuadro con subrayado al pasar el cursor o al enfocarla. La segunda tiene borde sutil y un sombreado al interactuar. La acción principal tiene fondo negro y texto blanco. Los formularios con dos acciones usan el botón con borde seguido de la acción principal.
 - El estado interactivo se comunica mediante color y fondo: marrón en reposo, negro al interactuar y `brown-soft` como sombreado. No se usa negrita como señal de interacción.
 - Crear y Notas parten de `brown-soft`; en hover, foco u open usan un sombreado marrón ligeramente más intenso, con texto e iconos negros.
 - Guardar nota parte sin relleno, con borde normal y texto marrón; en hover, foco o active usa exactamente el mismo sombreado marrón de Crear y Notas (`rgba(139,121,94,.16)`) y texto negro.
