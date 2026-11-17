@@ -4,6 +4,13 @@ const core = require('./core.cjs');
 const settingsPath = 'marketingSettings/welcome';
 const subscribers = 'marketingSubscribers';
 const subscriberPath = id => `${subscribers}/${id}`;
+function cancelRecord(record, source) {
+  if (record.status === 'cancelled') return record;
+  const cancelledAt = new Date().toISOString();
+  const welcome = ['queued', 'retry'].includes(record.welcome.status)
+    ? { ...record.welcome, status: 'cancelled', updatedAt: cancelledAt } : record.welcome;
+  return { ...record, status: 'cancelled', cancelledAt, cancelledSource: source, welcome };
+}
 const subscriberMonth = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit',
 });
@@ -70,11 +77,22 @@ function service(db, mail, secret, site) {
     await db.update(subscriberPath(id), record => {
       valid = core.validUnsubscribe(secret, id, record, token);
       if (!valid || record.status === 'cancelled') return null;
-      const welcome = ['queued', 'retry'].includes(record.welcome.status)
-        ? { ...record.welcome, status: 'cancelled' } : record.welcome;
-      return { ...record, status: 'cancelled', cancelledAt: new Date().toISOString(), welcome };
+      return cancelRecord(record, 'email');
     });
     return valid;
+  }
+
+  function editSubscriber(id, name, surname) {
+    return db.update(subscriberPath(id), record => record ? { ...record, name, surname } : null);
+  }
+
+  async function cancelSubscriber(id) {
+    let previous;
+    const updated = await db.update(subscriberPath(id), record => {
+      previous = record;
+      return record && record.status !== 'cancelled' ? cancelRecord(record, 'hub') : null;
+    });
+    return updated || previous;
   }
 
   async function drain() {
@@ -90,7 +108,7 @@ function service(db, mail, secret, site) {
     }
   }
 
-  return { signUp, unsubscribe, drain };
+  return { signUp, unsubscribe, drain, editSubscriber, cancelSubscriber };
 }
 
 module.exports = { service, settingsPath, subscribers, subscriberSummary };

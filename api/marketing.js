@@ -31,17 +31,21 @@ function publicPage(res, title, body) {
   return res.end(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${title}</title><style>body{background:#f5efe5;color:#1c1a17;font:16px system-ui;margin:0;padding:24px}main{max-width:480px;margin:10vh auto;background:white;padding:28px;border-radius:8px}button{background:#1c1a17;color:white;border:0;border-radius:6px;padding:12px 18px;cursor:pointer;font:inherit}</style></head><body><main><h1>${title}</h1>${body}</main></body></html>`);
 }
 
+function subscriberRow(id, data) {
+  return {
+    id, email: data.email, name: data.name, surname: data.surname, status: data.status,
+    firstSource: data.firstSource, lastSource: data.lastSource, createdAt: data.createdAt,
+    cancelledAt: data.cancelledAt, cancelledSource: data.cancelledSource, consents: Object.values(data.consents),
+    welcome: { status: data.welcome.status, updatedAt: data.welcome.updatedAt, reason: data.welcome.reason },
+  };
+}
+
 async function admin(req, res, url, action, marketing, db) {
   if (!await owner(req, db)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
   if (req.method === 'GET' && action === 'subscriber-summary') return res.json(await subscriberSummary(db));
   if (req.method === 'GET' && action === 'subscribers') {
     const page = await db.list(subscribers, url.searchParams.get('page') || '');
-    return res.json({ next: page.next, rows: page.rows.map(({ data }) => ({
-      email: data.email, name: data.name, surname: data.surname, status: data.status,
-      firstSource: data.firstSource, lastSource: data.lastSource, createdAt: data.createdAt,
-      cancelledAt: data.cancelledAt, consents: Object.values(data.consents),
-      welcome: { status: data.welcome.status, updatedAt: data.welcome.updatedAt, reason: data.welcome.reason },
-    })) });
+    return res.json({ next: page.next, rows: page.rows.map(({ id, data }) => subscriberRow(id, data)) });
   }
   if (req.method === 'GET' && action === 'settings') {
     const settings = (await db.read(settingsPath))?.data;
@@ -53,6 +57,19 @@ async function admin(req, res, url, action, marketing, db) {
   }
   if (req.method !== 'POST') return res.status(405).end();
   const { body } = req;
+  if (action === 'subscriber-profile' || action === 'subscriber-cancel') {
+    if (typeof body?.id !== 'string' || !/^[a-f0-9]{64}$/.test(body.id)) {
+      return res.status(400).json({ error: 'Selecciona un suscriptor válido.' });
+    }
+    const { id, name, surname } = body;
+    if (action === 'subscriber-profile' && ![name, surname].every(value => typeof value === 'string' && value.trim().length <= 100)) {
+      return res.status(400).json({ error: 'Nombre y apellido admiten hasta 100 caracteres cada uno.' });
+    }
+    const record = action === 'subscriber-profile' ? await marketing.editSubscriber(id, name.trim(), surname.trim())
+      : await marketing.cancelSubscriber(id);
+    return record ? res.json({ row: subscriberRow(id, record) })
+      : res.status(404).json({ error: 'El suscriptor ya no está disponible.' });
+  }
   if (['draft', 'publish', 'preview', 'test', 'copy'].includes(action)) {
     const draft = core.templateOf(body?.template);
     if (!draft) return res.status(400).json({ error: 'Revisa el asunto, los bloques y los enlaces HTTPS.' });

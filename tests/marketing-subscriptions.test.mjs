@@ -127,6 +127,27 @@ test('una suscripción por botón conserva la versión de la casilla anterior', 
   assert.equal(calls.length, 1);
 });
 
+test('editar y cancelar desde el Hub conserva correo e historial y retira la bienvenida pendiente', async () => {
+  const messages = [];
+  const app = fixture(async message => { messages.push(message); return { status: 'sent' }; });
+  const email = 'ana@example.org';
+  const id = core.digest(secret, `subscriber:${email}`);
+  const path = `${subscribers}/${id}`;
+  const initial = core.subscribe(null, core.subscription({ ...consent, email, source: 'footer' }),
+    { enabled: true, published: core.templateOf(core.defaultDraft) }, '2026-11-16T12:00:00Z');
+  app.rows.set(path, initial);
+  const edited = await app.editSubscriber(id, 'Ana', 'Pérez');
+  assert.deepEqual(edited, { ...initial, name: 'Ana', surname: 'Pérez' });
+  const cancelled = await app.cancelSubscriber(id);
+  assert.equal(cancelled.status, 'cancelled');
+  assert.equal(cancelled.cancelledSource, 'hub');
+  assert.equal(cancelled.welcome.status, 'cancelled');
+  assert.deepEqual(cancelled.consents, initial.consents);
+  assert.deepEqual(await app.cancelSubscriber(id), cancelled);
+  await app.drain();
+  assert.equal(messages.length, 0);
+});
+
 test('un resultado incierto queda para revisión y nunca se reenvía automáticamente', async () => {
   let attempts = 0;
   const app = fixture(async () => { attempts++; return { status: 'review' }; });

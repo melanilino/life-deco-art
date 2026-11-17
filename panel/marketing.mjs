@@ -1,4 +1,5 @@
 const sourceLabel = { footer: 'Footer', community: 'Comunidad' };
+const consentLabel = { 'community-email-v1': 'Casilla de suscripción', 'community-email-v2': 'Botón para unirse' };
 const jobLabel = { queued: 'En cola', sending: 'Enviando', sent: 'Aceptado por Gmail', retry: 'Reintento pendiente',
   review: 'Por revisar', failed: 'Falló', inactive: 'Sin envío', cancelled: 'Cancelado' };
 const blockLabels = { text: 'Texto', image: 'Imagen', button: 'Botón', divider: 'Separador', columns: 'Columnas' };
@@ -38,12 +39,12 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261116-subscriber-summary">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-panel">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
 
-export function bindMarketing(view, user) {
+export function bindMarketing(view, user, ask) {
   const root = document.querySelector('#marketing-view');
   if (!root) return;
   const result = root.querySelector('[data-marketing-result]');
@@ -66,17 +67,18 @@ export function bindMarketing(view, user) {
     feedback.hidden = !message;
     feedback.classList.toggle('is-error', error);
   }
-  if (view === 'marketing') bindContacts(root, result, request, report);
+  if (view === 'marketing') bindContacts(root, result, request, report, ask);
   else bindWelcome(result, request, report);
 }
 
-function bindContacts(root, result, request, report) {
+function bindContacts(root, result, request, report, ask) {
   const search = root.querySelector('[type=search]');
   const source = root.querySelector('[name=source]');
   const status = root.querySelector('[name=status]');
   const dialog = root.querySelector('dialog');
   const rows = [];
   let next = '', loading = false;
+  let contactIndex = -1, saving = false, summaryRequest = 0;
   const origins = row => [...new Set(row.consents.map(entry => sourceLabel[entry.source]).filter(Boolean))];
 
   function show() {
@@ -90,7 +92,7 @@ function bindContacts(root, result, request, report) {
         <td>${escape(nameOf(row) || '—')}</td><td>${escape(row.email)}</td>
         <td>${escape(origins(row).join(' · ') || sourceLabel[row.firstSource] || '—')}</td>
         <td>${escape(format(row.createdAt))}</td><td>${statusBadge(stateLabel(row.status === 'active'), row.status === 'active')}</td>
-        <td><button class="mkt-contact-name" type="button" data-contact="${rows.indexOf(row)}" aria-label="Ver ficha de ${escape(nameOf(row) || row.email)}">Ver ficha</button></td></tr>`).join('')
+        <td><button class="mkt-contact-actions" type="button" data-contact="${rows.indexOf(row)}" aria-haspopup="dialog" aria-label="Acciones de ${escape(nameOf(row) || row.email)}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button></td></tr>`).join('')
         || `<tr><td colspan="6" class="mkt-table-empty">${rows.length ? 'No hay coincidencias con estos filtros.' : 'Todavía no hay suscriptores.'}</td></tr>`}</tbody>
       </table></div><div class="mkt-table-footer"><span>${filtered.length} ${filtered.length === 1 ? 'contacto visible' : 'contactos visibles'}</span>
       ${next ? '<button type="button" data-more>Cargar más</button>' : ''}</div>`;
@@ -118,38 +120,109 @@ function bindContacts(root, result, request, report) {
   search.addEventListener('input', () => { if (result.querySelector('table')) show(); });
   source.addEventListener('change', () => { if (result.querySelector('table')) show(); });
   status.addEventListener('change', () => { if (result.querySelector('table')) show(); });
-  dialog.addEventListener('click', event => {
+  const summaryError = document.createElement('p');
+  summaryError.className = 'mkt-feedback is-error';
+  summaryError.setAttribute('role', 'status');
+  summaryError.hidden = true;
+  summaryError.textContent = 'No se pudieron cargar los totales.';
+  root.querySelector('.sales-metrics').after(summaryError);
+
+  async function refreshSummary() {
+    const current = ++summaryRequest;
+    try {
+      const summary = await request('subscriber-summary');
+      if (current !== summaryRequest) return;
+      for (const element of root.querySelectorAll('[data-metric]')) {
+        element.textContent = new Intl.NumberFormat('es-DO').format(summary[element.dataset.metric]);
+      }
+      summaryError.hidden = true;
+    } catch {
+      if (current !== summaryRequest) return;
+      for (const element of root.querySelectorAll('[data-metric]')) element.textContent = '—';
+      summaryError.hidden = false;
+    }
+  }
+
+  function renderContact() {
+    const row = rows[contactIndex];
+    const active = row.status === 'active';
+    const cancellation = { hub: 'Desde el Hub', email: 'Desde el enlace de un correo' }[row.cancelledSource];
+    dialog.innerHTML = `<header class="quick-notes-head mkt-contact-head">
+      <div><h2 id="mkt-contact-title">Suscriptor</h2><p>${escape(row.email)}</p></div>
+      <button type="button" data-close-contact aria-label="Cerrar ficha" autofocus>×</button></header>
+      <div class="quick-notes-scroll mkt-contact-scroll">
+        <form class="mkt-contact-card" data-contact-form aria-label="Datos del suscriptor">
+          <div class="mkt-contact-fields"><label>Nombre<input name="name" autocomplete="off" maxlength="100" value="${escape(row.name)}"></label>
+          <label>Apellido<input name="surname" autocomplete="off" maxlength="100" value="${escape(row.surname)}"></label></div>
+          <div class="mkt-contact-save"><p role="status" data-contact-feedback></p><button type="submit" class="primary">Guardar cambios</button></div>
+        </form>
+        <section class="mkt-contact-card" aria-label="Historial"><h3>Historial</h3>
+          <dl class="mkt-contact-data">
+            <div><dt>Registro inicial</dt><dd>${escape(format(row.createdAt))}</dd></div>
+            <div><dt>Bienvenida</dt><dd>${escape(jobLabel[row.welcome.status] || '—')}${row.welcome.reason ? `<small>${escape(row.welcome.reason)}</small>` : ''}</dd></div>
+            ${row.cancelledAt ? `<div><dt>Última baja</dt><dd>${escape(format(row.cancelledAt))}${cancellation ? `<small>${cancellation}</small>` : ''}</dd></div>` : ''}
+          </dl>
+          ${row.consents.length ? `<h4>Consentimientos</h4><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
+          <span>${escape(format(entry.acceptedAt))}</span><small>${escape(consentLabel[entry.version] || entry.version)}</small></li>`).join('')}</ul>` : ''}
+        </section>
+      </div>
+      <footer class="mkt-contact-footer">${statusBadge(stateLabel(active), active)}
+        ${active ? '<button type="button" class="mkt-cancel-subscription" data-cancel-subscription>Dar de baja</button>' : ''}</footer>`;
+  }
+
+  async function updateContact(action, fields = {}) {
+    if (saving) return;
+    saving = true;
+    const activeElement = document.activeElement;
+    for (const button of dialog.querySelectorAll('button, input')) button.disabled = true;
+    const feedback = dialog.querySelector('[data-contact-feedback]');
+    feedback.textContent = 'Guardando…';
+    feedback.classList.remove('is-error');
+    try {
+      const { row } = await request(action, { id: rows[contactIndex].id, ...fields });
+      rows[contactIndex] = row;
+      show();
+      renderContact();
+      const cancelled = action === 'subscriber-cancel';
+      dialog.querySelector('[data-contact-feedback]').textContent = cancelled ? 'Suscripción cancelada.' : 'Cambios guardados.';
+      dialog.querySelector(cancelled ? '[data-close-contact]' : '[type=submit]').focus();
+      if (cancelled) refreshSummary();
+    } catch (error) {
+      feedback.textContent = error.message;
+      feedback.classList.add('is-error');
+      for (const button of dialog.querySelectorAll('button, input')) button.disabled = false;
+      activeElement?.focus();
+    } finally { saving = false; }
+  }
+
+  dialog.addEventListener('submit', event => {
+    if (!event.target.matches('[data-contact-form]')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const data = new FormData(event.target);
+    updateContact('subscriber-profile', { name: data.get('name'), surname: data.get('surname') });
+  });
+  dialog.addEventListener('cancel', event => { if (saving) event.preventDefault(); });
+  dialog.addEventListener('close', () => {
+    (result.querySelector(`[data-contact="${contactIndex}"]`) || search).focus({ preventScroll: true });
+  });
+  dialog.addEventListener('click', async event => {
     if (event.target.closest('[data-close-contact]')) dialog.close();
+    if (!event.target.closest('[data-cancel-subscription]') || saving) return;
+    if (await ask(`¿Dar de baja a ${rows[contactIndex].email}? Dejará de recibir correos de la comunidad.`)) {
+      updateContact('subscriber-cancel');
+    }
   });
   result.addEventListener('click', event => {
     if (event.target.closest('[data-more]')) { load(); return; }
     const button = event.target.closest('[data-contact]');
     if (!button) return;
-    const row = rows[Number(button.dataset.contact)];
-    dialog.innerHTML = `<header><button type="button" data-close-contact>Cerrar</button></header>
-      <h2 id="mkt-contact-title">${escape(nameOf(row) || row.email)}</h2>
-      ${nameOf(row) ? `<p class="mkt-email">${escape(row.email)}</p>` : ''}
-      <dl class="mkt-contact-data"><div><dt>Estado</dt><dd>${statusBadge(stateLabel(row.status === 'active'), row.status === 'active')}</dd></div>
-      <div><dt>Origen inicial</dt><dd>${escape(sourceLabel[row.firstSource] || '—')}</dd></div>
-      <div><dt>Fecha de registro</dt><dd>${escape(format(row.createdAt))}</dd></div>
-      <div><dt>Bienvenida</dt><dd>${escape(jobLabel[row.welcome.status] || '—')}${row.welcome.reason ? `<small>${escape(row.welcome.reason)}</small>` : ''}</dd></div>
-      ${row.cancelledAt ? `<div><dt>Fecha de baja</dt><dd>${escape(format(row.cancelledAt))}</dd></div>` : ''}</dl>
-      <h3>Consentimientos</h3><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
-      <span>${escape(format(entry.acceptedAt))}</span><small>${escape(entry.version)}</small></li>`).join('')}</ul>`;
+    contactIndex = Number(button.dataset.contact);
+    renderContact();
     dialog.showModal();
   });
   load();
-  request('subscriber-summary').then(summary => {
-    for (const element of root.querySelectorAll('[data-metric]')) {
-      element.textContent = new Intl.NumberFormat('es-DO').format(summary[element.dataset.metric]);
-    }
-  }).catch(() => {
-    const message = document.createElement('p');
-    message.className = 'mkt-feedback is-error';
-    message.setAttribute('role', 'status');
-    message.textContent = 'No se pudieron cargar los totales.';
-    root.querySelector('.sales-metrics').after(message);
-  });
+  refreshSummary();
 }
 
 const safeColor = color => /^#[\da-f]{6}$/i.test(color || '') ? color : '#1c1a17';

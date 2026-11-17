@@ -22,12 +22,13 @@
 .mkt-table th { white-space: nowrap; }
 .mkt-table td { vertical-align: middle; overflow-wrap: anywhere; }
 .mkt-table td:nth-child(2) { min-width: 180px; }
-#marketing-view .mkt-contact-name {
-  display: block; text-align: left; padding: 2px 0; min-height: 28px; max-width: 100%;
-  border: 0; background: transparent; color: var(--black); overflow-wrap: anywhere; font-weight: 500;
+#marketing-view .mkt-contact-actions {
+  display: grid; place-items: center; padding: 0; width: 40px;
+  border: 0; background: transparent; color: var(--black);
 }
-#marketing-view .mkt-contact-name:hover { text-decoration: underline; text-underline-offset: 4px; }
-.mkt-email, .mkt-contact-data small, .mkt-consents small { display: block; color: var(--mkt-muted); font-size: 12px; overflow-wrap: anywhere; }
+#marketing-view .mkt-contact-actions:hover { background: var(--brown-soft); }
+.mkt-contact-actions svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
+.mkt-contact-data small { display: block; color: var(--mkt-muted); font-size: 12px; overflow-wrap: anywhere; }
 .mkt-status {
   display: inline-flex; gap: 7px; align-items: center; width: max-content;
   font-size: 12px; line-height: 1.4; padding: 5px 9px; border-radius: 4px;
@@ -38,20 +39,34 @@
 .mkt-table .mkt-table-empty { height: 150px; text-align: center; color: var(--mkt-muted); }
 .mkt-table-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; margin-top: 12px; color: var(--mkt-muted); }
 .mkt-contact-dialog {
-  position: fixed; inset: 0 0 0 auto; margin: 0; width: min(420px, 100%); height: 100%;
-  max-height: 100%; max-width: 100%; border: 0; padding: 22px;
-  color: var(--black); background: var(--white);
+  position: fixed; inset: 0 0 0 auto; margin: 0; width: min(var(--hub-panel-width, 470px), 100%);
+  height: 100dvh; max-height: 100%; max-width: 100%; border: 0; padding: 0; overflow: hidden;
+  color: var(--black); background: var(--cream); box-shadow: -18px 0 46px var(--shadow-soft);
 }
+.mkt-contact-dialog[open] { display: flex; flex-direction: column; }
 .mkt-contact-dialog::backdrop { background: var(--overlay); }
-.mkt-contact-dialog header { display: flex; justify-content: flex-end; margin-bottom: 18px; }
-.mkt-contact-dialog h2 { overflow-wrap: anywhere; }
-.mkt-contact-data { margin: 22px 0 25px; }
-.mkt-contact-data div { display: grid; grid-template-columns: 43% 1fr; gap: 8px; padding: 10px 0; border-top: 1px solid var(--mkt-line); }
+.mkt-contact-head { flex: 0 0 auto; }
+.mkt-contact-head > div { min-width: 0; }
+#marketing-view .mkt-contact-head p { margin-top: 6px; overflow-wrap: anywhere; }
+.mkt-contact-scroll { flex: 1; padding: 18px 20px; }
+.mkt-contact-card { padding: 18px; background: var(--white); border-radius: var(--radius); }
+.mkt-contact-card + .mkt-contact-card { margin-top: 14px; }
+.mkt-contact-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.mkt-contact-fields label { display: grid; gap: 5px; }
+.mkt-contact-save, .mkt-contact-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.mkt-contact-save { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--mkt-line); }
+.mkt-contact-save p { color: var(--mkt-muted); font-size: 12px; }
+.mkt-contact-save p.is-error, #marketing-view .mkt-cancel-subscription { color: #8b2f24; }
+.mkt-contact-footer { padding: 12px 20px; border-top: 1px solid var(--mkt-line); }
+.mkt-contact-data { margin: 10px 0; }
+.mkt-contact-data div { display: grid; grid-template-columns: 43% 1fr; gap: 8px; padding: 9px 0; border-bottom: 1px solid var(--mkt-line); }
 .mkt-contact-data dt { color: var(--mkt-muted); }
 .mkt-contact-data dd { margin: 0; overflow-wrap: anywhere; }
-.mkt-consents { padding: 0; margin: 8px 0; list-style: none; }
-.mkt-consents li { padding: 10px 0; border-bottom: 1px solid var(--mkt-line); }
-.mkt-consents li > span { display: block; }
+.mkt-contact-card h4 { margin: 14px 0 0; font-size: 13px; font-weight: 500; }
+.mkt-consents { padding: 0; margin: 4px 0 0; list-style: none; }
+.mkt-consents li { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; padding: 6px 0; }
+.mkt-consents li > span { color: var(--mkt-muted); }
+.mkt-consents small { flex-basis: 100%; color: var(--mkt-muted); }
 
 .mkt-overview { max-width: 880px; padding: 24px; }
 .mkt-overview header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
@@ -125,6 +140,7 @@
 @media (max-width: 630px) {
   .mkt-filters { grid-template-columns: 1fr; gap: 8px; }
   .mkt-table { min-width: 670px; }
+  .mkt-contact-head, .mkt-contact-scroll, .mkt-contact-footer { padding-inline: 16px; }
   .mkt-overview, .mkt-editor-header, .mkt-subject { padding-inline: 14px; }
   .mkt-flow li { grid-template-columns: 10px minmax(0, 1fr); gap: 8px; }
   .mkt-flow li button { grid-column: 2; justify-self: start; }
