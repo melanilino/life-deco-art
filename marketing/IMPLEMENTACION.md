@@ -2,6 +2,8 @@
 
 Los formularios de Footer y Comunidad comparten el registro del Hub. La suscripción es directa y la bienvenida se registra una sola vez por dirección. Un registro posterior completa los campos de nombre y apellido vacíos y deja constancia del origen. La baja requiere acción explícita en la página o una solicitud POST del cliente de correo.
 
+El historial registra la acción de suscribirse, el formulario y la fecha. La versión `community-email-v1` corresponde a la casilla original y `community-email-v2` al envío mediante el botón de suscripción.
+
 La edición vive en el Hub. El editor de bloques usa el código del proyecto y guarda copias reutilizables junto a la configuración. El servidor genera HTML y texto plano. Las pruebas del editor usan el propio buzón corporativo. Los contactos se consultan por páginas y los filtros se aplican a los registros cargados.
 
 ## Preparación para publicar

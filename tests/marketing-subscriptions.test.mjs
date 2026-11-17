@@ -116,6 +116,17 @@ test('consentimiento requerido, saludo sin nombre y HTML seguro', () => {
   assert.equal(core.templateOf({ subject: 'Bienvenida', blocks: [{ kind: 'button', url: 'javascript:alert(1)' }] }), null);
 });
 
+test('una suscripción por botón conserva la versión de la casilla anterior', async () => {
+  const calls = [];
+  const app = fixture(async message => { calls.push(message); return { status: 'sent' }; });
+  const body = { ...consent, email: 'ana@example.org', source: 'footer' };
+  await app.signUp(core.subscription({ ...body, consentVersion: 'community-email-v1' }));
+  await app.signUp(core.subscription(body));
+  const [record] = [...app.rows.values()].filter(row => row.email);
+  assert.deepEqual(Object.values(record.consents).map(entry => entry.version), ['community-email-v1', 'community-email-v2']);
+  assert.equal(calls.length, 1);
+});
+
 test('un resultado incierto queda para revisión y nunca se reenvía automáticamente', async () => {
   let attempts = 0;
   const app = fixture(async () => { attempts++; return { status: 'review' }; });

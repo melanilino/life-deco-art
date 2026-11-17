@@ -1,6 +1,7 @@
 const { createHmac, randomUUID, timingSafeEqual } = require('node:crypto');
 
-const consentVersion = 'community-email-v1';
+const consentVersion = 'community-email-v2';
+const acceptedConsentVersions = new Set(['community-email-v1', consentVersion]);
 const sources = new Set(['footer', 'community']);
 const kinds = new Set(['text', 'image', 'button', 'divider', 'columns']);
 const clean = (value, length) => typeof value === 'string' ? value.trim().slice(0, length) : '';
@@ -19,8 +20,8 @@ function digest(key, value) {
 
 function subscription(body) {
   const email = emailOf(body.email);
-  if (!email || body.consent !== true || body.consentVersion !== consentVersion || !sources.has(body.source)) return null;
-  return { email, source: body.source,
+  if (!email || body.consent !== true || !acceptedConsentVersions.has(body.consentVersion) || !sources.has(body.source)) return null;
+  return { email, source: body.source, consentVersion: body.consentVersion,
     name: body.source === 'community' ? clean(body.name, 100) : '',
     surname: body.source === 'community' ? clean(body.surname, 100) : '' };
 }
@@ -30,10 +31,10 @@ function subscribe(current, signup, template, now) {
     consents: {}, welcome: { status: 'inactive' } };
   const wasActive = current?.status === 'active';
   const activationId = wasActive ? base.activationId : randomUUID();
-  const key = `${activationId}-${consentVersion}-${signup.source}`;
+  const key = `${activationId}-${signup.consentVersion}-${signup.source}`;
   const previousConsent = wasActive && base.consents[key];
   const consents = previousConsent ? base.consents : {
-    ...base.consents, [key]: { source: signup.source, version: consentVersion, acceptedAt: now },
+    ...base.consents, [key]: { source: signup.source, version: signup.consentVersion, acceptedAt: now },
   };
   let welcome = base.welcome;
   if (!current && template?.enabled && template.published) {
