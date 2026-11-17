@@ -183,6 +183,7 @@
 .mkt-brand-preview { width: min(760px, calc(100% - 32px)); }
 .mkt-brand-preview header { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
 .mkt-brand-preview h2 { overflow-wrap: anywhere; }
+.mkt-preview-file-actions { justify-content: flex-end; flex-wrap: wrap; gap: 14px; margin-bottom: 10px; }
 .mkt-brand-preview iframe { display: block; width: 100%; height: min(62dvh, 640px); border: 0; }
 .mkt-brand-preview img { display: block; max-width: 100%; max-height: 62dvh; margin-inline: auto; object-fit: contain; }
 

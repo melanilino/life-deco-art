@@ -344,11 +344,28 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     try {
       const blob = await readFile(file);
       if (!dialog.open || !dialog.isConnected) return;
-      const preview = document.createElement(blob.type === 'application/pdf' ? 'iframe' : 'img');
+      const pdf = blob.type === 'application/pdf';
+      const preview = document.createElement(pdf ? 'iframe' : 'img');
       preview.title = name;
       if (preview.tagName === 'IMG') preview.alt = name;
       preview.src = assetUrl(blob);
       body.replaceChildren(preview);
+      if (pdf) {
+        const open = document.createElement('a');
+        open.className = 'mkt-preview-external';
+        open.href = preview.src;
+        open.target = '_blank';
+        open.rel = 'noopener noreferrer';
+        open.textContent = 'Ver en otra pestaña';
+        const save = document.createElement('a');
+        save.href = preview.src;
+        save.download = name;
+        save.textContent = 'Descargar PDF';
+        const actions = document.createElement('div');
+        actions.className = 'mkt-brand-item-actions mkt-preview-file-actions';
+        actions.append(open, save);
+        body.prepend(actions);
+      }
     } catch (error) { body.textContent = error.message; }
   }
   function open(key, index) {
