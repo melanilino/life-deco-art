@@ -328,8 +328,7 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
         `<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button>`)}
       ${card('Tipografías', '<span aria-hidden="true">Aa</span>',
         fontsHtml.length ? `<ul class="mkt-font-list">${fontsHtml.join('')}</ul>` : '<p class="mkt-muted">Todavía no hay tipografías agregadas.</p>',
-        `${hasMontserrat ? '' : '<button type="button" data-brand-montserrat>Añadir Montserrat</button>'}
-        ${upload('font', 'Adjuntar tipografía', '.woff2,.woff,.otf,.ttf')}`)}
+        upload('font', 'Adjuntar tipografía', '.woff2,.woff,.otf,.ttf'))}
       ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3>
         ${logo ? asset(logo, true) : `<div class="mkt-upload-box">${upload('primary', 'Subir', images, 'Subir logo principal')}</div>`}</div>
         <div><h3>Versiones adicionales</h3><div class="mkt-brand-variants">${variants.map(file => asset(file, true)).join('')}
@@ -404,18 +403,6 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     const button = event.target.closest('button');
     if (!button || busy) return;
     const { brandColor, brandEdit, brandUpload, brandDownload, brandPreview } = button.dataset;
-    if (button.hasAttribute('data-brand-montserrat')) {
-      busy = true;
-      button.disabled = true;
-      report('');
-      try {
-        await execute({ action: 'marketing-brand', data: { showMontserrat: true } });
-        render();
-        result.querySelector('[data-brand-upload="font"]')?.focus();
-      } catch (error) { report(error.message, true); }
-      finally { busy = false; button.disabled = false; }
-      return;
-    }
     if (button.hasAttribute('data-brand-remove')) { await removeItem(button); return; }
     if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
     if (brandColor !== undefined) open('color', brandColor);
@@ -457,7 +444,7 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
       link: { manual: '' },
     }[kind];
     const role = files.find(file => file.id === value)?.brandAsset;
-    const target = { color: '[data-brand-color="new"]', montserrat: '[data-brand-montserrat]', link: '[data-brand-edit="manual"]',
+    const target = { color: '[data-brand-color="new"]', montserrat: '[data-brand-upload="font"]', link: '[data-brand-edit="manual"]',
       file: `[data-brand-upload="${role}"]` }[kind];
     busy = true;
     button.disabled = true;

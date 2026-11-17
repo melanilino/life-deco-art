@@ -1,4 +1,4 @@
-import {marketingView,marketingPage,bindMarketing} from './marketing.mjs?v=20261117-brand-font-list';
+import {marketingView,marketingPage,bindMarketing} from './marketing.mjs?v=20261117-brand-font-upload';
 import {syncHubUI} from './ui-standards.mjs?v=20261117-hub-form-actions';
 import {syncPanelLayout} from './panel-layout.mjs';
 import {composerHtml,composerIsOpen,setComposerOpen,bindComposers} from './composer.mjs';

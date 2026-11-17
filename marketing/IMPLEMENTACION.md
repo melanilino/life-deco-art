@@ -10,7 +10,7 @@ Automatizaciones muestra el flujo de bienvenida y sus envíos aceptados por Gmai
 
 Marca guarda la paleta, las tipografías y el enlace del documento en el Hub. La paleta admite agregar, editar y eliminar colores. Los logotipos y documentos adjuntos se guardan como recursos privados. «Usar estilos de Marca» aplica las tipografías y el primer color de la paleta a los botones del borrador de correo.
 
-En Tipografías se puede añadir Montserrat o adjuntar un archivo WOFF2, WOFF, OTF o TTF. La lista muestra el nombre junto al archivo. Los archivos adjuntos permanecen en el almacenamiento privado del Hub.
+En Tipografías se puede adjuntar cualquier fuente en formato WOFF2, WOFF, OTF o TTF. La lista muestra el nombre junto al archivo. Los archivos adjuntos permanecen en el almacenamiento privado del Hub.
 
 ## Preparación para publicar
 
