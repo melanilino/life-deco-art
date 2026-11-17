@@ -146,6 +146,8 @@
 .mkt-brand-card { background: var(--white); padding: 18px; border-radius: var(--surface-radius); min-width: 0; }
 .mkt-brand-card header { display: flex; align-items: center; gap: 14px; padding-bottom: 13px; border-bottom: 1px solid var(--mkt-line); margin-bottom: 14px; }
 .mkt-brand-card h2 { font-size: var(--font-section-title); }
+.mkt-brand-card header:has([data-brand-color]) { flex-wrap: wrap; }
+.mkt-brand-card header [data-brand-color] { margin-inline-start: auto; }
 .mkt-swatches { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
 .mkt-swatch { width: 85px; text-align: center; font-variant-numeric: tabular-nums; }
 #marketing-view button.mkt-swatch { padding: 2px; }

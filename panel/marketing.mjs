@@ -40,7 +40,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-marketing-brand">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-brand-palette">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
@@ -69,7 +69,7 @@ export function bindMarketing(view, user, ask, context) {
     feedback.classList.toggle('is-error', error);
   }
   if (view === 'marketing') bindContacts(root, result, request, report, ask);
-  else if (view === 'marketing-brand') bindBrand(result, report, context);
+  else if (view === 'marketing-brand') bindBrand(result, report, ask, context);
   else bindWelcome(result, request, report, ask, context);
 }
 
@@ -260,15 +260,13 @@ const safeUrl = value => {
 };
 const welcomeName = 'Bienvenida a la comunidad';
 const emailFonts = [['Arial','Arial'], ['Georgia','Georgia']];
-const brandExamples = ['#A78F7A', '#DCC9B4', '#F4EDE3'];
-
-function bindBrand(result, report, { getState, execute, store, download, icon, imageUrl }) {
+function bindBrand(result, report, ask, { getState, execute, store, download, icon, imageUrl }) {
   let busy = false;
   let files = [];
   const getBrand = () => getState().settings.marketingBrand || {};
   const upload = (role, label, accept) => `<button type="button" class="mkt-soft-button" data-brand-upload="${role}">${label}</button>
     <input hidden type="file" data-brand-file="${role}" accept="${accept}">`;
-  const card = (title, symbol, html) => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2></header>${html}</section>`;
+  const card = (title, symbol, html, action = '') => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2>${action}</header>${html}</section>`;
   const asset = file => {
     const index = files.indexOf(file);
     return `<button type="button" class="mkt-brand-asset" data-brand-download="${index}">${file.mime?.startsWith('image/') ? `<img alt="" data-brand-image="${index}" hidden>` : icon('doc')}<span>${escape(file.fileName || file.name)}</span></button>`;
@@ -283,13 +281,13 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
     const logo = files.find(file => file.brandAsset === 'primary');
     const variants = files.filter(file => file.brandAsset === 'variant');
     const manuals = files.filter(file => file.brandAsset === 'manual');
-    const palettes = (colors.length ? colors : brandExamples).map((color, i) =>
-      colors.length ? `<button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>`
-        : `<div class="mkt-swatch"><span style="background:${safeColor(color)}"></span>${escape(color)}</div>`).join('');
+    const palettes = colors.map((color, i) =>
+      `<button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>`).join('');
     const images = 'image/png,image/jpeg,image/webp,image/gif';
     result.innerHTML = `<div class="mkt-brand-grid">
-      ${card('Colores', icon('drop'), `<h3>${colors.length ? 'Paleta de marca' : 'Colores de ejemplo'}</h3>
-        <div class="mkt-swatches">${palettes}<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button></div>`)}
+      ${card('Colores', icon('drop'), colors.length ? `<div class="mkt-swatches">${palettes}</div>`
+        : '<p class="mkt-muted">Todavía no hay colores guardados.</p>',
+        `<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button>`)}
       ${card('Tipografías', '<span aria-hidden="true">Aa</span>', `<dl class="mkt-font-list"><div><dt>Títulos</dt><dd>${escape(brand.headingFont || 'Sin configurar')}</dd></div>
         <div><dt>Texto</dt><dd>${escape(brand.bodyFont || 'Sin configurar')}</dd></div></dl>
         <button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
@@ -297,8 +295,8 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
         ${upload('primary', logo ? 'Cambiar logotipo' : 'Subir logotipo', images)}</div></div>
         <div><h3>Versiones adicionales</h3><div class="mkt-upload-box">${variants.map(asset).join('')}
         ${upload('variant', 'Subir logotipo', images)}</div></div></div>`)}
-      ${card('Documentos', icon('doc'), `<h3>Manual de marca</h3><p class="mkt-muted">Adjunta un documento o añade un enlace</p>
-        ${manuals.map(asset).join('')}${manual ? `<a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir manual de marca</a>` : ''}
+      ${card('Documentos', icon('doc'), `<p class="mkt-muted">Adjunta un documento o añade un enlace</p>
+        ${manuals.map(asset).join('')}${manual ? `<a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir documento</a>` : ''}
         <div class="mkt-brand-actions">${upload('manual', 'Adjuntar archivo', 'application/pdf')}
         <button type="button" data-brand-edit="manual">${icon('link')} ${manual ? 'Editar enlace' : 'Añadir enlace'}</button></div>`)}
       </div><p class="mkt-brand-note">Usa los estilos de Marca al diseñar tus correos.</p>
@@ -312,15 +310,16 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
   function open(key, index) {
     const brand = getBrand();
     const dialog = result.querySelector('dialog');
-    const titles = { color: index === 'new' ? 'Agregar color' : 'Editar color', fonts: 'Tipografías', manual: 'Enlace del manual de marca' };
+    const titles = { color: index === 'new' ? 'Agregar color' : 'Editar color', fonts: 'Tipografías', manual: 'Enlace del documento' };
     const fields = {
-      color: `<label>Código hexadecimal<input name="color" maxlength="7" pattern="#[0-9A-Fa-f]{6}" placeholder="#A78F7A" value="${escape(brand.colors?.[index])}" required></label>`,
+      color: `<label>Código hexadecimal<input name="color" maxlength="7" pattern="#[0-9A-Fa-f]{6}" placeholder="#RRGGBB" value="${escape(brand.colors?.[index])}" required></label>`,
       fonts: [['headingFont','Títulos'],['bodyFont','Texto']].map(([name,label]) =>
         `<label>${label}<select name="${name}">${options([['','Sin configurar'], ...emailFonts], brand[name] || '')}</select></label>`).join(''),
       manual: `<label>Enlace HTTPS<input type="url" name="manual" maxlength="1200" value="${escape(brand.manual)}" required></label>`,
     };
     dialog.innerHTML = `<form data-brand-form="${key}" data-index="${escape(index)}"><h2 id="mkt-brand-dialog-title">${titles[key]}</h2>
       <div class="mkt-fields">${fields[key]}</div><p role="status" data-brand-status></p><footer class="mkt-brand-actions">
+        ${key === 'color' && index !== 'new' ? '<button type="button" data-brand-remove data-form-action="text">Eliminar color</button>' : ''}
         <button type="button" data-brand-close data-form-action="secondary">Cancelar</button>
         <button type="submit" data-form-action="primary">Guardar</button></footer></form>`;
     dialog.showModal();
@@ -329,6 +328,7 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
     const button = event.target.closest('button');
     if (!button || busy) return;
     const { brandColor, brandEdit, brandUpload, brandDownload } = button.dataset;
+    if (button.hasAttribute('data-brand-remove')) { await saveBrand(button.form, true); return; }
     if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
     if (brandColor !== undefined) open('color', brandColor);
     if (brandEdit) open(brandEdit);
@@ -358,32 +358,36 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
     } catch (error) { event.target.value = ''; report(error.message, true); }
     finally { busy = false; }
   });
-  result.addEventListener('submit', async event => {
-    const form = event.target;
-    if (!form.matches('[data-brand-form]')) return;
-    event.preventDefault();
-    event.stopPropagation();
-    if (busy) return;
+  async function saveBrand(form, removing = false) {
     const values = Object.fromEntries(new FormData(form));
-    const patch = { ...values };
+    let patch = values;
     const status = form.querySelector('[data-brand-status]');
     if (form.dataset.brandForm === 'color') {
-      const colors = [...(getBrand().colors || [])];
-      colors[form.dataset.index === 'new' ? colors.length : Number(form.dataset.index)] = values.color.toUpperCase();
-      patch.colors = [...new Set(colors)];
-      delete patch.color;
+      const previousColors = getBrand().colors || [];
+      const colors = [...previousColors];
+      if (removing && !await ask(`¿Eliminar el color ${colors[form.dataset.index]} de la paleta?`)) return;
+      if (removing) colors.splice(Number(form.dataset.index), 1);
+      else colors[form.dataset.index === 'new' ? colors.length : Number(form.dataset.index)] = values.color.toUpperCase();
+      patch = { colors, previousColors };
     }
     if ('manual' in patch && !safeUrl(patch.manual)) { status.textContent = 'Escribe un enlace HTTPS válido.'; return; }
     busy = true;
-    const save = form.querySelector('[type=submit]');
-    save.disabled = true;
+    const buttons = form.querySelectorAll('button');
+    for (const button of buttons) button.disabled = true;
     try {
       await execute({ action: 'marketing-brand', data: patch });
       form.closest('dialog').close();
       render();
-      report('Cambios guardados.');
+      if (form.dataset.brandForm === 'color') result.querySelector('[data-brand-color="new"]')?.focus();
+      report(removing ? 'Color eliminado.' : 'Cambios guardados.');
     } catch (error) { status.textContent = error.message; }
-    finally { busy = false; save.disabled = false; }
+    finally { busy = false; for (const button of buttons) button.disabled = false; }
+  }
+  result.addEventListener('submit', event => {
+    if (!event.target.matches('[data-brand-form]')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (!busy) saveBrand(event.target);
   });
   render();
 }

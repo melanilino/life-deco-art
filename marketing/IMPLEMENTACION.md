@@ -8,7 +8,7 @@ La edición vive en el Hub. El editor de bloques usa el código del proyecto y g
 
 Automatizaciones muestra el flujo de bienvenida y sus envíos aceptados por Gmail. «Nueva automatización» abre la configuración del borrador de ese flujo. La activación publica el borrador y habilita el flujo en una sola operación, después de confirmar.
 
-Marca guarda la paleta, las tipografías y el enlace del manual en el Hub. Los logotipos y manuales adjuntos se guardan como recursos privados. «Usar estilos de Marca» aplica las tipografías y el primer color de la paleta a los botones del borrador de correo.
+Marca guarda la paleta, las tipografías y el enlace del documento en el Hub. La paleta admite agregar, editar y eliminar colores. Los logotipos y documentos adjuntos se guardan como recursos privados. «Usar estilos de Marca» aplica las tipografías y el primer color de la paleta a los botones del borrador de correo.
 
 ## Preparación para publicar
 
