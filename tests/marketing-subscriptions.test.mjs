@@ -1,12 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import core from '../marketing/core.cjs';
-import { service, settingsPath } from '../marketing/service.cjs';
+import { service, settingsPath, subscriberSummary, subscribers } from '../marketing/service.cjs';
 import { forIdentity } from '../marketing/firestore.cjs';
 
 const secret = 'only used by the local marketing tests';
 const consent = { consent: true, consentVersion: core.consentVersion };
 const origin = 'https://lifedecoart.com';
+
+test('el resumen cuenta todas las páginas y usa el mes de Santo Domingo', async () => {
+  const pages = new Map([
+    ['', { rows: [{ data: { status: 'active', createdAt: '2026-11-01T03:59:59Z' } }], next: 'next' }],
+    ['next', { rows: [{ data: { status: 'cancelled', createdAt: '2026-11-01T04:00:00Z' } }], next: '' }],
+  ]);
+  const db = { async list(collection, cursor) {
+    assert.equal(collection, subscribers);
+    return pages.get(cursor);
+  } };
+  assert.deepEqual(await subscriberSummary(db, new Date('2026-11-05T12:00:00Z')),
+    { total: 2, active: 1, cancelled: 1, newThisMonth: 1 });
+});
 
 test('Firestore usa la identidad de Vercel y no reutiliza el permiso con otra identidad', async t => {
   const key = 'MARKETING_FIREBASE_PROVIDER';

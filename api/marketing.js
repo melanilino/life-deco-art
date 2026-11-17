@@ -1,7 +1,7 @@
 const { project, forIdentity } = require('../marketing/firestore.cjs');
 const gmail = require('../marketing/gmail.cjs');
 const core = require('../marketing/core.cjs');
-const { service, settingsPath, subscribers } = require('../marketing/service.cjs');
+const { service, settingsPath, subscribers, subscriberSummary } = require('../marketing/service.cjs');
 
 const site = 'https://lifedecoart.com';
 const unsubscribePattern = /^[a-f0-9]{64}\.[a-f0-9]{64}$/;
@@ -33,6 +33,7 @@ function publicPage(res, title, body) {
 
 async function admin(req, res, url, action, marketing, db) {
   if (!await owner(req, db)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
+  if (req.method === 'GET' && action === 'subscriber-summary') return res.json(await subscriberSummary(db));
   if (req.method === 'GET' && action === 'subscribers') {
     const page = await db.list(subscribers, url.searchParams.get('page') || '');
     return res.json({ next: page.next, rows: page.rows.map(({ data }) => ({

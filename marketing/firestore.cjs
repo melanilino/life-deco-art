@@ -68,8 +68,8 @@ async function update(identity, path, change) {
   throw new Error('Concurrent marketing updates');
 }
 
-async function list(identity, collection, pageToken = '') {
-  const query = new URLSearchParams({ pageSize: '50' });
+async function list(identity, collection, pageToken = '', pageSize = 50) {
+  const query = new URLSearchParams({ pageSize: String(pageSize) });
   if (pageToken) query.set('pageToken', pageToken);
   const response = await request(identity, `/${collection}?${query}`);
   if (!response.ok) throw new Error('Marketing storage list failed');
@@ -97,7 +97,7 @@ function forIdentity(identity) {
   return {
     read: path => read(identity, path),
     update: (path, change) => update(identity, path, change),
-    list: (collection, pageToken) => list(identity, collection, pageToken),
+    list: (collection, pageToken, pageSize) => list(identity, collection, pageToken, pageSize),
     queue: status => queue(identity, status),
   };
 }

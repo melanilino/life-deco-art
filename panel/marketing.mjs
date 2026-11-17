@@ -2,6 +2,12 @@ const sourceLabel = { footer: 'Footer', community: 'Comunidad' };
 const jobLabel = { queued: 'En cola', sending: 'Enviando', sent: 'Aceptado por Gmail', retry: 'Reintento pendiente',
   review: 'Por revisar', failed: 'Falló', inactive: 'Sin envío', cancelled: 'Cancelado' };
 const blockLabels = { text: 'Texto', image: 'Imagen', button: 'Botón', divider: 'Separador', columns: 'Columnas' };
+const subscriberMetrics = [
+  ['people', 'Total', 'total', 'Contactos registrados'],
+  ['check', 'Activos', 'active', 'Suscripciones vigentes'],
+  ['doc', 'Cancelados', 'cancelled', 'Contactos que se dieron de baja'],
+  ['calendar', 'Nuevos este mes', 'newThisMonth', 'Primeras suscripciones del mes'],
+];
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
 const format = date => date ? new Date(date).toLocaleString('es-DO', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
@@ -22,20 +28,19 @@ export function marketingView(view) {
   }[view];
 }
 
-export function marketingPage(view) {
-  const contacts = view === 'marketing' ? `<div class="mkt-contact-controls">
-    <div class="mkt-tabs" role="group" aria-label="Estado de suscripción">
-      <button type="button" data-status="" aria-pressed="true">Todos</button>
-      <button type="button" data-status="active" aria-pressed="false">Activos</button>
-      <button type="button" data-status="cancelled" aria-pressed="false">Bajas</button>
-    </div>
+export function marketingPage(view, icon) {
+  const contacts = view === 'marketing' ? `<section class="sales-metrics" aria-label="Resumen de suscriptores">
+    ${subscriberMetrics.map(([symbol, title, key, description]) => `<article class="sales-metric">
+      <span>${icon(symbol)}</span><div><small>${title}</small><strong data-metric="${key}">—</strong><p>${description}</p></div></article>`).join('')}
+    </section><section class="sales-panel mkt-contacts" aria-label="Listado de suscriptores">
     <div class="mkt-filters">
-      <input type="search" aria-label="Buscar suscriptor" placeholder="Buscar por nombre o correo">
+      <label class="sales-search">${icon('search')}<input type="search" aria-label="Buscar por suscriptor o correo electrónico" placeholder="Buscar por suscriptor o correo"></label>
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
-    </div></div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261116-editor">
-    <section id="marketing-view"${view === 'marketing' ? ' class="mkt-contacts"' : ''}>${contacts}
-    <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div></section>`;
+      <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
+    </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261116-subscriber-summary">
+    <section id="marketing-view">${contacts}
+    <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
 
 export function bindMarketing(view, user) {
@@ -68,25 +73,25 @@ export function bindMarketing(view, user) {
 function bindContacts(root, result, request, report) {
   const search = root.querySelector('[type=search]');
   const source = root.querySelector('[name=source]');
+  const status = root.querySelector('[name=status]');
   const dialog = root.querySelector('dialog');
   const rows = [];
-  let status = '', next = '', loading = false;
+  let next = '', loading = false;
   const origins = row => [...new Set(row.consents.map(entry => sourceLabel[entry.source]).filter(Boolean))];
 
   function show() {
     const query = normalize(search.value.trim());
-    const filtered = rows.filter(row => (!status || row.status === status)
+    const filtered = rows.filter(row => (!status.value || row.status === status.value)
       && (!source.value || row.consents.some(entry => entry.source === source.value))
       && normalize(`${nameOf(row)} ${row.email}`).includes(query));
-    result.innerHTML = `<div class="mkt-table-scroll"><table class="mkt-table">
-      <thead><tr><th scope="col">Suscriptor</th><th scope="col">Estado</th><th scope="col">Origen</th><th scope="col">Registro</th><th scope="col">Bienvenida</th></tr></thead>
+    result.innerHTML = `<div class="sales-table-wrap mkt-table-scroll"><table class="sales-table mkt-table">
+      <thead><tr><th scope="col">Suscriptor</th><th scope="col">Correo electrónico</th><th scope="col">Origen</th><th scope="col">Registro</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr></thead>
       <tbody>${filtered.map(row => `<tr>
-        <td><button class="mkt-contact-name" type="button" data-contact="${rows.indexOf(row)}">${escape(nameOf(row) || row.email)}</button>
-        ${nameOf(row) ? `<span class="mkt-email">${escape(row.email)}</span>` : ''}</td>
-        <td>${statusBadge(stateLabel(row.status === 'active'), row.status === 'active')}</td>
+        <td>${escape(nameOf(row) || '—')}</td><td>${escape(row.email)}</td>
         <td>${escape(origins(row).join(' · ') || sourceLabel[row.firstSource] || '—')}</td>
-        <td>${escape(format(row.createdAt))}</td><td>${escape(jobLabel[row.welcome.status] || '—')}</td></tr>`).join('')
-        || `<tr><td colspan="5" class="mkt-table-empty">${rows.length ? 'No hay coincidencias con estos filtros.' : 'Los registros del footer y Comunidad aparecerán aquí.'}</td></tr>`}</tbody>
+        <td>${escape(format(row.createdAt))}</td><td>${statusBadge(stateLabel(row.status === 'active'), row.status === 'active')}</td>
+        <td><button class="mkt-contact-name" type="button" data-contact="${rows.indexOf(row)}" aria-label="Ver ficha de ${escape(nameOf(row) || row.email)}">Ver ficha</button></td></tr>`).join('')
+        || `<tr><td colspan="6" class="mkt-table-empty">${rows.length ? 'No hay coincidencias con estos filtros.' : 'Todavía no hay suscriptores.'}</td></tr>`}</tbody>
       </table></div><div class="mkt-table-footer"><span>${filtered.length} ${filtered.length === 1 ? 'contacto visible' : 'contactos visibles'}</span>
       ${next ? '<button type="button" data-more>Cargar más</button>' : ''}</div>`;
   }
@@ -110,15 +115,9 @@ function bindContacts(root, result, request, report) {
     } finally { loading = false; }
   }
 
-  root.querySelector('.mkt-tabs').addEventListener('click', event => {
-    const tab = event.target.closest('[data-status]');
-    if (!tab) return;
-    status = tab.dataset.status;
-    for (const button of root.querySelectorAll('[data-status]')) button.setAttribute('aria-pressed', button === tab);
-    if (result.querySelector('table')) show();
-  });
   search.addEventListener('input', () => { if (result.querySelector('table')) show(); });
   source.addEventListener('change', () => { if (result.querySelector('table')) show(); });
+  status.addEventListener('change', () => { if (result.querySelector('table')) show(); });
   dialog.addEventListener('click', event => {
     if (event.target.closest('[data-close-contact]')) dialog.close();
   });
@@ -140,6 +139,17 @@ function bindContacts(root, result, request, report) {
     dialog.showModal();
   });
   load();
+  request('subscriber-summary').then(summary => {
+    for (const element of root.querySelectorAll('[data-metric]')) {
+      element.textContent = new Intl.NumberFormat('es-DO').format(summary[element.dataset.metric]);
+    }
+  }).catch(() => {
+    const message = document.createElement('p');
+    message.className = 'mkt-feedback is-error';
+    message.setAttribute('role', 'status');
+    message.textContent = 'No se pudieron cargar los totales.';
+    root.querySelector('.sales-metrics').after(message);
+  });
 }
 
 const safeColor = color => /^#[\da-f]{6}$/i.test(color || '') ? color : '#1c1a17';

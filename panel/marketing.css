@@ -15,26 +15,13 @@
 #marketing-view input[type=checkbox] { width: auto; min-height: 0; accent-color: var(--brown); }
 #marketing-view .mkt-feedback { padding: 10px 14px; margin-bottom: 12px; color: var(--mkt-muted); background: var(--white); border-radius: var(--radius); }
 #marketing-view .mkt-feedback.is-error { color: #8b2f24; }
-#marketing-view.mkt-contacts, .mkt-overview, .mkt-editor { background: var(--white); border-radius: var(--radius); }
-.mkt-contact-controls { padding: 0 22px; }
-.mkt-tabs { display: flex; gap: 20px; border-bottom: 1px solid var(--mkt-line); }
-#marketing-view .mkt-tabs button {
-  padding: 14px 2px 12px; background: none; border: 0; border-bottom: 2px solid transparent;
-  border-radius: 0; color: var(--mkt-muted);
-}
-#marketing-view .mkt-tabs button[aria-pressed=true] { border-color: var(--black); color: var(--black); }
-#marketing-view .mkt-tabs button:hover { color: var(--black); }
-.mkt-filters { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 204px); gap: 12px; padding: 17px 0; }
-.mkt-contacts .mkt-feedback { margin-inline: 22px; }
+.mkt-overview, .mkt-editor { background: var(--white); border-radius: var(--radius); }
+.mkt-filters { display: grid; grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 18px; }
 .mkt-table-scroll { overflow-x: auto; }
-.mkt-table { width: 100%; border-collapse: collapse; text-align: left; }
-.mkt-table th, .mkt-table td { padding: 13px 14px; border-bottom: 1px solid var(--mkt-line); }
-.mkt-table :is(th,td):first-child { padding-left: 22px; }
-.mkt-table :is(th,td):last-child { padding-right: 22px; }
-.mkt-table th { background: var(--mkt-stage); color: var(--black); font-weight: 500; white-space: nowrap; }
-.mkt-table th:first-child { width: 31%; }
-.mkt-table td { font-size: 13px; vertical-align: middle; }
-.mkt-table tbody tr:hover { background: #faf8f5; }
+.mkt-table { margin: 0; }
+.mkt-table th { white-space: nowrap; }
+.mkt-table td { vertical-align: middle; overflow-wrap: anywhere; }
+.mkt-table td:nth-child(2) { min-width: 180px; }
 #marketing-view .mkt-contact-name {
   display: block; text-align: left; padding: 2px 0; min-height: 28px; max-width: 100%;
   border: 0; background: transparent; color: var(--black); overflow-wrap: anywhere; font-weight: 500;
@@ -48,9 +35,8 @@
 }
 .mkt-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .mkt-status.is-active { color: #215a3a; background: var(--success-soft); }
-.mkt-table .mkt-table-empty { height: 124px; text-align: center; color: var(--mkt-muted); }
-.mkt-table-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 58px; padding: 8px 22px; color: var(--mkt-muted); }
-.mkt-reload { margin: 0 22px 22px; }
+.mkt-table .mkt-table-empty { height: 150px; text-align: center; color: var(--mkt-muted); }
+.mkt-table-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 48px; margin-top: 12px; color: var(--mkt-muted); }
 .mkt-contact-dialog {
   position: fixed; inset: 0 0 0 auto; margin: 0; width: min(420px, 100%); height: 100%;
   max-height: 100%; max-width: 100%; border: 0; padding: 22px;
@@ -137,10 +123,9 @@
   .mkt-palette-actions { display: inline-flex; flex-wrap: wrap; margin: 7px 8px 0 0; }
 }
 @media (max-width: 630px) {
-  .mkt-contact-controls { padding-inline: 14px; }
   .mkt-filters { grid-template-columns: 1fr; gap: 8px; }
-  .mkt-table { min-width: 620px; }
-  .mkt-table-footer, .mkt-overview, .mkt-editor-header, .mkt-subject { padding-inline: 14px; }
+  .mkt-table { min-width: 670px; }
+  .mkt-overview, .mkt-editor-header, .mkt-subject { padding-inline: 14px; }
   .mkt-flow li { grid-template-columns: 10px minmax(0, 1fr); gap: 8px; }
   .mkt-flow li button { grid-column: 2; justify-self: start; }
   .mkt-editor-grid { grid-template-columns: 1fr; }

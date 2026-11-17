@@ -4,6 +4,27 @@ const core = require('./core.cjs');
 const settingsPath = 'marketingSettings/welcome';
 const subscribers = 'marketingSubscribers';
 const subscriberPath = id => `${subscribers}/${id}`;
+const subscriberMonth = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit',
+});
+
+async function subscriberSummary(db, now = new Date()) {
+  const currentMonth = subscriberMonth.format(now);
+  const totals = { total: 0, active: 0, cancelled: 0, newThisMonth: 0 };
+  let cursor = '';
+  do {
+    const page = await db.list(subscribers, cursor, 300);
+    totals.total += page.rows.length;
+    for (const { data } of page.rows) {
+      if (data.status === 'active') totals.active++;
+      if (data.status === 'cancelled') totals.cancelled++;
+      const registered = new Date(data.createdAt);
+      if (Number.isFinite(registered.getTime()) && subscriberMonth.format(registered) === currentMonth) totals.newThisMonth++;
+    }
+    cursor = page.next;
+  } while (cursor);
+  return totals;
+}
 
 function service(db, mail, secret, site) {
   async function attemptWelcome(id) {
@@ -72,4 +93,4 @@ function service(db, mail, secret, site) {
   return { signUp, unsubscribe, drain };
 }
 
-module.exports = { service, settingsPath, subscribers };
+module.exports = { service, settingsPath, subscribers, subscriberSummary };
