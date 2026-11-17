@@ -142,8 +142,9 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   const items=normalizePhrases(cmd.text),previous=s.settings.homePhrases||{};
   s.settings.homePhrases={items,startDate:previous.startDate||phraseDate(new Date(at),s.settings.timezone),archived:[...new Set([...(previous.archived||[]),...(previous.items||[]).filter(text=>!items.includes(text))])].filter(text=>!items.includes(text))};
  }else if(cmd.action==='marketing-brand'){
-  const {colors,previousColors,headingFont,bodyFont,manual}=cmd.data;
+  const {colors,previousColors,headingFont,bodyFont,manual,showMontserrat}=cmd.data;
   const brand={...s.settings.marketingBrand};
+  if(typeof showMontserrat==='boolean')brand.showMontserrat=showMontserrat;
   if(colors!==undefined){
    if(previousColors!==undefined&&JSON.stringify(previousColors)!==JSON.stringify(brand.colors||[]))throw Error('La paleta cambió en otra sesión. Vuelve a abrir Marca para actualizarla.');
    if(!Array.isArray(colors)||colors.length>24||colors.some(color=>typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)))throw Error('Guarda hasta 24 colores en formato hexadecimal.');
