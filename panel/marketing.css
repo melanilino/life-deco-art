@@ -46,6 +46,12 @@
 .mkt-contact-dialog[open] { display: flex; flex-direction: column; }
 .mkt-contact-dialog::backdrop { background: var(--overlay); }
 .mkt-contact-head { display: flex; justify-content: flex-end; padding: 20px 24px 0; }
+#marketing-view .mkt-contact-head > button {
+  display: grid; place-items: center; width: 44px; min-height: 44px;
+  padding: 0; border: 0; background: transparent; color: var(--black);
+  font-size: 24px; font-weight: 300; line-height: 1;
+}
+#marketing-view .mkt-contact-head > button:hover { color: var(--text-muted); }
 .mkt-contact-scroll { flex: 1; padding: 20px 24px; }
 .mkt-contact-identity h2 { margin: 0; overflow-wrap: anywhere; }
 #marketing-view .mkt-contact-identity p { margin: 4px 0 0; color: var(--mkt-muted); overflow-wrap: anywhere; }
@@ -57,6 +63,13 @@
 .mkt-contact-footer p:not(:empty) { margin-bottom: 8px; }
 .mkt-contact-footer p.is-error, #marketing-view .mkt-cancel-subscription { color: #8b2f24; }
 .mkt-contact-buttons { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+#marketing-view .mkt-contact-buttons .primary {
+  background: var(--black); border-color: var(--black); color: var(--white);
+}
+#marketing-view .mkt-contact-buttons .primary:enabled:hover { background: var(--brown); border-color: var(--brown); }
+#marketing-view .mkt-contact-buttons .primary:disabled {
+  background: var(--brown-soft); border-color: var(--border); color: var(--text-muted); opacity: 1;
+}
 .mkt-contact-data { margin: 22px 0 26px; }
 .mkt-contact-data div { display: grid; grid-template-columns: 43% 1fr; align-items: start; gap: 8px; padding: 10px 0; border-top: 1px solid var(--mkt-line); }
 .mkt-contact-data dt { color: var(--mkt-muted); }
