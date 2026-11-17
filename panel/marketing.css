@@ -158,7 +158,7 @@
 #marketing-view .mkt-brand-remove:hover { background: var(--brown-soft); }
 #marketing-view .mkt-swatch-item .mkt-brand-remove { position: absolute; inset: auto 0 -4px auto; }
 .mkt-font-list { margin: 0 0 14px; }
-.mkt-font-list div { display: grid; grid-template-columns: minmax(72px, 1fr) 3fr; align-items: center; gap: 10px; min-height: 43px; padding: 5px 0; border-bottom: 1px solid var(--mkt-line); }
+.mkt-font-list div { display: grid; grid-template-columns: minmax(72px, 1fr) 3fr; align-items: center; gap: 10px; min-height: 43px; padding: 5px 0; }
 .mkt-font-list dd { display: flex; align-items: center; justify-content: space-between; margin: 0; color: var(--text-muted); }
 .mkt-brand-logos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .mkt-upload-box { display: grid; justify-items: center; align-content: center; gap: 8px; margin-top: 9px; padding: 12px; min-height: 110px; border: 1px dashed var(--border-strong); border-radius: var(--surface-radius); }
