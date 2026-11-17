@@ -39,7 +39,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-save-black">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-action-styles">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
@@ -174,8 +174,8 @@ function bindContacts(root, result, request, report, ask) {
       <footer class="mkt-contact-footer">
         <p role="status" data-contact-feedback></p>
         <div class="mkt-contact-buttons">${editingContact
-          ? '<button type="button" data-discard-contact>Cancelar</button><button type="submit" class="primary" form="mkt-contact-form" disabled>Guardar cambios</button>'
-          : `${active ? '<button type="button" class="mkt-cancel-subscription" data-cancel-subscription>Dar de baja</button>' : ''}<button type="button" data-edit-contact>Editar</button>`}</div>
+          ? '<button type="button" class="secondary" data-discard-contact>Cancelar</button><button type="submit" class="primary" form="mkt-contact-form" disabled>Guardar cambios</button>'
+          : `${active ? '<button type="button" class="secondary" data-cancel-subscription>Dar de baja</button>' : ''}<button type="button" class="primary" data-edit-contact>Editar</button>`}</div>
       </footer>`;
   }
 
