@@ -116,6 +116,33 @@ test('consentimiento requerido, saludo sin nombre y HTML seguro', () => {
   assert.equal(core.templateOf({ subject: 'Bienvenida', blocks: [{ kind: 'button', url: 'javascript:alert(1)' }] }), null);
 });
 
+test('la plantilla conserva el nombre, el texto de vista previa y los estilos al volver a editarla', () => {
+  const draft = {
+    name: 'Bienvenida de prueba', subject: 'Bienvenida', preheader: '<texto>', headingFont: 'Georgia',
+    brandColors: true,
+    blocks: [{ kind: 'text', text: 'Hola', font: 'Georgia' },
+      { kind: 'button', text: 'Visitar', color: '#F4EDE3', url: 'https://example.org/' }],
+  };
+  const saved = core.templateOf(draft);
+  assert.equal(saved.name, draft.name);
+  assert.deepEqual(core.templateOf(saved), saved);
+  const { html } = core.renderEmail(saved);
+  assert.match(html, /mso-hide:all">&lt;texto&gt;/);
+  assert.match(html, /font-family:Georgia,serif">Life Deco Art/);
+  assert.match(html, /background:#F4EDE3;[^"]*color:#000/);
+});
+
+test('el resumen cuenta solo bienvenidas enviadas y usa el mes de Santo Domingo', async () => {
+  const db = { list: async () => ({ next: '', rows: [
+    { data: { welcome: { status: 'sent', updatedAt: '2026-11-01T03:59:59Z' } } },
+    { data: { welcome: { status: 'sent', updatedAt: '2026-11-01T04:00:00Z' } } },
+    { data: { welcome: { status: 'failed', updatedAt: '2026-11-02T04:00:00Z' } } },
+  ] }) };
+  assert.deepEqual(await subscriberSummary(db, new Date('2026-11-17T12:00:00Z'), true), {
+    sentThisMonth: 1, lastSent: '2026-11-01T04:00:00.000Z',
+  });
+});
+
 test('una suscripción por botón conserva la versión de la casilla anterior', async () => {
   const calls = [];
   const app = fixture(async message => { calls.push(message); return { status: 'sent' }; });

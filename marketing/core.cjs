@@ -75,11 +75,21 @@ function templateOf(input) {
       url: httpsUrl(clean(block.url, 1200)), alt: clean(block.alt, 150),
       color: /^#[0-9a-f]{6}$/i.test(block.color) ? block.color : '#1c1a17',
       align: ['left', 'center', 'right'].includes(block.align) ? block.align : 'left',
-      font: block.font === 'Georgia' ? 'Georgia, serif' : 'Arial, sans-serif',
+      font: typeof block.font === 'string' && block.font.startsWith('Georgia') ? 'Georgia, serif' : 'Arial, sans-serif',
       space: [8, 16, 24, 32].includes(Number(block.space)) ? Number(block.space) : 16 };
   });
   if (blocks.some(block => !block || (['image', 'button'].includes(block.kind) && !block.url))) return null;
-  return { subject, blocks };
+  const name = clean(input.name, 100);
+  const preheader = clean(input.preheader, 150).replace(/[\r\n]+/g, ' ');
+  const headingFont = ['Arial', 'Georgia'].includes(input.headingFont) ? input.headingFont : '';
+  return { subject, blocks, ...(name ? { name } : {}), ...(preheader ? { preheader } : {}),
+    ...(headingFont ? { headingFont } : {}), ...(input.brandColors === true ? { brandColors: true } : {}) };
+}
+
+function buttonInk(color) {
+  const channels = String(color).slice(1).match(/.{2}/g) || [];
+  const light = channels.map(pair => parseInt(pair, 16) / 255).map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+  return .2126 * light[0] + .7152 * light[1] + .0722 * light[2] > .179 ? '#000' : '#fff';
 }
 
 function renderEmail(template, person = {}, unsubscribe = '') {
@@ -89,7 +99,7 @@ function renderEmail(template, person = {}, unsubscribe = '') {
     let content;
     switch (block.kind) {
       case 'image': content = `<img src="${escape(block.url)}" alt="${escape(block.alt)}" width="552" style="display:inline-block;width:100%;max-width:552px;height:auto;border:0">`; break;
-      case 'button': content = `<a href="${escape(block.url)}" style="display:inline-block;background:${block.color};padding:12px 20px;color:#fff;text-decoration:none">${paragraph(block.text)}</a>`; break;
+      case 'button': content = `<a href="${escape(block.url)}" style="display:inline-block;background:${block.color};padding:12px 20px;color:${template.brandColors ? buttonInk(block.color) : '#fff'};text-decoration:none">${paragraph(block.text)}</a>`; break;
       case 'divider': content = '<hr style="border:0;border-top:1px solid #ddd">'; break;
       case 'columns': content = `<table role="presentation" width="100%"><tr><td class="column" width="50%" valign="top">${paragraph(block.text)}</td><td class="column" width="50%" valign="top">${paragraph(block.secondary)}</td></tr></table>`; break;
       default: content = paragraph(block.text);
@@ -97,7 +107,9 @@ function renderEmail(template, person = {}, unsubscribe = '') {
     return `<tr><td style="padding:0 24px ${block.space}px;color:${block.color};text-align:${block.align};font-family:${block.font}">${content}</td></tr>`;
   }).join('');
   const link = unsubscribe ? `<a href="${escape(unsubscribe)}">Cancelar suscripción</a>` : 'Cancelar suscripción';
-  const html = `<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media(max-width:520px){.column{display:block!important;width:100%!important;margin-bottom:12px}}</style></head><body style="margin:0;background:#f5efe5"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;font:16px/1.55 Arial,sans-serif;color:#1c1a17" cellspacing="0" cellpadding="0"><tr><td style="padding:24px">Life Deco Art<br><br>${paragraph(greeting)}</td></tr>${rows}<tr><td style="padding:0 24px 24px;font-size:13px">${link}</td></tr></table></td></tr></table></body></html>`;
+  const preheader = template.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escape(template.preheader)}</div>` : '';
+  const titleFont = template.headingFont === 'Georgia' ? 'Georgia,serif' : 'Arial,sans-serif';
+  const html = `<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media(max-width:520px){.column{display:block!important;width:100%!important;margin-bottom:12px}}</style></head><body style="margin:0;background:#f5efe5">${preheader}<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;font:16px/1.55 Arial,sans-serif;color:#1c1a17" cellspacing="0" cellpadding="0"><tr><td style="padding:24px"><span style="font-family:${titleFont}">Life Deco Art</span><br><br>${paragraph(greeting)}</td></tr>${rows}<tr><td style="padding:0 24px 24px;font-size:13px">${link}</td></tr></table></td></tr></table></body></html>`;
   const text = [ 'Life Deco Art', greeting, ...template.blocks.flatMap(block => [block.text || block.alt, block.secondary, block.url]).filter(Boolean),
     unsubscribe ? `Cancelar suscripción: ${unsubscribe}` : '' ].filter(Boolean).join('\n\n');
   return { html, text };

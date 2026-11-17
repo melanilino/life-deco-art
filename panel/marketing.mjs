@@ -25,7 +25,8 @@ const select = (label, field, values, value) => `<label>${label}<select data-fie
 export function marketingView(view) {
   return {
     marketing: ['Suscriptores', 'Consulta los contactos y sus preferencias de suscripción.'],
-    'marketing-automation': ['Automatizaciones', 'Gestiona el correo que reciben los nuevos suscriptores.'],
+    'marketing-automation': ['Automatizaciones', 'Gestiona los correos que se envían automáticamente.'],
+    'marketing-brand': ['Marca', 'Toda la identidad visual de Life Deco Art en un solo lugar.'],
   }[view];
 }
 
@@ -39,12 +40,12 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-hub-form-actions">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-marketing-brand">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
 
-export function bindMarketing(view, user, ask) {
+export function bindMarketing(view, user, ask, context) {
   const root = document.querySelector('#marketing-view');
   if (!root) return;
   const result = root.querySelector('[data-marketing-result]');
@@ -68,7 +69,8 @@ export function bindMarketing(view, user, ask) {
     feedback.classList.toggle('is-error', error);
   }
   if (view === 'marketing') bindContacts(root, result, request, report, ask);
-  else bindWelcome(result, request, report);
+  else if (view === 'marketing-brand') bindBrand(result, report, context);
+  else bindWelcome(result, request, report, ask, context);
 }
 
 function bindContacts(root, result, request, report, ask) {
@@ -256,7 +258,136 @@ const safeUrl = value => {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : ''; }
   catch { return ''; }
 };
-const contentOf = (block, kind) => {
+const welcomeName = 'Bienvenida a la comunidad';
+const emailFonts = [['Arial','Arial'], ['Georgia','Georgia']];
+const brandExamples = ['#A78F7A', '#DCC9B4', '#F4EDE3'];
+
+function bindBrand(result, report, { getState, execute, store, download, icon, imageUrl }) {
+  let busy = false;
+  let files = [];
+  const getBrand = () => getState().settings.marketingBrand || {};
+  const upload = (role, label, accept) => `<button type="button" class="mkt-soft-button" data-brand-upload="${role}">${label}</button>
+    <input hidden type="file" data-brand-file="${role}" accept="${accept}">`;
+  const card = (title, symbol, html) => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2></header>${html}</section>`;
+  const asset = file => {
+    const index = files.indexOf(file);
+    return `<button type="button" class="mkt-brand-asset" data-brand-download="${index}">${file.mime?.startsWith('image/') ? `<img alt="" data-brand-image="${index}" hidden>` : icon('doc')}<span>${escape(file.fileName || file.name)}</span></button>`;
+  };
+  function render() {
+    const brand = getBrand();
+    const colors = brand.colors || [];
+    const manual = safeUrl(brand.manual);
+    files = Object.values(getState().records)
+      .filter(record => record.kind === 'resources' && record.brandAsset && !record.archived && record.path)
+      .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    const logo = files.find(file => file.brandAsset === 'primary');
+    const variants = files.filter(file => file.brandAsset === 'variant');
+    const manuals = files.filter(file => file.brandAsset === 'manual');
+    const palettes = (colors.length ? colors : brandExamples).map((color, i) =>
+      colors.length ? `<button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>`
+        : `<div class="mkt-swatch"><span style="background:${safeColor(color)}"></span>${escape(color)}</div>`).join('');
+    const images = 'image/png,image/jpeg,image/webp,image/gif';
+    result.innerHTML = `<div class="mkt-brand-grid">
+      ${card('Colores', icon('drop'), `<h3>${colors.length ? 'Paleta de marca' : 'Colores de ejemplo'}</h3>
+        <div class="mkt-swatches">${palettes}<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button></div>`)}
+      ${card('Tipografías', '<span aria-hidden="true">Aa</span>', `<dl class="mkt-font-list"><div><dt>Títulos</dt><dd>${escape(brand.headingFont || 'Sin configurar')}</dd></div>
+        <div><dt>Texto</dt><dd>${escape(brand.bodyFont || 'Sin configurar')}</dd></div></dl>
+        <button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
+      ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3><div class="mkt-upload-box">${logo ? asset(logo) : ''}
+        ${upload('primary', logo ? 'Cambiar logotipo' : 'Subir logotipo', images)}</div></div>
+        <div><h3>Versiones adicionales</h3><div class="mkt-upload-box">${variants.map(asset).join('')}
+        ${upload('variant', 'Subir logotipo', images)}</div></div></div>`)}
+      ${card('Documentos', icon('doc'), `<h3>Manual de marca</h3><p class="mkt-muted">Adjunta un documento o añade un enlace</p>
+        ${manuals.map(asset).join('')}${manual ? `<a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir manual de marca</a>` : ''}
+        <div class="mkt-brand-actions">${upload('manual', 'Adjuntar archivo', 'application/pdf')}
+        <button type="button" data-brand-edit="manual">${icon('link')} ${manual ? 'Editar enlace' : 'Añadir enlace'}</button></div>`)}
+      </div><p class="mkt-brand-note">Usa los estilos de Marca al diseñar tus correos.</p>
+      <dialog class="confirm-dialog mkt-brand-dialog" aria-labelledby="mkt-brand-dialog-title"></dialog>`;
+    for (const img of result.querySelectorAll('[data-brand-image]')) {
+      imageUrl(files[Number(img.dataset.brandImage)].path).then(url => {
+        if (img.isConnected) { img.src = url; img.hidden = false; }
+      }).catch(() => {});
+    }
+  }
+  function open(key, index) {
+    const brand = getBrand();
+    const dialog = result.querySelector('dialog');
+    const titles = { color: index === 'new' ? 'Agregar color' : 'Editar color', fonts: 'Tipografías', manual: 'Enlace del manual de marca' };
+    const fields = {
+      color: `<label>Código hexadecimal<input name="color" maxlength="7" pattern="#[0-9A-Fa-f]{6}" placeholder="#A78F7A" value="${escape(brand.colors?.[index])}" required></label>`,
+      fonts: [['headingFont','Títulos'],['bodyFont','Texto']].map(([name,label]) =>
+        `<label>${label}<select name="${name}">${options([['','Sin configurar'], ...emailFonts], brand[name] || '')}</select></label>`).join(''),
+      manual: `<label>Enlace HTTPS<input type="url" name="manual" maxlength="1200" value="${escape(brand.manual)}" required></label>`,
+    };
+    dialog.innerHTML = `<form data-brand-form="${key}" data-index="${escape(index)}"><h2 id="mkt-brand-dialog-title">${titles[key]}</h2>
+      <div class="mkt-fields">${fields[key]}</div><p role="status" data-brand-status></p><footer class="mkt-brand-actions">
+        <button type="button" data-brand-close data-form-action="secondary">Cancelar</button>
+        <button type="submit" data-form-action="primary">Guardar</button></footer></form>`;
+    dialog.showModal();
+  }
+  result.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button || busy) return;
+    const { brandColor, brandEdit, brandUpload, brandDownload } = button.dataset;
+    if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
+    if (brandColor !== undefined) open('color', brandColor);
+    if (brandEdit) open(brandEdit);
+    if (brandUpload) result.querySelector(`[data-brand-file="${brandUpload}"]`).click();
+    if (brandDownload !== undefined) {
+      const file = files[Number(brandDownload)];
+      try { download(await store.downloadFile(file.path), file.fileName || file.name); }
+      catch { report('No se pudo descargar el archivo.', true); }
+    }
+  });
+  result.addEventListener('change', async event => {
+    const { brandFile } = event.target.dataset;
+    const file = event.target.files?.[0];
+    if (!brandFile || !file || busy) return;
+    if (brandFile === 'manual' ? file.type !== 'application/pdf' : !/^image\/(png|jpeg|webp|gif)$/.test(file.type)) {
+      event.target.value = '';
+      report(brandFile === 'manual' ? 'Selecciona un archivo PDF.' : 'Selecciona una imagen PNG, JPG, WebP o GIF.', true);
+      return;
+    }
+    busy = true;
+    report('Subiendo archivo…');
+    try {
+      const attachment = await store.upload(file);
+      await execute({ action: 'save', kind: 'resources', data: { ...attachment, name: attachment.fileName, brandAsset: brandFile, visibility: 'interno' } });
+      render();
+      report('Archivo guardado.');
+    } catch (error) { event.target.value = ''; report(error.message, true); }
+    finally { busy = false; }
+  });
+  result.addEventListener('submit', async event => {
+    const form = event.target;
+    if (!form.matches('[data-brand-form]')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (busy) return;
+    const values = Object.fromEntries(new FormData(form));
+    const patch = { ...values };
+    const status = form.querySelector('[data-brand-status]');
+    if (form.dataset.brandForm === 'color') {
+      const colors = [...(getBrand().colors || [])];
+      colors[form.dataset.index === 'new' ? colors.length : Number(form.dataset.index)] = values.color.toUpperCase();
+      patch.colors = [...new Set(colors)];
+      delete patch.color;
+    }
+    if ('manual' in patch && !safeUrl(patch.manual)) { status.textContent = 'Escribe un enlace HTTPS válido.'; return; }
+    busy = true;
+    const save = form.querySelector('[type=submit]');
+    save.disabled = true;
+    try {
+      await execute({ action: 'marketing-brand', data: patch });
+      form.closest('dialog').close();
+      render();
+      report('Cambios guardados.');
+    } catch (error) { status.textContent = error.message; }
+    finally { busy = false; save.disabled = false; }
+  });
+  render();
+}
+const contentOf = (block, kind, brandColors) => {
   const text = escape(block.text || blockLabels[kind]);
   if (kind === 'divider') return '<span class="mkt-divider"></span>';
   if (kind === 'image') {
@@ -264,14 +395,22 @@ const contentOf = (block, kind) => {
     return url ? `<img src="${escape(url)}" alt="${escape(block.alt)}" referrerpolicy="no-referrer">`
       : '<span class="mkt-image-empty">Agrega el enlace de la imagen</span>';
   }
-  if (kind === 'button') return `<span class="mkt-email-button" style="background:${safeColor(block.color)}">${text}</span>`;
+  if (kind === 'button') {
+    const color = safeColor(block.color);
+    const light = color.slice(1).match(/.{2}/g).map(pair => parseInt(pair, 16) / 255)
+      .map(value => value <= .04045 ? value / 12.92 : ((value + .055) / 1.055) ** 2.4);
+    const ink = brandColors && .2126 * light[0] + .7152 * light[1] + .0722 * light[2] > .179 ? '#000' : '#fff';
+    return `<span class="mkt-email-button" style="background:${color};color:${ink}">${text}</span>`;
+  }
   if (kind === 'columns') return `<span class="mkt-columns"><span>${escape(block.text || 'Primera columna')}</span>
     <span>${escape(block.secondary || 'Segunda columna')}</span></span>`;
   return text;
 };
 
-function bindWelcome(result, request, report) {
+function bindWelcome(result, request, report, ask, { icon, getState }) {
   let settings, template, previous, copies = [], copiesNext = '';
+  let metrics, newEditor = false, editorTab = 'content';
+  let query = '', filter = '';
   let editing = false, selected = 0, withName = false, mobile = false;
   let busy = false, dirty = false, dragIndex = null;
   const refreshCopies = async (page = '') => {
@@ -284,11 +423,11 @@ function bindWelcome(result, request, report) {
   function canvas() {
     const recipient = result.querySelector('[data-canvas]');
     recipient.classList.toggle('is-mobile', mobile);
-    recipient.innerHTML = `<div class="mkt-email-intro">Life Deco Art<p>${greeting()}</p></div>
+    recipient.innerHTML = `<div class="mkt-email-intro"><span class="mkt-email-title"${template.headingFont === 'Georgia' ? ' style="font-family:Georgia,serif"' : ''}>Life Deco Art</span><p>${greeting()}</p></div>
       ${template.blocks.map((block, index) => `<button type="button" data-select="${index}" draggable="true"
         aria-label="Editar ${blockLabels[block.kind]}, bloque ${index + 1}" aria-pressed="${index === selected}"
         class="mkt-block is-${block.kind}" style="color:${safeColor(block.color)};text-align:${['center','right'].includes(block.align) ? block.align : 'left'};
-        font-family:${block.font?.startsWith('Georgia') ? 'Georgia, serif' : 'Arial, sans-serif'};margin-bottom:${[8,16,24,32].includes(Number(block.space)) ? Number(block.space) : 16}px">${contentOf(block, block.kind)}</button>`).join('')}
+        font-family:${block.font?.startsWith('Georgia') ? 'Georgia, serif' : 'Arial, sans-serif'};margin-bottom:${[8,16,24,32].includes(Number(block.space)) ? Number(block.space) : 16}px">${contentOf(block, block.kind, template.brandColors)}</button>`).join('')}
       <div class="mkt-email-footer">Cancelar suscripción</div>`;
   }
 
@@ -311,35 +450,63 @@ function bindWelcome(result, request, report) {
   }
 
   function render() {
+    const name = template.name || welcomeName;
+    const state = settings.enabled ? 'Activa' : settings.published ? 'Pausada' : 'Borrador';
     if (!editing) {
-      result.innerHTML = `<article class="mkt-overview"><header><div><h2>Bienvenida a la comunidad</h2>
-        <p>${settings.published ? 'Plantilla publicada' : 'Plantilla por publicar'}${settings.mailReady ? '' : ' · Buzón pendiente de configurar'}</p></div>
-        ${statusBadge(settings.enabled ? 'Activa' : 'Pausada', settings.enabled)}</header>
-        <ol class="mkt-flow" aria-label="Flujo de bienvenida">
-          <li><span class="mkt-flow-mark"></span><div><strong>Alta de suscripción</strong><p>Footer o Aprende → Comunidad</p></div></li>
-          <li><span class="mkt-flow-mark"></span><div><strong>Correo de bienvenida</strong><p>${escape(template.subject)}</p></div><button type="button" class="primary" data-edit="open">Editar correo</button></li>
-        </ol><footer><button type="button" data-request="toggle" ${!settings.enabled && (!settings.published || !settings.mailReady) ? 'disabled' : ''}>${settings.enabled ? 'Pausar bienvenida' : 'Activar bienvenida'}</button>
-        ${settings.enabled ? '<button type="button" data-request="retry">Procesar envíos pendientes</button>' : ''}</footer></article>`;
+      result.innerHTML = `<section class="sales-metrics" aria-label="Resumen de automatizaciones">${[
+        ['flow', 'Total', 1], ['check', 'Activas', Number(settings.enabled)], ['doc', 'Borradores', Number(state === 'Borrador')],
+        ['mail', 'Correos enviados este mes', metrics?.sentThisMonth ?? '—']
+      ].map(([symbol, label, value]) => `<article class="sales-metric"><span>${icon(symbol)}</span><div><small>${label}</small><strong>${value}</strong></div></article>`).join('')}</section>
+      <section class="sales-panel mkt-automation-list" aria-label="Listado de automatizaciones">
+        <div class="mkt-filters"><label class="sales-search">${icon('search')}<input type="search" data-automation-search aria-label="Buscar automatización" placeholder="Buscar automatización" value="${escape(query)}"></label>
+          <select data-automation-status aria-label="Estado">${options([['','Todos los estados'],['Activa','Activas'],['Borrador','Borradores'],['Pausada','Pausadas']],filter)}</select>
+          <button type="button" class="mkt-soft-button" data-edit="new">${icon('plus')} Nueva automatización</button></div>
+        <div class="mkt-table-scroll"><table class="sales-table mkt-automation-table">
+          <thead><tr><th scope="col">Automatización</th><th scope="col">Disparador</th><th scope="col">Estado</th><th scope="col">Último envío</th><th scope="col" aria-label="Acciones"></th></tr></thead>
+          <tbody><tr data-automation-row><td><button type="button" data-edit="open">${escape(name)}</button><small>Email · 1 correo</small></td>
+          <td>Nueva suscripción</td><td>${statusBadge(state, settings.enabled)}</td><td>${escape(format(metrics?.lastSent))}</td>
+          <td><button class="mkt-automation-open" type="button" data-edit="open" aria-label="Abrir ${escape(name)}">${icon('chevron')}</button></td></tr>
+          <tr data-automation-empty hidden><td colspan="5" class="mkt-table-empty">No hay coincidencias con esos filtros.</td></tr></tbody>
+        </table></div></section>`;
+      filterList();
       return;
     }
     result.innerHTML = `<section class="mkt-editor" aria-label="Editor del correo de bienvenida">
-      <header class="mkt-editor-header"><button type="button" data-edit="back">Volver al flujo</button>
+      <button type="button" class="mkt-editor-back" data-edit="back">← Automatizaciones</button>
+      <header class="mkt-editor-header"><div><div class="mkt-editor-title"><h1 tabindex="-1">${newEditor ? 'Nueva automatización' : escape(name)}</h1>${statusBadge(state, settings.enabled)}</div>
+        <p>Configura el correo de bienvenida para nuevos suscriptores.</p></div>
         <div class="mkt-editor-actions"><button type="button" data-request="test" data-form-action="text" ${settings.mailReady ? '' : 'disabled'}>Enviar prueba</button>
-          <button type="button" data-request="draft" data-form-action="secondary">Guardar borrador</button><button type="button" class="primary" data-request="publish" data-form-action="primary">Publicar plantilla</button></div></header>
-      <label class="mkt-subject">Asunto<input maxlength="150" data-subject value="${escape(template.subject)}"></label>
+          <button type="button" data-request="draft" data-form-action="secondary">Guardar borrador</button>
+          <button type="button" data-request="${settings.enabled ? 'publish' : 'activate'}" data-form-action="primary" ${settings.enabled || settings.mailReady ? '' : 'disabled'}>${settings.enabled ? 'Publicar cambios' : 'Activar'}</button></div></header>
+      <ol class="mkt-steps" aria-label="Flujo de bienvenida"><li><span class="mkt-round">1</span><div><strong>Nueva suscripción</strong><p>Pie de página o Comunidad</p></div></li>
+        <li><span class="mkt-round">2</span><div><strong>Enviar correo de bienvenida</strong><p>Un correo por contacto</p></div></li></ol>
       <div class="mkt-editor-grid">
-        <aside class="mkt-palette"><h3>Agregar bloque</h3><div class="mkt-palette-actions">${Object.entries(blockLabels).map(([kind,label]) => `<button type="button" draggable="true" data-add="${kind}" ${template.blocks.length >= 30 ? 'disabled' : ''}>${label}</button>`).join('')}</div>
-          <button type="button" data-edit="undo" ${previous ? '' : 'disabled'}>Deshacer cambio</button>
+        <aside class="mkt-palette">
+          <div class="mkt-editor-tabs" role="group" aria-label="Ajustes del correo">
+            <button type="button" data-editor-tab="content" aria-pressed="${editorTab === 'content'}">Contenido</button>
+            <button type="button" data-editor-tab="design" aria-pressed="${editorTab === 'design'}">Diseño</button>
+          </div>
+          <div ${editorTab === 'content' ? '' : 'hidden'}>
+            <div class="mkt-fields"><label>Nombre de la automatización<input maxlength="100" data-meta="name" value="${escape(name)}"></label>
+              <label>Asunto<input maxlength="150" data-meta="subject" value="${escape(template.subject)}"></label>
+              <label>Texto de vista previa<input maxlength="150" data-meta="preheader" value="${escape(template.preheader)}"></label></div>
+            <div class="mkt-palette-actions">${['text','image','button'].map(kind => `<button type="button" draggable="true" data-add="${kind}" ${template.blocks.length >= 30 ? 'disabled' : ''}>${icon({text:'doc',image:'image',button:'link'}[kind])}${blockLabels[kind]}</button>`).join('')}</div>
+            <button type="button" data-edit="brand">Usar estilos de Marca</button>
+          </div>
+          <div ${editorTab === 'design' ? '' : 'hidden'}><section class="mkt-inspector" data-inspector aria-label="Ajustes del bloque"></section>
+            <div class="mkt-block-actions">${['divider','columns'].map(kind => `<button type="button" draggable="true" data-add="${kind}" ${template.blocks.length >= 30 ? 'disabled' : ''}>${blockLabels[kind]}</button>`).join('')}
+              <button type="button" data-edit="undo" ${previous ? '' : 'disabled'}>Deshacer cambio</button></div></div>
         </aside>
-        <div class="mkt-stage"><div class="mkt-preview-tools"><div role="group" aria-label="Tamaño de vista previa">
+        <section class="mkt-preview"><div class="mkt-preview-tools"><h3>Vista previa del correo</h3><div role="group" aria-label="Tamaño de vista previa">
           <button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
-          <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div>
-          <label><input type="checkbox" data-sample-name ${withName ? 'checked' : ''}> Ejemplo con nombre</label></div>
+          <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div></div>
           <div class="mkt-stage-scroll"><div class="mkt-email-paper" data-canvas></div></div>
-          <div class="mkt-stage-footer"><button type="button" data-request="preview">Ver correo final</button></div>
-        </div>
-        <aside class="mkt-inspector" data-inspector aria-label="Ajustes del bloque"></aside>
+          <div class="mkt-stage-footer"><label><input type="checkbox" data-sample-name ${withName ? 'checked' : ''}> Ejemplo con nombre</label>
+          <button type="button" data-request="preview">Ver correo final</button></div>
+        </section>
       </div>
+      ${!settings.mailReady ? '<p class="mkt-muted">El buzón corporativo está pendiente de configurar.</p>' : ''}
+      ${settings.enabled ? '<div class="mkt-brand-actions"><button type="button" data-request="toggle">Pausar bienvenida</button><button type="button" data-request="retry">Procesar envíos pendientes</button></div>' : ''}
       <details class="mkt-templates"><summary>Plantillas guardadas</summary>
         <div class="mkt-template-tools"><label>Nombre de la copia<input maxlength="100" data-copy-name></label><button type="button" data-request="copy">Guardar copia</button>
         <label>Usar una plantilla<select data-copy-select><option value="">Selecciona una plantilla</option>
@@ -352,10 +519,17 @@ function bindWelcome(result, request, report) {
     inspector();
   }
 
+  function filterList() {
+    const match = (!filter || filter === (settings.enabled ? 'Activa' : settings.published ? 'Pausada' : 'Borrador'))
+      && normalize(template.name || welcomeName).includes(normalize(query.trim()));
+    result.querySelector('[data-automation-row]').hidden = !match;
+    result.querySelector('[data-automation-empty]').hidden = match;
+  }
+
   function changeSelection(index, focus = false) {
     selected = index;
-    canvas();
-    inspector();
+    editorTab = 'design';
+    render();
     if (focus) result.querySelector(`[data-select="${selected}"]`)?.focus();
   }
 
@@ -368,6 +542,7 @@ function bindWelcome(result, request, report) {
 
   function add(kind, index = template.blocks.length) {
     if (!Object.hasOwn(blockLabels, kind) || template.blocks.length >= 30) return;
+    editorTab = 'design';
     editBlock(() => {
       template.blocks.splice(index, 0, { kind, align: 'left' });
       selected = index;
@@ -399,8 +574,7 @@ function bindWelcome(result, request, report) {
   async function load() {
     report('Cargando automatización…');
     try {
-      settings = await request('settings');
-      await refreshCopies();
+      [settings, metrics] = await Promise.all([request('settings'), request('automation-summary').catch(() => null), refreshCopies()]);
       template = structuredClone(settings.draft);
       render();
       report('');
@@ -412,13 +586,19 @@ function bindWelcome(result, request, report) {
 
   result.addEventListener('input', event => {
     const target = event.target;
-    if (target.matches('[data-subject]')) { template.subject = target.value; dirty = true; }
+    if (target.dataset.meta) { template[target.dataset.meta] = target.value; dirty = true; }
+    if (target.matches('[data-automation-search]')) { query = target.value; filterList(); }
     if (target.matches('[data-sample-name]')) { withName = target.checked; canvas(); }
     if (target.dataset.field && template.blocks[selected]) {
       template.blocks[selected][target.dataset.field] = target.value;
       dirty = true;
       canvas();
     }
+  });
+  result.addEventListener('change', event => {
+    if (!event.target.matches('[data-automation-status]')) return;
+    filter = event.target.value;
+    filterList();
   });
   result.addEventListener('dragstart', event => {
     if (busy) { event.preventDefault(); return; }
@@ -458,10 +638,30 @@ function bindWelcome(result, request, report) {
       canvas();
       return;
     }
-    if (edit === 'open' || edit === 'back') {
-      editing = edit === 'open';
+    if (button.dataset.editorTab) {
+      editorTab = button.dataset.editorTab; render();
+      result.querySelector(`[data-editor-tab="${editorTab}"]`).focus();
+      return;
+    }
+    if (edit === 'brand') {
+      const brand = getState().settings.marketingBrand || {};
+      if (!brand.headingFont && !brand.bodyFont && !brand.colors?.length) { report('Agrega colores o tipografías en Marca para usarlos aquí.', true); return; }
+      editBlock(() => {
+        if (brand.headingFont) template.headingFont = brand.headingFont;
+        if (brand.colors?.length) template.brandColors = true;
+        for (const block of template.blocks) {
+          if (brand.bodyFont && ['text','columns'].includes(block.kind)) block.font = brand.bodyFont;
+          if (brand.colors?.length && block.kind === 'button') block.color = brand.colors[0];
+        }
+      });
+      report('Estilos de Marca aplicados al borrador.');
+      return;
+    }
+    if (['open','new','back'].includes(edit)) {
+      editing = edit !== 'back';
+      if (editing) { newEditor = edit === 'new'; editorTab = 'content'; }
       render();
-      result.querySelector(editing ? '[data-subject]' : '[data-edit="open"]')?.focus();
+      result.querySelector(editing ? '.mkt-editor-title h1' : '[data-edit="new"]')?.focus();
       report(!editing && dirty ? 'Hay cambios sin guardar en el correo.' : '');
       return;
     }
@@ -485,7 +685,7 @@ function bindWelcome(result, request, report) {
       return;
     }
     if (!action) return;
-    if (action === 'toggle' && !settings.enabled && !window.confirm('¿Activar el correo de bienvenida para nuevas suscripciones?')) return;
+    if (action === 'activate' && !await ask('¿Publicar esta plantilla y activar el correo de bienvenida para nuevas suscripciones?')) return;
     busy = true;
     button.disabled = true;
     const name = result.querySelector('[data-copy-name]')?.value;
@@ -499,10 +699,10 @@ function bindWelcome(result, request, report) {
       } else {
         const response = await request(action, action === 'toggle' ? { enabled: !settings.enabled } : { template: snapshot, name, withName });
         if (action === 'preview') showPreview(response.html);
-        if (['draft','publish','toggle'].includes(action)) {
+        if (['draft','publish','toggle','activate'].includes(action)) {
           settings = await request('settings');
           if (action !== 'toggle' && JSON.stringify(template) === JSON.stringify(snapshot)) dirty = false;
-          if (action === 'toggle') render();
+          if (action === 'toggle' || action === 'activate') render();
         }
         if (action === 'copy') {
           await refreshCopies();
@@ -510,7 +710,7 @@ function bindWelcome(result, request, report) {
           result.querySelector('.mkt-templates').open = true;
         }
       }
-      report({ test:'Prueba aceptada por Gmail.', draft:'Borrador guardado.', publish:'Plantilla publicada.', toggle:'Automatización actualizada.',
+      report({ test:'Prueba aceptada por Gmail.', draft:'Borrador guardado.', publish:'Plantilla publicada.', toggle:'Automatización actualizada.', activate:'Automatización activada.',
         retry:'Envíos pendientes revisados.', copy:'Copia guardada.' }[action] || '');
     } catch (error) { report(error.message, true); }
     finally { busy = false; button.disabled = false; }

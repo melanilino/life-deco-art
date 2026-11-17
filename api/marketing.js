@@ -43,6 +43,7 @@ function subscriberRow(id, data) {
 async function admin(req, res, url, action, marketing, db) {
   if (!await owner(req, db)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
   if (req.method === 'GET' && action === 'subscriber-summary') return res.json(await subscriberSummary(db));
+  if (req.method === 'GET' && action === 'automation-summary') return res.json(await subscriberSummary(db, new Date(), true));
   if (req.method === 'GET' && action === 'subscribers') {
     const page = await db.list(subscribers, url.searchParams.get('page') || '');
     return res.json({ next: page.next, rows: page.rows.map(({ id, data }) => subscriberRow(id, data)) });
@@ -70,7 +71,7 @@ async function admin(req, res, url, action, marketing, db) {
     return record ? res.json({ row: subscriberRow(id, record) })
       : res.status(404).json({ error: 'El suscriptor ya no está disponible.' });
   }
-  if (['draft', 'publish', 'preview', 'test', 'copy'].includes(action)) {
+  if (['draft', 'publish', 'activate', 'preview', 'test', 'copy'].includes(action)) {
     const draft = core.templateOf(body?.template);
     if (!draft) return res.status(400).json({ error: 'Revisa el asunto, los bloques y los enlaces HTTPS.' });
     if (action === 'preview') return res.json(core.renderEmail(draft, body.withName ? { name: 'Ana' } : {}));
@@ -88,8 +89,10 @@ async function admin(req, res, url, action, marketing, db) {
       return result.status === 'sent' ? res.json({ ok: true })
         : res.status(502).json({ error: 'El buzón no confirmó el envío de prueba.' });
     }
+    if (action === 'activate' && !gmail.configured()) return res.status(503).json({ error: 'Configura el buzón antes de activar.' });
     await db.update(settingsPath, previous => ({ enabled: false, ...previous, draft,
-      ...(action === 'publish' ? { published: { ...draft, publishedAt: new Date().toISOString() } } : {}) }));
+      ...(['publish', 'activate'].includes(action) ? { published: { ...draft, publishedAt: new Date().toISOString() } } : {}),
+      ...(action === 'activate' ? { enabled: true } : {}) }));
     return res.json({ ok: true });
   }
   if (action === 'toggle' && typeof body?.enabled === 'boolean') {

@@ -141,6 +141,25 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
  }else if(cmd.action==='home-phrases'){
   const items=normalizePhrases(cmd.text),previous=s.settings.homePhrases||{};
   s.settings.homePhrases={items,startDate:previous.startDate||phraseDate(new Date(at),s.settings.timezone),archived:[...new Set([...(previous.archived||[]),...(previous.items||[]).filter(text=>!items.includes(text))])].filter(text=>!items.includes(text))};
+ }else if(cmd.action==='marketing-brand'){
+  const {colors,headingFont,bodyFont,manual}=cmd.data;
+  const brand={...s.settings.marketingBrand};
+  if(colors!==undefined){
+   if(!Array.isArray(colors)||colors.length>24||colors.some(color=>typeof color!=='string'||!/^#[0-9a-f]{6}$/i.test(color)))throw Error('Guarda hasta 24 colores en formato hexadecimal.');
+   brand.colors=[...new Set(colors.map(color=>color.toUpperCase()))];
+  }
+  for(const [key,value] of Object.entries({headingFont,bodyFont})){
+   if(value===undefined)continue;
+   if(!['','Arial','Georgia'].includes(value))throw Error('Selecciona una tipografía disponible.');
+   brand[key]=value;
+  }
+  if(manual!==undefined){
+   let url;
+   try{url=new URL(manual);}catch{throw Error('Escribe un enlace HTTPS válido.');}
+   if(url.protocol!=='https:'||url.username||url.password||url.href.length>1200)throw Error('Escribe un enlace HTTPS válido.');
+   brand.manual=url.href;
+  }
+  s.settings.marketingBrand=brand;
  }else if(cmd.action==='settings'){
   s.settings={...s.settings,...cmd.data,name:required(cmd.data.name),currency:'DOP'};finite(s.settings.hourly);finite(s.settings.validDays);
  }else if(cmd.action==='archive'){

@@ -15,9 +15,10 @@ const subscriberMonth = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit',
 });
 
-async function subscriberSummary(db, now = new Date()) {
+async function subscriberSummary(db, now = new Date(), includeMail = false) {
   const currentMonth = subscriberMonth.format(now);
   const totals = { total: 0, active: 0, cancelled: 0, newThisMonth: 0 };
+  const mail = { sentThisMonth: 0, lastSent: '' };
   let cursor = '';
   do {
     const page = await db.list(subscribers, cursor, 300);
@@ -27,10 +28,17 @@ async function subscriberSummary(db, now = new Date()) {
       if (data.status === 'cancelled') totals.cancelled++;
       const registered = new Date(data.createdAt);
       if (Number.isFinite(registered.getTime()) && subscriberMonth.format(registered) === currentMonth) totals.newThisMonth++;
+      if (includeMail && data.welcome?.status === 'sent') {
+        const sent = new Date(data.welcome.updatedAt);
+        if (!Number.isFinite(sent.getTime())) continue;
+        const sentAt = sent.toISOString();
+        if (sentAt > mail.lastSent) mail.lastSent = sentAt;
+        if (subscriberMonth.format(sent) === currentMonth) mail.sentThisMonth++;
+      }
     }
     cursor = page.next;
   } while (cursor);
-  return totals;
+  return includeMail ? mail : totals;
 }
 
 function service(db, mail, secret, site) {
