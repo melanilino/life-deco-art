@@ -2,7 +2,7 @@ const { Readable } = require('node:stream');
 const { pipeline } = require('node:stream/promises');
 
 const fileIdPattern = /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
-const allowedType = /^(?:image\/(?:png|jpeg|webp|gif)|application\/pdf)$/;
+const allowedType = /^(?:image\/(?:png|jpeg|webp|gif)|application\/pdf|font\/(?:woff2?|otf|ttf))$/;
 
 module.exports = async function handler(req, res) {
   res.setHeader('Cache-Control', 'private, no-store');

@@ -151,7 +151,8 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   }
   for(const [key,value] of Object.entries({headingFont,bodyFont})){
    if(value===undefined)continue;
-   if(!['','Arial','Georgia'].includes(value))throw Error('Selecciona una tipografía disponible.');
+   const font=typeof value==='string'&&value.startsWith('font:')?s.records[value.slice(5)]:null;
+   if(!['','Arial','Georgia','Montserrat'].includes(value)&&!(font?.brandAsset==='font'&&!font.archived))throw Error('Selecciona una tipografía disponible.');
    brand[key]=value;
   }
   if(manual==='')delete brand.manual;
@@ -164,7 +165,11 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
   s.settings.marketingBrand=brand;
  }else if(cmd.action==='remove-brand-asset'){
   const resource=get(s,cmd.id);
-  if(resource.kind!=='resources'||!['primary','variant','manual'].includes(resource.brandAsset))throw Error('Selecciona un archivo de Marca.');
+  if(resource.kind!=='resources'||!['primary','variant','manual','font'].includes(resource.brandAsset))throw Error('Selecciona un archivo de Marca.');
+  if(resource.brandAsset==='font'){
+   const brand=s.settings.marketingBrand||{};
+   for(const key of ['headingFont','bodyFont'])if(brand[key]===`font:${resource.id}`)brand[key]='';
+  }
   result=resource.archived?resource.id:update(resource,{archived:true});
  }else if(cmd.action==='settings'){
   s.settings={...s.settings,...cmd.data,name:required(cmd.data.name),currency:'DOP'};finite(s.settings.hourly);finite(s.settings.validDays);

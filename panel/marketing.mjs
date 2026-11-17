@@ -259,6 +259,14 @@ const safeUrl = value => {
 };
 const welcomeName = 'Bienvenida a la comunidad';
 const emailFonts = [['Arial','Arial'], ['Georgia','Georgia']];
+const brandFonts = [['Montserrat','Montserrat'], ...emailFonts];
+const fontFormats = { woff2: 'wOF2', woff: 'wOFF', otf: 'OTTO', ttf: '\0\x01\0\0' };
+async function brandFontFile(file) {
+  const format = file.name.split('.').at(-1).toLowerCase();
+  const signature = new TextDecoder().decode(await file.slice(0, 4).arrayBuffer());
+  if (!Object.hasOwn(fontFormats, format) || signature !== fontFormats[format]) throw Error('Selecciona una tipografía WOFF2, WOFF, OTF o TTF válida.');
+  return new File([file], file.name, { type: `font/${format}` });
+}
 function bindBrand(result, report, user, { getState, execute, store, download, icon, assetUrl }) {
   let busy = false;
   let files = [];
@@ -290,7 +298,8 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
       <div class="mkt-brand-item-actions">${image ? '' : action('preview', `Vista previa de ${name}`, 'eye')}
         ${action('download', `Descargar ${name}`, 'download')}${removeButton('file', file.id, `Eliminar ${name}`)}</div></div>`;
   };
-  const fontRow = (key, label, value) => `<div><dt>${label}</dt><dd><span>${escape(value || 'Sin configurar')}</span>${value ? removeButton('font', key, `Quitar tipografía de ${label.toLowerCase()}`) : ''}</dd></div>`;
+  const fontLabel = value => value?.startsWith('font:') ? files.find(file => file.id === value.slice(5))?.name : value;
+  const fontRow = (key, label, value) => `<div><dt>${label}</dt><dd><span>${escape(fontLabel(value) || 'Sin configurar')}</span>${value ? removeButton('font', key, `Quitar tipografía de ${label.toLowerCase()}`) : ''}</dd></div>`;
   function render() {
     const brand = getBrand();
     const colors = brand.colors || [];
@@ -301,6 +310,7 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     const logo = files.find(file => file.brandAsset === 'primary');
     const variants = files.filter(file => file !== logo && ['primary', 'variant'].includes(file.brandAsset));
     const manuals = files.filter(file => file.brandAsset === 'manual');
+    const fonts = files.filter(file => file.brandAsset === 'font');
     const palettes = colors.map((color, i) =>
       `<div class="mkt-swatch-item"><button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>
       ${removeButton('color', color, `Eliminar color ${color}`)}</div>`).join('');
@@ -310,7 +320,10 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
         : '<p class="mkt-muted">Todavía no hay colores guardados.</p>',
         `<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button>`)}
       ${card('Tipografías', '<span aria-hidden="true">Aa</span>',
-        `<dl class="mkt-font-list">${fontRow('headingFont', 'Títulos', brand.headingFont)}${fontRow('bodyFont', 'Texto', brand.bodyFont)}</dl>`,
+        `<dl class="mkt-font-list">${fontRow('headingFont', 'Títulos', brand.headingFont)}${fontRow('bodyFont', 'Texto', brand.bodyFont)}</dl>
+          ${fonts.map(font => `<div class="mkt-brand-item"><span>${escape(font.fileName)}</span><div class="mkt-brand-item-actions">
+            <button type="button" class="mkt-brand-icon" data-brand-download="${files.indexOf(font)}" aria-label="Descargar ${escape(font.name)}">${icon('download')}</button>
+            ${removeButton('file', font.id, `Eliminar ${font.name}`)}</div></div>`).join('')}`,
         `<button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
       ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3>
         ${logo ? asset(logo, true) : `<div class="mkt-upload-box">${upload('primary', 'Subir', images, 'Subir logo principal')}</div>`}</div>
@@ -368,14 +381,16 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
       }
     } catch (error) { body.textContent = error.message; }
   }
-  function open(key, index) {
-    const brand = getBrand();
+  function open(key, index, selections = {}) {
+    const brand = { ...getBrand(), ...selections };
     const dialog = result.querySelector('dialog');
     const titles = { color: index === 'new' ? 'Agregar color' : 'Editar color', fonts: 'Tipografías', manual: 'Enlace del documento' };
     const fields = {
       color: `<label>Código hexadecimal<input name="color" maxlength="7" pattern="#[0-9A-Fa-f]{6}" placeholder="#RRGGBB" value="${escape(brand.colors?.[index])}" required></label>`,
       fonts: [['headingFont','Títulos'],['bodyFont','Texto']].map(([name,label]) =>
-        `<label>${label}<select name="${name}">${options([['','Sin configurar'], ...emailFonts], brand[name] || '')}</select></label>`).join(''),
+        `<label>${label}<select name="${name}">${options([['','Sin configurar'], ...brandFonts,
+          ...files.filter(file => file.brandAsset === 'font').map(file => [`font:${file.id}`, file.name])], brand[name] || '')}</select></label>`).join('') +
+        `<div>${upload('font', 'Adjuntar tipografía', '.woff2,.woff,.otf,.ttf')}</div>`,
       manual: `<label>Enlace HTTPS<input type="url" name="manual" maxlength="1200" value="${escape(brand.manual)}" required></label>`,
     };
     dialog.innerHTML = `<form data-brand-form="${key}" data-index="${escape(index)}"><h2 id="mkt-brand-dialog-title">${titles[key]}</h2>
@@ -404,7 +419,7 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     const { brandFile } = event.target.dataset;
     const file = event.target.files?.[0];
     if (!brandFile || !file || busy) return;
-    if (brandFile === 'manual' ? file.type !== 'application/pdf' : !/^image\/(png|jpeg|webp|gif)$/.test(file.type)) {
+    if (brandFile !== 'font' && (brandFile === 'manual' ? file.type !== 'application/pdf' : !/^image\/(png|jpeg|webp|gif)$/.test(file.type))) {
       event.target.value = '';
       report(brandFile === 'manual' ? 'Selecciona un archivo PDF.' : 'Selecciona una imagen PNG, JPG, WebP o GIF.', true);
       return;
@@ -412,10 +427,23 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     busy = true;
     report('');
     try {
-      const attachment = await store.upload(file);
-      await execute({ action: 'save', kind: 'resources', data: { ...attachment, name: attachment.fileName, brandAsset: brandFile, visibility: 'interno' } });
+      const selections = brandFile === 'font' ? Object.fromEntries(new FormData(event.target.form)) : null;
+      const attachment = await store.upload(brandFile === 'font' ? await brandFontFile(file) : file);
+      const name = brandFile === 'font' ? attachment.fileName.replace(/\.[^.]+$/, '') : attachment.fileName;
+      const saved = await execute({ action: 'save', kind: 'resources', data: { ...attachment, name, brandAsset: brandFile, visibility: 'interno' } });
+      if (selections) event.target.closest('dialog').close();
       render();
-    } catch (error) { event.target.value = ''; report(error.message, true); }
+      if (selections) {
+        if (!selections.headingFont) selections.headingFont = `font:${saved.result}`;
+        else if (!selections.bodyFont) selections.bodyFont = `font:${saved.result}`;
+        open('fonts', '', selections);
+      }
+    } catch (error) {
+      event.target.value = '';
+      const status = event.target.closest('form')?.querySelector('[data-brand-status]');
+      if (status) status.textContent = error.message;
+      else report(error.message, true);
+    }
     finally { busy = false; }
   });
   async function removeItem(button) {
@@ -428,7 +456,7 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     }[kind];
     const role = files.find(file => file.id === value)?.brandAsset;
     const target = { color: '[data-brand-color="new"]', font: '[data-brand-edit="fonts"]', link: '[data-brand-edit="manual"]',
-      file: `[data-brand-upload="${role}"]` }[kind];
+      file: role === 'font' ? '[data-brand-edit="fonts"]' : `[data-brand-upload="${role}"]` }[kind];
     busy = true;
     button.disabled = true;
     report('');

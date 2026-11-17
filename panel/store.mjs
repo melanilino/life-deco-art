@@ -49,7 +49,7 @@ export async function commit(cmd){
 export async function history(){const rows=await getDocs(collection(db,root(),'history'));return rows.docs.map(d=>d.data()).sort((a,b)=>b.at.localeCompare(a.at));}
 export async function upload(file){
  if(!file||file.size>15*1024*1024)throw Error('El archivo debe pesar como máximo 15 MB.');
- if(!/^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|application\/pdf)$/.test(file.type))throw Error('Utiliza una imagen PNG, JPG, WebP o GIF, video MP4/WebM o PDF.');
+ if(!/^(image\/(png|jpeg|webp|gif)|video\/(mp4|webm)|application\/pdf|font\/(woff2?|otf|ttf))$/.test(file.type))throw Error('Selecciona una imagen, un video, un PDF o un archivo de tipografía válido.');
  const path=`panel-private/${user.uid}/${crypto.randomUUID()}`;
  await uploadBytes(ref(storage,path),file,{contentType:file.type,customMetadata:{originalName:file.name}});
  return {path,fileName:file.name,mime:file.type,size:file.size};

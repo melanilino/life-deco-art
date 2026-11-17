@@ -8,7 +8,7 @@ service firebase.storage {
       allow create, update: if request.auth != null && request.auth.uid == uid
         && uid == 'HYMvz06CtsTK1ny44VJRNfLXV0K2'
         && request.resource.size < 15 * 1024 * 1024
-        && request.resource.contentType.matches('image/(png|jpeg|webp|gif)|video/(mp4|webm)|application/pdf');
+        && request.resource.contentType.matches('image/(png|jpeg|webp|gif)|video/(mp4|webm)|application/pdf|font/(woff2?|otf|ttf)');
       allow delete: if false;
     }
     match /{allPaths=**} { allow read, write: if false; }

@@ -10,6 +10,8 @@ Automatizaciones muestra el flujo de bienvenida y sus envíos aceptados por Gmai
 
 Marca guarda la paleta, las tipografías y el enlace del documento en el Hub. La paleta admite agregar, editar y eliminar colores. Los logotipos y documentos adjuntos se guardan como recursos privados. «Usar estilos de Marca» aplica las tipografías y el primer color de la paleta a los botones del borrador de correo.
 
+En Tipografías se puede elegir Montserrat o adjuntar un archivo WOFF2, WOFF, OTF o TTF y asignarlo a Títulos o Texto. Los archivos de tipografía permanecen en el almacenamiento privado del Hub.
+
 ## Preparación para publicar
 
 1. Configurar la federación de Google Cloud para que acepte únicamente la identidad del proyecto de producción de Life Deco Art en Vercel. Autorizar a esa identidad a consultar, crear y actualizar documentos de Firestore en `lifedecoart-hub`. Guardar en producción `MARKETING_FIREBASE_PROVIDER` con el nombre completo del proveedor, desde `//iam.googleapis.com/projects/` hasta `/providers/<id>`. Las colecciones de Marketing permanecen privadas bajo las reglas existentes. El servidor comprueba la sesión del Hub y `panelAccess` antes de exponer datos administrativos.
