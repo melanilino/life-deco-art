@@ -39,7 +39,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-panel">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-layout">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
@@ -79,6 +79,7 @@ function bindContacts(root, result, request, report, ask) {
   const rows = [];
   let next = '', loading = false;
   let contactIndex = -1, saving = false, summaryRequest = 0;
+  let editingContact = false;
   const origins = row => [...new Set(row.consents.map(entry => sourceLabel[entry.source]).filter(Boolean))];
 
   function show() {
@@ -147,27 +148,35 @@ function bindContacts(root, result, request, report, ask) {
     const row = rows[contactIndex];
     const active = row.status === 'active';
     const cancellation = { hub: 'Desde el Hub', email: 'Desde el enlace de un correo' }[row.cancelledSource];
-    dialog.innerHTML = `<header class="quick-notes-head mkt-contact-head">
-      <div><h2 id="mkt-contact-title">Suscriptor</h2><p>${escape(row.email)}</p></div>
-      <button type="button" data-close-contact aria-label="Cerrar ficha" autofocus>×</button></header>
+    dialog.innerHTML = `<header class="mkt-contact-head">
+      <button type="button" data-close-contact autofocus>Cerrar</button></header>
       <div class="quick-notes-scroll mkt-contact-scroll">
-        <form class="mkt-contact-card" data-contact-form aria-label="Datos del suscriptor">
+        <div class="mkt-contact-identity">
+          <h2 id="mkt-contact-title">${escape(nameOf(row) || 'Suscriptor')}</h2>
+          <p>${escape(row.email)}</p>
+        </div>
+        ${editingContact ? `<form id="mkt-contact-form" aria-label="Datos del suscriptor">
           <div class="mkt-contact-fields"><label>Nombre<input name="name" autocomplete="off" maxlength="100" value="${escape(row.name)}"></label>
           <label>Apellido<input name="surname" autocomplete="off" maxlength="100" value="${escape(row.surname)}"></label></div>
-          <div class="mkt-contact-save"><p role="status" data-contact-feedback></p><button type="submit" class="primary">Guardar cambios</button></div>
-        </form>
-        <section class="mkt-contact-card" aria-label="Historial"><h3>Historial</h3>
+        </form>` : ''}
+        <section aria-label="Historial">
           <dl class="mkt-contact-data">
-            <div><dt>Registro inicial</dt><dd>${escape(format(row.createdAt))}</dd></div>
+            <div><dt>Estado</dt><dd>${statusBadge(stateLabel(active), active)}</dd></div>
+            <div><dt>Origen inicial</dt><dd>${escape(sourceLabel[row.firstSource] || '—')}</dd></div>
+            <div><dt>Fecha de registro</dt><dd>${escape(format(row.createdAt))}</dd></div>
             <div><dt>Bienvenida</dt><dd>${escape(jobLabel[row.welcome.status] || '—')}${row.welcome.reason ? `<small>${escape(row.welcome.reason)}</small>` : ''}</dd></div>
             ${row.cancelledAt ? `<div><dt>Última baja</dt><dd>${escape(format(row.cancelledAt))}${cancellation ? `<small>${cancellation}</small>` : ''}</dd></div>` : ''}
           </dl>
-          ${row.consents.length ? `<h4>Consentimientos</h4><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
+          ${row.consents.length ? `<h3>Consentimientos</h3><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
           <span>${escape(format(entry.acceptedAt))}</span><small>${escape(consentLabel[entry.version] || entry.version)}</small></li>`).join('')}</ul>` : ''}
         </section>
       </div>
-      <footer class="mkt-contact-footer">${statusBadge(stateLabel(active), active)}
-        ${active ? '<button type="button" class="mkt-cancel-subscription" data-cancel-subscription>Dar de baja</button>' : ''}</footer>`;
+      <footer class="mkt-contact-footer">
+        <p role="status" data-contact-feedback></p>
+        <div class="mkt-contact-buttons">${editingContact
+          ? '<button type="button" data-discard-contact>Cancelar</button><button type="submit" class="primary" form="mkt-contact-form" disabled>Guardar cambios</button>'
+          : `${active ? '<button type="button" class="mkt-cancel-subscription" data-cancel-subscription>Dar de baja</button>' : ''}<button type="button" data-edit-contact>Editar</button>`}</div>
+      </footer>`;
   }
 
   async function updateContact(action, fields = {}) {
@@ -181,11 +190,12 @@ function bindContacts(root, result, request, report, ask) {
     try {
       const { row } = await request(action, { id: rows[contactIndex].id, ...fields });
       rows[contactIndex] = row;
+      editingContact = false;
       show();
       renderContact();
       const cancelled = action === 'subscriber-cancel';
       dialog.querySelector('[data-contact-feedback]').textContent = cancelled ? 'Suscripción cancelada.' : 'Cambios guardados.';
-      dialog.querySelector(cancelled ? '[data-close-contact]' : '[type=submit]').focus();
+      dialog.querySelector(cancelled ? '[data-close-contact]' : '[data-edit-contact]').focus();
       if (cancelled) refreshSummary();
     } catch (error) {
       feedback.textContent = error.message;
@@ -195,10 +205,20 @@ function bindContacts(root, result, request, report, ask) {
     } finally { saving = false; }
   }
 
+  dialog.addEventListener('input', event => {
+    const form = event.target.closest('#mkt-contact-form');
+    if (!form) return;
+    const data = new FormData(form);
+    const row = rows[contactIndex];
+    dialog.querySelector('[type=submit]').disabled = ['name', 'surname'].every(
+      field => data.get(field).trim() === (row[field] || '').trim()
+    );
+  });
   dialog.addEventListener('submit', event => {
-    if (!event.target.matches('[data-contact-form]')) return;
+    if (!event.target.matches('#mkt-contact-form')) return;
     event.preventDefault();
     event.stopPropagation();
+    if (dialog.querySelector('[type=submit]').disabled) return;
     const data = new FormData(event.target);
     updateContact('subscriber-profile', { name: data.get('name'), surname: data.get('surname') });
   });
@@ -208,6 +228,11 @@ function bindContacts(root, result, request, report, ask) {
   });
   dialog.addEventListener('click', async event => {
     if (event.target.closest('[data-close-contact]')) dialog.close();
+    if (event.target.closest('[data-edit-contact], [data-discard-contact]')) {
+      editingContact = Boolean(event.target.closest('[data-edit-contact]'));
+      renderContact();
+      dialog.querySelector(editingContact ? 'input[name="name"]' : '[data-edit-contact]').focus();
+    }
     if (!event.target.closest('[data-cancel-subscription]') || saving) return;
     if (await ask(`¿Dar de baja a ${rows[contactIndex].email}? Dejará de recibir correos de la comunidad.`)) {
       updateContact('subscriber-cancel');
@@ -218,6 +243,7 @@ function bindContacts(root, result, request, report, ask) {
     const button = event.target.closest('[data-contact]');
     if (!button) return;
     contactIndex = Number(button.dataset.contact);
+    editingContact = false;
     renderContact();
     dialog.showModal();
   });
