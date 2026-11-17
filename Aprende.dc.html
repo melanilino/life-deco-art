@@ -293,7 +293,7 @@ body{margin:0;background:#fff}
             <input id="comunidad-email" type="email" name="email" autocomplete="email" class="comunidad-input" value="{{ comunidadEmail }}" onChange="{{ onComunidadEmailChange }}" placeholder="Tu correo" style="min-height:44px;box-sizing:border-box;margin-top:22px;padding:10px 0;border:none;border-bottom:1px solid rgba(255,255,255,0.5);border-radius:0;font-size:14px;font-family:'Montserrat',sans-serif;background:transparent;color:#FFFFFF;">
             <button type="button" onClick="{{ onComunidadSubmit }}" disabled="{{ comunidadSubscribing }}" style="margin-top:28px;background:#000000;color:#FFFFFF;text-align:center;padding:15px;border:0;border-radius:4px;font-size:13px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;">{{ comunidadSubmitLabel }}</button>
             <sc-if value="{{ comunidadError }}" hint-placeholder-val="{{ false }}"><p role="alert" style="font-size:12px;color:#FFFFFF;font-weight:500;margin:12px 0 0;">{{ comunidadError }}</p></sc-if>
-            <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">{{ community.signupPrivacy }} <a href="/politica-de-privacidad" style="color:inherit;text-decoration:underline">Privacidad</a></p>
+            <p style="font-size:12px;color:#E3F9FC;font-weight:300;margin:14px 0 0;">{{ community.signupPrivacy }}</p>
           </sc-if>
           <sc-if value="{{ comunidadSubscribed }}" hint-placeholder-val="{{ false }}">
             <p role="status" aria-live="polite" style="font-size: 17px; font-weight: 300; color: #FFFFFF; text-align: center">{{ community.successMessage }}</p>
