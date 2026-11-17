@@ -154,13 +154,18 @@ export function applyCommand(state,cmd,{id=crypto.randomUUID(),at=new Date().toI
    if(!['','Arial','Georgia'].includes(value))throw Error('Selecciona una tipografía disponible.');
    brand[key]=value;
   }
-  if(manual!==undefined){
+  if(manual==='')delete brand.manual;
+  else if(manual!==undefined){
    let url;
    try{url=new URL(manual);}catch{throw Error('Escribe un enlace HTTPS válido.');}
    if(url.protocol!=='https:'||url.username||url.password||url.href.length>1200)throw Error('Escribe un enlace HTTPS válido.');
    brand.manual=url.href;
   }
   s.settings.marketingBrand=brand;
+ }else if(cmd.action==='remove-brand-asset'){
+  const resource=get(s,cmd.id);
+  if(resource.kind!=='resources'||!['primary','variant','manual'].includes(resource.brandAsset))throw Error('Selecciona un archivo de Marca.');
+  result=resource.archived?resource.id:update(resource,{archived:true});
  }else if(cmd.action==='settings'){
   s.settings={...s.settings,...cmd.data,name:required(cmd.data.name),currency:'DOP'};finite(s.settings.hourly);finite(s.settings.validDays);
  }else if(cmd.action==='archive'){

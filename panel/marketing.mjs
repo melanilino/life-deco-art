@@ -40,8 +40,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-brand-palette">
-    <section id="marketing-view">${contacts}
+  return `<section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
 
@@ -69,7 +68,7 @@ export function bindMarketing(view, user, ask, context) {
     feedback.classList.toggle('is-error', error);
   }
   if (view === 'marketing') bindContacts(root, result, request, report, ask);
-  else if (view === 'marketing-brand') bindBrand(result, report, ask, context);
+  else if (view === 'marketing-brand') bindBrand(result, report, context);
   else bindWelcome(result, request, report, ask, context);
 }
 
@@ -260,17 +259,20 @@ const safeUrl = value => {
 };
 const welcomeName = 'Bienvenida a la comunidad';
 const emailFonts = [['Arial','Arial'], ['Georgia','Georgia']];
-function bindBrand(result, report, ask, { getState, execute, store, download, icon, imageUrl }) {
+function bindBrand(result, report, { getState, execute, store, download, icon, imageUrl }) {
   let busy = false;
   let files = [];
   const getBrand = () => getState().settings.marketingBrand || {};
-  const upload = (role, label, accept) => `<button type="button" class="mkt-soft-button" data-brand-upload="${role}">${label}</button>
+  const upload = (role, label, accept, accessibleName = label) => `<button type="button" class="mkt-soft-button" data-brand-upload="${role}" aria-label="${accessibleName}">${label}</button>
     <input hidden type="file" data-brand-file="${role}" accept="${accept}">`;
-  const card = (title, symbol, html, action = '') => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2>${action}</header>${html}</section>`;
+  const card = (title, symbol, html, action = '') => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2>${action ? `<div class="mkt-brand-tools">${action}</div>` : ''}</header>${html}</section>`;
+  const removeButton = (kind, value, label) => `<button type="button" class="mkt-brand-remove" data-brand-remove="${kind}" data-brand-value="${escape(value)}" aria-label="${escape(label)}" title="${escape(label)}"><span aria-hidden="true">×</span></button>`;
   const asset = file => {
     const index = files.indexOf(file);
-    return `<button type="button" class="mkt-brand-asset" data-brand-download="${index}">${file.mime?.startsWith('image/') ? `<img alt="" data-brand-image="${index}" hidden>` : icon('doc')}<span>${escape(file.fileName || file.name)}</span></button>`;
+    const name = file.fileName || file.name;
+    return `<div class="mkt-brand-item"><button type="button" class="mkt-brand-asset" data-brand-download="${index}">${file.mime?.startsWith('image/') ? `<img alt="" data-brand-image="${index}" hidden>` : icon('doc')}<span>${escape(name)}</span></button>${removeButton('file', file.id, `Eliminar ${name}`)}</div>`;
   };
+  const fontRow = (key, label, value) => `<div><dt>${label}</dt><dd><span>${escape(value || 'Sin configurar')}</span>${value ? removeButton('font', key, `Quitar tipografía de ${label.toLowerCase()}`) : ''}</dd></div>`;
   function render() {
     const brand = getBrand();
     const colors = brand.colors || [];
@@ -279,26 +281,27 @@ function bindBrand(result, report, ask, { getState, execute, store, download, ic
       .filter(record => record.kind === 'resources' && record.brandAsset && !record.archived && record.path)
       .sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     const logo = files.find(file => file.brandAsset === 'primary');
-    const variants = files.filter(file => file.brandAsset === 'variant');
+    const variants = files.filter(file => file !== logo && ['primary', 'variant'].includes(file.brandAsset));
     const manuals = files.filter(file => file.brandAsset === 'manual');
     const palettes = colors.map((color, i) =>
-      `<button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>`).join('');
+      `<div class="mkt-swatch-item"><button type="button" class="mkt-swatch" data-brand-color="${i}" aria-label="Editar color ${escape(color)}"><span style="background:${safeColor(color)}"></span>${escape(color)}</button>
+      ${removeButton('color', color, `Eliminar color ${color}`)}</div>`).join('');
     const images = 'image/png,image/jpeg,image/webp,image/gif';
     result.innerHTML = `<div class="mkt-brand-grid">
       ${card('Colores', icon('drop'), colors.length ? `<div class="mkt-swatches">${palettes}</div>`
         : '<p class="mkt-muted">Todavía no hay colores guardados.</p>',
         `<button type="button" class="mkt-soft-button" data-brand-color="new">${icon('plus')} Agregar color</button>`)}
-      ${card('Tipografías', '<span aria-hidden="true">Aa</span>', `<dl class="mkt-font-list"><div><dt>Títulos</dt><dd>${escape(brand.headingFont || 'Sin configurar')}</dd></div>
-        <div><dt>Texto</dt><dd>${escape(brand.bodyFont || 'Sin configurar')}</dd></div></dl>
-        <button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
+      ${card('Tipografías', '<span aria-hidden="true">Aa</span>',
+        `<dl class="mkt-font-list">${fontRow('headingFont', 'Títulos', brand.headingFont)}${fontRow('bodyFont', 'Texto', brand.bodyFont)}</dl>`,
+        `<button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
       ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3><div class="mkt-upload-box">${logo ? asset(logo) : ''}
-        ${upload('primary', logo ? 'Cambiar logotipo' : 'Subir logotipo', images)}</div></div>
+        ${upload('primary', 'Subir', images, 'Subir logo principal')}</div></div>
         <div><h3>Versiones adicionales</h3><div class="mkt-upload-box">${variants.map(asset).join('')}
-        ${upload('variant', 'Subir logotipo', images)}</div></div></div>`)}
+        ${upload('variant', 'Subir', images, 'Subir versión adicional')}</div></div></div>`)}
       ${card('Documentos', icon('doc'), `<p class="mkt-muted">Adjunta un documento o añade un enlace</p>
-        ${manuals.map(asset).join('')}${manual ? `<a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir documento</a>` : ''}
-        <div class="mkt-brand-actions">${upload('manual', 'Adjuntar archivo', 'application/pdf')}
-        <button type="button" data-brand-edit="manual">${icon('link')} ${manual ? 'Editar enlace' : 'Añadir enlace'}</button></div>`)}
+        ${manuals.map(asset).join('')}${manual ? `<div class="mkt-brand-item"><a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir documento</a>${removeButton('link', '', 'Eliminar enlace')}</div>` : ''}`,
+        `${upload('manual', 'Adjuntar archivo', 'application/pdf')}
+        <button type="button" class="mkt-brand-link-button" data-brand-edit="manual" aria-label="${manual ? 'Editar enlace' : 'Añadir enlace'}" title="${manual ? 'Editar enlace' : 'Añadir enlace'}">${icon('link')}</button>`)}
       </div><p class="mkt-brand-note">Usa los estilos de Marca al diseñar tus correos.</p>
       <dialog class="confirm-dialog mkt-brand-dialog" aria-labelledby="mkt-brand-dialog-title"></dialog>`;
     for (const img of result.querySelectorAll('[data-brand-image]')) {
@@ -319,7 +322,6 @@ function bindBrand(result, report, ask, { getState, execute, store, download, ic
     };
     dialog.innerHTML = `<form data-brand-form="${key}" data-index="${escape(index)}"><h2 id="mkt-brand-dialog-title">${titles[key]}</h2>
       <div class="mkt-fields">${fields[key]}</div><p role="status" data-brand-status></p><footer class="mkt-brand-actions">
-        ${key === 'color' && index !== 'new' ? '<button type="button" data-brand-remove data-form-action="text">Eliminar color</button>' : ''}
         <button type="button" data-brand-close data-form-action="secondary">Cancelar</button>
         <button type="submit" data-form-action="primary">Guardar</button></footer></form>`;
     dialog.showModal();
@@ -328,7 +330,7 @@ function bindBrand(result, report, ask, { getState, execute, store, download, ic
     const button = event.target.closest('button');
     if (!button || busy) return;
     const { brandColor, brandEdit, brandUpload, brandDownload } = button.dataset;
-    if (button.hasAttribute('data-brand-remove')) { await saveBrand(button.form, true); return; }
+    if (button.hasAttribute('data-brand-remove')) { await removeItem(button); return; }
     if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
     if (brandColor !== undefined) open('color', brandColor);
     if (brandEdit) open(brandEdit);
@@ -349,37 +351,56 @@ function bindBrand(result, report, ask, { getState, execute, store, download, ic
       return;
     }
     busy = true;
-    report('Subiendo archivo…');
+    report('');
     try {
       const attachment = await store.upload(file);
       await execute({ action: 'save', kind: 'resources', data: { ...attachment, name: attachment.fileName, brandAsset: brandFile, visibility: 'interno' } });
       render();
-      report('Archivo guardado.');
     } catch (error) { event.target.value = ''; report(error.message, true); }
     finally { busy = false; }
   });
-  async function saveBrand(form, removing = false) {
+  async function removeItem(button) {
+    const { brandRemove: kind, brandValue: value } = button.dataset;
+    const previousColors = getBrand().colors || [];
+    const data = {
+      color: { colors: previousColors.filter(color => color !== value), previousColors },
+      font: { [value]: '' },
+      link: { manual: '' },
+    }[kind];
+    const role = files.find(file => file.id === value)?.brandAsset;
+    const target = { color: '[data-brand-color="new"]', font: '[data-brand-edit="fonts"]', link: '[data-brand-edit="manual"]',
+      file: `[data-brand-upload="${role}"]` }[kind];
+    busy = true;
+    button.disabled = true;
+    report('');
+    try {
+      if (kind === 'file') await execute({ action: 'remove-brand-asset', id: value });
+      else await execute({ action: 'marketing-brand', data });
+      render();
+      result.querySelector(target)?.focus();
+    } catch (error) { report(error.message, true); }
+    finally { busy = false; button.disabled = false; }
+  }
+  async function saveBrand(form) {
     const values = Object.fromEntries(new FormData(form));
     let patch = values;
     const status = form.querySelector('[data-brand-status]');
     if (form.dataset.brandForm === 'color') {
       const previousColors = getBrand().colors || [];
       const colors = [...previousColors];
-      if (removing && !await ask(`¿Eliminar el color ${colors[form.dataset.index]} de la paleta?`)) return;
-      if (removing) colors.splice(Number(form.dataset.index), 1);
-      else colors[form.dataset.index === 'new' ? colors.length : Number(form.dataset.index)] = values.color.toUpperCase();
+      colors[form.dataset.index === 'new' ? colors.length : Number(form.dataset.index)] = values.color.toUpperCase();
       patch = { colors, previousColors };
     }
     if ('manual' in patch && !safeUrl(patch.manual)) { status.textContent = 'Escribe un enlace HTTPS válido.'; return; }
     busy = true;
     const buttons = form.querySelectorAll('button');
     for (const button of buttons) button.disabled = true;
+    report('');
     try {
       await execute({ action: 'marketing-brand', data: patch });
       form.closest('dialog').close();
       render();
       if (form.dataset.brandForm === 'color') result.querySelector('[data-brand-color="new"]')?.focus();
-      report(removing ? 'Color eliminado.' : 'Cambios guardados.');
     } catch (error) { status.textContent = error.message; }
     finally { busy = false; for (const button of buttons) button.disabled = false; }
   }
