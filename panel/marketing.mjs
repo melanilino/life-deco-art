@@ -68,7 +68,7 @@ export function bindMarketing(view, user, ask, context) {
     feedback.classList.toggle('is-error', error);
   }
   if (view === 'marketing') bindContacts(root, result, request, report, ask);
-  else if (view === 'marketing-brand') bindBrand(result, report, context);
+  else if (view === 'marketing-brand') bindBrand(result, report, user, context);
   else bindWelcome(result, request, report, ask, context);
 }
 
@@ -259,18 +259,36 @@ const safeUrl = value => {
 };
 const welcomeName = 'Bienvenida a la comunidad';
 const emailFonts = [['Arial','Arial'], ['Georgia','Georgia']];
-function bindBrand(result, report, { getState, execute, store, download, icon, imageUrl }) {
+function bindBrand(result, report, user, { getState, execute, store, download, icon, assetUrl }) {
   let busy = false;
   let files = [];
+  const previews = new Map();
+  function readFile(file) {
+    if (!previews.has(file.path)) {
+      const pending = user.getIdToken().then(async token => {
+        const query = new URLSearchParams({ file: file.path.split('/').at(-1) });
+        const response = await fetch(`/api/brand-file?${query}`, { headers: { Authorization: `Bearer ${token}` } });
+        if (!response.ok) throw Error('No se pudo abrir el archivo.');
+        return response.blob();
+      }).catch(error => { previews.delete(file.path); throw error; });
+      previews.set(file.path, pending);
+    }
+    return previews.get(file.path);
+  }
   const getBrand = () => getState().settings.marketingBrand || {};
   const upload = (role, label, accept, accessibleName = label) => `<button type="button" class="mkt-soft-button" data-brand-upload="${role}" aria-label="${accessibleName}">${label}</button>
     <input hidden type="file" data-brand-file="${role}" accept="${accept}">`;
   const card = (title, symbol, html, action = '') => `<section class="mkt-brand-card"><header><span class="mkt-round">${symbol}</span><h2>${title}</h2>${action ? `<div class="mkt-brand-tools">${action}</div>` : ''}</header>${html}</section>`;
   const removeButton = (kind, value, label) => `<button type="button" class="mkt-brand-remove" data-brand-remove="${kind}" data-brand-value="${escape(value)}" aria-label="${escape(label)}" title="${escape(label)}"><span aria-hidden="true">×</span></button>`;
-  const asset = file => {
+  const asset = (file, image = false) => {
     const index = files.indexOf(file);
     const name = file.fileName || file.name;
-    return `<div class="mkt-brand-item"><button type="button" class="mkt-brand-asset" data-brand-download="${index}">${file.mime?.startsWith('image/') ? `<img alt="" data-brand-image="${index}" hidden>` : icon('doc')}<span>${escape(name)}</span></button>${removeButton('file', file.id, `Eliminar ${name}`)}</div>`;
+    const action = (kind, label, symbol) => `<button type="button" class="mkt-brand-icon" data-brand-${kind}="${index}" title="${escape(label)}" aria-label="${escape(label)}">${icon(symbol)}</button>`;
+    return `<div class="mkt-brand-item${image ? ' mkt-logo-item' : ''}">
+      <button type="button" class="mkt-brand-asset" data-brand-preview="${index}" aria-label="Ver ${escape(name)}">
+        ${image ? `<img alt="" data-brand-image="${index}" hidden><span data-brand-image-fallback>${escape(name)}</span>` : `${icon('doc')}<span>${escape(name)}</span>`}</button>
+      <div class="mkt-brand-item-actions">${image ? '' : action('preview', `Vista previa de ${name}`, 'eye')}
+        ${action('download', `Descargar ${name}`, 'download')}${removeButton('file', file.id, `Eliminar ${name}`)}</div></div>`;
   };
   const fontRow = (key, label, value) => `<div><dt>${label}</dt><dd><span>${escape(value || 'Sin configurar')}</span>${value ? removeButton('font', key, `Quitar tipografía de ${label.toLowerCase()}`) : ''}</dd></div>`;
   function render() {
@@ -294,21 +312,44 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
       ${card('Tipografías', '<span aria-hidden="true">Aa</span>',
         `<dl class="mkt-font-list">${fontRow('headingFont', 'Títulos', brand.headingFont)}${fontRow('bodyFont', 'Texto', brand.bodyFont)}</dl>`,
         `<button type="button" class="mkt-soft-button" data-brand-edit="fonts">${icon('plus')} ${brand.headingFont || brand.bodyFont ? 'Editar tipografías' : 'Agregar tipografía'}</button>`)}
-      ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3><div class="mkt-upload-box">${logo ? asset(logo) : ''}
-        ${upload('primary', 'Subir', images, 'Subir logo principal')}</div></div>
-        <div><h3>Versiones adicionales</h3><div class="mkt-upload-box">${variants.map(asset).join('')}
-        ${upload('variant', 'Subir', images, 'Subir versión adicional')}</div></div></div>`)}
-      ${card('Documentos', icon('doc'), `<p class="mkt-muted">Adjunta un documento o añade un enlace</p>
-        ${manuals.map(asset).join('')}${manual ? `<div class="mkt-brand-item"><a class="mkt-brand-link" href="${escape(manual)}" target="_blank" rel="noopener noreferrer">Abrir documento</a>${removeButton('link', '', 'Eliminar enlace')}</div>` : ''}`,
+      ${card('Logotipos', icon('image'), `<div class="mkt-brand-logos"><div><h3>Logo principal</h3>
+        ${logo ? asset(logo, true) : `<div class="mkt-upload-box">${upload('primary', 'Subir', images, 'Subir logo principal')}</div>`}</div>
+        <div><h3>Versiones adicionales</h3><div class="mkt-brand-variants">${variants.map(file => asset(file, true)).join('')}
+        <div class="mkt-upload-box">${upload('variant', 'Subir', images, 'Subir versión adicional')}</div></div></div></div>`)}
+      ${card('Documentos', icon('doc'), `${manuals.length || manual ? '' : '<p class="mkt-muted">Adjunta un documento o añade un enlace</p>'}
+        ${manuals.map(file => asset(file)).join('')}${manual ? `<div class="mkt-brand-item"><a class="mkt-brand-link" href="${escape(manual)}" title="Abrir enlace" target="_blank" rel="noopener noreferrer">${icon('link')} ${escape(new URL(manual).hostname)}</a>${removeButton('link', '', 'Eliminar enlace')}</div>` : ''}`,
         `${upload('manual', 'Adjuntar archivo', 'application/pdf')}
         <button type="button" class="mkt-brand-link-button" data-brand-edit="manual" aria-label="${manual ? 'Editar enlace' : 'Añadir enlace'}" title="${manual ? 'Editar enlace' : 'Añadir enlace'}">${icon('link')}</button>`)}
       </div><p class="mkt-brand-note">Usa los estilos de Marca al diseñar tus correos.</p>
-      <dialog class="confirm-dialog mkt-brand-dialog" aria-labelledby="mkt-brand-dialog-title"></dialog>`;
+      <dialog class="confirm-dialog mkt-brand-dialog" aria-labelledby="mkt-brand-dialog-title"></dialog>
+      <dialog class="confirm-dialog mkt-brand-preview" aria-labelledby="mkt-brand-preview-title">
+        <header><h2 id="mkt-brand-preview-title"></h2><button type="button" class="mkt-brand-remove" data-brand-close aria-label="Cerrar vista previa">×</button></header>
+        <div data-brand-preview-body></div>
+      </dialog>`;
     for (const img of result.querySelectorAll('[data-brand-image]')) {
-      imageUrl(files[Number(img.dataset.brandImage)].path).then(url => {
-        if (img.isConnected) { img.src = url; img.hidden = false; }
+      readFile(files[Number(img.dataset.brandImage)]).then(blob => {
+        if (!img.isConnected) return;
+        img.addEventListener('load', () => { img.hidden = false; img.nextElementSibling.hidden = true; }, { once: true });
+        img.src = assetUrl(blob);
       }).catch(() => {});
     }
+  }
+  async function showFile(file) {
+    const dialog = result.querySelector('.mkt-brand-preview');
+    const body = dialog.querySelector('[data-brand-preview-body]');
+    const name = file.fileName || file.name;
+    dialog.querySelector('h2').textContent = name;
+    body.textContent = 'Cargando vista previa…';
+    dialog.showModal();
+    try {
+      const blob = await readFile(file);
+      if (!dialog.open || !dialog.isConnected) return;
+      const preview = document.createElement(blob.type === 'application/pdf' ? 'iframe' : 'img');
+      preview.title = name;
+      if (preview.tagName === 'IMG') preview.alt = name;
+      preview.src = assetUrl(blob);
+      body.replaceChildren(preview);
+    } catch (error) { body.textContent = error.message; }
   }
   function open(key, index) {
     const brand = getBrand();
@@ -329,15 +370,16 @@ function bindBrand(result, report, { getState, execute, store, download, icon, i
   result.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button || busy) return;
-    const { brandColor, brandEdit, brandUpload, brandDownload } = button.dataset;
+    const { brandColor, brandEdit, brandUpload, brandDownload, brandPreview } = button.dataset;
     if (button.hasAttribute('data-brand-remove')) { await removeItem(button); return; }
     if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
     if (brandColor !== undefined) open('color', brandColor);
     if (brandEdit) open(brandEdit);
     if (brandUpload) result.querySelector(`[data-brand-file="${brandUpload}"]`).click();
+    if (brandPreview !== undefined) { await showFile(files[Number(brandPreview)]); return; }
     if (brandDownload !== undefined) {
       const file = files[Number(brandDownload)];
-      try { download(await store.downloadFile(file.path), file.fileName || file.name); }
+      try { download(await readFile(file), file.fileName || file.name); }
       catch { report('No se pudo descargar el archivo.', true); }
     }
   });
