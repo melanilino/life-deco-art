@@ -335,8 +335,8 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
         <div class="mkt-upload-box">${upload('variant', 'Subir', images, 'Subir versión adicional')}</div></div></div></div>`)}
       ${card('Documentos', icon('doc'), `${manuals.length || manual ? '' : '<p class="mkt-muted">Adjunta un documento o añade un enlace</p>'}
         ${manuals.map(file => asset(file)).join('')}${manual ? `<div class="mkt-brand-item"><a class="mkt-brand-link" href="${escape(manual)}" title="Abrir enlace" target="_blank" rel="noopener noreferrer">${icon('link')} ${escape(new URL(manual).hostname)}</a>${removeButton('link', '', 'Eliminar enlace')}</div>` : ''}`,
-        `${upload('manual', 'Adjuntar archivo', 'application/pdf')}
-        <button type="button" class="mkt-brand-link-button" data-brand-edit="manual" aria-label="${manual ? 'Editar enlace' : 'Añadir enlace'}" title="${manual ? 'Editar enlace' : 'Añadir enlace'}">${icon('link')}</button>`)}
+        `<button type="button" class="mkt-brand-link-button" data-brand-edit="manual" aria-label="${manual ? 'Editar enlace' : 'Añadir enlace'}" title="${manual ? 'Editar enlace' : 'Añadir enlace'}">${icon('link')}</button>
+        ${upload('manual', 'Adjuntar archivo', 'application/pdf')}`)}
       </div><p class="mkt-brand-note">Usa los estilos de Marca al diseñar tus correos.</p>
       <dialog class="confirm-dialog mkt-brand-dialog" aria-labelledby="mkt-brand-dialog-title"></dialog>
       <dialog class="confirm-dialog mkt-brand-preview" aria-labelledby="mkt-brand-preview-title">
