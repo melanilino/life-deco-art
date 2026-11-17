@@ -39,7 +39,7 @@ export function marketingPage(view, icon) {
       <select name="source" aria-label="Origen"><option value="">Todos los orígenes</option>${options(Object.entries(sourceLabel))}</select>
       <select name="status" aria-label="Estado"><option value="">Todos los estados</option><option value="active">Activos</option><option value="cancelled">Cancelados</option></select>
     </div><dialog class="mkt-contact-dialog" aria-labelledby="mkt-contact-title"></dialog>` : '';
-  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-controls">
+  return `<link rel="stylesheet" href="/panel/marketing.css?v=20261117-subscriber-save-black">
     <section id="marketing-view">${contacts}
     <p class="mkt-feedback" role="status" hidden></p><div data-marketing-result></div>${contacts ? '</section>' : ''}</section>`;
 }
@@ -149,7 +149,7 @@ function bindContacts(root, result, request, report, ask) {
     const active = row.status === 'active';
     const cancellation = { hub: 'Desde el Hub', email: 'Desde el enlace de un correo' }[row.cancelledSource];
     dialog.innerHTML = `<header class="mkt-contact-head">
-      <button type="button" data-close-contact aria-label="Cerrar ficha" autofocus>×</button></header>
+      <button type="button" data-close-contact aria-label="Cerrar ficha" autofocus><span aria-hidden="true">×</span></button></header>
       <div class="quick-notes-scroll mkt-contact-scroll">
         <div class="mkt-contact-identity">
           <h2 id="mkt-contact-title">${escape(nameOf(row) || 'Suscriptor')}</h2>
