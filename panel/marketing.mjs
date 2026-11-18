@@ -297,8 +297,14 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
     return `<div class="mkt-brand-item${image ? ' mkt-logo-item' : ''}">
       <button type="button" class="mkt-brand-asset" data-brand-preview="${index}" aria-label="Ver ${escape(name)}">
         ${image ? `<img alt="" data-brand-image="${index}" hidden><span data-brand-image-fallback>${escape(name)}</span>` : `${icon('doc')}<span>${escape(name)}</span>`}</button>
-      <div class="mkt-brand-item-actions">${image ? '' : action('preview', `Vista previa de ${name}`, 'eye')}
-        ${action('download', `Descargar ${name}`, 'download')}${removeButton('file', file.id, `Eliminar ${name}`)}</div></div>`;
+      ${image ? `<details class="mkt-logo-menu">
+        <summary aria-label="Acciones de ${escape(name)}"><span aria-hidden="true">⋯</span></summary>
+        <div class="mkt-logo-menu-actions">
+          <button type="button" data-brand-download="${index}">Descargar</button>
+          <button type="button" data-brand-remove="file" data-brand-value="${escape(file.id)}">Eliminar</button>
+        </div>
+      </details>` : `<div class="mkt-brand-item-actions">${action('preview', `Vista previa de ${name}`, 'eye')}
+        ${action('download', `Descargar ${name}`, 'download')}${removeButton('file', file.id, `Eliminar ${name}`)}</div>`}</div>`;
   };
   const fontRow = (name, attachment, remove) => `<li><strong>${escape(name)}</strong><div>${attachment}${remove}</div></li>`;
   function render() {
@@ -404,6 +410,11 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
   result.addEventListener('click', async event => {
     const button = event.target.closest('button');
     if (!button || busy) return;
+    const menu = button.closest('.mkt-logo-menu');
+    if (menu) {
+      menu.open = false;
+      menu.querySelector('summary').focus();
+    }
     const { brandColor, brandEdit, brandUpload, brandDownload, brandPreview } = button.dataset;
     if (button.hasAttribute('data-brand-remove')) { await removeItem(button); return; }
     if (button.hasAttribute('data-brand-close')) button.closest('dialog').close();
@@ -415,6 +426,17 @@ function bindBrand(result, report, user, { getState, execute, store, download, i
       const file = files[Number(brandDownload)];
       try { download(await readFile(file), file.fileName || file.name); }
       catch { report('No se pudo descargar el archivo.', true); }
+    }
+  });
+  result.addEventListener('focusout', event => {
+    const menu = event.target.closest('.mkt-logo-menu');
+    if (menu && !menu.contains(event.relatedTarget)) menu.open = false;
+  });
+  result.addEventListener('keydown', event => {
+    const menu = event.target.closest('.mkt-logo-menu[open]');
+    if (menu && event.key === 'Escape') {
+      menu.open = false;
+      menu.querySelector('summary').focus();
     }
   });
   result.addEventListener('change', async event => {
