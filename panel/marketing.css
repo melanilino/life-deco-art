@@ -52,6 +52,7 @@
 }
 #marketing-view .mkt-contact-head > button:hover { color: var(--text-muted); }
 .mkt-contact-scroll { flex: 1; padding: 20px 24px; }
+.mkt-contact-card { padding: clamp(14px, 3vw, 20px); background: var(--white); border-radius: var(--surface-radius); }
 .mkt-contact-identity h2 { margin: 0; overflow-wrap: anywhere; }
 #marketing-view .mkt-contact-identity p { margin: 4px 0 0; color: var(--mkt-muted); overflow-wrap: anywhere; }
 .mkt-contact-scroll form { margin-top: 16px; }

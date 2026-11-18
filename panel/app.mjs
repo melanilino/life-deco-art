@@ -1,4 +1,4 @@
-import {marketingView,marketingPage,bindMarketing} from './marketing.mjs?v=20261117-brand-doc-actions';
+import {marketingView,marketingPage,bindMarketing} from './marketing.mjs?v=20261118-subscriber-card';
 import {syncHubUI} from './ui-standards.mjs?v=20261117-hub-form-actions';
 import {syncPanelLayout} from './panel-layout.mjs';
 import {composerHtml,composerIsOpen,setComposerOpen,bindComposers} from './composer.mjs';

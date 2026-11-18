@@ -152,25 +152,27 @@ function bindContacts(root, result, request, report, ask) {
     dialog.innerHTML = `<header class="mkt-contact-head">
       <button type="button" data-close-contact aria-label="Cerrar ficha" autofocus><span aria-hidden="true">×</span></button></header>
       <div class="quick-notes-scroll mkt-contact-scroll">
-        <div class="mkt-contact-identity">
-          <h2 id="mkt-contact-title">${escape(nameOf(row) || 'Suscriptor')}</h2>
-          <p>${escape(row.email)}</p>
+        <div class="mkt-contact-card">
+          <div class="mkt-contact-identity">
+            <h2 id="mkt-contact-title">${escape(nameOf(row) || 'Suscriptor')}</h2>
+            <p>${escape(row.email)}</p>
+          </div>
+          ${editingContact ? `<form id="mkt-contact-form" aria-label="Datos del suscriptor">
+            <div class="mkt-contact-fields"><label>Nombre<input name="name" autocomplete="off" maxlength="100" value="${escape(row.name)}"></label>
+            <label>Apellido<input name="surname" autocomplete="off" maxlength="100" value="${escape(row.surname)}"></label></div>
+          </form>` : ''}
+          <section aria-label="Historial">
+            <dl class="mkt-contact-data">
+              <div><dt>Estado</dt><dd>${statusBadge(stateLabel(active), active)}</dd></div>
+              <div><dt>Origen inicial</dt><dd>${escape(sourceLabel[row.firstSource] || '—')}</dd></div>
+              <div><dt>Fecha de registro</dt><dd>${escape(format(row.createdAt))}</dd></div>
+              <div><dt>Bienvenida</dt><dd>${escape(jobLabel[row.welcome.status] || '—')}${row.welcome.reason ? `<small>${escape(row.welcome.reason)}</small>` : ''}</dd></div>
+              ${row.cancelledAt ? `<div><dt>Última baja</dt><dd>${escape(format(row.cancelledAt))}${cancellation ? `<small>${cancellation}</small>` : ''}</dd></div>` : ''}
+            </dl>
+            ${row.consents.length ? `<h3>Consentimientos</h3><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
+            <span>${escape(format(entry.acceptedAt))}</span><small>${escape(consentLabel[entry.version] || entry.version)}</small></li>`).join('')}</ul>` : ''}
+          </section>
         </div>
-        ${editingContact ? `<form id="mkt-contact-form" aria-label="Datos del suscriptor">
-          <div class="mkt-contact-fields"><label>Nombre<input name="name" autocomplete="off" maxlength="100" value="${escape(row.name)}"></label>
-          <label>Apellido<input name="surname" autocomplete="off" maxlength="100" value="${escape(row.surname)}"></label></div>
-        </form>` : ''}
-        <section aria-label="Historial">
-          <dl class="mkt-contact-data">
-            <div><dt>Estado</dt><dd>${statusBadge(stateLabel(active), active)}</dd></div>
-            <div><dt>Origen inicial</dt><dd>${escape(sourceLabel[row.firstSource] || '—')}</dd></div>
-            <div><dt>Fecha de registro</dt><dd>${escape(format(row.createdAt))}</dd></div>
-            <div><dt>Bienvenida</dt><dd>${escape(jobLabel[row.welcome.status] || '—')}${row.welcome.reason ? `<small>${escape(row.welcome.reason)}</small>` : ''}</dd></div>
-            ${row.cancelledAt ? `<div><dt>Última baja</dt><dd>${escape(format(row.cancelledAt))}${cancellation ? `<small>${cancellation}</small>` : ''}</dd></div>` : ''}
-          </dl>
-          ${row.consents.length ? `<h3>Consentimientos</h3><ul class="mkt-consents">${row.consents.map(entry => `<li><strong>${escape(sourceLabel[entry.source] || entry.source)}</strong>
-          <span>${escape(format(entry.acceptedAt))}</span><small>${escape(consentLabel[entry.version] || entry.version)}</small></li>`).join('')}</ul>` : ''}
-        </section>
       </div>
       <footer class="mkt-contact-footer">
         <p role="status" data-contact-feedback></p>
