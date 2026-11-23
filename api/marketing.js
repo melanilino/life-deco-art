@@ -3,6 +3,7 @@ const gmail = require('../marketing/gmail.cjs');
 const core = require('../marketing/core.cjs');
 const { service, settingsPath, subscribers, subscriberSummary } = require('../marketing/service.cjs');
 const { automations, validId } = require('../marketing/automations.cjs');
+const { tasks } = require('../marketing/tasks.cjs');
 
 const site = 'https://lifedecoart.com';
 const unsubscribePattern = /^[a-f0-9]{64}\.[a-f0-9]{64}$/;
@@ -41,12 +42,15 @@ function subscriberRow(id, data) {
   };
 }
 
-async function admin(req, res, url, action, marketing, db, sequences) {
+async function admin(req, res, url, action, marketing, db, sequences, scheduler) {
   const account = await owner(req, db);
   if (!account) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
   if (req.method === 'GET' && action === 'automations') {
     return res.json({ rows: await sequences.list(), mailReady: gmail.configured(),
-      sampleName: account.displayName || account.email.split('@')[0], scheduler: 'daily' });
+      sampleName: account.displayName || account.email.split('@')[0], scheduler: scheduler.configured() ? 'tasks' : 'daily' });
+  }
+  if (req.method === 'GET' && action === 'flow-wait-test-status') {
+    return res.json(await sequences.testStatus(url.searchParams.get('id'),account.localId));
   }
   if (req.method === 'GET' && action === 'flow-metrics' && validId(url.searchParams.get('id'))) {
     return res.json(await sequences.metrics(url.searchParams.get('id')));
@@ -67,6 +71,13 @@ async function admin(req, res, url, action, marketing, db, sequences) {
   }
   if (req.method !== 'POST') return res.status(405).end();
   const { body } = req;
+  if (action === 'flow-wait-test') {
+    if (!validId(body?.id)) return res.status(400).json({error:'Selecciona una automatización válida.'});
+    try {
+      return res.json(await sequences.testWait(body.id,account.localId,body.version,body.template,
+        {email:account.email,name:account.displayName || account.email.split('@')[0]}));
+    } catch (error) { return res.status(409).json({error:error.message}); }
+  }
   if (['flow-save','flow-activate','flow-pause'].includes(action)) {
     if (!validId(body?.id)) return res.status(400).json({ error: 'Selecciona una automatización válida.' });
     try {
@@ -150,8 +161,14 @@ module.exports = async function handler(req, res) {
     const secret = process.env.MARKETING_SECRET;
     if (!secret || secret.length < 32) return res.status(503).json({ error: 'Marketing todavía necesita configuración.' });
     const db = forIdentity(req.headers['x-vercel-oidc-token']);
-    const sequences = automations(db, gmail, secret, site);
+    const scheduler = tasks(req.headers['x-vercel-oidc-token'],secret,site);
+    const sequences = automations(db, gmail, secret, site,() => new Date(),scheduler);
     const marketing = service(db, gmail, secret, site, sequences);
+    if (action === 'task-wake') {
+      if (req.method !== 'POST' || !scheduler.validWake(req.body)) return res.status(403).end();
+      await sequences.wake(req.body.jobId);
+      return res.json({ok:true});
+    }
     if (action === 'open' && req.method === 'GET') {
       await sequences.open(url.searchParams.get('job') || '', url.searchParams.get('step') || '', url.searchParams.get('token') || '');
       res.setHeader('Content-Type', 'image/gif');
@@ -199,7 +216,7 @@ module.exports = async function handler(req, res) {
       await sequences.drain();
       return res.json({ ok: true });
     }
-    return await admin(req, res, url, action, marketing, db, sequences);
+    return await admin(req, res, url, action, marketing, db, sequences, scheduler);
   } catch {
     return res.status(503).json({ error: 'No pudimos completar la operación. Inténtalo nuevamente.' });
   }

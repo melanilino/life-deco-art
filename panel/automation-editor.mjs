@@ -2,6 +2,7 @@ import { triggerOptions, originOptions, flowStages, starterOptions, starter, emp
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
 const dateLabel = value => value ? new Date(value).toLocaleTimeString('es-DO', { hour:'2-digit', minute:'2-digit', timeZone:'America/Santo_Domingo' }) : '';
+const testTime = value => `<time datetime="${escape(value || '')}">${value ? escape(new Date(value).toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit',second:'2-digit',timeZone:'America/Santo_Domingo'})) : '—'}</time>`;
 const triggerLabel = flow => triggerOptions.find(([key]) => key === flow.trigger)?.[1] || '';
 const stateLabel = row => ({ active:'Activa', paused:'Pausada', draft:'Borrador' })[row?.status] || 'Borrador';
 const id = () => crypto.randomUUID();
@@ -16,8 +17,9 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let revision = 0, savedRevision = 0, timer, saving, busy = false, loadFailed = false;
   let previousTemplate = null, copies = [], templatesLoaded = false, search = '', stateFilter = '';
   let conflict = false, loading = true;
+  let taskScheduling = false, waitTest = null;
   const journal = () => {
-    try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, dirty: revision !== savedRevision })); }
+    try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
   };
   const badge = () => `<span class="mkt-status${current?.status === 'active' ? ' is-active' : ''}">${stateLabel(current)}</span>`;
@@ -162,10 +164,13 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const checks = flowChecks(flow);
     return `<div class="auto-review-grid">${panel('Resumen de la secuencia', `${timeline(false)}<ul class="auto-checks">${checks.map(check =>
       `<li class="${check.ok ? 'is-ok' : check.warning ? 'is-warning' : 'is-error'}"><span aria-hidden="true">${check.ok ? '✓' : '!'}</span><div>${check.label}${!check.ok ? `<button type="button" data-stage="${check.stage}">Revisar</button>` : ''}</div></li>`).join('')}</ul>
-      <p class="auto-muted">Las suscripciones nuevas se procesan al registrarse. Las esperas y los eventos del Hub se revisan diariamente a las 5:00 a. m. (GMT-04), y al pulsar «Procesar pendientes».</p>`)}
+      <p class="auto-muted">${taskScheduling ? 'Cada espera programa el siguiente correo para cuando venza el plazo. Puede haber un pequeño retraso de procesamiento. Los eventos del Hub mantienen su revisión diaria.' : 'Conecta Cloud Tasks para programar las esperas. La recuperación y los eventos del Hub mantienen su revisión diaria.'}</p>`)}
       ${panel('Prueba y vista final', `<label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
         <div class="auto-inline-actions">${button('Ver correo final','preview')}${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
         <p class="auto-muted">La prueba se envía al correo de tu cuenta administradora.</p>
+        ${taskScheduling ? `<div class="auto-wait-test">${button('Probar espera de 1 minuto','wait-test',false,mailReady && selectedMail() ? '' : 'disabled')}
+          <p class="auto-muted">Esta prueba pausa la automatización y solo envía a tu correo.</p>
+          ${waitTest ? `<p role="status">${waitTest.status === 'done' ? `Programada: ${testTime(waitTest.scheduledFor)}. Enviada: ${testTime(waitTest.sentAt)}.` : waitTest.error ? escape(waitTest.error) : `Prueba ${waitTest.status === 'review' ? 'por revisar' : waitTest.status === 'failed' ? 'fallida' : 'programada'} para ${testTime(waitTest.scheduledFor || waitTest.dueAt)}.`}</p>${button('Actualizar prueba','wait-test-status')}` : ''}</div>` : ''}
         ${!mailReady ? '<p role="status">El buzón necesita configuración para enviar correos.</p>' : ''}
         <p class="auto-muted">Cumpleaños usa fechas registradas. Los eventos comerciales envían solo a contactos suscritos.</p>`)} </div>`;
   }
@@ -203,7 +208,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if (flow) await save();
     flow = starter(kind,id(),id());
     current = { id:flow.id, version:0, status:'draft' };
-    stage = 1; revision = 1; savedRevision = 0; confirmation = false; conflict = false; selectedBlock = 0;
+    stage = 1; revision = 1; savedRevision = 0; confirmation = false; conflict = false; selectedBlock = 0; waitTest = null;
     change();
     await save();
     render();
@@ -216,6 +221,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     stage = flow.stage || 1; revision = 0; savedRevision = 0; selectedBlock = 0; conflict = false;
     confirmation = row.status === 'active';
     metric = null;
+    waitTest = null;
     journal(); render();
     root.closest('.home-workspace')?.scrollIntoView({ block: 'start' });
     if (confirmation) await loadMetrics();
@@ -237,7 +243,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     report('Cargando automatizaciones…');
     try {
       const response = await request('automations');
-      rows = response.rows; mailReady = response.mailReady; sampleName = response.sampleName || '';
+      rows = response.rows; mailReady = response.mailReady; sampleName = response.sampleName || ''; taskScheduling = response.scheduler === 'tasks';
       loadFailed = false; loading = false;
       let pending;
       try { pending = JSON.parse(localStorage.getItem(key)); } catch { /* A damaged local draft cannot replace the server copy. */ }
@@ -245,6 +251,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       if (row && pending.flow && pending.stage > 0) {
         current = row; flow = normalizeFlow(pending.dirty && pending.version === row.version ? pending.flow : row.draft); flow.id = row.id;
         confirmation = row.status === 'active' && !pending.dirty;
+        waitTest = pending.waitTest || null;
         stage = pending.stage; revision = pending.dirty && pending.version === row.version ? 1 : 0; savedRevision = 0;
         if (revision) timer = setTimeout(()=>save().catch(()=>{}),1000);
       }
@@ -349,6 +356,13 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       else if (action==='reuse') mutateMail(mail=>{const index=Number(result.querySelector('[data-copy]').value);mail.template=normalizeFlow({...flow,steps:[{...mail,template:copies[index].template}]}).steps[0].template;selectedBlock=0;});
       else if (action==='save-copy') { await save(); await request('copy',{name:selectedMail().name||flow.name,template:selectedMail().template});report('Plantilla guardada.'); }
       else if (action==='metrics') await loadMetrics();
+      else if (action==='wait-test') {
+        await save();
+        if(!await ask('¿Pausar esta automatización y enviar solo a tu correo una prueba después de un minuto?'))return;
+        const response=await request('flow-wait-test',{id:current.id,version:current.version,template:selectedMail().template});
+        current=response.row;rows[rows.findIndex(row=>row.id===current.id)]=current;waitTest=response.test;journal();render();
+      }
+      else if (action==='wait-test-status') { waitTest=await request('flow-wait-test-status',null,'',{id:waitTest.id});journal();render(); }
       else if (action==='process') { await request('flow-process',{});await loadMetrics(); }
       else if (action==='pause') { await save();const response=await request('flow-pause',{id:current.id,version:current.version});current=response.row;const idx=rows.findIndex(row=>row.id===current.id);rows[idx]=current;confirmation=false;stage=1;flow.stage=1;journal();render(); }
       else if (action==='activate') {

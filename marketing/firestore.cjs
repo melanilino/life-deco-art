@@ -134,4 +134,4 @@ function forIdentity(identity) {
   };
 }
 
-module.exports = { project, forIdentity };
+module.exports = { project, forIdentity, accessToken };

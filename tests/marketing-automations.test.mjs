@@ -8,7 +8,7 @@ import { starter, flowChecks, normalizeFlow } from '../panel/automation-model.mj
 const secret = 'sequence-tests-private-key';
 const site = 'https://lifedecoart.com';
 const uid = 'owner';
-function fixture() {
+function fixture(withScheduler = false) {
   let time = new Date('2026-11-22T12:00:00Z');
   const documents = new Map();
   const domain = [];
@@ -27,7 +27,10 @@ function fixture() {
     async nativeList() { return structuredClone(domain); },
   };
   const mail = { configured:()=>true, send:async message=>{messages.push(message);return {status:'sent',messageId:String(messages.length)};} };
-  const api = automations(db,mail,secret,site,()=>time);
+  const scheduled = [];
+  const scheduler = withScheduler ? { configured:()=>true,schedule:async(jobId,job,epoch)=>{scheduled.push({jobId,job:structuredClone(job),epoch});return {scheduleTime:job.dueAt};} } : null;
+  const fresh = () => automations(db,mail,secret,site,()=>time,scheduler);
+  const api = fresh();
   function contact(email='ana@example.org') {
     const id=core.digest(secret,`subscriber:${email}`);
     documents.set('marketingSubscribers/'+id,core.subscribe(null,{email,name:'Ana',surname:'Prueba',source:'footer',consentVersion:core.consentVersion},null,time.toISOString()));
@@ -39,7 +42,7 @@ function fixture() {
     const saved=await api.save(kind,draft,uid,0);
     return api.activate(kind,uid,saved.version);
   }
-  return { api, db, documents, domain, messages, contact, publish, mail, advance:milliseconds=>{time=new Date(time.getTime()+milliseconds);} };
+  return { api, db, scheduler, scheduled, fresh, documents, domain, messages, contact, publish, mail, advance:milliseconds=>{time=new Date(time.getTime()+milliseconds);} };
 }
 
 test('los borradores incompletos se guardan y retoman, pero no se activan',async()=>{
@@ -230,4 +233,77 @@ test('el recorrido de ambos formularios comparte secuencia y la baja retira el s
   await x.api.drain();
   assert.equal(x.messages.length,1);
   assert.equal((await x.api.metrics('welcome')).pending,0);
+});
+
+test('Cloud Tasks despierta el correo al vencer la espera, sin cron y sin duplicados',async()=>{
+  const x=fixture(true);
+  await x.publish('welcome',flow=>flow.steps.unshift({id:'wait',kind:'wait',duration:1,unit:'hours'}));
+  await x.api.subscription({source:'footer'},x.contact());
+  assert.equal(x.scheduled.length,1);
+  assert.equal(x.scheduled[0].job.dueAt,'2026-11-22T13:00:00.000Z');
+  assert.equal(x.messages.length,0);
+  x.advance(3600000);
+  await Promise.all([x.fresh().wake(x.scheduled[0].jobId),x.fresh().wake(x.scheduled[0].jobId)]);
+  assert.equal(x.messages.length,1);
+  await x.fresh().wake(x.scheduled[0].jobId);
+  assert.equal(x.messages.length,1);
+});
+
+test('una pausa bloquea la tarea y reanudar crea otra programación para el mismo vencimiento',async()=>{
+  const x=fixture(true);
+  const active=await x.publish('welcome',flow=>flow.steps.unshift({id:'wait',kind:'wait',duration:1,unit:'hours'}));
+  await x.api.subscription({source:'footer'},x.contact());
+  const paused=await x.api.pause('welcome',uid,active.version);
+  x.advance(3600000);
+  await x.fresh().wake(x.scheduled[0].jobId);
+  assert.equal(x.messages.length,0);
+  await x.fresh().activate('welcome',uid,paused.version);
+  assert.equal(x.scheduled.length,2);
+  assert.notEqual(x.scheduled[0].epoch,x.scheduled[1].epoch);
+  await x.fresh().wake(x.scheduled[1].jobId);
+  assert.equal(x.messages.length,1);
+});
+
+test('una baja entre programar y ejecutar impide el envío',async()=>{
+  const x=fixture(true);
+  await x.publish('welcome',flow=>flow.steps.unshift({id:'wait',kind:'wait',duration:1,unit:'hours'}));
+  const subscriber=x.contact();
+  await x.api.subscription({source:'footer'},subscriber);
+  await x.api.cancel(subscriber);
+  x.advance(3600000);
+  await x.fresh().wake(x.scheduled[0].jobId);
+  assert.equal(x.messages.length,0);
+});
+
+test('la prueba usa el motor real, pausa el flujo y no altera las métricas de suscriptores',async()=>{
+  const x=fixture(true);
+  const saved=await x.api.save('welcome',starter('welcome','welcome','mail'),uid,0);
+  const result=await x.api.testWait('welcome',uid,saved.version,saved.draft.steps[0].template,{email:'admin@example.org',name:'Administradora'});
+  assert.equal(result.row.status,'paused');
+  assert.equal(result.test.scheduledFor,'2026-11-22T12:01:00.000Z');
+  assert.equal(x.messages.length,0);
+  await assert.rejects(x.api.testStatus(result.test.id,'otra-cuenta'),/no disponible/);
+  x.advance(60000);
+  await x.fresh().wake(result.test.id);
+  assert.equal(x.messages.length,1);
+  assert.equal(x.messages[0].to,'admin@example.org');
+  assert.match(x.messages[0].subject,/Prueba de espera/);
+  assert.equal((await x.api.testStatus(result.test.id,uid)).status,'done');
+  assert.equal((await x.api.metrics('welcome')).sent,0);
+});
+
+test('un fallo al programar conserva la espera y se recupera sin duplicar la entrega',async()=>{
+  const x=fixture(true),schedule=x.scheduler.schedule;
+  x.scheduler.schedule=async()=>{throw Error('Cola no disponible');};
+  await x.publish('welcome',flow=>flow.steps.unshift({id:'wait',kind:'wait',duration:1,unit:'hours'}));
+  await assert.rejects(x.api.subscription({source:'footer'},x.contact()),/no disponible/);
+  const [path,record]=[...x.documents].find(([key])=>key.startsWith('marketingSequences/'));
+  assert.equal(record.index,1);
+  assert.match(record.schedulingError,/no disponible/);
+  x.scheduler.schedule=schedule;
+  await x.fresh().drain();
+  assert.equal(x.scheduled.length,1);
+  x.advance(3600000);
+  await x.fresh().wake(path.split('/').at(-1));
+  assert.equal(x.messages.length,1);
 });

@@ -20,7 +20,7 @@ async function all(db, path) {
   return rows;
 }
 
-function automations(db, mail, secret, site, now = () => new Date()) {
+function automations(db, mail, secret, site, now = () => new Date(), scheduler = null) {
   const path = id => `${collection}/${id}`;
   const timestamp = () => now().toISOString();
   let processed = 0;
@@ -57,6 +57,9 @@ function automations(db, mail, secret, site, now = () => new Date()) {
     const record = await db.update(path(id), previous => {
       if (!previous || previous.ownerUid !== uid || previous.version !== version) { error = 'Recarga el borrador antes de activarlo.'; return null; }
       if (!mail.configured()) { error = 'Configura el buzón antes de activar.'; return null; }
+      if (scheduler && !scheduler.configured() && previous.draft.steps.some(step => step.kind === 'wait')) {
+        error = 'Conecta Cloud Tasks antes de activar una secuencia con esperas.'; return null;
+      }
       if (flowChecks(previous.draft).some(check => !check.ok && !check.warning)) { error = 'Completa los puntos obligatorios antes de activar.'; return null; }
       const published = { ...previous.draft, publishedAt: timestamp() };
       return { ...previous, published, status: 'active', activatedAt: previous.activatedAt || timestamp(), acceptFrom: timestamp(), savedAt: timestamp(), version: previous.version + 1 };
@@ -65,6 +68,11 @@ function automations(db, mail, secret, site, now = () => new Date()) {
     // The existing welcome route is retired only when its replacement is explicitly activated.
     if (record.published.trigger === 'subscription') {
       await db.update(legacyPath, previous => ({ ...previous, enabled: false, draft: previous?.draft || core.defaultDraft, managedBySequences: true }));
+    }
+    // A paused task may have been acknowledged already. A fresh activation epoch
+    // gives pending jobs new task names without changing their original deadlines.
+    for (const { id: jobId, data } of await all(db,jobs)) {
+      if (data.automationId === id && !data.test && ['queued','retry'].includes(data.status)) await ensureScheduled(jobId);
     }
     return { ...record, id };
   }
@@ -105,15 +113,51 @@ function automations(db, mail, secret, site, now = () => new Date()) {
     }
   }
 
+  async function ensureScheduled(jobId) {
+    if (!scheduler?.configured()) return;
+    const record = (await db.read(`${jobs}/${jobId}`))?.data;
+    if (!record || !['queued','retry'].includes(record.status)) return;
+    const automation = (await db.read(path(record.automationId)))?.data;
+    if (!automation || automation.status !== (record.test ? 'paused' : 'active')) return;
+    const epoch = record.test ? record.createdAt : automation.acceptFrom || automation.activatedAt;
+    const key = `${record.index}:${record.dueAt}:${epoch}`;
+    if (record.scheduleKey === key) return;
+    try {
+      const scheduled = await scheduler.schedule(jobId,record,epoch);
+      await db.update(`${jobs}/${jobId}`, current => current?.index === record.index && current.dueAt === record.dueAt
+        && ['queued','retry'].includes(current.status) ? { ...current, scheduleKey:key, scheduledFor:scheduled.scheduleTime, schedulingError:'' } : null);
+    } catch (error) {
+      await db.update(`${jobs}/${jobId}`, current => current?.index === record.index && current.dueAt === record.dueAt
+        ? { ...current, schedulingError:error.message } : null);
+      throw error;
+    }
+  }
+
+  async function wake(jobId) {
+    const record = (await db.read(`${jobs}/${jobId}`))?.data;
+    if (!record) return;
+    if (['queued','retry'].includes(record.status) && Date.parse(record.dueAt) > now().getTime()
+      && Date.parse(record.dueAt)-now().getTime() < 15000) throw Error('La espera todavía no ha vencido.');
+    if (record.status === 'sending') {
+      if (Date.parse(record.claimedAt) >= now().getTime()-300000) throw Error('El envío todavía se está procesando.');
+      await db.update(`${jobs}/${jobId}`, current => current?.claim === record.claim
+        ? { ...current, status:'review', claim:'', reason:'Envío sin confirmación' } : null);
+      return;
+    }
+    await db.update(`${jobs}/${jobId}`, current => current && ['queued','retry'].includes(current.status) ? { ...current, scheduleKey:'' } : null);
+    await run(jobId);
+  }
+
   async function run(jobId) {
-    if (processed >= 12) return;
+    if (processed >= 12) { await ensureScheduled(jobId); return; }
     const docPath = `${jobs}/${jobId}`;
     const initial = (await db.read(docPath))?.data;
-    if (!initial || !['queued','retry'].includes(initial.status) || Date.parse(initial.dueAt) > now().getTime()) return;
+    if (!initial || !['queued','retry'].includes(initial.status)) return;
+    if (Date.parse(initial.dueAt) > now().getTime()) { await ensureScheduled(jobId); return; }
     const automation = (await db.read(path(initial.automationId)))?.data;
-    if (automation?.status !== 'active' || !mail.configured()) return;
-    if (automation.published?.trigger === 'subscription' && (await db.read(legacyPath))?.data.enabled) return;
-    let subscriber = (await db.read(`${subscribers}/${initial.subscriberId}`))?.data;
+    if (automation?.status !== (initial.test ? 'paused' : 'active') || !mail.configured()) return;
+    if (!initial.test && automation.published?.trigger === 'subscription' && (await db.read(legacyPath))?.data.enabled) return;
+    let subscriber = initial.test ? { ...initial.testRecipient,status:'active' } : (await db.read(`${subscribers}/${initial.subscriberId}`))?.data;
     if (subscriber?.status !== 'active') {
       await db.update(docPath, current => ['queued','retry'].includes(current?.status) ? { ...current, status: 'cancelled' } : null);
       return;
@@ -134,16 +178,18 @@ function automations(db, mail, secret, site, now = () => new Date()) {
       const dueAt = new Date(now().getTime() + (await model).waitMilliseconds(step)).toISOString();
       await db.update(docPath, current => current?.claim === claim
         ? { ...current, index: current.index + 1, status: 'queued', claim: '', dueAt } : null);
+      await ensureScheduled(jobId);
       return;
     }
-    subscriber = (await db.read(`${subscribers}/${record.subscriberId}`))?.data;
+    subscriber = record.test ? { ...record.testRecipient,status:'active' } : (await db.read(`${subscribers}/${record.subscriberId}`))?.data;
     const currentAutomation = (await db.read(path(record.automationId)))?.data;
-    if (subscriber?.status !== 'active' || currentAutomation?.status !== 'active') {
+    if (subscriber?.status !== 'active' || currentAutomation?.status !== (record.test ? 'paused' : 'active')) {
       await db.update(docPath, current => current?.claim === claim
         ? { ...current, status: subscriber?.status === 'active' ? 'queued' : 'cancelled', claim: '' } : null);
       return;
     }
-    const unsubscribe = `${site}/api/marketing?action=unsubscribe&token=${core.unsubscribeToken(secret, record.subscriberId, subscriber)}`;
+    const unsubscribe = record.test ? `${site}/api/marketing?action=test-unsubscribe`
+      : `${site}/api/marketing?action=unsubscribe&token=${core.unsubscribeToken(secret, record.subscriberId, subscriber)}`;
     const draft = core.templateOf(step.template);
     let outcome;
     try {
@@ -152,7 +198,7 @@ function automations(db, mail, secret, site, now = () => new Date()) {
       const signature = core.digest(secret, `open:${jobId}:${step.id}`);
       const pixel = `${site}/api/marketing?action=open&job=${jobId}&step=${step.id}&token=${signature}`;
       rendered.html = rendered.html.replace('</body>', `<img src="${pixel.replaceAll('&','&amp;')}" width="1" height="1" alt="" style="display:block;border:0"></body>`);
-      outcome = await mail.send({ to: subscriber.email, subject: core.personalize(draft.subject, subscriber), ...rendered, unsubscribe });
+      outcome = await mail.send({ to: subscriber.email, subject: (record.test ? '[Prueba de espera] ' : '') + core.personalize(draft.subject, subscriber), ...rendered, unsubscribe });
     } catch { outcome = { status: 'review', reason: 'Envío sin confirmación. Revisa el buzón antes de reintentar.' }; }
     await db.update(docPath, current => {
       if (current?.claim !== claim) return null;
@@ -165,6 +211,33 @@ function automations(db, mail, secret, site, now = () => new Date()) {
         claim: '', attempts, dueAt: new Date(now().getTime() + 300000 * attempts).toISOString(), reason: outcome.reason || '' };
     });
     if (outcome.status === 'sent' && record.index + 1 < record.sequence.length) await run(jobId);
+    else if (outcome.status === 'retry') await ensureScheduled(jobId);
+  }
+
+  async function testWait(id, uid, version, template, person) {
+    if (!scheduler?.configured()) throw Error('Cloud Tasks todavía no está conectado.');
+    if (!mail.configured()) throw Error('Configura el buzón antes de probar la espera.');
+    const draft = core.templateOf(template);
+    if (!draft || !core.emailOf(person.email)) throw Error('Completa el correo antes de probar la espera.');
+    // Tests run through the same wait and delivery engine without enrolling subscribers.
+    const row = await pause(id,uid,version);
+    const pending = (await all(db,jobs)).find(entry => entry.data.test && entry.data.automationId === id
+      && entry.data.ownerUid === uid && ['queued','retry'].includes(entry.data.status));
+    const jobId = pending?.id || core.digest(secret,`wait-test:${randomUUID()}`);
+    if (!pending) await db.update(`${jobs}/${jobId}`,() => ({ automationId:id,ownerUid:uid,test:true,
+      testRecipient:{email:person.email,name:person.name},sequence:[{id:'test-wait',kind:'wait',duration:1,unit:'minutes'},
+        {id:'test-mail',kind:'mail',template:draft}],index:0,status:'queued',dueAt:timestamp(),createdAt:timestamp(),deliveries:[],attempts:0 }));
+    try { await run(jobId); } catch { /* Keep the test ID and scheduling error available for retry. */ }
+    return { row, test:await testStatus(jobId,uid) };
+  }
+
+  async function testStatus(jobId,uid) {
+    if (!/^[a-f0-9]{64}$/.test(jobId||'')) throw Error('Selecciona una prueba válida.');
+    const record = (await db.read(`${jobs}/${jobId}`))?.data;
+    if (!record?.test || record.ownerUid !== uid) throw Error('Prueba no disponible.');
+    return { id:jobId,status:record.status,dueAt:record.dueAt,scheduledFor:record.scheduledFor,
+      sentAt:record.deliveries[0]?.sentAt || '',messageId:record.deliveries[0]?.messageId || '',
+      error:record.schedulingError || record.reason || '' };
   }
 
   async function open(jobId, stepId, token) {
@@ -185,7 +258,7 @@ function automations(db, mail, secret, site, now = () => new Date()) {
   }
 
   async function metrics(id) {
-    const rows = (await all(db, jobs)).filter(row => row.data.automationId === id).map(row => row.data);
+    const rows = (await all(db, jobs)).filter(row => row.data.automationId === id && !row.data.test).map(row => row.data);
     const legacySent = id === 'welcome' ? (await all(db, subscribers)).filter(row => row.data.welcome?.status === 'sent').length : 0;
     return { sent: legacySent + rows.reduce((sum, row) => sum + row.deliveries.length, 0),
       opens: rows.reduce((sum, row) => sum + row.deliveries.filter(delivery => row.opens?.[delivery.stepId]).length, 0),
@@ -240,10 +313,10 @@ function automations(db, mail, secret, site, now = () => new Date()) {
       if (data.status === 'sending' && Date.parse(data.claimedAt) < now().getTime() - 300000) {
         await db.update(`${jobs}/${id}`, current => current?.claim === data.claim
           ? { ...current, status: 'review', claim: '', reason: 'Envío sin confirmación' } : null);
-      } else if (['queued','retry'].includes(data.status) && Date.parse(data.dueAt) <= now().getTime()) await run(id);
+      } else if (['queued','retry'].includes(data.status)) await run(id);
     }
   }
-  return { list, save, activate, pause, subscription, drain, metrics, open, cancel };
+  return { list, save, activate, pause, subscription, drain, metrics, open, cancel, wake, testWait, testStatus };
 }
 
 module.exports = { automations, validId };

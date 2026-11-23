@@ -49,6 +49,8 @@
 .auto-saved-templates { margin-top: 20px; }
 .auto-saved-templates .auto-inline-actions { margin-top: 12px; }
 .auto-review-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.auto-wait-test { margin: 18px 0; padding-top: 16px; border-top: 1px solid var(--mkt-line); }
+.auto-wait-test p { margin: 10px 0; }
 .auto-checks { list-style: none; padding: 0; margin: 22px 0; }
 .auto-checks li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; }
 .auto-checks li > span { display: grid; place-items: center; flex: 0 0 22px; height: 22px; border-radius: 50%; background: var(--brown-soft); }
