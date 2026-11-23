@@ -13,7 +13,8 @@ async function navigationFixture(run, { fail = false, gate = false } = {}) {
   const flow = starter('welcome','paused-flow','mail-one');flow.stage=0;
   let row = { id:flow.id,draft:flow,status:'paused',version:1,savedAt:'2026-11-23T12:00:00Z' };
   const result = { innerHTML:'',querySelector:()=>null,addEventListener:(type,fn)=>{listeners[type]=fn;} };
-  const root = { isConnected:true,parentNode:{},querySelector:()=>result,closest:()=>null };
+  const workspace = { querySelector:()=>null,addEventListener:(type,fn)=>{listeners['workspace-'+type]=fn;},removeEventListener(){},scrollIntoView(){} };
+  const root = { isConnected:true,parentNode:{},querySelector:()=>result,closest:()=>workspace };
   install('location',{hash:'#marketing-automation/paused-flow'});
   install('window',{addEventListener(){},removeEventListener(){}});
   install('localStorage',{getItem:key=>storage.get(key)||null,setItem:(key,value)=>storage.set(key,value)});
@@ -34,7 +35,8 @@ async function navigationFixture(run, { fail = false, gate = false } = {}) {
     const edit = name => listeners.input({target:{dataset:{flow:'name'},value:name,hasAttribute:()=>false,matches:selector=>selector==='[data-flow],[data-mail],[data-block-field],[data-wait-duration]'}});
     let prevented=false;
     const back = () => listeners.click({target:{closest:selector=>selector==='a[href="#marketing-automation"]'?{}:null},preventDefault:()=>{prevented=true;}});
-    await run({edit,back,requests,errors,release,row:()=>row,prevented:()=>prevented});
+    const headerBack = () => listeners['workspace-click']({target:{closest:selector=>selector==='.section-action-header a[href="#marketing-automation"]'?{}:null},preventDefault:()=>{prevented=true;}});
+    await run({edit,back,headerBack,requests,errors,release,row:()=>row,prevented:()=>prevented});
   } finally {
     for(const [key,descriptor] of original){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}
   }
@@ -50,6 +52,26 @@ test('volver a la lista guarda la edición inmediata y conserva la pausa', async
     assert.equal(f.row().status,'paused');
     assert.equal(location.hash,'#marketing-automation');
   });
+});
+
+test('el retorno bajo el título guarda antes de salir y conserva la pausa',async()=>{
+  await navigationFixture(async f=>{
+    f.edit('Edición desde el encabezado');
+    await f.headerBack();
+    assert.equal(f.prevented(),true);
+    assert.equal(f.row().draft.name,'Edición desde el encabezado');
+    assert.equal(f.row().status,'paused');
+    assert.equal(location.hash,'#marketing-automation');
+  });
+});
+
+test('el retorno del encabezado permanece en el editor si no puede guardar',async()=>{
+  await navigationFixture(async f=>{
+    f.edit('Cambio pendiente del encabezado');
+    await f.headerBack();
+    assert.equal(location.hash,'#marketing-automation/paused-flow');
+    assert.ok(f.errors.includes('No se pudo guardar.'));
+  },{fail:true});
 });
 
 test('un fallo de guardado conserva el editor y la copia local al volver',async()=>{

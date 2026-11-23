@@ -107,6 +107,8 @@ En móvil de hasta 640 px, el saludo baja a 24 px y los títulos de tarjeta a 16
 
 La barra lateral mide 250 px. El encabezado tiene una altura mínima de 98 px, saludo a la izquierda y acciones a la derecha. Comparte con el contenido el margen lateral `--hub-content-gutter`; una línea inferior se alinea con ese mismo margen. El margen es 56 px, baja a 24 px hasta 1150 px y a 18 px hasta 859 px. El contenido comienza con 28 px de separación superior en escritorio.
 
+En páginas que ya ofrecen retorno, el encabezado presenta el título y debajo un único enlace «← Volver a [destino]», como Nuevo cliente. El retorno sustituye la descripción del encabezado y no se repite en el cuerpo. Las páginas sin retorno conservan su descripción. En Automatizaciones, volver sigue esperando el guardado y permanece en el editor si este falla.
+
 Orden: atención prioritaria, cuatro métricas y zona inferior con agenda junto a etapas e inventario. En escritorio, la zona inferior usa `repeat(2,minmax(0,1fr))` para mantener dos columnas de igual ancho; Pedidos e Inventario mantienen recuadros blancos independientes, uno encima del otro a la derecha. Separación entre bloques: 16 px. Hasta 1250 px, las cifras pasan a dos columnas y la zona inferior se apila, con etapas e inventario emparejados. Hasta 859 px, la navegación pasa a menú móvil y esos resúmenes se apilan. Hasta 640 px, las cifras tienen una columna, las acciones admiten salto de línea y Crear abre su menú alineado a la izquierda. Las etiquetas de categorías admiten varias líneas.
 
 ## Elevation & Depth

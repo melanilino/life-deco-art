@@ -1,4 +1,5 @@
 import { triggerOptions, originOptions, flowStages, starterOptions, starter, emptyMail, normalizeFlow, flowChecks, sequenceLabel } from './automation-model.mjs';
+import { syncReturnHeader } from './panel-layout.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
 const dateLabel = value => value ? new Date(value).toLocaleTimeString('es-DO', { hour:'2-digit', minute:'2-digit', timeZone:'America/Santo_Domingo' }) : '';
@@ -11,6 +12,11 @@ const selectOptions = (values, selected) => values.map(([value, label]) => `<opt
 
 export function bindAutomations(root, request, report, ask, { user, icon, getState, contentOf, blockLabels }) {
   const result = root.querySelector('[data-marketing-result]');
+  const workspace = root.closest('.home-workspace');
+  const headerReturn = event => {
+    if (event.target.closest('.section-action-header a[href="#marketing-automation"]')) return returnToList(event);
+  };
+  workspace?.addEventListener('click', headerReturn);
   const key = `lda-automation-draft:${user.uid}`;
   const editorId = location.hash.slice(1).split('/')[1] || '';
   const editing = Boolean(editorId);
@@ -218,6 +224,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
+    syncReturnHeader(root.closest('.home-workspace'));
     const navigation = result.querySelector('.auto-stepper');
     const activeStep = navigation?.querySelector('[aria-current=step]');
     if (activeStep && navigation.scrollWidth > navigation.clientWidth) {
@@ -319,17 +326,19 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if (target.matches('[data-mail-select]')) { flow.selectedMail = target.value; selectedBlock = 0; change(); render(); }
     if (target.hasAttribute('data-wait-unit')) { flow.steps[Number(target.dataset.waitUnit)].unit = target.value; change(); }
   });
-  result.addEventListener('click', async event => {
-    const homeLink = event.target.closest('a[href="#marketing-automation"]');
-    if (homeLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+  async function returnToList(event) {
+    if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
       event.preventDefault();
       if (busy) return;
       busy = true;
       try { await save(); location.hash = '#marketing-automation'; }
       catch (error) { report(error.message,true); }
       finally { busy = false; }
-      return;
     }
+  }
+  result.addEventListener('click', async event => {
+    const homeLink = event.target.closest('a[href="#marketing-automation"]');
+    if (homeLink) { await returnToList(event); return; }
     const target = event.target.closest('button');
     if (!target || target.disabled || busy) return;
     if (target.dataset.actions || target.hasAttribute('data-sequence-menu')) {
@@ -435,7 +444,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }, true);
   const unload = event => { if(root.isConnected&&revision!==savedRevision){journal();event.preventDefault();event.returnValue='';} };
   window.addEventListener('beforeunload',unload);
-  const cleanup = new MutationObserver(()=>{if(!root.isConnected){window.removeEventListener('beforeunload',unload);clearTimeout(timer);cleanup.disconnect();}});
+  const cleanup = new MutationObserver(()=>{if(!root.isConnected){workspace?.removeEventListener('click',headerReturn);window.removeEventListener('beforeunload',unload);clearTimeout(timer);cleanup.disconnect();}});
   cleanup.observe(root.parentNode,{childList:true});
   load();
 }
