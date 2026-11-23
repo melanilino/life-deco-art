@@ -77,7 +77,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const panel = (title, body, extra = '') => `<section class="auto-panel ${extra}">${title ? `<h2>${title}</h2>` : ''}${body}</section>`;
   const button = (label, action, primary = false, attributes = '') => `<button type="button" data-auto="${action}" ${primary ? 'data-form-action="primary"' : 'data-form-action="secondary"'} ${attributes}>${label}</button>`;
   const stepper = () => `<nav class="auto-stepper" aria-label="Pasos de la automatización">${flowStages.map((label, index) =>
-    `<button type="button" data-stage="${index}" ${stage === index ? 'aria-current="step"' : ''} ${!flow && index ? 'disabled' : ''}>${index + 1}. ${label}</button>`).join('')}</nav>`;
+    `<button type="button" data-stage="${index}" aria-label="${index + 1}. ${label}" ${stage === index ? 'aria-current="step"' : ''} ${!flow && index ? 'disabled' : ''}><span class="auto-step-number" aria-hidden="true">${index + 1}</span><span>${label}</span></button>`).join('')}</nav>`;
   function home() {
     const list = rows.filter(row => (!stateFilter || row.status === stateFilter)
       && (row.draft?.name || '').toLocaleLowerCase('es').includes(search.toLocaleLowerCase('es')));
@@ -195,14 +195,21 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function render() {
     if (!root.isConnected) return;
     header();
-    result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a>${stepper()}` : ''}${!editing ? home() : confirmation ? confirmedScreen() : stage === 0 ? startScreen()
-      : stage === 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen()}
+    const screen = !editing ? home() : confirmation ? confirmedScreen() : stage === 0 ? startScreen()
+      : stage === 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
+    result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a><div class="auto-editor-layout">${stepper()}<div class="auto-editor-content">${screen}</div></div>` : screen}
       ${editing && flow && !confirmation ? `<footer class="auto-footer">${stage > 0 ? `<button type="button" data-stage="${stage-1}" data-form-action="text">Atrás</button>` : '<a href="#marketing-automation" data-form-action="text">Volver a la lista</a>'}
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>${button('Guardar borrador','save')}
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
+    const navigation = result.querySelector('.auto-stepper');
+    const activeStep = navigation?.querySelector('[aria-current=step]');
+    if (activeStep && navigation.scrollWidth > navigation.clientWidth) {
+      navigation.scrollLeft += activeStep.getBoundingClientRect().left - navigation.getBoundingClientRect().left
+        - (navigation.clientWidth - activeStep.offsetWidth) / 2;
+    }
   }
   async function go(next) {
     if (!flow && next) return;

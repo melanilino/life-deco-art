@@ -1,8 +1,12 @@
 #marketing-view .auto-workspace { min-width: 0; }
-.auto-stepper { display: flex; gap: 6px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
-#marketing-view .auto-stepper button { flex: 1 0 auto; min-width: 110px; padding: 10px 8px; border: 0; border-bottom: 2px solid var(--mkt-line); border-radius: 0; background: transparent; color: var(--text-muted); white-space: nowrap; }
-#marketing-view .auto-stepper button[aria-current=step] { color: var(--black); border-bottom-color: var(--text-muted); font-weight: 500; }
-#marketing-view .auto-stepper button:not(:disabled):hover { background: transparent; color: var(--black); border-bottom-color: var(--brown); }
+.auto-editor-layout { display: grid; grid-template-columns: 210px minmax(0,1fr); align-items: start; gap: 28px; min-height: 480px; padding: 24px; background: var(--white); border-radius: var(--surface-radius); }
+.auto-stepper { display: grid; gap: 6px; position: sticky; top: 24px; min-width: 0; }
+#marketing-view .auto-stepper button { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 0; border-radius: var(--surface-radius); background: transparent; color: var(--text-muted); text-align: left; }
+#marketing-view .auto-stepper button[aria-current=step], #marketing-view .auto-stepper button:not(:disabled):hover { background: var(--brown-soft); color: var(--black); }
+.auto-step-number { display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 30px; border-radius: 50%; background: var(--brown-soft); }
+.auto-stepper [aria-current=step] .auto-step-number { background: var(--black); color: var(--white); }
+.auto-editor-content { min-width: 0; min-height: 420px; padding-left: 28px; border-left: 1px solid var(--mkt-line); }
+.auto-editor-content .auto-panel { padding: 0; margin-bottom: 0; background: transparent; }
 .auto-panel { min-width: 0; background: var(--white); border-radius: var(--surface-radius); padding: 22px; margin-bottom: 18px; }
 #marketing-view .auto-panel h2 { margin-bottom: 18px; font-size: var(--font-section-title); }
 .auto-template-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
@@ -24,7 +28,7 @@
 .auto-actions-menu:popover-open { display: grid; }
 #marketing-view .auto-actions-menu button { min-height: 44px; width: 100%; padding: 10px 14px; border: 0; background: transparent; text-align: left; }
 #marketing-view .auto-actions-menu button:hover { background: var(--brown-soft); }
-.auto-back { margin: 0 0 16px; }
+.auto-back { margin: 0 0 22px; }
 .auto-field { display: grid; gap: 6px; min-width: 0; margin-bottom: 14px; }
 .auto-field textarea { min-height: 100px; }
 .auto-triggers, .auto-origins { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 18px 0; border: 0; }
@@ -79,8 +83,16 @@
 .auto-final-preview { width: min(760px, calc(100% - 32px)); }
 .auto-final-preview > button { display: block; margin-left: auto; border: 0; font-size: 24px; }
 .auto-final-preview iframe { display: block; width: 100%; height: 65dvh; border: 0; }
-@media (max-width: 1050px) {
-  .auto-template-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+@media (max-width: 1180px) {
+  .auto-editor-layout { grid-template-columns: 185px minmax(0,1fr); gap: 20px; padding: 20px; }
+  .auto-editor-content { padding-left: 20px; }
+  .auto-editor-content .auto-template-list, .auto-editor-content .auto-mail-grid, .auto-editor-content .auto-review-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 859px) {
+  .auto-editor-layout { grid-template-columns: minmax(0,1fr); gap: 22px; }
+  .auto-stepper { position: static; display: flex; overflow-x: auto; padding-bottom: 6px; }
+  #marketing-view .auto-stepper button { flex: 0 0 auto; white-space: nowrap; }
+  .auto-editor-content { min-height: 0; padding: 22px 0 0; border-left: 0; border-top: 1px solid var(--mkt-line); }
 }
 @media (max-width: 800px) {
   .auto-mail-grid, .auto-review-grid { grid-template-columns: minmax(0,1fr); }
