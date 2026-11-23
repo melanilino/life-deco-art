@@ -87,7 +87,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <div class="mkt-table-scroll" aria-busy="${loading}"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
           ${list.map(row => `<tr><td><button type="button" data-open="${row.id}">${escape(row.draft.name || 'Sin nombre')}</button></td><td>${triggerLabel(row.draft)}</td>
             <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><button type="button" class="mkt-contact-actions" data-actions="${row.id}" popovertarget="auto-actions-${row.id}" aria-expanded="false" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button>
-            <div popover id="auto-actions-${row.id}" class="auto-actions-menu" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><button type="button" data-open="${row.id}">Editar</button><button type="button" data-delete="${row.id}">Borrar</button></div></td></tr>`).join('') ||
+            <div popover id="auto-actions-${row.id}" class="auto-actions-menu" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><button type="button" data-open="${row.id}">Editar</button><button type="button" data-delete="${row.id}">Eliminar</button></div></td></tr>`).join('') ||
           (loading ? '' : `<tr><td colspan="5">${loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`)}</tbody></table></div>
         ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}`;
   }
@@ -315,7 +315,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       else if (target.dataset.open) await open(rows.find(row=>row.id===target.dataset.open));
       else if (target.dataset.delete) {
         const row=rows.find(row=>row.id===target.dataset.delete);
-        if(!await ask(`¿Borrar «${row.draft.name || 'Sin nombre'}»? Se detendrán sus envíos pendientes.`))return;
+        if(!await ask(`¿Eliminar «${row.draft.name || 'Sin nombre'}»? Se detendrán sus envíos pendientes.`))return;
         const version=row.version || (await request('flow-save',{id:row.id,version:0,flow:row.draft})).row.version;
         await request('flow-delete',{id:row.id,version});rows=rows.filter(entry=>entry.id!==row.id);render();
       }
