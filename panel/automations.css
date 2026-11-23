@@ -104,8 +104,8 @@
 .auto-mail-section > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; cursor: pointer; list-style: none; border-radius: var(--surface-radius); }
 .auto-mail-section > summary::-webkit-details-marker { display: none; }
 #marketing-view .auto-mail-section > summary h2 { margin: 0; font-size: var(--font-section-title); font-weight: 500; }
-.auto-mail-section > summary svg { width: 18px; height: 18px; color: var(--text-muted); flex-shrink: 0; transform: rotate(-90deg); }
-.auto-mail-section[open] > summary svg { transform: none; }
+.auto-mail-section > summary svg { width: 16px; height: 16px; color: var(--text-muted); flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.auto-mail-section[open] > summary svg { transform: rotate(180deg); }
 .auto-mail-section > summary:focus-visible { outline: 2px solid var(--brown); outline-offset: 4px; }
 .auto-mail-section-body { padding-top: 24px; }
 .auto-mail-meta { display: grid; grid-template-columns: minmax(0,1fr); align-items: start; gap: 12px 24px; }
