@@ -118,15 +118,16 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${flow.trigger === 'inactive' ? `<label class="auto-field auto-trigger-inactive">Días sin comprar<input type="number" data-flow="inactiveDays" min="1" max="730" value="${flow.inactiveDays}"></label>` : ''}</section>`;
   }
   function timeline(editable = true) {
+    const stepMenu = (step, index) => `<button type="button" class="mkt-contact-actions auto-step-actions" data-sequence-menu popovertarget="auto-step-actions-${index}" aria-expanded="false" aria-label="Acciones del paso ${index+1}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button><div popover id="auto-step-actions-${index}" class="auto-actions-menu" aria-label="Acciones del paso ${index+1}">${step.kind === 'mail' ? `<button type="button" data-edit-mail="${step.id}">Editar</button>` : ''}<button type="button" data-remove-step="${index}">Eliminar</button></div>`;
     return `<ol class="auto-timeline${editable ? ' auto-sequence-list' : ''}" ${editable ? 'aria-label="Orden de la secuencia"' : ''}><li>${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${icon('flow')}</span><div class="auto-node-head"><strong>${triggerLabel(flow)}</strong><span class="auto-sequence-type">Disparador</span></div>` : `<strong>${triggerLabel(flow)}</strong>`}<p>${flow.trigger === 'subscription' ? flow.origins.map(originText).join(' · ') || 'Elige al menos un origen' : 'Contacto con suscripción activa'}</p></li>
-      ${flow.steps.map((step, index) => `<li class="${step.kind === 'wait' ? 'auto-wait' : ''}">${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${index+1}</span>` : ''}<div class="auto-node-head"><strong>${step.kind === 'wait' ? 'Espera' : escape(step.name || 'Correo')}</strong></div>
+      ${flow.steps.map((step, index) => `<li class="${step.kind === 'wait' ? 'auto-wait' : ''}${editable ? ' auto-sequence-step' : ''}">${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${index+1}</span>${step.kind === 'mail' ? `<button type="button" class="auto-mail-card-target" data-edit-mail="${step.id}" aria-label="Editar ${escape(step.name || 'correo')}, paso ${index+1}"></button>` : ''}` : ''}<div class="auto-node-head"><strong>${step.kind === 'wait' ? 'Espera' : escape(step.name || 'Correo')}</strong>${editable ? stepMenu(step,index) : ''}</div>
         ${step.kind === 'wait' ? editable ? `<div class="auto-wait-fields"><label class="auto-field">Duración<input type="number" aria-label="Duración de la espera ${index + 1}" min="1" max="365" data-wait-duration="${index}" value="${step.duration}"></label>
           <label class="auto-field">Unidad<select aria-label="Unidad de la espera ${index + 1}" data-wait-unit="${index}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],step.unit)}</select></label></div>` :
           `<p>${step.duration} ${(step.duration === 1 ? {minutes:'minuto',hours:'hora',days:'día'} : {minutes:'minutos',hours:'horas',days:'días'})[step.unit]}</p>` : `<p${editable ? ' class="auto-sequence-subject"' : ''}>${editable ? '<span>Asunto</span>' : ''}${escape(step.template.subject || 'Asunto pendiente')}</p>`}
-        ${editable ? `<div class="auto-sequence-actions"><button type="button" data-remove-step="${index}" data-form-action="secondary" aria-label="Eliminar ${step.kind === 'wait' ? 'espera' : 'correo'}, paso ${index+1}">Eliminar</button>${step.kind === 'mail' ? `<button type="button" data-edit-mail="${step.id}" data-form-action="primary" aria-label="Editar correo, paso ${index+1}">Editar</button>` : ''}</div>` : ''}</li>`).join('')}</ol>`;
+        </li>`).join('')}</ol>`;
   }
   function sequenceScreen() {
-    return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${timeline()}<div class="auto-sequence-add" role="group" aria-label="Añadir un paso">${button(`${icon('plus')} Añadir espera`,'add-wait')}${button(`${icon('plus')} Añadir correo`,'add-mail',true)}</div></section>`;
+    return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${timeline()}<div class="auto-sequence-add"><button type="button" data-sequence-menu popovertarget="auto-add-step" aria-expanded="false">${icon('plus')} Añadir paso</button><div popover id="auto-add-step" class="auto-actions-menu" aria-label="Añadir un paso">${button('Correo','add-mail')}${button('Espera','add-wait')}</div></div></section>`;
   }
   function mailPaper(mail) {
     const greeting = sampleName ? `Hola, ${escape(sampleName)}.` : '¡Hola!';
@@ -330,8 +331,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
     const target = event.target.closest('button');
     if (!target || target.disabled || busy) return;
-    if (target.dataset.actions) {
-      const menu = result.querySelector(`#auto-actions-${target.dataset.actions}`), bounds = target.getBoundingClientRect();
+    if (target.dataset.actions || target.hasAttribute('data-sequence-menu')) {
+      const menu = result.querySelector(`#${target.getAttribute('popovertarget')}`), bounds = target.getBoundingClientRect();
       menu.style.left = `${Math.max(12,Math.min(bounds.right-160,innerWidth-172))}px`;
       menu.style.top = `${Math.max(12,bounds.bottom+6+104>innerHeight ? bounds.top-110 : bounds.bottom+6)}px`;
       return;

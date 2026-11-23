@@ -85,7 +85,13 @@
 .auto-sequence-list strong { font-weight: 500; overflow-wrap: anywhere; }
 .auto-sequence-list p { overflow-wrap: anywhere; }
 .auto-sequence-subject span { display: block; margin-top: 10px; color: var(--text-muted); font-size: var(--font-helper); }
-.auto-sequence-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+#marketing-view .auto-sequence-list .auto-node-head { flex-wrap: nowrap; }
+#marketing-view .auto-step-actions { position: relative; z-index: 1; flex: 0 0 36px; width: 36px; height: 36px; min-height: 36px; padding: 6px; border: 0; background: transparent; }
+#marketing-view .auto-step-actions:hover { background: var(--brown-soft); }
+#marketing-view .auto-mail-card-target { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: inherit; background: transparent; padding: 0; }
+#marketing-view .auto-mail-card-target:hover { background: transparent; }
+.auto-sequence-step:has(.auto-mail-card-target:hover) { border-color: var(--brown); }
+.auto-mail-card-target:focus-visible { outline: 2px solid var(--brown); outline-offset: 3px; }
 .auto-wait-fields { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; gap: 12px; max-width: 360px; margin-top: 16px; }
 .auto-wait-fields .auto-field { margin-bottom: 0; }
 .auto-sequence-add { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-left: 38px; }
