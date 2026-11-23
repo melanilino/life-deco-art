@@ -17,7 +17,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let rows = [], current = null, flow = null, stage = 0, selectedBlock = 0;
   let mobile = false, sampleName = '', mailReady = false, metric = null, confirmation = false;
   let revision = 0, savedRevision = 0, timer, saving, busy = false, loadFailed = false;
-  let previousTemplate = null, copies = [], templatesLoaded = false, search = '', stateFilter = '';
+  let previousTemplate = null, copies = [], templatesLoaded = false, templatesOpen = false, search = '', stateFilter = '';
   let conflict = false, loading = true;
   let taskScheduling = false, waitTest = null;
   const journal = () => {
@@ -165,7 +165,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         `<button type="button" data-insert="${key}">+ ${label}</button>`).join('')}</div>
       <div data-auto-inspector>${inspector(mail)}</div>
       <div class="auto-inline-actions auto-mail-brand"><button type="button" data-auto="brand">Usar estilos de Marca</button></div>
-      <details class="auto-saved-templates"><summary>Plantillas guardadas</summary><div class="auto-inline-actions">
+      <details class="auto-saved-templates" ${templatesOpen ? 'open' : ''}><summary>Plantillas guardadas</summary><div class="auto-inline-actions">
         ${!templatesLoaded ? '<button type="button" data-auto="load-templates">Cargar plantillas</button>' : copies.length ? `<select data-copy aria-label="Plantilla guardada">${selectOptions(copies.map((copy,index) => [index,copy.name]),'0')}</select><button type="button" data-auto="reuse">Usar plantilla</button>` : '<p>No hay plantillas guardadas.</p>'}
         <button type="button" data-auto="save-copy">Guardar este correo como plantilla</button></div></details></section>
       <section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3 class="auto-mail-section-title">Vista previa del correo</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
@@ -318,6 +318,16 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if (target.hasAttribute('data-wait-unit')) { flow.steps[Number(target.dataset.waitUnit)].unit = target.value; change(); }
   });
   result.addEventListener('click', async event => {
+    const homeLink = event.target.closest('a[href="#marketing-automation"]');
+    if (homeLink && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
+      event.preventDefault();
+      if (busy) return;
+      busy = true;
+      try { await save(); location.hash = '#marketing-automation'; }
+      catch (error) { report(error.message,true); }
+      finally { busy = false; }
+      return;
+    }
     const target = event.target.closest('button');
     if (!target || target.disabled || busy) return;
     if (target.dataset.actions) {
@@ -416,6 +426,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     finally { busy=false; }
   });
   result.addEventListener('toggle', event => {
+    if (event.target.matches('.auto-saved-templates')) { templatesOpen = event.target.open; return; }
     if (!event.target.matches('.auto-actions-menu')) return;
     result.querySelector(`[popovertarget="${event.target.id}"]`)?.setAttribute('aria-expanded',String(event.newState === 'open'));
   }, true);

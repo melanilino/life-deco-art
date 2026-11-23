@@ -168,9 +168,9 @@
 @container (min-width: 780px) {
   .auto-review-grid { grid-template-columns: minmax(0,1.1fr) minmax(0,1fr); }
 }
-.auto-footer { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 0; border-top: 1px solid var(--mkt-line); background: var(--cream); }
+.auto-footer { position: sticky; bottom: 0; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 0; border-top: 1px solid var(--mkt-line); background: var(--cream); }
 .auto-footer > div { display: flex; gap: 8px; margin-left: auto; }
-.auto-footer > span { color: var(--text-muted); font-size: var(--font-helper); }
+.auto-footer > span { color: var(--text-muted); font-size: var(--font-body); }
 .auto-result-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; margin: 24px 0; }
 .auto-result-metrics strong { display: block; font-size: var(--font-section-title); font-weight: 500; overflow-wrap: anywhere; }
 .auto-result-metrics span { display: block; margin-bottom: 5px; color: var(--text-muted); }
