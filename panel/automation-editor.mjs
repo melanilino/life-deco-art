@@ -151,22 +151,25 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function mailScreen() {
     const mail = selectedMail();
     if (!mail) return panel('Correo', `<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
-    return `<div class="auto-mail-grid">${panel('', `<div class="auto-mail-selector"><label class="auto-field">Correo de la secuencia<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(step => [step.id,step.name || 'Correo']),mail.id)}</select></label></div>
+    return `<section class="auto-mail-screen" aria-label="Editor de correo"><h2>Correo</h2><div class="auto-mail-meta"><label class="auto-field">Correo de la secuencia<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(step => [step.id,step.name || 'Correo']),mail.id)}</select></label>
       <label class="auto-field">Nombre del correo<input maxlength="100" data-mail="name" value="${escape(mail.name)}"></label>
       <label class="auto-field">Asunto<input maxlength="150" data-mail="subject" value="${escape(mail.template.subject)}"></label>
-      <label class="auto-field">Texto de vista previa<input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
-      <div class="auto-chips" aria-label="Sugerencias de vista previa">${['Ideas y novedades de Life Deco Art','Gracias por ser parte de nuestra comunidad.'].map(text => `<button type="button" data-suggestion="${escape(text)}">${text}</button>`).join('')}</div>
+      <div><label class="auto-field">Texto de vista previa<input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
+      <div class="auto-chips auto-preheader-suggestions" aria-label="Sugerencias de vista previa">${['Ideas y novedades de Life Deco Art','Gracias por ser parte de nuestra comunidad.'].map(text => `<button type="button" data-suggestion="${escape(text)}">${text}</button>`).join('')}</div></div></div>
+      <div class="auto-mail-grid"><section class="auto-mail-settings" aria-label="Contenido del correo"><h3 class="auto-mail-section-title">Contenido del correo</h3>
+      <div class="mkt-palette-actions auto-mail-add-blocks">${['text','image','button'].map(kind => `<button type="button" data-add-block="${kind}">${icon({text:'doc',image:'image',button:'link'}[kind])}${blockLabels[kind]}</button>`).join('')}</div>
+      <ol class="auto-mail-blocks" aria-label="Bloques del correo">${mail.template.blocks.map((block,index)=>`<li><button type="button" data-block="${index}" aria-label="Seleccionar ${blockLabels[block.kind]}, bloque ${index+1}" aria-pressed="${index===selectedBlock}"><span>${index+1}.</span> ${blockLabels[block.kind]}</button></li>`).join('')}</ol>
       <div class="auto-chips" aria-label="Insertar en el correo">${[['name','Nombre'],['code','Código LDA10'],['shop','Botón tienda'],['whatsapp','Botón WhatsApp']].map(([key,label]) =>
         `<button type="button" data-insert="${key}">+ ${label}</button>`).join('')}</div>
-      <div class="mkt-palette-actions">${['text','image','button'].map(kind => `<button type="button" data-add-block="${kind}">${icon({text:'doc',image:'image',button:'link'}[kind])}${blockLabels[kind]}</button>`).join('')}</div>
-      <div class="auto-inline-actions"><button type="button" data-auto="brand">Usar estilos de Marca</button></div>
       <div data-auto-inspector>${inspector(mail)}</div>
+      <div class="auto-inline-actions auto-mail-brand"><button type="button" data-auto="brand">Usar estilos de Marca</button></div>
       <details class="auto-saved-templates"><summary>Plantillas guardadas</summary><div class="auto-inline-actions">
         ${!templatesLoaded ? '<button type="button" data-auto="load-templates">Cargar plantillas</button>' : copies.length ? `<select data-copy aria-label="Plantilla guardada">${selectOptions(copies.map((copy,index) => [index,copy.name]),'0')}</select><button type="button" data-auto="reuse">Usar plantilla</button>` : '<p>No hay plantillas guardadas.</p>'}
-        <button type="button" data-auto="save-copy">Guardar este correo como plantilla</button></div></details>`, 'auto-mail-settings')}
-      ${panel('Vista previa del correo', `<div class="auto-inline-actions auto-preview-size"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
-        <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
-        <p class="auto-muted">Ejemplo con ${escape(sampleName || 'saludo sin nombre')}. Cada persona recibe su propio saludo.</p>`,'auto-preview') }</div>`;
+        <button type="button" data-auto="save-copy">Guardar este correo como plantilla</button></div></details></section>
+      <section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3 class="auto-mail-section-title">Vista previa del correo</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
+        <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div></header><div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
+        <p class="auto-muted">Ejemplo con ${escape(sampleName || 'saludo sin nombre')}. Cada persona recibe su propio saludo.</p>
+        <div class="auto-inline-actions auto-mail-final">${button('Ver correo final','preview')}</div></section></div></section>`;
   }
   function reviewScreen() {
     const checks = flowChecks(flow);
