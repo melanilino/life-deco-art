@@ -8,6 +8,8 @@ La edición vive en el Hub. El editor de bloques usa el código del proyecto y g
 
 Automatizaciones tiene cinco pasos: Inicio, Disparador, Secuencia, Correo y Revisar y activar. Los borradores se guardan al editar y antes de cambiar de paso; se conserva el paso actual. Las secuencias se almacenan en `marketingAutomations` y las entradas de cada persona en `marketingSequences`. Activar publica una copia validada; editar el borrador no cambia los correos que ya están en curso. Pausar detiene su procesamiento y una baja cancela los pasos pendientes.
 
+La lista comienza con búsqueda, filtro de estado y «Nueva automatización» en una misma barra, siguiendo la disposición de Finanzas. El paso activo usa el marrón del ícono de Notas. La consulta inicial mantiene la estructura visible sin mensajes de precarga; los errores conservan su aviso y opción de reintentar.
+
 Las suscripciones de Footer y Comunidad entran en las secuencias activas cuyos orígenes coincidan. La identidad de cada entrada evita repetir envíos al registrarse en el otro formulario. Al activar un flujo de suscripción se retira el envío heredado; la bienvenida migrada conserva los envíos previos. Los resultados inciertos quedan en revisión y no se reenvían automáticamente.
 
 Compras usa facturas emitidas del Hub que no estén en borrador ni anuladas. Entregas usa pedidos en etapa entregado con fecha de entrega. Inactividad usa la última factura y el plazo configurado. Estos eventos requieren un cliente vinculado a un suscriptor activo. Cumpleaños admite `birthday` o `dateOfBirth` en el registro del cliente, pero aún no hay un campo para capturarlo en el formulario de Clientes; no se modificó esa sección.

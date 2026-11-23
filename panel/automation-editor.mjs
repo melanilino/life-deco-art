@@ -79,13 +79,13 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function home() {
     const list = rows.filter(row => (!stateFilter || row.status === stateFilter)
       && (row.draft?.name || '').toLocaleLowerCase('es').includes(search.toLocaleLowerCase('es')));
-    return `<div class="auto-home-actions">${button(icon('plus') + ' Nueva automatización', 'new', true, loadFailed || loading ? 'disabled' : '')}</div>
-      ${panel('Mis automatizaciones', `<div class="auto-list-filters"><label class="sales-search">${icon('search')}<input type="search" data-list-search aria-label="Buscar automatización" placeholder="Buscar automatización" value="${escape(search)}"></label>
-        <select data-list-status aria-label="Estado">${selectOptions([['','Todos los estados'],['draft','Borradores'],['active','Activas'],['paused','Pausadas']],stateFilter)}</select></div>
-        <div class="mkt-table-scroll"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th aria-label="Acciones"></th></tr></thead><tbody>
+    return `${panel('', `<div class="auto-list-filters"><label class="sales-search">${icon('search')}<input type="search" data-list-search aria-label="Buscar automatización" placeholder="Buscar automatización" value="${escape(search)}"></label>
+        <select data-list-status aria-label="Estado">${selectOptions([['','Todos los estados'],['draft','Borradores'],['active','Activas'],['paused','Pausadas']],stateFilter)}</select>
+        <button type="button" class="finance-register" data-auto="new" ${loadFailed || loading ? 'disabled' : ''}>${icon('plus')} Nueva automatización</button></div>
+        <div class="mkt-table-scroll" aria-busy="${loading}"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th aria-label="Acciones"></th></tr></thead><tbody>
           ${list.map(row => `<tr><td><button type="button" data-open="${row.id}">${escape(row.draft.name || 'Sin nombre')}</button></td><td>${triggerLabel(row.draft)}</td>
             <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><button type="button" data-open="${row.id}" aria-label="Abrir ${escape(row.draft.name || 'Sin nombre')}">${icon('chevron')}</button></td></tr>`).join('') ||
-          `<tr><td colspan="5">${loading ? 'Cargando automatizaciones…' : loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`}</tbody></table></div>
+          (loading ? '' : `<tr><td colspan="5">${loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`)}</tbody></table></div>
         ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}
       ${panel('Empieza desde una plantilla', `<div class="auto-template-list">${starterOptions.map(([kind, name]) =>
         `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${kind === 'blank' ? 'Elegir disparador y contenido' : triggerLabel({trigger:starterOptions.find(row => row[0] === kind)[2]})}</span></button>`).join('')}</div>`)}`;
@@ -240,7 +240,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   async function load() {
     loading = true;
     render();
-    report('Cargando automatizaciones…');
+    report('');
     try {
       const response = await request('automations');
       rows = response.rows; mailReady = response.mailReady; sampleName = response.sampleName || ''; taskScheduling = response.scheduler === 'tasks';
