@@ -78,11 +78,12 @@ async function admin(req, res, url, action, marketing, db, sequences, scheduler)
         {email:account.email,name:account.displayName || account.email.split('@')[0]}));
     } catch (error) { return res.status(409).json({error:error.message}); }
   }
-  if (['flow-save','flow-activate','flow-pause'].includes(action)) {
+  if (['flow-save','flow-activate','flow-pause','flow-delete'].includes(action)) {
     if (!validId(body?.id)) return res.status(400).json({ error: 'Selecciona una automatización válida.' });
     try {
       const row = action === 'flow-save' ? await sequences.save(body.id, body.flow, account.localId, body.version)
         : action === 'flow-activate' ? await sequences.activate(body.id, account.localId, body.version)
+        : action === 'flow-delete' ? await sequences.remove(body.id, account.localId, body.version)
         : await sequences.pause(body.id, account.localId, body.version);
       return res.json({ row });
     } catch (error) { return res.status(409).json({ error: error.message }); }

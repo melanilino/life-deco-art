@@ -12,6 +12,8 @@ const selectOptions = (values, selected) => values.map(([value, label]) => `<opt
 export function bindAutomations(root, request, report, ask, { user, icon, getState, contentOf, blockLabels }) {
   const result = root.querySelector('[data-marketing-result]');
   const key = `lda-automation-draft:${user.uid}`;
+  const editorId = location.hash.slice(1).split('/')[1] || '';
+  const editing = Boolean(editorId);
   let rows = [], current = null, flow = null, stage = 0, selectedBlock = 0;
   let mobile = false, sampleName = '', mailReady = false, metric = null, confirmation = false;
   let revision = 0, savedRevision = 0, timer, saving, busy = false, loadFailed = false;
@@ -29,8 +31,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const workspace = root.closest('.home-workspace');
     const title = workspace?.querySelector('.section-action-header .home-welcome h1');
     const description = workspace?.querySelector('.section-action-header .home-welcome p');
-    if (title) title.textContent = !flow || stage === 0 ? 'Automatizaciones' : confirmation ? 'Automatización activa' : stage === 4 ? 'Revisar y activar' : flow.name || 'Nueva automatización';
-    if (description) description.textContent = !flow || stage === 0 ? 'Gestiona los correos que se envían automáticamente.' : confirmation ? 'Consulta los resultados y gestiona el flujo.' : triggerLabel(flow);
+    if (title) title.textContent = !editing ? 'Automatizaciones' : !flow ? 'Nueva automatización' : confirmation ? 'Automatización activa' : stage === 4 ? 'Revisar y activar' : flow.name || 'Nueva automatización';
+    if (description) description.textContent = !editing ? 'Gestiona los correos que se envían automáticamente.' : !flow ? 'Elige cómo quieres empezar.' : confirmation ? 'Consulta los resultados y gestiona el flujo.' : triggerLabel(flow);
   };
   function savedStatus(message) {
     const status = result.querySelector('[data-auto-saved]');
@@ -84,11 +86,15 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <button type="button" class="finance-register" data-auto="new" ${loadFailed || loading ? 'disabled' : ''}>${icon('plus')} Nueva automatización</button></div>
         <div class="mkt-table-scroll" aria-busy="${loading}"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th aria-label="Acciones"></th></tr></thead><tbody>
           ${list.map(row => `<tr><td><button type="button" data-open="${row.id}">${escape(row.draft.name || 'Sin nombre')}</button></td><td>${triggerLabel(row.draft)}</td>
-            <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><button type="button" data-open="${row.id}" aria-label="Abrir ${escape(row.draft.name || 'Sin nombre')}">${icon('chevron')}</button></td></tr>`).join('') ||
+            <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><div class="auto-row-actions"><button type="button" data-open="${row.id}" aria-label="Abrir ${escape(row.draft.name || 'Sin nombre')}">${icon('chevron')}</button><button type="button" data-delete="${row.id}" aria-label="Borrar ${escape(row.draft.name || 'Sin nombre')}">Borrar</button></div></td></tr>`).join('') ||
           (loading ? '' : `<tr><td colspan="5">${loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`)}</tbody></table></div>
-        ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}
-      ${panel('Empieza desde una plantilla', `<div class="auto-template-list">${starterOptions.map(([kind, name]) =>
-        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${kind === 'blank' ? 'Elegir disparador y contenido' : triggerLabel({trigger:starterOptions.find(row => row[0] === kind)[2]})}</span></button>`).join('')}</div>`)}`;
+        ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}`;
+  }
+  function startScreen() {
+    if (flow) return panel('Inicio', `<label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>`);
+    if (editorId !== 'new') return panel('', loading ? '' : `<p>Esta automatización no está disponible.</p>`);
+    return panel('Empieza desde una plantilla', `<div class="auto-template-list">${starterOptions.map(([kind, name]) =>
+        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${kind === 'blank' ? 'Elegir disparador y contenido' : triggerLabel({trigger:starterOptions.find(row => row[0] === kind)[2]})}</span></button>`).join('')}</div>`);
   }
   function triggerScreen() {
     const details = {
@@ -187,9 +193,9 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function render() {
     if (!root.isConnected) return;
     header();
-    result.innerHTML = `<section class="auto-workspace">${stepper()}${confirmation ? confirmedScreen() : stage === 0 ? home()
+    result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a>${stepper()}` : ''}${!editing ? home() : confirmation ? confirmedScreen() : stage === 0 ? startScreen()
       : stage === 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen()}
-      ${flow && stage > 0 && !confirmation ? `<footer class="auto-footer"><button type="button" data-stage="${stage-1}" data-form-action="text">Atrás</button>
+      ${editing && flow && !confirmation ? `<footer class="auto-footer">${stage > 0 ? `<button type="button" data-stage="${stage-1}" data-form-action="text">Atrás</button>` : '<a href="#marketing-automation" data-form-action="text">Volver a la lista</a>'}
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>${button('Guardar borrador','save')}
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
@@ -211,20 +217,11 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     stage = 1; revision = 1; savedRevision = 0; confirmation = false; conflict = false; selectedBlock = 0; waitTest = null;
     change();
     await save();
-    render();
-    root.closest('.home-workspace')?.scrollIntoView({ block: 'start' });
+    location.hash = `#marketing-automation/${current.id}`;
   }
   async function open(row) {
     if (flow) await save();
-    current = structuredClone(row);
-    flow = normalizeFlow(row.draft); flow.id = row.id;
-    stage = flow.stage || 1; revision = 0; savedRevision = 0; selectedBlock = 0; conflict = false;
-    confirmation = row.status === 'active';
-    metric = null;
-    waitTest = null;
-    journal(); render();
-    root.closest('.home-workspace')?.scrollIntoView({ block: 'start' });
-    if (confirmation) await loadMetrics();
+    location.hash = `#marketing-automation/${row.id}`;
   }
   async function loadMetrics() {
     metric = await request('flow-metrics', null, '', { id: current.id });
@@ -247,15 +244,17 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       loadFailed = false; loading = false;
       let pending;
       try { pending = JSON.parse(localStorage.getItem(key)); } catch { /* A damaged local draft cannot replace the server copy. */ }
-      const row = rows.find(entry => entry.id === pending?.id);
-      if (row && pending.flow && pending.stage > 0) {
-        current = row; flow = normalizeFlow(pending.dirty && pending.version === row.version ? pending.flow : row.draft); flow.id = row.id;
-        confirmation = row.status === 'active' && !pending.dirty;
-        waitTest = pending.waitTest || null;
-        stage = pending.stage; revision = pending.dirty && pending.version === row.version ? 1 : 0; savedRevision = 0;
+      const row = editing && editorId !== 'new' ? rows.find(entry => entry.id === editorId) : null;
+      if (row) {
+        const local = pending?.id === row.id && pending.version === row.version ? pending : null;
+        current = row; flow = normalizeFlow(local?.dirty ? local.flow : row.draft); flow.id = row.id;
+        confirmation = row.status === 'active' && !local?.dirty;
+        waitTest = local?.waitTest || null;
+        stage = confirmation ? 4 : flow.stage; revision = local?.dirty ? 1 : 0; savedRevision = 0;
         if (revision) timer = setTimeout(()=>save().catch(()=>{}),1000);
       }
       render(); report('');
+      if (confirmation) await loadMetrics();
     } catch (error) { loading = false; loadFailed = true; render(); report(error.message,true); }
   }
   result.addEventListener('input', event => {
@@ -305,6 +304,12 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       if (target.hasAttribute('data-stage')) await go(Number(target.dataset.stage));
       else if (target.dataset.starter) await create(target.dataset.starter);
       else if (target.dataset.open) await open(rows.find(row=>row.id===target.dataset.open));
+      else if (target.dataset.delete) {
+        const row=rows.find(row=>row.id===target.dataset.delete);
+        if(!await ask(`¿Borrar «${row.draft.name || 'Sin nombre'}»? Se detendrán sus envíos pendientes.`))return;
+        const version=row.version || (await request('flow-save',{id:row.id,version:0,flow:row.draft})).row.version;
+        await request('flow-delete',{id:row.id,version});rows=rows.filter(entry=>entry.id!==row.id);render();
+      }
       else if (target.dataset.editMail) { flow.selectedMail = target.dataset.editMail; selectedBlock = 0; await go(3); }
       else if (target.hasAttribute('data-remove-step')) {
         const index = Number(target.dataset.removeStep);
@@ -328,8 +333,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         }
       });
       else if (action==='reload') await load();
-      else if (action==='new') await create('blank');
-      else if (action==='home') await go(0);
+      else if (action==='new') { if(flow)await save();location.hash='#marketing-automation/new'; }
+      else if (action==='home') { if(flow)await save();location.hash='#marketing-automation'; }
       else if (action==='sequence') await go(2);
       else if (action==='edit') { confirmation=false; await go(flow.stage||1); }
       else if (action==='save') await save();

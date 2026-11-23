@@ -33,7 +33,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
       if (legacy?.draft) draft.steps[0].template = legacy.draft;
       rows.unshift({ id: 'welcome', draft, status: legacy?.enabled ? 'active' : 'draft', legacy: true });
     }
-    return rows;
+    return rows.filter(row => row.status !== 'deleted');
   }
 
   async function save(id, input, uid, version) {
@@ -42,7 +42,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
     const legacy = id === 'welcome' ? (await db.read(legacyPath))?.data : null;
     let conflict = false;
     const record = await db.update(path(id), previous => {
-      if (previous && previous.ownerUid !== uid) { conflict = true; return null; }
+      if (previous && (previous.ownerUid !== uid || previous.status === 'deleted')) { conflict = true; return null; }
       if (previous && Number(version) !== previous.version) { conflict = true; return null; }
       return { ...previous, ownerUid: uid, draft, status: previous?.status || (legacy?.enabled ? 'active' : 'draft'), createdAt: previous?.createdAt || timestamp(),
         savedAt: timestamp(), version: (previous?.version || 0) + 1 };
@@ -55,7 +55,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
     const { flowChecks } = await model;
     let error = '';
     const record = await db.update(path(id), previous => {
-      if (!previous || previous.ownerUid !== uid || previous.version !== version) { error = 'Recarga el borrador antes de activarlo.'; return null; }
+      if (!previous || previous.status === 'deleted' || previous.ownerUid !== uid || previous.version !== version) { error = 'Recarga el borrador antes de activarlo.'; return null; }
       if (!mail.configured()) { error = 'Configura el buzón antes de activar.'; return null; }
       if (scheduler && !scheduler.configured() && previous.draft.steps.some(step => step.kind === 'wait')) {
         error = 'Conecta Cloud Tasks antes de activar una secuencia con esperas.'; return null;
@@ -80,7 +80,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
   async function pause(id, uid, version) {
     let error = false;
     const record = await db.update(path(id), previous => {
-      if (!previous || previous.ownerUid !== uid || previous.version !== version) { error = true; return null; }
+      if (!previous || previous.status === 'deleted' || previous.ownerUid !== uid || previous.version !== version) { error = true; return null; }
       return { ...previous, status: 'paused', savedAt: timestamp(), version: previous.version + 1 };
     });
     if (error) throw Error('Recarga la automatización antes de pausarla.');
@@ -88,6 +88,20 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
       await db.update(legacyPath, previous => previous ? { ...previous, enabled: false } : null);
     }
     return { ...record, id };
+  }
+
+  async function remove(id,uid,version) {
+    if (!validId(id)) throw Error('Selecciona una automatización válida.');
+    const record = await db.update(path(id), previous => previous?.ownerUid === uid && previous.version === version
+      ? { ...previous,status:'deleted',deletedAt:timestamp(),version:previous.version+1 } : null);
+    if (!record) throw Error('La automatización cambió. Recarga antes de borrarla.');
+    if (id === 'welcome') await db.update(legacyPath, previous => previous ? { ...previous,enabled:false } : null);
+    for (const {id:jobId,data} of await all(db,jobs)) {
+      if (data.automationId !== id) continue;
+      await db.update(`${jobs}/${jobId}`, current => current?.automationId === id && ['queued','retry','sending'].includes(current.status)
+        ? { ...current,status:'cancelled',claim:'' } : null);
+    }
+    return { ...record,id };
   }
 
   async function enroll(id, automation, subscriberId, eventKey, occurredAt) {
@@ -316,7 +330,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
       } else if (['queued','retry'].includes(data.status)) await run(id);
     }
   }
-  return { list, save, activate, pause, subscription, drain, metrics, open, cancel, wake, testWait, testStatus };
+  return { list, save, activate, pause, remove, subscription, drain, metrics, open, cancel, wake, testWait, testStatus };
 }
 
 module.exports = { automations, validId };

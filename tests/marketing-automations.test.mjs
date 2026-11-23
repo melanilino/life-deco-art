@@ -307,3 +307,40 @@ test('un fallo al programar conserva la espera y se recupera sin duplicar la ent
   await x.fresh().wake(path.split('/').at(-1));
   assert.equal(x.messages.length,1);
 });
+
+test('borrar retira el borrador y una pestaña anterior no puede recuperarlo al guardar o activar',async()=>{
+  const x=fixture();
+  const row=await x.api.save('accidental',starter('blank','accidental','mail'),uid,0);
+  await assert.rejects(x.api.remove(row.id,'otra-cuenta',row.version),/Recarga/);
+  await assert.rejects(x.api.remove(row.id,uid,0),/Recarga/);
+  const deleted=await x.api.remove(row.id,uid,row.version);
+  assert.equal((await x.api.list()).some(entry=>entry.id===row.id),false);
+  assert.equal((await x.api.list()).some(entry=>entry.id==='welcome'),true);
+  await assert.rejects(x.api.save(row.id,row.draft,uid,deleted.version),/otra ventana/);
+  await assert.rejects(x.api.activate(row.id,uid,deleted.version),/Recarga/);
+  await assert.rejects(x.api.pause(row.id,uid,deleted.version),/Recarga/);
+});
+
+test('borrar un flujo con una espera programada cancela el envío y conserva su historial',async()=>{
+  const x=fixture(true);
+  const active=await x.publish('welcome',flow=>flow.steps.push({id:'wait',kind:'wait',duration:1,unit:'hours'},
+    {...structuredClone(flow.steps[0]),id:'second'}));
+  await x.api.subscription({source:'footer'},x.contact());
+  await x.api.remove('welcome',uid,active.version);
+  x.advance(3600000);
+  await x.fresh().wake(x.scheduled[0].jobId);
+  assert.equal(x.messages.length,1);
+  assert.equal((await x.api.metrics('welcome')).pending,0);
+  assert.equal((await x.api.metrics('welcome')).sent,1);
+  assert.equal((await x.api.list()).some(entry=>entry.id==='welcome'),false);
+});
+
+test('borrar la bienvenida heredada la deshabilita y no recrea una fila virtual',async()=>{
+  const x=fixture();
+  x.documents.set('marketingSettings/welcome',{enabled:true,draft:core.defaultDraft});
+  const virtual=(await x.api.list()).find(row=>row.id==='welcome');
+  const saved=await x.api.save('welcome',virtual.draft,uid,0);
+  await x.api.remove('welcome',uid,saved.version);
+  assert.equal(x.documents.get('marketingSettings/welcome').enabled,false);
+  assert.equal((await x.api.list()).length,0);
+});

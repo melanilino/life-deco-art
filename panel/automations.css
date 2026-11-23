@@ -12,7 +12,11 @@
 .auto-list-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(170px, 1fr) auto; align-items: center; gap: 12px; margin-bottom: 16px; }
 .auto-list { min-width: 590px; }
 #marketing-view .auto-list button { border: 0; background: transparent; text-align: left; padding: 0; }
-.auto-list th:last-child { width: 40px; }
+.auto-list th:last-child { width: 120px; }
+.auto-row-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+#marketing-view .auto-row-actions button { min-height: 36px; padding: 4px; }
+#marketing-view .auto-row-actions button[data-delete] { color: var(--text-muted); }
+.auto-back { margin: 0 0 16px; }
 .auto-field { display: grid; gap: 6px; min-width: 0; margin-bottom: 14px; }
 .auto-field textarea { min-height: 100px; }
 .auto-triggers, .auto-origins { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 18px 0; border: 0; }
