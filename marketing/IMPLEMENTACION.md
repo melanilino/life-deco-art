@@ -61,3 +61,5 @@ Correo plegable (23 de noviembre de 2026): el paso Correo separa los datos del m
 Corrección de flechas (23 de noviembre de 2026): las secciones plegables de Correo usan el mismo chevrón SVG de Vista actual, sin relleno, de 16 px y trazo 1.8, orientado abajo al cerrar y arriba al abrir.
 
 Ajuste de escala y espaciado (23 de noviembre de 2026): el chevrón plegable aumenta de 16 a 24 px. El menú de tres puntos se posiciona sin aumentar la altura de la fila del título, igualando la separación título/descripción y la altura de las tarjetas de correo y disparador cuando su contenido ocupa las mismas líneas. Verificado en escritorio y móvil sin envíos.
+
+Navegación sin duplicados (23 de noviembre de 2026): se eliminan Atrás, Volver a la lista y Guardar borrador del pie del editor. Se conserva el retorno superior a Automatizaciones, la navegación por pasos, el estado de guardado automático y Continuar/Activar. La etiqueta superior Borrador se omite, conservando los estados Activa y Pausada cuando corresponden. Verificados guardado al navegar, retorno a la lista y presentación móvil; 194 pruebas aprobadas, sin activación ni envíos.

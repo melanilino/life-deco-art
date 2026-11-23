@@ -25,7 +25,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
   };
-  const badge = () => `<span class="mkt-status${current?.status === 'active' ? ' is-active' : ''}">${stateLabel(current)}</span>`;
+  const badge = () => !current || current.status === 'draft' ? '' : `<span class="mkt-status${current.status === 'active' ? ' is-active' : ''}">${stateLabel(current)}</span>`;
   const selectedMail = () => flow?.steps.find(step => step.id === flow.selectedMail && step.kind === 'mail');
   const mails = () => flow?.steps.filter(step => step.kind === 'mail') || [];
   const header = () => {
@@ -212,9 +212,9 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const screen = !editing ? home() : confirmation ? confirmedScreen() : stage === 0 ? startScreen()
       : stage === 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
     result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a><div class="auto-editor-layout">${stepper()}<div class="auto-editor-content">${screen}</div></div>` : screen}
-      ${editing && flow && !confirmation ? `<footer class="auto-footer">${stage > 0 ? `<button type="button" data-stage="${stage-1}" data-form-action="text">Atrás</button>` : '<a href="#marketing-automation" data-form-action="text">Volver a la lista</a>'}
+      ${editing && flow && !confirmation ? `<footer class="auto-footer">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
-        <div>${button('Guardar borrador','save')}
+        <div>
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
