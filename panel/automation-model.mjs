@@ -89,6 +89,17 @@ export function flowChecks(flow) {
 export function waitMilliseconds(step) {
   return step.duration * { minutes: 60000, hours: 3600000, days: 86400000 }[step.unit];
 }
+export function mailTiming(steps, index) {
+  let minutes = 0, previous = index - 1;
+  while (previous >= 0 && steps[previous].kind === 'wait') {
+    minutes += waitMilliseconds(steps[previous]) / 60000;
+    previous--;
+  }
+  if (!minutes) return previous < 0 ? 'Al instante' : 'Sin espera adicional';
+  const unit = minutes % 1440 === 0 ? 'día' : minutes % 60 === 0 ? 'hora' : 'minuto';
+  const duration = minutes / (unit === 'día' ? 1440 : unit === 'hora' ? 60 : 1);
+  return `Después de ${duration} ${unit}${duration === 1 ? '' : 's'}`;
+}
 export function sequenceLabel(flow) {
   return flow.steps.map(step => step.kind === 'wait' ? `Espera ${step.duration} ${{minutes:'min',hours:'h',days:'días'}[step.unit]}` : step.name || 'Correo').join(' → ');
 }

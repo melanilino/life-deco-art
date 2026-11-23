@@ -80,7 +80,7 @@
 .auto-sequence-list li::before { display: none; }
 .auto-sequence-marker { position: absolute; left: -39px; top: 16px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cream); color: var(--text-muted); font-size: var(--font-helper); }
 .auto-sequence-marker svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; }
-.auto-sequence-type { color: var(--text-muted); font-size: var(--font-helper); }
+.auto-sequence-timing { color: var(--text-muted); font-size: var(--font-helper); }
 .auto-sequence-list .auto-node-head { flex-wrap: wrap; gap: 6px 12px; }
 .auto-sequence-list strong { font-weight: 500; overflow-wrap: anywhere; }
 .auto-sequence-list p { overflow-wrap: anywhere; }
