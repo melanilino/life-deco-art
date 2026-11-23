@@ -84,17 +84,19 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     return `${panel('', `<div class="auto-list-filters"><label class="sales-search">${icon('search')}<input type="search" data-list-search aria-label="Buscar automatización" placeholder="Buscar automatización" value="${escape(search)}"></label>
         <select data-list-status aria-label="Estado">${selectOptions([['','Todos los estados'],['draft','Borradores'],['active','Activas'],['paused','Pausadas']],stateFilter)}</select>
         <button type="button" class="finance-register" data-auto="new" ${loadFailed || loading ? 'disabled' : ''}>${icon('plus')} Nueva automatización</button></div>
-        <div class="mkt-table-scroll" aria-busy="${loading}"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th aria-label="Acciones"></th></tr></thead><tbody>
+        <div class="mkt-table-scroll" aria-busy="${loading}"><table class="sales-table auto-list"><thead><tr><th>Automatización</th><th>Disparador</th><th>Pasos</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
           ${list.map(row => `<tr><td><button type="button" data-open="${row.id}">${escape(row.draft.name || 'Sin nombre')}</button></td><td>${triggerLabel(row.draft)}</td>
-            <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><div class="auto-row-actions"><button type="button" data-open="${row.id}" aria-label="Abrir ${escape(row.draft.name || 'Sin nombre')}">${icon('chevron')}</button><button type="button" data-delete="${row.id}" aria-label="Borrar ${escape(row.draft.name || 'Sin nombre')}">Borrar</button></div></td></tr>`).join('') ||
+            <td>${row.draft.steps.length}</td><td>${stateLabel(row)}</td><td><button type="button" class="mkt-contact-actions" data-actions="${row.id}" popovertarget="auto-actions-${row.id}" aria-expanded="false" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button>
+            <div popover id="auto-actions-${row.id}" class="auto-actions-menu" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><button type="button" data-open="${row.id}">Editar</button><button type="button" data-delete="${row.id}">Borrar</button></div></td></tr>`).join('') ||
           (loading ? '' : `<tr><td colspan="5">${loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`)}</tbody></table></div>
         ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}`;
   }
   function startScreen() {
     if (flow) return panel('Inicio', `<label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>`);
     if (editorId !== 'new') return panel('', loading ? '' : `<p>Esta automatización no está disponible.</p>`);
-    return panel('Empieza desde una plantilla', `<div class="auto-template-list">${starterOptions.map(([kind, name]) =>
-        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${kind === 'blank' ? 'Elegir disparador y contenido' : triggerLabel({trigger:starterOptions.find(row => row[0] === kind)[2]})}</span></button>`).join('')}</div>`);
+    return panel('Elige cómo empezar', `<div class="auto-template-list">${starterOptions.filter(([kind])=>kind!=='blank').map(([kind, name, trigger]) =>
+        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${triggerLabel({trigger})}</span></button>`).join('')}</div>
+        <button type="button" class="auto-from-scratch" data-starter="blank" ${loadFailed || loading ? 'disabled' : ''}>${icon('plus')}<span><strong>Desde cero</strong><span>Elegir disparador y contenido</span></span></button>`);
   }
   function triggerScreen() {
     const details = {
@@ -296,7 +298,14 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   result.addEventListener('click', async event => {
     const target = event.target.closest('button');
     if (!target || target.disabled || busy) return;
+    if (target.dataset.actions) {
+      const menu = result.querySelector(`#auto-actions-${target.dataset.actions}`), bounds = target.getBoundingClientRect();
+      menu.style.left = `${Math.max(12,Math.min(bounds.right-160,innerWidth-172))}px`;
+      menu.style.top = `${Math.max(12,bounds.bottom+6+104>innerHeight ? bounds.top-110 : bounds.bottom+6)}px`;
+      return;
+    }
     try {
+      target.closest('[popover]')?.hidePopover();
       const action = target.dataset.auto;
       if (target.dataset.device) { mobile = target.dataset.device === 'mobile'; render(); return; }
       if (target.hasAttribute('data-block')) { selectedBlock = Number(target.dataset.block); render(); result.querySelector('[data-block-field]')?.focus(); return; }
@@ -384,6 +393,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     } catch (error) { report(error.message,true); }
     finally { busy=false; }
   });
+  result.addEventListener('toggle', event => {
+    if (!event.target.matches('.auto-actions-menu')) return;
+    result.querySelector(`[popovertarget="${event.target.id}"]`)?.setAttribute('aria-expanded',String(event.newState === 'open'));
+  }, true);
   const unload = event => { if(root.isConnected&&revision!==savedRevision){journal();event.preventDefault();event.returnValue='';} };
   window.addEventListener('beforeunload',unload);
   const cleanup = new MutationObserver(()=>{if(!root.isConnected){window.removeEventListener('beforeunload',unload);clearTimeout(timer);cleanup.disconnect();}});
