@@ -92,11 +92,12 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}`;
   }
   function startScreen() {
-    if (flow) return panel('Inicio', `<label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>`);
+    if (flow) return `<section class="auto-start-screen" aria-label="Inicio de la automatización"><header class="auto-start-heading"><h2>Inicio</h2>${badge()}</header><label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label></section>`;
     if (editorId !== 'new') return panel('', loading ? '' : `<p>Esta automatización no está disponible.</p>`);
-    return panel('Elige cómo empezar', `<div class="auto-template-list">${starterOptions.filter(([kind])=>kind!=='blank').map(([kind, name, trigger]) =>
-        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><strong>${name}</strong><span>${triggerLabel({trigger})}</span></button>`).join('')}</div>
-        <button type="button" class="auto-from-scratch" data-starter="blank" ${loadFailed || loading ? 'disabled' : ''}>${icon('plus')}<span><strong>Desde cero</strong><span>Elegir disparador y contenido</span></span></button>`);
+    return `<section class="auto-start-screen" aria-label="Elegir cómo empezar"><header class="auto-start-heading"><h2>Elige cómo empezar</h2></header><h3 class="auto-start-label">Plantillas</h3><div class="auto-template-list" role="group" aria-label="Plantillas de automatización">${starterOptions.filter(([kind])=>kind!=='blank').map(([kind, name, trigger]) =>
+        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><span class="auto-template-icon" aria-hidden="true">${icon({welcome:'mail',purchase:'doc',review:'check'}[kind])}</span><span class="auto-template-copy"><strong>${name}</strong><span>${triggerLabel({trigger})}</span></span><span class="auto-template-next" aria-hidden="true">${icon('chevron')}</span></button>`).join('')}</div>
+        <button type="button" class="auto-from-scratch" data-starter="blank" ${loadFailed || loading ? 'disabled' : ''}><span class="auto-template-icon" aria-hidden="true">${icon('plus')}</span><span class="auto-template-copy"><strong>Desde cero</strong><span>Elegir disparador y contenido</span></span><span class="auto-template-next" aria-hidden="true">${icon('chevron')}</span></button>
+        <p class="auto-start-note">Ninguna opción activa el envío automáticamente.</p></section>`;
   }
   function triggerScreen() {
     const details = {
