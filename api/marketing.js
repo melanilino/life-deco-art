@@ -2,6 +2,7 @@ const { project, forIdentity } = require('../marketing/firestore.cjs');
 const gmail = require('../marketing/gmail.cjs');
 const core = require('../marketing/core.cjs');
 const { service, settingsPath, subscribers, subscriberSummary } = require('../marketing/service.cjs');
+const { automations, validId } = require('../marketing/automations.cjs');
 
 const site = 'https://lifedecoart.com';
 const unsubscribePattern = /^[a-f0-9]{64}\.[a-f0-9]{64}$/;
@@ -22,7 +23,7 @@ async function owner(req, db) {
   const account = (await response.json()).users?.[0];
   if (!account || account.disabled || account.localId !== claims.sub || !/^[\w-]+$/.test(account.localId || '')) return false;
   const access = await db.read(`panelAccess/${account.localId}`);
-  return access?.data.enabled?.booleanValue === true;
+  return access?.data.enabled?.booleanValue === true ? account : false;
 }
 
 function publicPage(res, title, body) {
@@ -40,8 +41,16 @@ function subscriberRow(id, data) {
   };
 }
 
-async function admin(req, res, url, action, marketing, db) {
-  if (!await owner(req, db)) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
+async function admin(req, res, url, action, marketing, db, sequences) {
+  const account = await owner(req, db);
+  if (!account) return res.status(403).json({ error: 'Inicia sesión con una cuenta autorizada del Hub.' });
+  if (req.method === 'GET' && action === 'automations') {
+    return res.json({ rows: await sequences.list(), mailReady: gmail.configured(),
+      sampleName: account.displayName || account.email.split('@')[0], scheduler: 'daily' });
+  }
+  if (req.method === 'GET' && action === 'flow-metrics' && validId(url.searchParams.get('id'))) {
+    return res.json(await sequences.metrics(url.searchParams.get('id')));
+  }
   if (req.method === 'GET' && action === 'subscriber-summary') return res.json(await subscriberSummary(db));
   if (req.method === 'GET' && action === 'automation-summary') return res.json(await subscriberSummary(db, new Date(), true));
   if (req.method === 'GET' && action === 'subscribers') {
@@ -58,6 +67,29 @@ async function admin(req, res, url, action, marketing, db) {
   }
   if (req.method !== 'POST') return res.status(405).end();
   const { body } = req;
+  if (['flow-save','flow-activate','flow-pause'].includes(action)) {
+    if (!validId(body?.id)) return res.status(400).json({ error: 'Selecciona una automatización válida.' });
+    try {
+      const row = action === 'flow-save' ? await sequences.save(body.id, body.flow, account.localId, body.version)
+        : action === 'flow-activate' ? await sequences.activate(body.id, account.localId, body.version)
+        : await sequences.pause(body.id, account.localId, body.version);
+      return res.json({ row });
+    } catch (error) { return res.status(409).json({ error: error.message }); }
+  }
+  if (action === 'flow-test' || action === 'flow-preview') {
+    const draft = core.templateOf(body?.template);
+    if (!draft) return res.status(400).json({ error: 'Completa el asunto, el contenido y los enlaces del correo.' });
+    const person = { name: account.displayName || account.email.split('@')[0] };
+    const rendered = core.renderEmail(draft, person, site + '/api/marketing?action=test-unsubscribe');
+    if (action === 'flow-preview') return res.json(rendered);
+    if (!gmail.configured()) return res.status(503).json({ error: 'Configura el buzón para enviar una prueba.' });
+    const result = await gmail.send({ to: account.email, subject: '[Prueba] ' + core.personalize(draft.subject, person), ...rendered });
+    return result.status === 'sent' ? res.json({ ok: true }) : res.status(502).json({ error: 'Gmail no confirmó el envío de la prueba.' });
+  }
+  if (action === 'flow-process') {
+    await sequences.drain();
+    return res.json({ ok: true });
+  }
   if (action === 'subscriber-profile' || action === 'subscriber-cancel') {
     if (typeof body?.id !== 'string' || !/^[a-f0-9]{64}$/.test(body.id)) {
       return res.status(400).json({ error: 'Selecciona un suscriptor válido.' });
@@ -118,7 +150,14 @@ module.exports = async function handler(req, res) {
     const secret = process.env.MARKETING_SECRET;
     if (!secret || secret.length < 32) return res.status(503).json({ error: 'Marketing todavía necesita configuración.' });
     const db = forIdentity(req.headers['x-vercel-oidc-token']);
-    const marketing = service(db, gmail, secret, site);
+    const sequences = automations(db, gmail, secret, site);
+    const marketing = service(db, gmail, secret, site, sequences);
+    if (action === 'open' && req.method === 'GET') {
+      await sequences.open(url.searchParams.get('job') || '', url.searchParams.get('step') || '', url.searchParams.get('token') || '');
+      res.setHeader('Content-Type', 'image/gif');
+      return res.end(Buffer.from('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7','base64'));
+    }
+    if (action === 'test-unsubscribe') return publicPage(res, 'Correo de prueba', '<p>En los envíos reales, este enlace cancela la suscripción del destinatario.</p>');
     if (action === 'subscribe') {
       if (req.method !== 'POST') return res.status(405).end();
       if (req.headers.origin !== site) return res.status(403).end();
@@ -157,9 +196,10 @@ module.exports = async function handler(req, res) {
     if (action === 'queue') {
       if (req.method !== 'GET' || !process.env.CRON_SECRET || req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) return res.status(403).end();
       await marketing.drain();
+      await sequences.drain();
       return res.json({ ok: true });
     }
-    return await admin(req, res, url, action, marketing, db);
+    return await admin(req, res, url, action, marketing, db, sequences);
   } catch {
     return res.status(503).json({ error: 'No pudimos completar la operación. Inténtalo nuevamente.' });
   }

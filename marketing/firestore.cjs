@@ -79,6 +79,37 @@ async function list(identity, collection, pageToken = '', pageSize = 50) {
   })), next: page.nextPageToken || '' };
 }
 
+function decodeValue(value) {
+  if ('stringValue' in value) return value.stringValue;
+  if ('integerValue' in value) return Number(value.integerValue);
+  if ('doubleValue' in value) return value.doubleValue;
+  if ('booleanValue' in value) return value.booleanValue;
+  if ('timestampValue' in value) return value.timestampValue;
+  if ('nullValue' in value) return null;
+  if ('arrayValue' in value) return (value.arrayValue.values || []).map(decodeValue);
+  if ('mapValue' in value) return Object.fromEntries(Object.entries(value.mapValue.fields || {}).map(([key, field]) => [key, decodeValue(field)]));
+  return null;
+}
+
+async function nativeList(identity, collection) {
+  const rows = [];
+  let token = '';
+  do {
+    const params = new URLSearchParams({ pageSize: '300' });
+    if (token) params.set('pageToken', token);
+    const response = await request(identity, `/${collection}?${params}`);
+    if (!response.ok) throw Error('No se pudieron consultar los eventos del Hub.');
+    const page = await response.json();
+    rows.push(...(page.documents || []).map(doc => ({
+      ...Object.fromEntries(Object.entries(doc.fields || {}).map(([key, field]) => [key, decodeValue(field)])),
+      id: doc.name.split('/').at(-1),
+    })));
+    token = page.nextPageToken || '';
+    if (rows.length > 5000) throw Error('Hay demasiados registros para una sola revisión.');
+  } while (token);
+  return rows;
+}
+
 async function queue(identity, status) {
   const response = await request(identity, ':runQuery', {
     method: 'POST',
@@ -99,6 +130,7 @@ function forIdentity(identity) {
     update: (path, change) => update(identity, path, change),
     list: (collection, pageToken, pageSize) => list(identity, collection, pageToken, pageSize),
     queue: status => queue(identity, status),
+    nativeList: collection => nativeList(identity, collection),
   };
 }
 

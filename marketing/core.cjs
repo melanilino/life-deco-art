@@ -75,13 +75,14 @@ function templateOf(input) {
       url: httpsUrl(clean(block.url, 1200)), alt: clean(block.alt, 150),
       color: /^#[0-9a-f]{6}$/i.test(block.color) ? block.color : '#1c1a17',
       align: ['left', 'center', 'right'].includes(block.align) ? block.align : 'left',
-      font: typeof block.font === 'string' && block.font.startsWith('Georgia') ? 'Georgia, serif' : 'Arial, sans-serif',
+      font: typeof block.font === 'string' && block.font.startsWith('Georgia') ? 'Georgia, serif'
+        : typeof block.font === 'string' && block.font.startsWith('Montserrat') ? 'Montserrat, Arial, sans-serif' : 'Arial, sans-serif',
       space: [8, 16, 24, 32].includes(Number(block.space)) ? Number(block.space) : 16 };
   });
   if (blocks.some(block => !block || (['image', 'button'].includes(block.kind) && !block.url))) return null;
   const name = clean(input.name, 100);
   const preheader = clean(input.preheader, 150).replace(/[\r\n]+/g, ' ');
-  const headingFont = ['Arial', 'Georgia'].includes(input.headingFont) ? input.headingFont : '';
+  const headingFont = ['Arial', 'Georgia', 'Montserrat'].includes(input.headingFont) ? input.headingFont : '';
   return { subject, blocks, ...(name ? { name } : {}), ...(preheader ? { preheader } : {}),
     ...(headingFont ? { headingFont } : {}), ...(input.brandColors === true ? { brandColors: true } : {}) };
 }
@@ -92,7 +93,14 @@ function buttonInk(color) {
   return .2126 * light[0] + .7152 * light[1] + .0722 * light[2] > .179 ? '#000' : '#fff';
 }
 
+function personalize(value, person = {}) {
+  return String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_match, key) =>
+    key === 'codigo' ? 'LDA10' : person.name || '');
+}
+
 function renderEmail(template, person = {}, unsubscribe = '') {
+  template = { ...template, preheader: personalize(template.preheader, person),
+    blocks: template.blocks.map(block => ({ ...block, text: personalize(block.text, person), secondary: personalize(block.secondary, person) })) };
   const greeting = person.name ? `Hola, ${person.name}.` : '¡Hola!';
   const paragraph = text => escape(text).replace(/\r?\n/g, '<br>');
   const rows = template.blocks.map(block => {
@@ -108,7 +116,7 @@ function renderEmail(template, person = {}, unsubscribe = '') {
   }).join('');
   const link = unsubscribe ? `<a href="${escape(unsubscribe)}">Cancelar suscripción</a>` : 'Cancelar suscripción';
   const preheader = template.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escape(template.preheader)}</div>` : '';
-  const titleFont = template.headingFont === 'Georgia' ? 'Georgia,serif' : 'Arial,sans-serif';
+  const titleFont = template.headingFont === 'Georgia' ? 'Georgia,serif' : template.headingFont === 'Montserrat' ? 'Montserrat,Arial,sans-serif' : 'Arial,sans-serif';
   const html = `<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media(max-width:520px){.column{display:block!important;width:100%!important;margin-bottom:12px}}</style></head><body style="margin:0;background:#f5efe5">${preheader}<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;font:16px/1.55 Arial,sans-serif;color:#1c1a17" cellspacing="0" cellpadding="0"><tr><td style="padding:24px"><span style="font-family:${titleFont}">Life Deco Art</span><br><br>${paragraph(greeting)}</td></tr>${rows}<tr><td style="padding:0 24px 24px;font-size:13px">${link}</td></tr></table></td></tr></table></body></html>`;
   const text = [ 'Life Deco Art', greeting, ...template.blocks.flatMap(block => [block.text || block.alt, block.secondary, block.url]).filter(Boolean),
     unsubscribe ? `Cancelar suscripción: ${unsubscribe}` : '' ].filter(Boolean).join('\n\n');
@@ -116,4 +124,4 @@ function renderEmail(template, person = {}, unsubscribe = '') {
 }
 
 module.exports = { consentVersion, emailOf, digest, subscription, subscribe, unsubscribeToken,
-  validUnsubscribe, templateOf, renderEmail, defaultDraft, escape };
+  validUnsubscribe, templateOf, renderEmail, defaultDraft, escape, personalize };

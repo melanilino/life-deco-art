@@ -41,7 +41,7 @@ async function subscriberSummary(db, now = new Date(), includeMail = false) {
   return includeMail ? mail : totals;
 }
 
-function service(db, mail, secret, site) {
+function service(db, mail, secret, site, sequences) {
   async function attemptWelcome(id) {
     const settings = (await db.read(settingsPath))?.data;
     if (!settings?.enabled || !mail.configured()) return;
@@ -76,6 +76,9 @@ function service(db, mail, secret, site) {
     if (['queued', 'retry'].includes(record.welcome.status)) {
       try { await attemptWelcome(id); } catch { /* The stored job remains available for review or retry. */ }
     }
+    if (sequences) {
+      try { await sequences.subscription(signup, id); } catch { /* The periodic scan recovers missed enrollments. */ }
+    }
   }
 
   async function unsubscribe(token) {
@@ -87,6 +90,7 @@ function service(db, mail, secret, site) {
       if (!valid || record.status === 'cancelled') return null;
       return cancelRecord(record, 'email');
     });
+    if (valid && sequences) await sequences.cancel(id);
     return valid;
   }
 
@@ -100,6 +104,7 @@ function service(db, mail, secret, site) {
       previous = record;
       return record && record.status !== 'cancelled' ? cancelRecord(record, 'hub') : null;
     });
+    if (previous && sequences) await sequences.cancel(id);
     return updated || previous;
   }
 
