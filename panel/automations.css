@@ -45,9 +45,25 @@
 .auto-timeline li::before { content: ""; position: absolute; top: 20px; left: -22px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); }
 .auto-timeline li.auto-wait::before { background: var(--brown); }
 .auto-node-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.auto-node-head > div { display: flex; gap: 6px; }
-#marketing-view .auto-remove { border: 0; background: transparent; padding: 0; width: 32px; min-height: 32px; font-size: 21px; }
-.auto-wait-fields { display: flex; gap: 10px; max-width: 280px; margin-top: 12px; }
+.auto-sequence-screen { min-width: 0; }
+.auto-sequence-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 22px; }
+#marketing-view .auto-sequence-heading h2 { margin: 0; font-size: var(--font-section-title); }
+.auto-sequence-list { padding-left: 38px; margin-bottom: 22px; }
+.auto-sequence-list::before { left: 13px; top: 30px; bottom: 30px; }
+.auto-sequence-list li { margin-bottom: 16px; }
+.auto-sequence-list li::before { display: none; }
+.auto-sequence-marker { position: absolute; left: -39px; top: 16px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cream); color: var(--text-muted); font-size: var(--font-helper); }
+.auto-sequence-marker svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.auto-sequence-type { color: var(--text-muted); font-size: var(--font-helper); }
+.auto-sequence-list .auto-node-head { flex-wrap: wrap; gap: 6px 12px; }
+.auto-sequence-list strong { font-weight: 500; overflow-wrap: anywhere; }
+.auto-sequence-list p { overflow-wrap: anywhere; }
+.auto-sequence-subject span { display: block; margin-top: 10px; color: var(--text-muted); font-size: var(--font-helper); }
+.auto-sequence-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.auto-wait-fields { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: start; gap: 12px; max-width: 360px; margin-top: 16px; }
+.auto-wait-fields .auto-field { margin-bottom: 0; }
+.auto-sequence-add { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 10px; margin-left: 38px; }
+.auto-sequence-add button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
 .auto-inline-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
 .auto-mail-screen { container-type: inline-size; min-width: 0; }
 #marketing-view .auto-mail-screen > h2 { margin-bottom: 22px; font-size: var(--font-section-title); }
@@ -156,4 +172,7 @@
   .auto-footer > span { width: 100%; order: 2; }
   .auto-node-head { flex-wrap: wrap; }
   .auto-block-controls { grid-template-columns: minmax(0,1fr); }
+  .auto-sequence-list li { padding: 14px 12px; }
+  .auto-sequence-add { justify-content: stretch; }
+  .auto-sequence-add button { flex: 1 1 130px; }
 }
