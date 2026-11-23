@@ -20,6 +20,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let previousTemplate = null, copies = [], templatesLoaded = false, templatesOpen = false, search = '', stateFilter = '';
   let conflict = false, loading = true;
   let taskScheduling = false, waitTest = null;
+  const mailSections = { metadata:true, content:false };
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -123,7 +124,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${flow.steps.map((step, index) => `<li class="${step.kind === 'wait' ? 'auto-wait' : ''}${editable ? ' auto-sequence-step' : ''}">${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${index+1}</span>${step.kind === 'mail' ? `<button type="button" class="auto-mail-card-target" data-edit-mail="${step.id}" aria-label="Editar ${escape(step.name || 'correo')}, paso ${index+1}"></button>` : ''}` : ''}<div class="auto-node-head"><strong>${step.kind === 'wait' ? 'Espera' : escape(step.name || 'Correo')}</strong>${editable ? stepMenu(step,index) : ''}</div>
         ${step.kind === 'wait' ? editable ? `<div class="auto-wait-fields"><label class="auto-field">Duración<input type="number" aria-label="Duración de la espera ${index + 1}" min="1" max="365" data-wait-duration="${index}" value="${step.duration}"></label>
           <label class="auto-field">Unidad<select aria-label="Unidad de la espera ${index + 1}" data-wait-unit="${index}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],step.unit)}</select></label></div>` :
-          `<p>${step.duration} ${(step.duration === 1 ? {minutes:'minuto',hours:'hora',days:'día'} : {minutes:'minutos',hours:'horas',days:'días'})[step.unit]}</p>` : `<p${editable ? ' class="auto-sequence-subject"' : ''}>${editable ? '<span>Asunto</span>' : ''}${escape(step.template.subject || 'Asunto pendiente')}</p>`}
+          `<p>${step.duration} ${(step.duration === 1 ? {minutes:'minuto',hours:'hora',days:'día'} : {minutes:'minutos',hours:'horas',days:'días'})[step.unit]}</p>` : `<p${editable ? ' class="auto-sequence-subject"' : ''}>${escape(step.template.subject || 'Asunto pendiente')}</p>`}
         </li>`).join('')}</ol>`;
   }
   function sequenceScreen() {
@@ -154,12 +155,12 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function mailScreen() {
     const mail = selectedMail();
     if (!mail) return panel('Correo', `<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
-    return `<section class="auto-mail-screen" aria-label="Editor de correo"><h2>Correo</h2><div class="auto-mail-meta"><label class="auto-field">Correo de la secuencia<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(step => [step.id,step.name || 'Correo']),mail.id)}</select></label>
+    return `<section class="auto-mail-screen" aria-label="Editor de correo"><details class="auto-mail-section" data-mail-section="metadata" ${mailSections.metadata ? 'open' : ''}><summary><h2>Correo</h2>${icon('chevron')}</summary><div class="auto-mail-section-body"><div class="auto-mail-meta"><label class="auto-field">Correo de la secuencia<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(step => [step.id,step.name || 'Correo']),mail.id)}</select></label>
       <label class="auto-field">Nombre del correo<input maxlength="100" data-mail="name" value="${escape(mail.name)}"></label>
       <label class="auto-field">Asunto<input maxlength="150" data-mail="subject" value="${escape(mail.template.subject)}"></label>
       <div><label class="auto-field">Texto de vista previa<input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
       <div class="auto-chips auto-preheader-suggestions" aria-label="Sugerencias de vista previa">${['Ideas y novedades de Life Deco Art','Gracias por ser parte de nuestra comunidad.'].map(text => `<button type="button" data-suggestion="${escape(text)}">${text}</button>`).join('')}</div></div></div>
-      <div class="auto-mail-grid"><section class="auto-mail-settings" aria-label="Contenido del correo"><h3 class="auto-mail-section-title">Contenido del correo</h3>
+      </div></details><details class="auto-mail-section" data-mail-section="content" ${mailSections.content ? 'open' : ''}><summary><h2>Contenido del correo</h2>${icon('chevron')}</summary><div class="auto-mail-section-body auto-mail-grid"><section class="auto-mail-settings" aria-label="Contenido del correo">
       <div class="mkt-palette-actions auto-mail-add-blocks">${['text','image','button'].map(kind => `<button type="button" data-add-block="${kind}">${icon({text:'doc',image:'image',button:'link'}[kind])}${blockLabels[kind]}</button>`).join('')}</div>
       <ol class="auto-mail-blocks" aria-label="Bloques del correo">${mail.template.blocks.map((block,index)=>`<li><button type="button" data-block="${index}" aria-label="Seleccionar ${blockLabels[block.kind]}, bloque ${index+1}" aria-pressed="${index===selectedBlock}"><span>${index+1}.</span> ${blockLabels[block.kind]}</button></li>`).join('')}</ol>
       <div class="auto-chips" aria-label="Insertar en el correo">${[['name','Nombre'],['code','Código LDA10'],['shop','Botón tienda'],['whatsapp','Botón WhatsApp']].map(([key,label]) =>
@@ -172,7 +173,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       <section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3 class="auto-mail-section-title">Vista previa del correo</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
         <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div></header><div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
         <p class="auto-muted">Ejemplo con ${escape(sampleName || 'saludo sin nombre')}. Cada persona recibe su propio saludo.</p>
-        <div class="auto-inline-actions auto-mail-final">${button('Ver correo final','preview')}</div></section></div></section>`;
+        <div class="auto-inline-actions auto-mail-final">${button('Ver correo final','preview')}</div></section></div></details></section>`;
   }
   function reviewScreen() {
     const checks = flowChecks(flow);
@@ -427,6 +428,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     finally { busy=false; }
   });
   result.addEventListener('toggle', event => {
+    if (event.target.matches('[data-mail-section]')) { mailSections[event.target.dataset.mailSection] = event.target.open; return; }
     if (event.target.matches('.auto-saved-templates')) { templatesOpen = event.target.open; return; }
     if (!event.target.matches('.auto-actions-menu')) return;
     result.querySelector(`[popovertarget="${event.target.id}"]`)?.setAttribute('aria-expanded',String(event.newState === 'open'));
