@@ -106,13 +106,15 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       birthday: 'Solo entran clientas con una fecha de cumpleaños registrada. El formulario actual de Clientes aún no recoge ese dato.',
       inactive: 'Se revisa la última factura emitida de clientas con suscripción activa.',
     };
-    return panel('Disparador', `<label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>
-      <fieldset class="auto-triggers"><legend>¿Qué activa esta automatización?</legend>${triggerOptions.map(([value,label]) =>
-        `<label><input type="radio" name="auto-trigger" value="${value}" ${flow.trigger === value ? 'checked' : ''}>${label}</label>`).join('')}</fieldset>
-      <p class="auto-muted">${details[flow.trigger]}</p>
-      ${flow.trigger === 'subscription' ? `<fieldset class="auto-origins"><legend>Origen de la suscripción</legend>${originOptions.map(([value,label]) =>
-        `<label><input type="checkbox" data-origin="${value}" ${flow.origins.includes(value) ? 'checked' : ''}>${label}</label>`).join('')}</fieldset>` : ''}
-      ${flow.trigger === 'inactive' ? `<label class="auto-field">Días sin comprar<input type="number" data-flow="inactiveDays" min="1" max="730" value="${flow.inactiveDays}"></label>` : ''}`);
+    return `<section class="auto-trigger-screen" aria-label="Disparador de la automatización"><header class="auto-trigger-heading"><h2>Disparador</h2>${badge()}</header><label class="auto-field auto-trigger-name">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>
+      <fieldset class="auto-triggers" aria-describedby="auto-trigger-description"><legend>¿Qué activa esta automatización?</legend><div class="auto-trigger-options">${triggerOptions.map(([value,label]) =>
+        `<label><input type="radio" name="auto-trigger" value="${value}" ${flow.trigger === value ? 'checked' : ''}><span>${label}</span></label>`).join('')}</div></fieldset>
+      <p class="auto-muted auto-trigger-description" id="auto-trigger-description">${details[flow.trigger]}</p>
+      ${flow.trigger === 'subscription' ? `<fieldset class="auto-origins" aria-describedby="auto-origins-description"><legend>Orígenes de suscripción</legend><p class="auto-muted" id="auto-origins-description">Puedes elegir uno o ambos formularios.</p><div class="auto-origin-options">${originOptions.map(([value,label]) => {
+        const [place, name] = label.split(' «');
+        return `<label><input type="checkbox" aria-label="${escape(label)}" data-origin="${value}" ${flow.origins.includes(value) ? 'checked' : ''}><span><strong>${escape(place)}</strong><span>${name ? '«'+escape(name) : ''}</span></span></label>`;
+      }).join('')}</div>${!flow.origins.length ? '<p class="auto-origin-warning" role="status">Elige al menos un origen para activar esta automatización.</p>' : ''}</fieldset>` : ''}
+      ${flow.trigger === 'inactive' ? `<label class="auto-field auto-trigger-inactive">Días sin comprar<input type="number" data-flow="inactiveDays" min="1" max="730" value="${flow.inactiveDays}"></label>` : ''}</section>`;
   }
   function timeline(editable = true) {
     return `<ol class="auto-timeline${editable ? ' auto-sequence-list' : ''}" ${editable ? 'aria-label="Orden de la secuencia"' : ''}><li>${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${icon('flow')}</span><div class="auto-node-head"><strong>${triggerLabel(flow)}</strong><span class="auto-sequence-type">Disparador</span></div>` : `<strong>${triggerLabel(flow)}</strong>`}<p>${flow.trigger === 'subscription' ? flow.origins.map(originText).join(' · ') || 'Elige al menos un origen' : 'Contacto con suscripción activa'}</p></li>
@@ -307,7 +309,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if (target.matches('[data-list-status]')) { stateFilter = target.value; render(); return; }
     if (!flow) return;
     if (target.matches('[name=auto-trigger]')) { flow.trigger = target.value; change(); render(); }
-    if (target.dataset.origin) { flow.origins = target.checked ? [...new Set([...flow.origins,target.dataset.origin])] : flow.origins.filter(origin=>origin!==target.dataset.origin); change(); }
+    if (target.dataset.origin) {
+      flow.origins = target.checked ? [...new Set([...flow.origins,target.dataset.origin])] : flow.origins.filter(origin=>origin!==target.dataset.origin);
+      change(); render(); result.querySelector(`[data-origin="${target.dataset.origin}"]`)?.focus();
+    }
     if (target.matches('[data-mail-select]')) { flow.selectedMail = target.value; selectedBlock = 0; change(); render(); }
     if (target.hasAttribute('data-wait-unit')) { flow.steps[Number(target.dataset.waitUnit)].unit = target.value; change(); }
   });

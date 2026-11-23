@@ -31,14 +31,32 @@
 .auto-back { margin: 0 0 22px; }
 .auto-field { display: grid; gap: 6px; min-width: 0; margin-bottom: 14px; }
 .auto-field textarea { min-height: 100px; }
-.auto-triggers, .auto-origins { display: flex; flex-wrap: wrap; gap: 10px; padding: 0; margin: 18px 0; border: 0; }
-.auto-triggers legend, .auto-origins legend { margin-bottom: 12px; }
-.auto-triggers label { display: flex; gap: 8px; align-items: center; padding: 11px 14px; border: 1px solid var(--mkt-line); border-radius: var(--radius); cursor: pointer; }
-.auto-triggers label:has(:checked) { border-color: var(--brown); background: var(--brown-soft); }
+.auto-trigger-screen { container-type: inline-size; min-width: 0; }
+.auto-trigger-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 22px; }
+#marketing-view .auto-trigger-heading h2 { margin: 0; font-size: var(--font-section-title); }
+.auto-trigger-name { margin-bottom: 24px; }
+.auto-triggers, .auto-origins { min-width: 0; padding: 0; margin: 0; border: 0; }
+.auto-triggers legend, .auto-origins legend { padding: 0; margin-bottom: 12px; font-weight: 500; }
+.auto-trigger-options, .auto-origin-options { display: grid; grid-template-columns: minmax(0,1fr); gap: 10px; }
+.auto-triggers label, .auto-origins label { display: flex; gap: 10px; align-items: center; min-height: 48px; padding: 12px 14px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); cursor: pointer; }
+.auto-triggers label:has(:checked), .auto-origins label:has(:checked) { border-color: var(--brown); background: var(--brown-soft); }
+.auto-triggers label:focus-within, .auto-origins label:focus-within { outline: 2px solid var(--brown); outline-offset: 2px; }
 .auto-triggers input { accent-color: var(--brown); }
-#marketing-view .auto-triggers input { width: 18px; min-height: 18px; }
-.auto-origins { flex-direction: column; }
-.auto-origins label { display: flex; gap: 8px; align-items: center; }
+#marketing-view .auto-triggers input, #marketing-view .auto-origins input { flex: 0 0 18px; width: 18px; height: 18px; min-height: 18px; margin: 0; }
+#marketing-view .auto-trigger-description { margin-top: 12px; font-size: var(--font-helper); }
+.auto-origins { margin-top: 28px; }
+.auto-origin-options { margin-top: 14px; }
+.auto-origin-options label > span { display: grid; gap: 4px; min-width: 0; }
+.auto-origin-options strong { font-weight: 500; }
+.auto-origin-options span span { color: var(--text-muted); font-size: var(--font-helper); overflow-wrap: anywhere; }
+#marketing-view .auto-origin-warning { margin-top: 12px; color: var(--text-muted); font-size: var(--font-helper); }
+.auto-trigger-inactive { max-width: 260px; margin-top: 24px; }
+@container (min-width: 480px) {
+  .auto-trigger-options, .auto-origin-options { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@container (min-width: 820px) {
+  .auto-trigger-options { grid-template-columns: repeat(3,minmax(0,1fr)); }
+}
 .auto-timeline { position: relative; margin: 0 0 18px; padding: 0 0 0 24px; list-style: none; }
 .auto-timeline::before { content: ""; position: absolute; inset: 12px auto 12px 7px; border-left: 1px solid var(--mkt-line); }
 .auto-timeline li { position: relative; padding: 16px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); margin-bottom: 12px; }
