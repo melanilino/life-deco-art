@@ -241,7 +241,7 @@
 .auto-review-mail { display: flex; align-items: end; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 16px; }
 .auto-review-mail .auto-field { flex: 1 1 190px; margin: 0; }
 .auto-review-test-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-#marketing-view .auto-review-test-actions button { flex: 1 1 140px; background: var(--brown-soft); border-color: transparent; }
+#marketing-view .auto-review-test-actions button { flex: 0 1 auto; }
 #marketing-view .auto-review-test-note { margin: 16px 0 0; font-size: var(--font-helper); }
 .auto-test-details { margin-top: 32px; padding: 8px 14px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
 .auto-test-details > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; list-style: none; }
@@ -261,10 +261,10 @@
 .auto-checks .is-ok > span { color: var(--success); }
 .auto-checks .is-error > span { color: var(--error); }
 .auto-checks .is-warning > span { color: var(--brown); }
-#marketing-view .auto-checks button { padding: 0 4px; min-height: 28px; border: 0; background: transparent; text-decoration: underline; color: var(--text-muted); }
+#marketing-view .auto-checks button { padding: 0 4px; min-height: 28px; border: 0; background: transparent; text-decoration: none; text-underline-offset: 3px; color: var(--text-muted); }
 .auto-pending-checks { display: grid; gap: 12px; }
 .auto-pending-checks li { padding: 12px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); align-items: center; }
-#marketing-view .auto-pending-checks button { text-decoration: none; }
+#marketing-view .auto-checks button:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
 @container (min-width: 680px) {
   .auto-review-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
