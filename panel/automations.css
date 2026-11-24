@@ -53,7 +53,7 @@
 #marketing-view .auto-triggers input, #marketing-view .auto-origins input { flex: 0 0 18px; width: 18px; height: 18px; min-height: 18px; margin: 0; }
 #marketing-view .auto-trigger-description { margin-top: 12px; font-size: var(--font-helper); }
 .auto-origins { margin-top: 28px; }
-.auto-origin-options { margin-top: 14px; }
+.auto-origin-options { margin-top: 0; }
 .auto-origin-options label > span { display: grid; gap: 4px; min-width: 0; }
 .auto-origin-options strong { font-weight: 500; }
 .auto-origin-options span span { color: var(--text-muted); font-size: var(--font-helper); overflow-wrap: anywhere; }

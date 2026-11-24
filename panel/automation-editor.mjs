@@ -29,7 +29,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const mailSections = { metadata:true, content:false };
   let timingOpen = '';
   let testDetailsOpen = false;
-  const visited = new Set([1]);
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -87,8 +86,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const panel = (title, body, extra = '') => `<section class="auto-panel ${extra}">${title ? `<h2>${title}</h2>` : ''}${body}</section>`;
   const button = (label, action, primary = false, attributes = '') => `<button type="button" data-auto="${action}" ${primary ? 'data-form-action="primary"' : 'data-form-action="secondary"'} ${attributes}>${label}</button>`;
   const stepper = () => `<nav class="auto-stepper" aria-label="Pasos de la automatización">${flowStages.map((label,index)=>{
-    const number=index+1,checked=flow&&number<4&&visited.has(number)&&stage!==number,complete=checked&&flowChecks(flow).filter(check=>check.stage===number&&!check.warning).every(check=>check.ok);
-    return `<button type="button" data-stage="${number}" aria-label="${number}. ${label}" ${stage===number?'aria-current="step"':''} ${!flow?'disabled':''}><span class="auto-step-number" aria-hidden="true">${checked?(complete?icon('check'):'!'):number}</span><span>${label}</span></button>`;
+    const number=index+1;
+    return `<button type="button" data-stage="${number}" aria-label="${number}. ${label}" ${stage===number?'aria-current="step"':''} ${!flow?'disabled':''}><span class="auto-step-number" aria-hidden="true">${number}</span><span>${label}</span></button>`;
   }).join('')}</nav>`;
   function home() {
     const list = rows.filter(row => (!stateFilter || row.status === stateFilter)
@@ -247,7 +246,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
   }
   async function go(next) {
-    visited.add(next);
     if (!flow && next) return;
     if (flow) { stage = next; flow.stage = next; change(); await save(); }
     else stage = next;
