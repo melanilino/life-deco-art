@@ -42,7 +42,8 @@
 .auto-trigger-screen { container-type: inline-size; min-width: 0; }
 .auto-trigger-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 22px; }
 #marketing-view .auto-trigger-heading h2 { margin: 0; font-size: var(--font-section-title); }
-.auto-trigger-name { margin-bottom: 24px; }
+.auto-trigger-name { margin-bottom: 24px; font-weight: 500; }
+.auto-trigger-name input { font-weight: 400; }
 .auto-triggers, .auto-origins { min-width: 0; padding: 0; margin: 0; border: 0; }
 .auto-triggers legend, .auto-origins legend { padding: 0; margin-bottom: 12px; font-weight: 500; }
 .auto-trigger-options, .auto-origin-options { display: grid; grid-template-columns: minmax(0,1fr); gap: 10px; }
