@@ -32,7 +32,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let richRange = null;
   let imageOpen = false;
   let uploadingImage = '';
-  let organizeOpen = false;
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -217,10 +216,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <div class="auto-field"><label id="auto-text-label">Texto del correo</label><div class="auto-rich-shell"><div class="auto-rich-toolbar" role="toolbar" aria-label="Formato del texto"><button type="button" data-rich="bold" aria-label="Negrita"><strong>B</strong></button><button type="button" data-rich="italic" aria-label="Cursiva"><em>I</em></button><button type="button" data-rich="link" aria-label="Insertar enlace">${icon('link')}</button><button type="button" class="auto-insert-name" data-rich="name">Insertar nombre</button></div>
         <div class="auto-rich-link" hidden><label class="auto-field">Enlace HTTPS<input type="url" data-rich-url placeholder="https://"></label><button type="button" data-rich="apply-link">Aplicar</button><button type="button" data-rich="cancel-link">Cancelar</button></div>
         <div class="auto-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="auto-text-label" data-rich-editor>${richHTML(textBlock)}</div></div></div>
-        <section class="auto-compose-image" aria-label="Imagen del correo">${picture||imageOpen?`<div class="auto-image-heading"><h3>Imagen <span class="auto-muted">(opcional)</span></h3><button type="button" data-auto="remove-image" data-form-action="text">Eliminar imagen</button></div>${uploadControl('content','Subir desde mi computadora')}<label class="auto-field">Enlace de la imagen<input type="url" maxlength="1200" data-simple-image="url" value="${escape(picture?.url||'')}" placeholder="https://"></label><label class="auto-field">Texto alternativo<input maxlength="150" data-simple-image="alt" value="${escape(picture?.alt||'')}"></label>`:button(`${icon('plus')} Añadir imagen`,'show-image')}</section>
+        ${picture?`<section class="auto-compose-image" aria-label="Imagen del correo"><div class="auto-image-heading"><h3>Imagen <span class="auto-muted">(opcional)</span></h3><button type="button" data-auto="remove-image" data-form-action="text">Eliminar imagen</button></div>${uploadControl('content','Subir desde mi computadora')}<label class="auto-field">Enlace de la imagen<input type="url" maxlength="1200" data-simple-image="url" value="${escape(picture.url)}" placeholder="https://"></label><label class="auto-field">Texto alternativo<input maxlength="150" data-simple-image="alt" value="${escape(picture.alt||'')}"></label></section>`:''}
         <div class="auto-compose-button"><h3>Botón <span class="auto-muted">(opcional)</span></h3><div><label class="auto-field">Texto del botón<input maxlength="150" data-simple-button="text" value="${escape(cta?.text||'')}"></label><label class="auto-field">Enlace<input type="url" maxlength="1200" data-simple-button="url" value="${escape(cta?.url||'')}" placeholder="https://"></label></div></div>
-        <details class="auto-compose-organize" ${organizeOpen?'open':''}><summary>Organizar correo${icon('chevron')}</summary><label class="auto-brand-toggle"><input type="checkbox" data-hide-brand ${mail.template.hideBrandName?'':'checked'}>Mostrar Life Deco Art en la cabecera</label>${uploadControl('header','Subir imagen de cabecera')}
-          <ol class="auto-order-list" aria-label="Orden del contenido">${mail.template.blocks.map((block,index)=>`<li><span>${index+1}. ${blockLabels[block.kind]}</span><div>${block.kind==='image'?`<button type="button" data-edit-image="${index}" data-form-action="text">Editar</button>`:''}<button type="button" data-move-block="${index}" data-direction="-1" aria-label="Subir ${blockLabels[block.kind]}, bloque ${index+1}" ${index===0?'disabled':''}>${icon('chevron')}</button><button type="button" data-move-block="${index}" data-direction="1" aria-label="Bajar ${blockLabels[block.kind]}, bloque ${index+1}" ${index===mail.template.blocks.length-1?'disabled':''}>${icon('chevron')}</button></div></li>`).join('')}</ol></details>
         ${extras.length?`<details class="auto-compose-extras"><summary>Más contenido${icon('chevron')}</summary><ol class="auto-mail-blocks">${extras.map(block=>{const index=mail.template.blocks.indexOf(block);return `<li><button type="button" data-block="${index}">${blockLabels[block.kind]} ${index+1}</button></li>`}).join('')}</ol><div data-auto-inspector>${inspector(mail)}</div></details>`:''}
       </section><section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3>Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button><button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header>
         <div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
@@ -266,7 +263,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${editing && flow && !confirmation ? `<footer class="auto-footer">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>
-        ${stage>1?`<button type="button" data-stage="${stage-1}" data-form-action="secondary">← Atrás</button>`:button('← Atrás','home')}
+        ${stage>1?`<button type="button" data-stage="${stage-1}" data-form-action="secondary">Atrás</button>`:button('Atrás','home')}
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
@@ -594,7 +591,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     finally { busy=false; }
   });
   result.addEventListener('toggle', event => {
-    if(event.target.matches('.auto-compose-organize')){organizeOpen=event.target.open;return;}
     if (event.target.matches('.auto-test-details')) { testDetailsOpen=event.target.open;return; }
     if (event.target.matches('.auto-saved-templates')) { templatesOpen = event.target.open; return; }
     if (!event.target.matches('.auto-actions-menu')) return;
