@@ -1,4 +1,4 @@
-import { triggerOptions, originOptions, flowStages, starterOptions, starter, emptyMail, normalizeFlow, flowChecks, sequenceLabel, mailTiming } from './automation-model.mjs';
+import { triggerOptions, originOptions, flowStages, starter, emptyMail, normalizeFlow, flowChecks, sequenceLabel, precedingWaits, deliveryTiming, https } from './automation-model.mjs';
 import { syncReturnHeader } from './panel-layout.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[c]);
@@ -20,13 +20,15 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const key = `lda-automation-draft:${user.uid}`;
   const editorId = location.hash.slice(1).split('/')[1] || '';
   const editing = Boolean(editorId);
-  let rows = [], current = null, flow = null, stage = 0, selectedBlock = 0;
+  let rows = [], current = null, flow = null, stage = 1, selectedBlock = 0;
   let mobile = false, sampleName = '', mailReady = false, metric = null, confirmation = false;
   let revision = 0, savedRevision = 0, timer, saving, busy = false, loadFailed = false;
   let previousTemplate = null, copies = [], templatesLoaded = false, templatesOpen = false, search = '', stateFilter = '';
   let conflict = false, loading = true;
   let taskScheduling = false, waitTest = null;
   const mailSections = { metadata:true, content:false };
+  let timingOpen = '';
+  const visited = new Set([1]);
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -83,8 +85,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   const panel = (title, body, extra = '') => `<section class="auto-panel ${extra}">${title ? `<h2>${title}</h2>` : ''}${body}</section>`;
   const button = (label, action, primary = false, attributes = '') => `<button type="button" data-auto="${action}" ${primary ? 'data-form-action="primary"' : 'data-form-action="secondary"'} ${attributes}>${label}</button>`;
-  const stepper = () => `<nav class="auto-stepper" aria-label="Pasos de la automatización">${flowStages.map((label, index) =>
-    `<button type="button" data-stage="${index}" aria-label="${index + 1}. ${label}" ${stage === index ? 'aria-current="step"' : ''} ${!flow && index ? 'disabled' : ''}><span class="auto-step-number" aria-hidden="true">${index + 1}</span><span>${label}</span></button>`).join('')}</nav>`;
+  const stepper = () => `<nav class="auto-stepper" aria-label="Pasos de la automatización">${flowStages.map((label,index)=>{
+    const number=index+1,checked=flow&&number<4&&visited.has(number)&&stage!==number,complete=checked&&flowChecks(flow).filter(check=>check.stage===number&&!check.warning).every(check=>check.ok);
+    return `<button type="button" data-stage="${number}" aria-label="${number}. ${label}" ${stage===number?'aria-current="step"':''} ${!flow?'disabled':''}><span class="auto-step-number" aria-hidden="true">${checked?(complete?icon('check'):'!'):number}</span><span>${label}</span></button>`;
+  }).join('')}</nav>`;
   function home() {
     const list = rows.filter(row => (!stateFilter || row.status === stateFilter)
       && (row.draft?.name || '').toLocaleLowerCase('es').includes(search.toLocaleLowerCase('es')));
@@ -97,14 +101,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
             <div popover id="auto-actions-${row.id}" class="auto-actions-menu" aria-label="Acciones de ${escape(row.draft.name || 'Sin nombre')}"><button type="button" data-open="${row.id}">Editar</button><button type="button" data-delete="${row.id}">Eliminar</button></div></td></tr>`).join('') ||
           (loading ? '' : `<tr><td colspan="5">${loadFailed ? 'No se pudieron cargar las automatizaciones.' : 'No hay automatizaciones con estos filtros.'}</td></tr>`)}</tbody></table></div>
         ${loadFailed ? button('Volver a intentar', 'reload') : ''}`)}`;
-  }
-  function startScreen() {
-    if (flow) return `<section class="auto-start-screen" aria-label="Inicio de la automatización"><header class="auto-start-heading"><h2>Inicio</h2>${badge()}</header><label class="auto-field">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label></section>`;
-    if (editorId !== 'new') return panel('', loading ? '' : `<p>Esta automatización no está disponible.</p>`);
-    return `<section class="auto-start-screen" aria-label="Elegir cómo empezar"><header class="auto-start-heading"><h2>Elige cómo empezar</h2></header><h3 class="auto-start-label">Plantillas</h3><div class="auto-template-list" role="group" aria-label="Plantillas de automatización">${starterOptions.filter(([kind])=>kind!=='blank').map(([kind, name, trigger]) =>
-        `<button type="button" data-starter="${kind}" ${loadFailed || loading ? 'disabled' : ''}><span class="auto-template-icon" aria-hidden="true">${icon({welcome:'mail',purchase:'doc',review:'check'}[kind])}</span><span class="auto-template-copy"><strong>${name}</strong><span>${triggerLabel({trigger})}</span></span><span class="auto-template-next" aria-hidden="true">${icon('chevron')}</span></button>`).join('')}</div>
-        <button type="button" class="auto-from-scratch" data-starter="blank" ${loadFailed || loading ? 'disabled' : ''}><span class="auto-template-icon" aria-hidden="true">${icon('plus')}</span><span class="auto-template-copy"><strong>Desde cero</strong><span>Elegir disparador y contenido</span></span><span class="auto-template-next" aria-hidden="true">${icon('chevron')}</span></button>
-        <p class="auto-start-note">Ninguna opción activa el envío automáticamente.</p></section>`;
   }
   function triggerScreen() {
     const details = {
@@ -124,20 +120,34 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       }).join('')}</div>${!flow.origins.length ? '<p class="auto-origin-warning" role="status">Elige al menos un origen para activar esta automatización.</p>' : ''}</fieldset>` : ''}
       ${flow.trigger === 'inactive' ? `<label class="auto-field auto-trigger-inactive">Días sin comprar<input type="number" data-flow="inactiveDays" min="1" max="730" value="${flow.inactiveDays}"></label>` : ''}</section>`;
   }
-  function timeline(editable = true) {
-    const stepMenu = (step, index) => `<button type="button" class="mkt-contact-actions auto-step-actions" data-sequence-menu popovertarget="auto-step-actions-${index}" aria-expanded="false" aria-label="Acciones del paso ${index+1}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button><div popover id="auto-step-actions-${index}" class="auto-actions-menu" aria-label="Acciones del paso ${index+1}">${step.kind === 'mail' ? `<button type="button" data-edit-mail="${step.id}">Editar</button>` : ''}<button type="button" data-remove-step="${index}">Eliminar</button></div>`;
-    return `<ol class="auto-timeline${editable ? ' auto-sequence-list' : ''}" ${editable ? 'aria-label="Orden de la secuencia"' : ''}><li>${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${icon('flow')}</span><div class="auto-node-head"><strong>Disparador</strong></div><p>${triggerLabel(flow)}</p>` : `<strong>${triggerLabel(flow)}</strong><p>${flow.trigger === 'subscription' ? flow.origins.map(originText).join(' · ') || 'Elige al menos un origen' : 'Contacto con suscripción activa'}</p>`}</li>
-      ${flow.steps.map((step, index) => `<li class="${step.kind === 'wait' ? 'auto-wait' : ''}${editable ? ' auto-sequence-step' : ''}">${editable ? `<span class="auto-sequence-marker" aria-hidden="true">${index+1}</span>${step.kind === 'mail' ? `<button type="button" class="auto-mail-card-target" data-edit-mail="${step.id}" aria-label="Editar ${escape(step.name || 'correo')}, paso ${index+1}"></button>` : ''}` : ''}<div class="auto-node-head"><strong>${step.kind === 'wait' ? 'Espera' : escape(step.name || 'Correo')}</strong>${editable ? stepMenu(step,index) : ''}</div>
-        ${step.kind === 'wait' ? editable ? `<div class="auto-wait-fields"><label class="auto-field">Duración<input type="number" aria-label="Duración de la espera ${index + 1}" min="1" max="365" data-wait-duration="${index}" value="${step.duration}"></label>
-          <label class="auto-field">Unidad<select aria-label="Unidad de la espera ${index + 1}" data-wait-unit="${index}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],step.unit)}</select></label></div>` :
-          `<p>${step.duration} ${(step.duration === 1 ? {minutes:'minuto',hours:'hora',days:'día'} : {minutes:'minutos',hours:'horas',days:'días'})[step.unit]}</p>` : `<p${editable ? ' class="auto-sequence-subject"' : ''}>${escape(step.template.subject || 'Asunto pendiente')}</p>${editable ? `<p class="auto-sequence-timing" data-mail-timing="${index}">${mailTiming(flow.steps,index)}</p>` : ''}`}
-        </li>`).join('')}</ol>`;
+  function timeline() {
+    let elapsed=0;
+    const rows=[];
+    for(let index=0;index<flow.steps.length;index++) {
+      const step=flow.steps[index];
+      if(step.kind==='wait'){elapsed+=step.duration*({minutes:1,hours:60,days:1440}[step.unit]);continue;}
+      rows.push(`<li><strong>${escape(step.name||'Correo')}</strong><p>${escape(step.template.subject||'Asunto pendiente')}</p><p class="auto-muted">Día ${Math.floor(elapsed/1440)} · ${deliveryTiming(flow.steps,index)}</p></li>`);
+    }
+    return `<ol class="auto-timeline"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${rows.join('')}</ol>`;
   }
   function sequenceScreen() {
-    return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${timeline()}<div class="auto-sequence-add"><button type="button" data-sequence-menu popovertarget="auto-add-step" aria-expanded="false">${icon('plus')} Añadir paso</button><div popover id="auto-add-step" class="auto-actions-menu" aria-label="Añadir un paso">${button('Correo','add-mail')}${button('Espera','add-wait')}</div></div></section>`;
+    return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${sequenceTimeline()}<div class="auto-sequence-add">${button(`${icon('plus')} Añadir correo`,'add-mail')}</div></section>`;
+  }
+  function timingEditor(mail,index) {
+    const waits=precedingWaits(flow.steps,index);
+    return `<div class="auto-timing-editor" aria-label="Cuándo se envía ${escape(mail.name || 'el correo')}"><label class="auto-field">Cuándo sale<select data-timing-mode="${mail.id}" aria-label="Cuándo sale ${escape(mail.name||'el correo')}">${selectOptions([['now',waits.start===0?'Al instante':'Justo después del correo anterior'],['wait','Esperar…']],waits.steps.length?'wait':'now')}</select></label>${waits.steps.map((wait,offset)=>`<div class="auto-timing-fields"><label class="auto-field">Cantidad<input type="number" min="1" max="365" data-wait-duration="${waits.start+offset}" aria-label="Duración antes de ${escape(mail.name || 'correo')} ${offset+1}" value="${wait.duration}"></label><label class="auto-field">Unidad<select data-wait-unit="${waits.start+offset}" aria-label="Unidad antes de ${escape(mail.name || 'correo')} ${offset+1}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],wait.unit)}</select></label>${wait.unit==='days'?`<label class="auto-field">A las (opcional)<input type="time" data-wait-time="${waits.start+offset}" value="${wait.time||''}"></label>`:''}</div>`).join('')}${waits.steps.some(wait=>wait.unit==='days')?'<p class="auto-muted">Hora de República Dominicana.</p>':''}${button('Listo','timing-done')}</div>`;
+  }
+  function sequenceTimeline() {
+    const mailSteps=mails();
+    const lastMail=flow.steps.findLastIndex(step=>step.kind==='mail');
+    const pending=flow.steps.slice(lastMail+1).filter(step=>step.kind==='wait');
+    return `<ol class="auto-timeline auto-sequence-list" aria-label="Orden de la secuencia"><li><span class="auto-sequence-marker" aria-hidden="true">${icon('flow')}</span><strong>Disparador</strong><p>${triggerLabel(flow)}</p></li>${mailSteps.map((mail,number)=>{const index=flow.steps.indexOf(mail);return `<li class="auto-sequence-mail-group"><button type="button" class="auto-timing-toggle" data-timing="${mail.id}" aria-expanded="${timingOpen===mail.id}">${icon('clock')}<span data-mail-timing="${index}">${deliveryTiming(flow.steps,index)}</span>${icon('chevron')}</button>${timingOpen===mail.id?timingEditor(mail,index):''}<div class="auto-sequence-mail-card"><span class="auto-sequence-marker" aria-hidden="true">${number+1}</span><button type="button" class="auto-mail-card-target" data-edit-mail="${mail.id}" aria-label="Editar ${escape(mail.name||'correo')}"></button><div class="auto-node-head"><strong>${escape(mail.name||'Correo')}</strong>${!mail.template.subject.trim()?'<span class="auto-muted auto-mail-incomplete">Falta asunto</span>':''}<button type="button" class="mkt-contact-actions auto-step-actions" data-sequence-menu popovertarget="auto-mail-actions-${number}" aria-expanded="false" aria-label="Acciones de ${escape(mail.name||'correo')}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></button><div popover id="auto-mail-actions-${number}" class="auto-actions-menu"><button type="button" data-edit-mail="${mail.id}">Editar contenido</button><button type="button" data-duplicate-mail="${mail.id}">Duplicar</button>${mailSteps.length>1?`<button type="button" data-delete-mail="${mail.id}">Eliminar</button>`:''}</div></div><p>${escape(mail.template.subject||'Asunto pendiente')}</p></div></li>`}).join('')}${pending.length?`<li><strong>Espera pendiente</strong><p>${pending.map(wait=>`${wait.duration} ${{minutes:'minutos',hours:'horas',days:'días'}[wait.unit]}`).join(' + ')}</p><p class="auto-muted">Se aplicará al próximo correo que añadas.</p></li>`:''}</ol>`;
   }
   function refreshSequenceTiming() {
-    for (const label of result.querySelectorAll('[data-mail-timing]')) label.textContent = mailTiming(flow.steps,Number(label.dataset.mailTiming));
+    for (const label of result.querySelectorAll('[data-mail-timing]')) label.textContent = deliveryTiming(flow.steps,Number(label.dataset.mailTiming));
+  }
+  function affectedMails(key) {
+    return mails().filter(mail=>key==='subject'?!mail.template.subject.trim()||/[\r\n]/.test(mail.template.subject):key==='preheader'?!mail.template.preheader.trim():key==='blocks'?!mail.template.blocks.some(block=>block.kind==='image'||block.text?.trim()):key==='links'?mail.template.blocks.some(block=>['image','button'].includes(block.kind)&&!https(block.url)):false);
   }
   function mailPaper(mail) {
     const greeting = sampleName ? `Hola, ${escape(sampleName)}.` : '¡Hola!';
@@ -164,7 +174,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function mailScreen() {
     const mail = selectedMail();
     if (!mail) return panel('Correo', `<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
-    return `<section class="auto-mail-screen" aria-label="Editor de correo"><details class="auto-mail-section" data-mail-section="metadata" ${mailSections.metadata ? 'open' : ''}><summary><h2>Correo</h2>${icon('chevron')}</summary><div class="auto-mail-section-body"><div class="auto-mail-meta"><label class="auto-field">Correo de la secuencia<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(step => [step.id,step.name || 'Correo']),mail.id)}</select></label>
+    return `<section class="auto-mail-screen" aria-label="Editor de correo"><div class="auto-mail-tabs" role="group" aria-label="Correos de la secuencia">${mails().map((entry,index)=>`<button type="button" data-mail-tab="${entry.id}" aria-pressed="${entry.id===mail.id}">${index+1}. ${escape(entry.name||'Correo')}${entry.template.subject.trim()?'':' · Falta asunto'}</button>`).join('')}</div><div class="auto-content-timing"><span>${deliveryTiming(flow.steps,flow.steps.indexOf(mail))}</span>${button('Cambiar','change-timing')}</div><details class="auto-mail-section" data-mail-section="metadata" ${mailSections.metadata ? 'open' : ''}><summary><h2>Correo</h2>${icon('chevron')}</summary><div class="auto-mail-section-body"><div class="auto-mail-meta">
       <label class="auto-field">Nombre del correo<input maxlength="100" data-mail="name" value="${escape(mail.name)}"></label>
       <label class="auto-field">Asunto<input maxlength="150" data-mail="subject" value="${escape(mail.template.subject)}"></label>
       <div><label class="auto-field">Texto de vista previa<input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
@@ -193,7 +203,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       <div class="auto-review-overview">${timeline(false)}</div>
       <p class="auto-muted auto-review-timing">${taskScheduling ? 'Cada espera programa el siguiente correo para cuando venza el plazo. Puede haber un pequeño retraso de procesamiento. Los eventos del Hub mantienen su revisión diaria.' : 'Conecta Cloud Tasks para programar las esperas. La recuperación y los eventos del Hub mantienen su revisión diaria.'}</p>
       <div class="auto-review-grid"><section class="auto-review-checklist" aria-label="Comprobaciones"><h3>Comprobaciones</h3><ul class="auto-checks">${checks.map(check =>
-      `<li class="${check.ok ? 'is-ok' : check.warning ? 'is-warning' : 'is-error'}"><span role="img" aria-label="${check.ok ? 'Completado' : check.warning ? 'Opcional' : 'Pendiente'}">${check.ok ? icon('check') : '!'}</span><div>${check.label}${!check.ok && check.warning ? '<small class="auto-check-note">Opcional · no impide activar</small>' : ''}</div>${!check.ok ? `<button type="button" data-stage="${check.stage}">Revisar</button>` : ''}</li>`).join('')}</ul>
+      `<li class="${check.ok ? 'is-ok' : check.warning ? 'is-warning' : 'is-error'}"><span role="img" aria-label="${check.ok ? 'Completado' : check.warning ? 'Opcional' : 'Pendiente'}">${check.ok ? icon('check') : '!'}</span><div>${check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${!check.ok && check.warning ? '<small class="auto-check-note">Opcional · no impide activar</small>' : ''}</div>${!check.ok ? `<button type="button" data-check="${check.key}" data-stage="${check.stage}">Revisar</button>` : ''}</li>`).join('')}</ul>
       <p class="auto-review-readiness" role="status">${readiness}</p></section>
       <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Pruebas del correo</h3><div class="auto-review-mail"><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
         <button type="button" data-auto="preview" data-form-action="text" ${selectedMail() ? '' : 'disabled'}>Ver correo final</button></div>
@@ -218,8 +228,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function render() {
     if (!root.isConnected) return;
     header();
-    const screen = !editing ? home() : confirmation ? confirmedScreen() : stage === 0 ? startScreen()
-      : stage === 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
+    const screen = !editing ? home() : !flow ? '' : confirmation ? confirmedScreen()
+      : stage <= 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
     result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a><div class="auto-editor-layout">${stepper()}<div class="auto-editor-content">${screen}</div></div>` : screen}
       ${editing && flow && !confirmation ? `<footer class="auto-footer">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
@@ -236,6 +246,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
   }
   async function go(next) {
+    visited.add(next);
     if (!flow && next) return;
     if (flow) { stage = next; flow.stage = next; change(); await save(); }
     else stage = next;
@@ -275,6 +286,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       const response = await request('automations');
       rows = response.rows; mailReady = response.mailReady; sampleName = response.sampleName || ''; taskScheduling = response.scheduler === 'tasks';
       loadFailed = false; loading = false;
+      if (editing && editorId === 'new') { await create('blank'); return; }
       let pending;
       try { pending = JSON.parse(localStorage.getItem(key)); } catch { /* A damaged local draft cannot replace the server copy. */ }
       const row = editing && editorId !== 'new' ? rows.find(entry => entry.id === editorId) : null;
@@ -316,6 +328,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       if (Number.isInteger(value) && value >= 1 && value <= 365) flow.steps[Number(target.dataset.waitDuration)].duration = value;
       refreshSequenceTiming();
     }
+    if (target.hasAttribute('data-wait-time')) {
+      flow.steps[Number(target.dataset.waitTime)].time=target.value;
+      refreshSequenceTiming();change();
+    }
     if (target.matches('[data-flow],[data-mail],[data-block-field],[data-wait-duration]')) change();
   });
   result.addEventListener('change', event => {
@@ -328,7 +344,13 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       change(); render(); result.querySelector(`[data-origin="${target.dataset.origin}"]`)?.focus();
     }
     if (target.matches('[data-mail-select]')) { flow.selectedMail = target.value; selectedBlock = 0; change(); render(); }
-    if (target.hasAttribute('data-wait-unit')) { flow.steps[Number(target.dataset.waitUnit)].unit = target.value; change(); refreshSequenceTiming(); }
+    if (target.hasAttribute('data-wait-unit')) { const wait=flow.steps[Number(target.dataset.waitUnit)];wait.unit=target.value;if(wait.unit!=='days')delete wait.time;change(); render(); }
+    if (target.hasAttribute('data-timing-mode')) {
+      const index=flow.steps.findIndex(step=>step.id===target.dataset.timingMode), waits=precedingWaits(flow.steps,index);
+      if(target.value==='now')flow.steps.splice(waits.start,index-waits.start);
+      else if(!waits.steps.length){if(flow.steps.length>=30){report('La secuencia admite hasta 30 pasos.',true);return;}flow.steps.splice(index,0,{id:id(),kind:'wait',duration:2,unit:'days'});}
+      change();render();
+    }
   });
   async function returnToList(event) {
     if (!event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) {
@@ -347,8 +369,9 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if (!target || target.disabled || busy) return;
     if (target.dataset.actions || target.hasAttribute('data-sequence-menu')) {
       const menu = result.querySelector(`#${target.getAttribute('popovertarget')}`), bounds = target.getBoundingClientRect();
+      const height=menu.querySelectorAll('button').length*44+12;
       menu.style.left = `${Math.max(12,Math.min(bounds.right-160,innerWidth-172))}px`;
-      menu.style.top = `${Math.max(12,bounds.bottom+6+104>innerHeight ? bounds.top-110 : bounds.bottom+6)}px`;
+      menu.style.top = `${Math.max(12,bounds.bottom+6+height>innerHeight ? bounds.top-height-6 : bounds.bottom+6)}px`;
       return;
     }
     try {
@@ -357,7 +380,26 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       if (target.dataset.device) { mobile = target.dataset.device === 'mobile'; render(); return; }
       if (target.hasAttribute('data-block')) { selectedBlock = Number(target.dataset.block); render(); result.querySelector('[data-block-field]')?.focus(); return; }
       busy = true;
-      if (target.hasAttribute('data-stage')) await go(Number(target.dataset.stage));
+      if (target.hasAttribute('data-stage')) {
+        const affected=affectedMails(target.dataset.check)[0];
+        if(affected){flow.selectedMail=affected.id;selectedBlock=0;mailSections.metadata=true;mailSections.content=['blocks','links'].includes(target.dataset.check);}
+        await go(Number(target.dataset.stage));
+      }
+      else if (target.dataset.timing) {timingOpen=timingOpen===target.dataset.timing?'':target.dataset.timing;render();}
+      else if (target.dataset.mailTab) {flow.selectedMail=target.dataset.mailTab;selectedBlock=0;change();render();}
+      else if (target.dataset.duplicateMail) {
+        if(flow.steps.length+2>30)throw Error('La secuencia admite hasta 30 pasos.');
+        const index=flow.steps.findIndex(step=>step.id===target.dataset.duplicateMail),copy=structuredClone(flow.steps[index]);
+        copy.id=id();copy.name=(copy.name+' (copia)').slice(0,100);
+        flow.steps.splice(index+1,0,{id:id(),kind:'wait',duration:2,unit:'days'},copy);change();render();
+      }
+      else if (target.dataset.deleteMail) {
+        if(mails().length<2)return;
+        const index=flow.steps.findIndex(step=>step.id===target.dataset.deleteMail),waits=precedingWaits(flow.steps,index);
+        flow.steps.splice(waits.start,index-waits.start+1);
+        if(flow.selectedMail===target.dataset.deleteMail)flow.selectedMail=mails()[0].id;
+        timingOpen='';change();render();
+      }
       else if (target.dataset.starter) await create(target.dataset.starter);
       else if (target.dataset.open) await open(rows.find(row=>row.id===target.dataset.open));
       else if (target.dataset.delete) {
@@ -394,12 +436,15 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       else if (action==='sequence') await go(2);
       else if (action==='edit') { confirmation=false; await go(flow.stage||1); }
       else if (action==='save') await save();
-      else if (action==='add-wait'||action==='add-mail') {
-        if(flow.steps.length>=30)throw Error('La secuencia admite hasta 30 pasos.');
-        const step = action==='add-wait'?{id:id(),kind:'wait',duration:2,unit:'days'}:emptyMail(id());
-        if(step.kind==='mail')step.name=`Correo ${mails().length+1}`;
-        flow.steps.push(step);
-        change(); render();
+      else if (action==='timing-done') {await save();timingOpen='';render();}
+      else if (action==='change-timing') {timingOpen=flow.selectedMail;await go(2);}
+      else if (action==='add-mail') {
+        const pending=flow.steps.at(-1)?.kind==='wait';
+        const addWait=!pending&&mails().length>0;
+        if(flow.steps.length+(addWait?2:1)>30)throw Error('La secuencia admite hasta 30 pasos.');
+        const step=emptyMail(id());step.name=`Correo ${mails().length+1}`;
+        if(addWait)flow.steps.push({id:id(),kind:'wait',duration:2,unit:'days',time:'10:00'});
+        flow.steps.push(step);timingOpen=step.id;change();render();
       } else if(action==='brand') mutateMail(mail=>{
         const brand=getState().settings.marketingBrand||{};
         const color=brand.colors?.[0];

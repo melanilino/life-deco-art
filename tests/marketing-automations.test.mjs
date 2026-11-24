@@ -8,6 +8,15 @@ import { starter, flowChecks, normalizeFlow } from '../panel/automation-model.mj
 const secret = 'sequence-tests-private-key';
 const site = 'https://lifedecoart.com';
 const uid = 'owner';
+test('el programador respeta la hora opcional del correo sin adelantar ni duplicar',async()=>{
+  const x=fixture(true);
+  await x.publish('welcome',flow=>flow.steps.unshift({id:'wait-at',kind:'wait',duration:1,unit:'days',time:'11:30'}));
+  const subscriber=x.contact();await x.api.subscription({source:'footer'},subscriber);
+  assert.equal(x.messages.length,0);
+  assert.equal(x.scheduled.at(-1).job.dueAt,'2026-11-23T15:30:00.000Z');
+  x.advance(99000000-60000);await x.fresh().drain();assert.equal(x.messages.length,0);
+  x.advance(60000);await x.fresh().drain();await x.fresh().drain();assert.equal(x.messages.length,1);
+});
 function fixture(withScheduler = false) {
   let time = new Date('2026-11-22T12:00:00Z');
   const documents = new Map();

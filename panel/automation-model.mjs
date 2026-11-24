@@ -9,7 +9,7 @@ export const originOptions = [
   ['community', 'Formulario celeste «Suscríbete gratis»'],
   ['footer', 'Pie de página «Comunidad»'],
 ];
-export const flowStages = ['Inicio', 'Disparador', 'Secuencia', 'Correo', 'Revisar y activar'];
+export const flowStages = ['Disparador', 'Secuencia', 'Contenido', 'Revisar y activar'];
 export const starterOptions = [
   ['welcome', 'Bienvenida a la comunidad', 'subscription'],
   ['purchase', 'Gracias por tu compra', 'purchase'],
@@ -48,7 +48,9 @@ export function normalizeFlow(input) {
     if (step.kind === 'wait') {
       const duration = Number(step.duration);
       if (!Number.isInteger(duration) || duration < 1 || duration > 365 || !['minutes','hours','days'].includes(step.unit)) throw Error('Revisa la duración de la espera.');
-      return { id, kind: 'wait', duration, unit: step.unit };
+      const time = step.time || '';
+      if (time && (step.unit !== 'days' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time))) throw Error('Revisa la hora de envío.');
+      return { id, kind: 'wait', duration, unit: step.unit, ...(time ? {time} : {}) };
     }
     if (step.kind !== 'mail' || !Array.isArray(step.template?.blocks) || step.template.blocks.length > 30) throw Error('Revisa los pasos de correo.');
     const blocks = step.template.blocks.map(block => {
@@ -69,7 +71,7 @@ export function normalizeFlow(input) {
   return { name: text(input.name, 100), trigger: input.trigger,
     origins: ['community','footer'].filter(source => input.origins?.includes(source)),
     inactiveDays: Math.max(1, Math.min(730, Math.round(Number(input.inactiveDays) || 60))), steps,
-    stage: Number.isInteger(stage) && stage >= 0 && stage <= 4 ? stage : 1,
+    stage: Number.isInteger(stage) && stage >= 1 && stage <= 4 ? stage : 1,
     selectedMail: steps.some(step => step.kind === 'mail' && step.id === input.selectedMail) ? input.selectedMail : steps.find(step => step.kind === 'mail')?.id || '' };
 }
 export function flowChecks(flow) {
@@ -88,6 +90,26 @@ export function flowChecks(flow) {
 }
 export function waitMilliseconds(step) {
   return step.duration * { minutes: 60000, hours: 3600000, days: 86400000 }[step.unit];
+}
+export function waitDueAt(step, from) {
+  const due = new Date(new Date(from).getTime() + waitMilliseconds(step));
+  if (step.unit === 'days' && step.time) {
+    // Hora local de Life Deco Art: America/Santo_Domingo (UTC-04, sin cambio estacional).
+    const local = new Date(due.getTime() - 4 * 3600000);
+    const [hour, minute] = step.time.split(':').map(Number);
+    return new Date(Date.UTC(local.getUTCFullYear(),local.getUTCMonth(),local.getUTCDate(),hour+4,minute)).toISOString();
+  }
+  return due.toISOString();
+}
+export function precedingWaits(steps,index) {
+  let start=index;
+  while(start>0 && steps[start-1].kind==='wait')start--;
+  return {start,steps:steps.slice(start,index)};
+}
+export function deliveryTiming(steps,index) {
+  const waits=precedingWaits(steps,index), first=!steps.slice(0,waits.start).some(step=>step.kind==='mail');
+  if(!waits.steps.length)return first?'Al instante':'Justo después del correo anterior';
+  return waits.steps.map(step=>`Esperar ${step.duration} ${{minutes:['minuto','minutos'],hours:['hora','horas'],days:['día','días']}[step.unit][step.duration===1?0:1]}${step.time?' · a las '+step.time:''}`).join(' + ')+(first?' tras el disparador':' después del correo anterior');
 }
 export function mailTiming(steps, index) {
   let minutes = 0, previous = index - 1;

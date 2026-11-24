@@ -78,6 +78,22 @@
 .auto-sequence-list::before { left: 13px; top: 30px; bottom: 30px; }
 .auto-sequence-list li { margin-bottom: 16px; }
 .auto-sequence-list li::before { display: none; }
+.auto-sequence-list .auto-sequence-mail-group { padding: 0; border: 0; }
+.auto-sequence-mail-card { position: relative; padding: 16px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
+.auto-sequence-mail-card .auto-node-head { justify-content: flex-start; padding-right: 40px; }
+.auto-mail-incomplete { font-size: var(--font-helper); }
+.auto-step-number svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+#marketing-view .auto-timing-toggle { display: flex; align-items: center; gap: 8px; margin: 12px 0; padding: 7px 10px; min-height: 40px; max-width: 100%; white-space: normal; text-align: left; color: var(--text-muted); border-color: transparent; background: var(--brown-soft); }
+.auto-timing-toggle svg { flex: 0 0 18px; }
+.auto-timing-editor { padding: 16px; margin-bottom: 12px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
+.auto-timing-editor > .auto-field { max-width: 380px; }
+.auto-timing-fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 12px; }
+.auto-timing-editor > p { font-size: var(--font-helper); }
+.auto-mail-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+#marketing-view .auto-mail-tabs button { text-align: left; overflow-wrap: anywhere; }
+#marketing-view .auto-mail-tabs button[aria-pressed=true] { background: var(--brown-soft); border-color: var(--brown); }
+.auto-content-timing { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; margin-bottom: 22px; background: var(--brown-soft); border-radius: var(--surface-radius); color: var(--text-muted); }
+#marketing-view .auto-content-timing button { background: transparent; border-color: transparent; flex-shrink: 0; }
 .auto-sequence-marker { position: absolute; left: -39px; top: 16px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cream); color: var(--text-muted); font-size: var(--font-helper); }
 .auto-sequence-marker svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; }
 .auto-sequence-timing { color: var(--text-muted); font-size: var(--font-helper); }

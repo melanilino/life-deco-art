@@ -109,6 +109,8 @@ La barra lateral mide 250 px. El encabezado tiene una altura mínima de 98 px, s
 
 En páginas que ya ofrecen retorno, el encabezado presenta el título y debajo un único enlace «← Volver a [destino]», como Nuevo cliente. El retorno sustituye la descripción del encabezado y no se repite en el cuerpo. Las páginas sin retorno conservan su descripción. En Automatizaciones, volver sigue esperando el guardado y permanece en el editor si este falla.
 
+Automatizaciones usa cuatro pasos: Disparador, Secuencia, Contenido y Revisar y activar. La lista sigue separada. El tiempo se edita antes de cada correo, con espera inmediata o cantidad/unidad y hora opcional para días. El menú ofrece Editar contenido, Duplicar y Eliminar cuando hay más de un correo. Contenido conserva el editor de bloques y sus secciones plegables, con selección de correo y enlace Cambiar hacia su tiempo. Los estados de los pasos usan los tonos existentes del Hub, sin copiar colores ni componentes del prototipo.
+
 Orden: atención prioritaria, cuatro métricas y zona inferior con agenda junto a etapas e inventario. En escritorio, la zona inferior usa `repeat(2,minmax(0,1fr))` para mantener dos columnas de igual ancho; Pedidos e Inventario mantienen recuadros blancos independientes, uno encima del otro a la derecha. Separación entre bloques: 16 px. Hasta 1250 px, las cifras pasan a dos columnas y la zona inferior se apila, con etapas e inventario emparejados. Hasta 859 px, la navegación pasa a menú móvil y esos resúmenes se apilan. Hasta 640 px, las cifras tienen una columna, las acciones admiten salto de línea y Crear abre su menú alineado a la izquierda. Las etiquetas de categorías admiten varias líneas.
 
 ## Elevation & Depth

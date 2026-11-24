@@ -189,7 +189,7 @@ function automations(db, mail, secret, site, now = () => new Date(), scheduler =
       return;
     }
     if (step.kind === 'wait') {
-      const dueAt = new Date(now().getTime() + (await model).waitMilliseconds(step)).toISOString();
+      const dueAt = (await model).waitDueAt(step,now());
       await db.update(docPath, current => current?.claim === claim
         ? { ...current, index: current.index + 1, status: 'queued', claim: '', dueAt } : null);
       await ensureScheduled(jobId);
