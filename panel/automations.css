@@ -169,6 +169,48 @@
   .auto-mail-settings .auto-block-controls { grid-template-columns: 70px repeat(2,minmax(0,1fr)); }
   .auto-mail-settings .auto-block-controls > :last-child { grid-column: auto; }
 }
+.auto-mail-studio [hidden] { display: none !important; }
+.auto-studio-heading { display: flex; align-items: center; gap: 12px; min-width: 0; }
+#marketing-view .auto-studio-heading h2 { margin: 0; font-size: var(--font-section-title); font-weight: 500; overflow-wrap: anywhere; }
+.auto-studio-heading .auto-field { margin: 0; flex: 1; }
+#marketing-view .auto-icon-button { display: inline-grid; place-items: center; min-width: 40px; min-height: 40px; padding: 8px; background: transparent; border-color: transparent; color: var(--text-muted); }
+.auto-icon-button svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; }
+.auto-mail-studio .auto-content-timing { margin: 0 0 20px; }
+.auto-mail-studio .auto-mail-meta { margin-bottom: 24px; }
+.auto-mail-studio .auto-mail-grid { border-top: 1px solid var(--mkt-line); padding-top: 20px; gap: 24px; grid-template-columns: minmax(0,1fr); }
+.auto-studio-tabs { display: flex; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); overflow: hidden; margin-bottom: 12px; }
+#marketing-view .auto-studio-tabs button { flex: 1; border: 0; background: transparent; border-radius: 0; min-height: 40px; padding: 8px; }
+#marketing-view .auto-studio-tabs button[aria-pressed=true] { background: var(--brown-soft); }
+.auto-studio-tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: start; margin-bottom: 16px; }
+#marketing-view .auto-studio-tools > button { min-height: 36px; padding: 6px 10px; font-size: var(--font-helper); }
+#marketing-view .auto-studio-personalize, #marketing-view .auto-studio-add, #marketing-view .auto-studio-suggestions { margin: 0; padding: 0; border: 0; }
+.auto-studio-personalize { flex: 1 1 120px; }
+.auto-studio-personalize > summary, .auto-studio-add > summary, .auto-studio-suggestions > summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; list-style: none; cursor: pointer; font-size: var(--font-helper); }
+.auto-studio-personalize > summary, .auto-studio-add > summary { border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); padding: 6px 10px; min-height: 36px; }
+.auto-studio-personalize > summary::-webkit-details-marker, .auto-studio-add > summary::-webkit-details-marker, .auto-studio-suggestions > summary::-webkit-details-marker, .auto-mail-studio .auto-saved-templates > summary::-webkit-details-marker { display: none; }
+.auto-studio-tools summary svg, .auto-studio-add svg, .auto-studio-suggestions svg, .auto-mail-studio .auto-saved-templates summary svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; flex-shrink: 0; }
+.auto-studio-suggestions > summary { min-height: 32px; justify-content: flex-start; color: var(--text-muted); }
+.auto-studio-add { width: fit-content; max-width: 100%; }
+.auto-studio-add .auto-inline-actions { margin-top: 10px; }
+.auto-studio-add button { display: inline-flex; align-items: center; gap: 8px; }
+.auto-mail-studio .auto-mail-blocks { display: grid; gap: 6px; margin-bottom: 10px; }
+#marketing-view .auto-mail-studio .auto-mail-blocks button { display: flex; align-items: center; gap: 12px; width: 100%; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); min-height: 40px; color: var(--black); }
+.auto-mail-studio .auto-mail-blocks button > span { color: var(--text-muted); font-size: var(--font-helper); }
+.auto-mail-studio .auto-mail-blocks svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.auto-mail-studio .auto-block-editor { border-top: 1px solid var(--mkt-line); padding-top: 16px; margin-top: 16px; }
+#marketing-view .auto-mail-studio .auto-block-editor h3 { font-size: var(--font-body); font-weight: 500; }
+.auto-mail-studio .auto-block-editor textarea { min-height: 140px; }
+#marketing-view .auto-mail-studio .auto-block-editor > .auto-inline-actions button { min-height: 32px; padding: 6px 8px; font-size: var(--font-helper); }
+.auto-mail-studio .auto-saved-templates { margin: 0 0 16px; }
+.auto-mail-studio .auto-saved-templates > summary { display: flex; justify-content: space-between; align-items: center; list-style: none; cursor: pointer; min-height: 40px; }
+.auto-mail-studio .auto-preview-heading { flex-wrap: wrap; gap: 8px; }
+.auto-mail-studio .auto-preview-heading h3 { margin-right: auto; }
+#marketing-view .auto-preview-greeting { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 12px; font-size: var(--font-helper); }
+#marketing-view .auto-preview-greeting select { width: auto; max-width: 100%; }
+@container (min-width: 760px) {
+  .auto-mail-studio .auto-mail-grid { grid-template-columns: minmax(280px,.8fr) minmax(0,1.4fr); }
+  .auto-mail-studio .auto-mail-settings { border-right: 1px solid var(--mkt-line); padding-right: 20px; }
+}
 .auto-review-screen { container-type: inline-size; min-width: 0; }
 .auto-review-heading { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 32px; }
 #marketing-view .auto-review-heading h2 { font-size: var(--font-section-title); margin-bottom: 6px; }
