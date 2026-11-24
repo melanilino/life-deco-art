@@ -10,7 +10,7 @@ const id = () => crypto.randomUUID();
 const originText = key => originOptions.find(([value]) => key === value)?.[1] || key;
 const selectOptions = (values, selected) => values.map(([value, label]) => `<option value="${escape(value)}" ${String(value) === String(selected) ? 'selected' : ''}>${escape(label)}</option>`).join('');
 
-export function bindAutomations(root, request, report, ask, { user, icon, getState, contentOf, blockLabels }) {
+export function bindAutomations(root, request, report, ask, { user, icon, getState, contentOf, blockLabels, store }) {
   const result = root.querySelector('[data-marketing-result]');
   const workspace = root.closest('.home-workspace');
   const headerReturn = event => {
@@ -31,6 +31,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let mailTool = 'content', nameEditing = false;
   let richRange = null;
   let imageOpen = false;
+  let uploadingImage = '';
+  let organizeOpen = false;
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -149,7 +151,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   function mailPaper(mail) {
     const personalize = value => String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_all, variable) => variable === 'codigo' ? 'LDA10' : '{{nombre}}');
-    return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}"><div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span></div>
+    return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}">${mail.template.hideBrandName?'':'<div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span></div>'}
       ${mail.template.blocks.map((block,index) => `<button type="button" class="mkt-block" data-block="${index}" aria-label="Editar ${blockLabels[block.kind]}, bloque ${index + 1}" aria-pressed="${index === selectedBlock}"
         style="color:${block.color};text-align:${block.align};margin-bottom:${block.space || 16}px">${block.kind==='text'?richHTML(block,personalize):contentOf({...block,text:personalize(block.text),secondary:personalize(block.secondary)},block.kind,mail.template.brandColors)}</button>`).join('')}
       <div class="mkt-email-footer">Cancelar suscripción</div></div>`;
@@ -170,7 +172,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   const primaryText = mail => mail?.template.blocks.find(block=>block.kind==='text');
   const primaryButton = mail => mail?.template.blocks.find(block=>block.kind==='button');
-  const primaryImage = mail => mail?.template.blocks.find(block=>block.kind==='image');
+  const primaryImage = mail => mail?.template.blocks[selectedBlock]?.kind==='image'?mail.template.blocks[selectedBlock]:mail?.template.blocks.find(block=>block.kind==='image');
   function richHTML(block, personalize=value=>value) {
     return (block?.runs || [{text:block?.text||''}]).map(run=>{
       let value=escape(personalize(run.text)).replace(/\n/g,'<br>');
@@ -206,6 +208,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     if(!mail)return panel('Contenido',`<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
     const textBlock=primaryText(mail), cta=primaryButton(mail), picture=primaryImage(mail);
     const extras=mail.template.blocks.filter(block=>block!==textBlock&&block!==cta&&block!==picture);
+    const uploadControl=(role,label)=>`<div class="auto-image-upload"><button type="button" data-auto="upload-image" data-upload-role="${role}" data-form-action="secondary" ${uploadingImage?'disabled':''}>${uploadingImage===role?'Subiendo imagen…':label}</button><input type="file" data-image-file="${role}" accept="image/png,image/jpeg,image/webp,image/gif" hidden></div>`;
     return `<section class="auto-mail-screen auto-compose" aria-label="Editor de correo"><h2>Contenido</h2>
       <div class="auto-compose-mails" role="group" aria-label="Correos de la secuencia">${mails().map((entry,index)=>`<button type="button" data-mail-tab="${entry.id}" aria-pressed="${entry.id===mail.id}">${index+1}. ${escape(entry.name||'Correo')}</button>`).join('')}</div>
       <div class="auto-compose-grid"><section class="auto-compose-fields" aria-label="Contenido del correo">
@@ -214,8 +217,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <div class="auto-field"><label id="auto-text-label">Texto del correo</label><div class="auto-rich-shell"><div class="auto-rich-toolbar" role="toolbar" aria-label="Formato del texto"><button type="button" data-rich="bold" aria-label="Negrita"><strong>B</strong></button><button type="button" data-rich="italic" aria-label="Cursiva"><em>I</em></button><button type="button" data-rich="link" aria-label="Insertar enlace">${icon('link')}</button><button type="button" class="auto-insert-name" data-rich="name">Insertar nombre</button></div>
         <div class="auto-rich-link" hidden><label class="auto-field">Enlace HTTPS<input type="url" data-rich-url placeholder="https://"></label><button type="button" data-rich="apply-link">Aplicar</button><button type="button" data-rich="cancel-link">Cancelar</button></div>
         <div class="auto-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="auto-text-label" data-rich-editor>${richHTML(textBlock)}</div></div></div>
-        <section class="auto-compose-image" aria-label="Imagen del correo">${picture||imageOpen?`<div class="auto-image-heading"><h3>Imagen <span class="auto-muted">(opcional)</span></h3><button type="button" data-auto="remove-image" data-form-action="text">Eliminar imagen</button></div><label class="auto-field">Enlace de la imagen<input type="url" maxlength="1200" data-simple-image="url" value="${escape(picture?.url||'')}" placeholder="https://"></label><label class="auto-field">Texto alternativo<input maxlength="150" data-simple-image="alt" value="${escape(picture?.alt||'')}"></label>`:button(`${icon('plus')} Añadir imagen`,'show-image')}</section>
+        <section class="auto-compose-image" aria-label="Imagen del correo">${picture||imageOpen?`<div class="auto-image-heading"><h3>Imagen <span class="auto-muted">(opcional)</span></h3><button type="button" data-auto="remove-image" data-form-action="text">Eliminar imagen</button></div>${uploadControl('content','Subir desde mi computadora')}<label class="auto-field">Enlace de la imagen<input type="url" maxlength="1200" data-simple-image="url" value="${escape(picture?.url||'')}" placeholder="https://"></label><label class="auto-field">Texto alternativo<input maxlength="150" data-simple-image="alt" value="${escape(picture?.alt||'')}"></label>`:button(`${icon('plus')} Añadir imagen`,'show-image')}</section>
         <div class="auto-compose-button"><h3>Botón <span class="auto-muted">(opcional)</span></h3><div><label class="auto-field">Texto del botón<input maxlength="150" data-simple-button="text" value="${escape(cta?.text||'')}"></label><label class="auto-field">Enlace<input type="url" maxlength="1200" data-simple-button="url" value="${escape(cta?.url||'')}" placeholder="https://"></label></div></div>
+        <details class="auto-compose-organize" ${organizeOpen?'open':''}><summary>Organizar correo${icon('chevron')}</summary><label class="auto-brand-toggle"><input type="checkbox" data-hide-brand ${mail.template.hideBrandName?'':'checked'}>Mostrar Life Deco Art en la cabecera</label>${uploadControl('header','Subir imagen de cabecera')}
+          <ol class="auto-order-list" aria-label="Orden del contenido">${mail.template.blocks.map((block,index)=>`<li><span>${index+1}. ${blockLabels[block.kind]}</span><div>${block.kind==='image'?`<button type="button" data-edit-image="${index}" data-form-action="text">Editar</button>`:''}<button type="button" data-move-block="${index}" data-direction="-1" aria-label="Subir ${blockLabels[block.kind]}, bloque ${index+1}" ${index===0?'disabled':''}>${icon('chevron')}</button><button type="button" data-move-block="${index}" data-direction="1" aria-label="Bajar ${blockLabels[block.kind]}, bloque ${index+1}" ${index===mail.template.blocks.length-1?'disabled':''}>${icon('chevron')}</button></div></li>`).join('')}</ol></details>
         ${extras.length?`<details class="auto-compose-extras"><summary>Más contenido${icon('chevron')}</summary><ol class="auto-mail-blocks">${extras.map(block=>{const index=mail.template.blocks.indexOf(block);return `<li><button type="button" data-block="${index}">${blockLabels[block.kind]} ${index+1}</button></li>`}).join('')}</ol><div data-auto-inspector>${inspector(mail)}</div></details>`:''}
       </section><section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3>Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button><button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header>
         <div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
@@ -376,10 +381,31 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
     if (target.matches('[data-flow],[data-mail],[data-block-field],[data-wait-duration]')) change();
   });
-  result.addEventListener('change', event => {
+  result.addEventListener('change', async event => {
     const target = event.target;
     if (target.matches('[data-list-status]')) { stateFilter = target.value; render(); return; }
     if (!flow) return;
+    if(target.dataset.imageFile){
+      const file=target.files?.[0],role=target.dataset.imageFile;
+      if(!file||busy)return;
+      if(!/^image\/(png|jpeg|webp|gif)$/.test(file.type)||file.size>=15*1024*1024){target.value='';report('Selecciona una imagen PNG, JPG, WebP o GIF de menos de 15 MB.',true);return;}
+      const mail=selectedMail();
+      if((role==='header'||!primaryImage(mail))&&mail.template.blocks.length>=30){report('Cada correo admite hasta 30 bloques.',true);return;}
+      busy=true;uploadingImage=role;report('');render();
+      try{
+        const asset=await store.uploadEmailImage(file);
+        if(!https(asset.url))throw Error('No se pudo obtener el enlace de la imagen.');
+        let picture=role==='header'?null:primaryImage(mail);
+        if(!picture){picture={kind:'image',url:'',alt:'',align:'center',color:'#1c1a17',space:16,font:'Montserrat'};const cta=primaryButton(mail);mail.template.blocks.splice(role==='header'?0:cta?mail.template.blocks.indexOf(cta):mail.template.blocks.length,0,picture);}
+        picture.url=asset.url;picture.alt=picture.alt||file.name.replace(/\.[^.]+$/,'').slice(0,150);
+        selectedBlock=mail.template.blocks.indexOf(picture);imageOpen=true;
+        if(role==='header')mail.template.hideBrandName=true;
+        change();await save();
+      }catch(error){report(error.message,true);}
+      finally{busy=false;uploadingImage='';render();}
+      return;
+    }
+    if(target.matches('[data-hide-brand]')){selectedMail().template.hideBrandName=!target.checked;change();render();return;}
     if (target.matches('[name=auto-trigger]')) { flow.trigger = target.value; change(); render(); }
     if (target.dataset.origin) {
       flow.origins = target.checked ? [...new Set([...flow.origins,target.dataset.origin])] : flow.origins.filter(origin=>origin!==target.dataset.origin);
@@ -447,6 +473,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     try {
       target.closest('[popover]')?.hidePopover();
       const action = target.dataset.auto;
+      if(action==='upload-image'){result.querySelector(`[data-image-file="${target.dataset.uploadRole}"]`)?.click();return;}
+      if(target.hasAttribute('data-edit-image')){selectedBlock=Number(target.dataset.editImage);imageOpen=true;render();result.querySelector('[data-simple-image=url]')?.focus();return;}
       if(action==='show-image'){imageOpen=true;render();result.querySelector('[data-simple-image=url]')?.focus();return;}
       if(action==='remove-image'){const mail=selectedMail(),picture=primaryImage(mail);if(picture){previousTemplate=structuredClone(mail.template);mail.template.blocks.splice(mail.template.blocks.indexOf(picture),1);change();}imageOpen=false;render();return;}
       if (target.dataset.device) { mobile = target.dataset.device === 'mobile'; render(); return; }
@@ -454,7 +482,12 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       if (action==='rename-mail') { nameEditing=!nameEditing;render();if(nameEditing)result.querySelector('[data-mail=name]')?.focus();return; }
       if (target.hasAttribute('data-block')) { selectedBlock = Number(target.dataset.block); render(); result.querySelector('[data-block-field]')?.focus(); return; }
       busy = true;
-      if (target.hasAttribute('data-stage')) {
+      if(target.hasAttribute('data-move-block')){
+        const index=Number(target.dataset.moveBlock),next=index+Number(target.dataset.direction);
+        if(next<0||next>=selectedMail().template.blocks.length)return;
+        mutateMail(mail=>{[mail.template.blocks[index],mail.template.blocks[next]]=[mail.template.blocks[next],mail.template.blocks[index]];if(selectedBlock===index)selectedBlock=next;else if(selectedBlock===next)selectedBlock=index;});
+      }
+      else if (target.hasAttribute('data-stage')) {
         const affected=affectedMails(target.dataset.check)[0];
         if(affected){flow.selectedMail=affected.id;selectedBlock=0;mailTool='content';}
         await go(Number(target.dataset.stage));
@@ -561,6 +594,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     finally { busy=false; }
   });
   result.addEventListener('toggle', event => {
+    if(event.target.matches('.auto-compose-organize')){organizeOpen=event.target.open;return;}
     if (event.target.matches('.auto-test-details')) { testDetailsOpen=event.target.open;return; }
     if (event.target.matches('.auto-saved-templates')) { templatesOpen = event.target.open; return; }
     if (!event.target.matches('.auto-actions-menu')) return;

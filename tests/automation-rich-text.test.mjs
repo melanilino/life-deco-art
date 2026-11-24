@@ -54,3 +54,14 @@ test('las automatizaciones parten del contenido escrito sin saludo automático',
   assert.match(email.html,/Cancelar suscripción/);
   assert.match(core.renderEmail(core.templateOf({subject:'Otro editor',blocks:[{kind:'text',text:'Contenido'}]}),{name:'Ana'}).html,/Hola, Ana/);
 });
+
+test('cabecera con imagen conserva orden, enlaces y baja sin el nombre fijo de marca',()=>{
+ const flow=starter('blank','header-flow','header-mail'),mail=flow.steps[0];
+ mail.template.subject='Cabecera propia';mail.template.hideBrandName=true;
+ mail.template.blocks=[{kind:'image',url:'https://example.invalid/logo.png',alt:'Mi logo'},{kind:'text',text:'Texto propio'},{kind:'button',text:'Abrir',url:'https://example.invalid/tienda'}];
+ const normalized=normalizeFlow(flow),template=core.templateOf(normalized.steps[0].template),email=core.renderEmail(template,{},'https://example.invalid/baja');
+ assert.equal(template.hideBrandName,true);assert.doesNotMatch(email.html,/>Life Deco Art</);
+ assert.ok(email.html.indexOf('logo.png')<email.html.indexOf('Texto propio'));
+ assert.ok(email.html.indexOf('Texto propio')<email.html.indexOf('https://example.invalid/tienda'));
+ assert.match(email.html,/Cancelar suscripción/);
+});

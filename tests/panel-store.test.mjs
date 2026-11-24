@@ -1,12 +1,26 @@
 import test from 'node:test';import assert from 'node:assert/strict';import vm from 'node:vm';import fs from 'node:fs/promises';
 import * as domain from '../panel/domain.mjs';import * as recovery from '../panel/recovery.mjs';
 
+test('imagen de correo usa la ruta de la cuenta y obtiene un enlace de lectura',async()=>{
+ const h=await harness();await h.store.load();
+ const image=await h.store.uploadEmailImage(new File(['image-fixture'],'mi-logo.png',{type:'image/png'}));
+ assert.match(image.path,/^panel-private\/owner\//);
+ assert.equal(image.fileName,'mi-logo.png');assert.match(image.url,/^https:\/\/example.invalid\/image\/panel-private\/owner\//);
+ await assert.rejects(h.store.uploadEmailImage(new File(['pdf'],'archivo.pdf',{type:'application/pdf'})),/imagen PNG/);
+ await assert.rejects(h.store.uploadEmailImage({size:16*1024*1024,type:'image/png'}),/15 MB/);
+});
+
+test('imagen de correo no entrega el enlace si cambia la cuenta durante la subida',async()=>{
+ const h=await harness({changeUserOnUpload:true});await h.store.load();
+ await assert.rejects(h.store.uploadEmailImage(new File(['image-fixture'],'logo.png',{type:'image/png'})),/sesión cambió/);
+});
+
 async function harness({changeUserOnUpload=false}={}){
  const docs=new Map([['panelAccess/owner',{enabled:true}]]);let fail=false;let listener;const user={uid:'owner'};
  const snap=path=>({exists:()=>docs.has(path),data:()=>structuredClone(docs.get(path))});
  const firestore={getFirestore:()=>({}),doc:(_,...parts)=>parts.join('/'),collection:(_,...parts)=>parts.join('/'),getDoc:async path=>snap(path),getDocs:async path=>({docs:[...docs].filter(([p])=>p.startsWith(path+'/')).map(([p,v])=>({id:p.split('/').at(-1),data:()=>structuredClone(v)}))}),runTransaction:async(_db,fn)=>{const writes=[];await fn({get:async path=>snap(path),set:(path,value)=>writes.push([path,structuredClone(value)])});if(fail)throw Error('NETWORK_TEST');for(const [p,v]of writes)docs.set(p,v);}};
  const ctx=vm.createContext({console,structuredClone,TextEncoder,crypto,navigator:{onLine:true},Blob,File,fetch});
- const exports={app:{initializeApp:()=>({}),getApps:()=>[]},auth:{getAuth:()=>({}),signInWithEmailAndPassword:async()=>{},signOut:async()=>listener(null),onAuthStateChanged:(_a,fn)=>{listener=fn;fn(user);return ()=>{};},sendPasswordResetEmail:async()=>{}},firestore,storage:{getStorage:()=>({}),ref:(_s,p)=>p,uploadBytes:async()=>{if(changeUserOnUpload)listener({uid:"other-owner"});},getBlob:async()=>new Blob(['test'],{type:'image/png'})},domain,recovery,config:{firebaseConfig:{}}};
+ const exports={app:{initializeApp:()=>({}),getApps:()=>[]},auth:{getAuth:()=>({}),signInWithEmailAndPassword:async()=>{},signOut:async()=>listener(null),onAuthStateChanged:(_a,fn)=>{listener=fn;fn(user);return ()=>{};},sendPasswordResetEmail:async()=>{}},firestore,storage:{getStorage:()=>({}),ref:(_s,p)=>p,uploadBytes:async()=>{if(changeUserOnUpload)listener({uid:"other-owner"});},getDownloadURL:async path=>'https://example.invalid/image/'+path,getBlob:async()=>new Blob(['test'],{type:'image/png'})},domain,recovery,config:{firebaseConfig:{}}};
  const source=await fs.readFile(new URL('../panel/store.mjs',import.meta.url),'utf8');const module=new vm.SourceTextModule(source,{context:ctx});
  await module.link(async spec=>{const group=spec.includes('firebase-app')?'app':spec.includes('firebase-auth')?'auth':spec.includes('firebase-firestore')?'firestore':spec.includes('firebase-storage')?'storage':spec.includes('domain.mjs')?'domain':spec.includes('recovery.mjs')?'recovery':'config';const values=exports[group];return new vm.SyntheticModule(Object.keys(values),function(){for(const [k,v]of Object.entries(values))this.setExport(k,v);},{context:ctx});});await module.evaluate();module.namespace.observeAuth(()=>{});
  return {store:module.namespace,docs,set fail(value){fail=value;}};

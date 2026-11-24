@@ -86,6 +86,7 @@ function templateOf(input) {
   const headingFont = ['Arial', 'Georgia', 'Montserrat'].includes(input.headingFont) ? input.headingFont : '';
   return { subject, blocks, ...(name ? { name } : {}), ...(preheader ? { preheader } : {}),
     ...(input.hideGreeting===true?{hideGreeting:true}:{}),
+    ...(input.hideBrandName===true?{hideBrandName:true}:{}),
     ...(headingFont ? { headingFont } : {}), ...(input.brandColors === true ? { brandColors: true } : {}) };
 }
 
@@ -136,7 +137,7 @@ function renderEmail(template, person = {}, unsubscribe = '') {
   const link = unsubscribe ? `<a href="${escape(unsubscribe)}">Cancelar suscripción</a>` : 'Cancelar suscripción';
   const preheader = template.preheader ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all">${escape(template.preheader)}</div>` : '';
   const titleFont = template.headingFont === 'Georgia' ? 'Georgia,serif' : template.headingFont === 'Montserrat' ? 'Montserrat,Arial,sans-serif' : 'Arial,sans-serif';
-  const html = `<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media(max-width:520px){.column{display:block!important;width:100%!important;margin-bottom:12px}}</style></head><body style="margin:0;background:#f5efe5">${preheader}<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;font:16px/1.55 Arial,sans-serif;color:#1c1a17" cellspacing="0" cellpadding="0"><tr><td style="padding:24px"><span style="font-family:${titleFont}">Life Deco Art</span>${greeting ? `<br><br>${paragraph(greeting)}` : ''}</td></tr>${rows}<tr><td style="padding:0 24px 24px;font-size:13px">${link}</td></tr></table></td></tr></table></body></html>`;
+  const html = `<!doctype html><html lang="es"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>@media(max-width:520px){.column{display:block!important;width:100%!important;margin-bottom:12px}}</style></head><body style="margin:0;background:#f5efe5">${preheader}<table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center"><table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;font:16px/1.55 Arial,sans-serif;color:#1c1a17" cellspacing="0" cellpadding="0">${!template.hideBrandName || greeting ? `<tr><td style="padding:24px">${!template.hideBrandName ? `<span style="font-family:${titleFont}">Life Deco Art</span>` : ''}${greeting ? `<br><br>${paragraph(greeting)}` : ''}</td></tr>` : ''}${rows}<tr><td style="padding:0 24px 24px;font-size:13px">${link}</td></tr></table></td></tr></table></body></html>`;
   const text = [ 'Life Deco Art', greeting, ...template.blocks.flatMap(block => [block.text || block.alt, block.secondary, block.url]).filter(Boolean),
     unsubscribe ? `Cancelar suscripción: ${unsubscribe}` : '' ].filter(Boolean).join('\n\n');
   return { html, text };

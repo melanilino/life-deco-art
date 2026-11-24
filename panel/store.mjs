@@ -1,7 +1,7 @@
 import {initializeApp,getApps} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import {getFirestore,doc,collection,getDoc,getDocs,runTransaction} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import {getStorage,ref,uploadBytes,getBlob} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
+import {getStorage,ref,uploadBytes,getBlob,getDownloadURL} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 import {emptyState,applyCommand} from './domain.mjs';
 import {planRecovery} from './recovery.mjs';
 import {firebaseConfig} from './firebase-config.mjs';
@@ -55,6 +55,16 @@ export async function upload(file){
  return {path,fileName:file.name,mime:file.type,size:file.size};
 }
 export const downloadFile=path=>{if(!path.startsWith(`panel-private/${user.uid}/`))throw Error('El archivo no pertenece a tu panel.');return getBlob(ref(storage,path),15*1024*1024);};
+export async function uploadEmailImage(file){
+ if(!/^image\/(png|jpeg|webp|gif)$/.test(file?.type||''))throw Error('Selecciona una imagen PNG, JPG, WebP o GIF.');
+ const identity=user?.uid;
+ if(!identity)throw Error('Inicia sesión para subir la imagen.');
+ const asset=await upload(file);
+ if(user?.uid!==identity)throw Error('La sesión cambió durante la subida.');
+ const url=await getDownloadURL(ref(storage,asset.path));
+ if(user?.uid!==identity)throw Error('La sesión cambió durante la subida.');
+ return {...asset,url};
+}
 export async function exportBackup(includeFiles=true){
  const state=await load(),logs=await history(),files=[];
  if(includeFiles)for(const r of Object.values(state.records).filter(r=>r.path)){

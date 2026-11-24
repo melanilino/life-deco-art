@@ -70,6 +70,7 @@ export function normalizeFlow(input) {
     return { id, kind: 'mail', name: text(step.name, 100), template: {
       subject: text(step.template.subject, 150), preheader: text(step.template.preheader, 150), hideGreeting:true, blocks,
       headingFont: 'Montserrat', brandColors: step.template.brandColors === true,
+      ...(step.template.hideBrandName===true?{hideBrandName:true}:{}),
     } };
   });
   if (!triggerOptions.some(([key]) => key === input.trigger)) throw Error('Selecciona un disparador válido.');
