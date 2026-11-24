@@ -28,6 +28,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let taskScheduling = false, waitTest = null;
   const mailSections = { metadata:true, content:false };
   let timingOpen = '';
+  let testDetailsOpen = false;
   const visited = new Set([1]);
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
@@ -104,17 +105,17 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   function triggerScreen() {
     const details = {
-      subscription: 'Cada dirección entra una vez en este flujo.',
+      subscription: '',
       purchase: 'Se detectan las facturas emitidas del Hub. El contacto debe tener una suscripción activa.',
       delivered: 'Se detectan los pedidos marcados como entregados en el Hub. El contacto debe tener una suscripción activa.',
       birthday: 'Solo entran clientas con una fecha de cumpleaños registrada. El formulario actual de Clientes aún no recoge ese dato.',
       inactive: 'Se revisa la última factura emitida de clientas con suscripción activa.',
     };
     return `<section class="auto-trigger-screen" aria-label="Disparador de la automatización"><header class="auto-trigger-heading"><h2>Disparador</h2>${badge()}</header><label class="auto-field auto-trigger-name">Nombre de la automatización<input data-flow="name" maxlength="100" value="${escape(flow.name)}"></label>
-      <fieldset class="auto-triggers" aria-describedby="auto-trigger-description"><legend>¿Qué activa esta automatización?</legend><div class="auto-trigger-options">${triggerOptions.map(([value,label]) =>
+      <fieldset class="auto-triggers" ${details[flow.trigger]?'aria-describedby="auto-trigger-description"':''}><legend>¿Qué activa esta automatización?</legend><div class="auto-trigger-options">${triggerOptions.map(([value,label]) =>
         `<label><input type="radio" name="auto-trigger" value="${value}" ${flow.trigger === value ? 'checked' : ''}><span>${label}</span></label>`).join('')}</div></fieldset>
-      <p class="auto-muted auto-trigger-description" id="auto-trigger-description">${details[flow.trigger]}</p>
-      ${flow.trigger === 'subscription' ? `<fieldset class="auto-origins" aria-describedby="auto-origins-description"><legend>Orígenes de suscripción</legend><p class="auto-muted" id="auto-origins-description">Puedes elegir uno o ambos formularios.</p><div class="auto-origin-options">${originOptions.map(([value,label]) => {
+      ${details[flow.trigger]?`<p class="auto-muted auto-trigger-description" id="auto-trigger-description">${details[flow.trigger]}</p>`:''}
+      ${flow.trigger === 'subscription' ? `<fieldset class="auto-origins"><legend>Orígenes de suscripción</legend><div class="auto-origin-options">${originOptions.map(([value,label]) => {
         const [place, name] = label.split(' «');
         return `<label><input type="checkbox" aria-label="${escape(label)}" data-origin="${value}" ${flow.origins.includes(value) ? 'checked' : ''}><span><strong>${escape(place)}</strong><span>${name ? '«'+escape(name) : ''}</span></span></label>`;
       }).join('')}</div>${!flow.origins.length ? '<p class="auto-origin-warning" role="status">Elige al menos un origen para activar esta automatización.</p>' : ''}</fieldset>` : ''}
@@ -135,7 +136,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   function timingEditor(mail,index) {
     const waits=precedingWaits(flow.steps,index);
-    return `<div class="auto-timing-editor" aria-label="Cuándo se envía ${escape(mail.name || 'el correo')}"><label class="auto-field">Cuándo sale<select data-timing-mode="${mail.id}" aria-label="Cuándo sale ${escape(mail.name||'el correo')}">${selectOptions([['now',waits.start===0?'Al instante':'Justo después del correo anterior'],['wait','Esperar…']],waits.steps.length?'wait':'now')}</select></label>${waits.steps.map((wait,offset)=>`<div class="auto-timing-fields"><label class="auto-field">Cantidad<input type="number" min="1" max="365" data-wait-duration="${waits.start+offset}" aria-label="Duración antes de ${escape(mail.name || 'correo')} ${offset+1}" value="${wait.duration}"></label><label class="auto-field">Unidad<select data-wait-unit="${waits.start+offset}" aria-label="Unidad antes de ${escape(mail.name || 'correo')} ${offset+1}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],wait.unit)}</select></label>${wait.unit==='days'?`<label class="auto-field">A las (opcional)<input type="time" data-wait-time="${waits.start+offset}" value="${wait.time||''}"></label>`:''}</div>`).join('')}${waits.steps.some(wait=>wait.unit==='days')?'<p class="auto-muted">Hora de República Dominicana.</p>':''}${button('Listo','timing-done')}</div>`;
+    return `<div class="auto-timing-editor" aria-label="Cuándo se envía ${escape(mail.name || 'el correo')}"><label class="auto-field">Cuándo sale<select data-timing-mode="${mail.id}" aria-label="Cuándo sale ${escape(mail.name||'el correo')}">${selectOptions([['now',waits.start===0?'Al instante':'Justo después del correo anterior'],['wait','Esperar…']],waits.steps.length?'wait':'now')}</select></label>${waits.steps.map((wait,offset)=>`<div class="auto-timing-fields"><label class="auto-field">Cantidad<input type="number" min="1" max="365" data-wait-duration="${waits.start+offset}" aria-label="Duración antes de ${escape(mail.name || 'correo')} ${offset+1}" value="${wait.duration}"></label><label class="auto-field">Unidad<select data-wait-unit="${waits.start+offset}" aria-label="Unidad antes de ${escape(mail.name || 'correo')} ${offset+1}">${selectOptions([['minutes','Minutos'],['hours','Horas'],['days','Días']],wait.unit)}</select></label>${wait.unit==='days'?`<label class="auto-field">A las (opcional)<input type="time" data-wait-time="${waits.start+offset}" value="${wait.time||''}"></label>`:''}</div>`).join('')}${waits.steps.some(wait=>wait.unit==='days')?'<p class="auto-muted">Hora de República Dominicana.</p>':''}<div class="auto-timing-actions">${button('Listo','timing-done')}</div></div>`;
   }
   function sequenceTimeline() {
     const mailSteps=mails();
@@ -206,14 +207,14 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       `<li class="${check.ok ? 'is-ok' : check.warning ? 'is-warning' : 'is-error'}"><span role="img" aria-label="${check.ok ? 'Completado' : check.warning ? 'Opcional' : 'Pendiente'}">${check.ok ? icon('check') : '!'}</span><div>${check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${!check.ok && check.warning ? '<small class="auto-check-note">Opcional · no impide activar</small>' : ''}</div>${!check.ok ? `<button type="button" data-check="${check.key}" data-stage="${check.stage}">Revisar</button>` : ''}</li>`).join('')}</ul>
       <p class="auto-review-readiness" role="status">${readiness}</p></section>
       <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Pruebas del correo</h3><div class="auto-review-mail"><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
-        <button type="button" data-auto="preview" data-form-action="text" ${selectedMail() ? '' : 'disabled'}>Ver correo final</button></div>
-        <div class="auto-review-test-send">${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}
-        <p class="auto-muted">La prueba se envía al correo de tu cuenta administradora.</p></div>
+        </div><div class="auto-review-test-actions"><button type="button" data-auto="preview" data-form-action="text" ${selectedMail() ? '' : 'disabled'}>Ver correo final</button>${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
+        <p class="auto-muted auto-review-test-note">La prueba se envía al correo de tu cuenta administradora.</p>
+        <details class="auto-test-details" ${testDetailsOpen?'open':''}><summary>${taskScheduling?'Prueba de espera':'Información adicional'}${icon('chevron')}</summary>
         ${taskScheduling ? `<div class="auto-wait-test">${button('Probar espera de 1 minuto','wait-test',false,mailReady && selectedMail() ? '' : 'disabled')}
           <p class="auto-muted">Esta prueba pausa la automatización y solo envía a tu correo.</p>
           ${waitTest ? `<p role="status">${waitTest.status === 'done' ? `Programada: ${testTime(waitTest.scheduledFor)}. Enviada: ${testTime(waitTest.sentAt)}.` : waitTest.error ? escape(waitTest.error) : `Prueba ${waitTest.status === 'review' ? 'por revisar' : waitTest.status === 'failed' ? 'fallida' : 'programada'} para ${testTime(waitTest.scheduledFor || waitTest.dueAt)}.`}</p>${button('Actualizar prueba','wait-test-status')}` : ''}</div>` : ''}
         ${!mailReady ? '<p role="status">El buzón necesita configuración para enviar correos.</p>' : ''}
-        <p class="auto-muted auto-review-event-note">Cumpleaños usa fechas registradas. Los eventos comerciales envían solo a contactos suscritos.</p></section></div></section>`;
+        <p class="auto-muted auto-review-event-note">Cumpleaños usa fechas registradas. Los eventos comerciales envían solo a contactos suscritos.</p></details></section></div></section>`;
   }
   function confirmedScreen() {
     return panel(stateLabel(current) === 'Activa' ? 'Automatización activa' : stateLabel(current), `<p>${escape(flow.name)}</p>
@@ -295,6 +296,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         current = row; flow = normalizeFlow(local?.dirty ? local.flow : row.draft); flow.id = row.id;
         confirmation = row.status === 'active' && !local?.dirty;
         waitTest = local?.waitTest || null;
+        testDetailsOpen = Boolean(waitTest);
         stage = confirmation ? 4 : flow.stage; revision = local?.dirty ? 1 : 0; savedRevision = 0;
         if (revision) timer = setTimeout(()=>save().catch(()=>{}),1000);
       }
@@ -486,6 +488,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     finally { busy=false; }
   });
   result.addEventListener('toggle', event => {
+    if (event.target.matches('.auto-test-details')) { testDetailsOpen=event.target.open;return; }
     if (event.target.matches('[data-mail-section]')) { mailSections[event.target.dataset.mailSection] = event.target.open; return; }
     if (event.target.matches('.auto-saved-templates')) { templatesOpen = event.target.open; return; }
     if (!event.target.matches('.auto-actions-menu')) return;

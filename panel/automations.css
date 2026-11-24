@@ -68,7 +68,7 @@
 .auto-timeline { position: relative; margin: 0 0 18px; padding: 0 0 0 24px; list-style: none; }
 .auto-timeline::before { content: ""; position: absolute; inset: 12px auto 12px 7px; border-left: 1px solid var(--mkt-line); }
 .auto-timeline li { position: relative; padding: 16px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); margin-bottom: 12px; }
-.auto-timeline li::before { content: ""; position: absolute; top: 20px; left: -22px; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); }
+.auto-timeline li::before { content: ""; position: absolute; top: 20px; left: -22px; width: 9px; height: 9px; border-radius: 50%; background: var(--brown); }
 .auto-timeline li.auto-wait::before { background: var(--brown); }
 .auto-node-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .auto-sequence-screen { min-width: 0; }
@@ -89,6 +89,7 @@
 .auto-timing-editor > .auto-field { max-width: 380px; }
 .auto-timing-fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 12px; }
 .auto-timing-editor > p { font-size: var(--font-helper); }
+.auto-timing-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
 .auto-mail-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
 #marketing-view .auto-mail-tabs button { text-align: left; overflow-wrap: anywhere; }
 #marketing-view .auto-mail-tabs button[aria-pressed=true] { background: var(--brown-soft); border-color: var(--brown); }
@@ -173,20 +174,26 @@
 .auto-review-heading .mkt-status { flex-shrink: 0; }
 .auto-review-overview .auto-timeline { margin-bottom: 16px; }
 .auto-review-overview .auto-timeline li:last-child { margin-bottom: 0; }
-.auto-review-timing { font-size: var(--font-helper); }
+#marketing-view .auto-review-timing { max-width: none; font-size: var(--font-helper); }
 .auto-review-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 28px; align-items: start; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--mkt-line); }
 .auto-review-grid > section { min-width: 0; }
 #marketing-view .auto-review-grid h3 { margin-bottom: 16px; font-size: var(--font-body); font-weight: 500; }
 .auto-review-mail { display: flex; align-items: end; flex-wrap: wrap; gap: 8px 12px; margin-bottom: 16px; }
 .auto-review-mail .auto-field { flex: 1 1 190px; margin: 0; }
-#marketing-view .auto-review-mail [data-auto=preview] { border: 0; background: transparent; padding: 8px 0; color: var(--text-muted); }
-#marketing-view .auto-review-mail [data-auto=preview]:hover { color: var(--black); text-decoration: underline; }
-.auto-review-test-send { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 14px; }
-.auto-review-test-send p { flex: 1 1 190px; font-size: var(--font-helper); }
+#marketing-view .auto-review-test-actions [data-auto=preview] { border: 0; background: transparent; color: var(--text-muted); }
+#marketing-view .auto-review-test-actions [data-auto=preview]:hover { color: var(--black); text-decoration: underline; }
+.auto-review-test-actions { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 10px; }
+.auto-review-test-note { margin-top: 10px; font-size: var(--font-helper); }
+.auto-test-details { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--mkt-line); }
+.auto-test-details > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; list-style: none; }
+.auto-test-details > summary::-webkit-details-marker { display: none; }
+.auto-test-details > summary svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; color: var(--text-muted); }
+.auto-test-details[open] > summary svg { transform: rotate(180deg); }
 .auto-review-readiness { margin-top: 16px; padding: 12px 14px; border-radius: var(--surface-radius); background: var(--brown-soft); color: var(--text-muted); }
 #marketing-view .auto-review-event-note { margin-top: 18px; font-size: var(--font-helper); }
 .auto-wait-test { margin: 18px 0; padding-top: 16px; border-top: 1px solid var(--mkt-line); }
 .auto-wait-test p { margin: 10px 0; }
+.auto-test-details .auto-wait-test { margin: 10px 0 0; padding-top: 0; border-top: 0; }
 .auto-checks { list-style: none; padding: 0; margin: 0; }
 .auto-checks li { display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: 9px 0; }
 .auto-checks li > span { display: grid; place-items: center; height: 22px; border-radius: 50%; background: var(--brown-soft); }
