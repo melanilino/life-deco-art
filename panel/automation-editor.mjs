@@ -28,7 +28,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let taskScheduling = false, waitTest = null;
   let timingOpen = '';
   let testDetailsOpen = false;
-  let mailTool = 'content', nameEditing = false, namedGreeting = true;
+  let mailTool = 'content', nameEditing = false;
   let richRange = null;
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
@@ -147,9 +147,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     return mails().filter(mail=>key==='subject'?!mail.template.subject.trim()||/[\r\n]/.test(mail.template.subject):key==='preheader'?!mail.template.preheader.trim():key==='blocks'?!mail.template.blocks.some(block=>block.kind==='image'||block.text?.trim()):key==='links'?mail.template.blocks.some(block=>['image','button'].includes(block.kind)&&!https(block.url)):false);
   }
   function mailPaper(mail) {
-    const previewName = namedGreeting ? sampleName : '';
-    const greeting = previewName ? `Hola, ${escape(previewName)}.` : '¡Hola!';
-    const personalize = value => String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_all, variable) => variable === 'codigo' ? 'LDA10' : previewName);
+    const greeting = '¡Hola!';
+    const personalize = value => String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_all, variable) => variable === 'codigo' ? 'LDA10' : '{{nombre}}');
     return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}"><div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span><p>${greeting}</p></div>
       ${mail.template.blocks.map((block,index) => `<button type="button" class="mkt-block" data-block="${index}" aria-label="Editar ${blockLabels[block.kind]}, bloque ${index + 1}" aria-pressed="${index === selectedBlock}"
         style="color:${block.color};text-align:${block.align};margin-bottom:${block.space || 16}px">${block.kind==='text'?richHTML(block,personalize):contentOf({...block,text:personalize(block.text),secondary:personalize(block.secondary)},block.kind,mail.template.brandColors)}</button>`).join('')}
@@ -217,7 +216,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <div class="auto-compose-button"><h3>Botón <span class="auto-muted">(opcional)</span></h3><div><label class="auto-field">Texto del botón<input maxlength="150" data-simple-button="text" value="${escape(cta?.text||'')}"></label><label class="auto-field">Enlace<input type="url" maxlength="1200" data-simple-button="url" value="${escape(cta?.url||'')}" placeholder="https://"></label></div></div>
         ${extras.length?`<details class="auto-compose-extras"><summary>Más contenido${icon('chevron')}</summary><ol class="auto-mail-blocks">${extras.map(block=>{const index=mail.template.blocks.indexOf(block);return `<li><button type="button" data-block="${index}">${blockLabels[block.kind]} ${index+1}</button></li>`}).join('')}</ol><div data-auto-inspector>${inspector(mail)}</div></details>`:''}
       </section><section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3>Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button><button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header>
-        <div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div><label class="auto-compose-greeting">Vista previa del saludo<select data-preview-greeting aria-label="Vista previa del saludo">${selectOptions([['named','Con nombre'],['plain','Sin nombre']],namedGreeting?'named':'plain')}</select></label>
+        <div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
       </section></div></section>`;
   }
   function reviewScreen() {
@@ -260,7 +259,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${editing && flow && !confirmation ? `<footer class="auto-footer">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>
-        ${stage===3?'<button type="button" data-stage="2" data-form-action="secondary">← Atrás</button>':''}
+        ${stage>1?`<button type="button" data-stage="${stage-1}" data-form-action="secondary">← Atrás</button>`:button('← Atrás','home')}
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
@@ -372,7 +371,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   result.addEventListener('change', event => {
     const target = event.target;
     if (target.matches('[data-list-status]')) { stateFilter = target.value; render(); return; }
-    if (target.matches('[data-preview-greeting]')) { namedGreeting=target.value==='named';render();return; }
     if (!flow) return;
     if (target.matches('[name=auto-trigger]')) { flow.trigger = target.value; change(); render(); }
     if (target.dataset.origin) {
@@ -545,7 +543,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         current=response.row;rows[rows.findIndex(row=>row.id===current.id)]=current;confirmation=true;metric=null;journal();render();await loadMetrics();
       } else if (action==='preview'||action==='test') {
         await save();
-        const response=await request(action==='test'?'flow-test':'flow-preview',{template:selectedMail().template,...(action==='preview'&&stage===3&&!namedGreeting?{previewWithoutName:true}:{})});
+        const response=await request(action==='test'?'flow-test':'flow-preview',{template:selectedMail().template,...(action==='preview'?{previewWithoutName:true}:{})});
         if(action==='test')report('Prueba aceptada por Gmail.');
         else {const dialog=result.querySelector('dialog');const frame=document.createElement('iframe');frame.title='Correo final';frame.setAttribute('sandbox','');frame.srcdoc=response.html;dialog.querySelector('[data-final-mail]').replaceChildren(frame);dialog.showModal();}
       } else if (action==='close-preview') target.closest('dialog').close();
