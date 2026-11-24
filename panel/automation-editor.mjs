@@ -121,14 +121,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${flow.trigger === 'inactive' ? `<label class="auto-field auto-trigger-inactive">Días sin comprar<input type="number" data-flow="inactiveDays" min="1" max="730" value="${flow.inactiveDays}"></label>` : ''}</section>`;
   }
   function timeline() {
-    let elapsed=0;
-    const rows=[];
-    for(let index=0;index<flow.steps.length;index++) {
-      const step=flow.steps[index];
-      if(step.kind==='wait'){elapsed+=step.duration*({minutes:1,hours:60,days:1440}[step.unit]);continue;}
-      rows.push(`<li><strong>${escape(step.name||'Correo')}</strong><p>${escape(step.template.subject||'Asunto pendiente')}</p><p class="auto-muted">Día ${Math.floor(elapsed/1440)} · ${deliveryTiming(flow.steps,index)}</p></li>`);
-    }
-    return `<ol class="auto-timeline"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${rows.join('')}</ol>`;
+    const units={minutes:['minuto','minutos'],hours:['hora','horas'],days:['día','días']};
+    return `<ol class="auto-flow-summary" aria-label="Resumen del flujo"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${flow.steps.map(step=>step.kind==='wait'
+      ? `<li class="auto-flow-wait"><strong>Esperar ${step.duration} ${units[step.unit][step.duration===1?0:1]}</strong>${step.time?`<p>A las ${escape(step.time)} · República Dominicana</p>`:''}</li>`
+      : `<li><strong>${escape(step.name||'Correo')}</strong><p>${escape(step.template.subject||'Correo sin asunto')}</p></li>`).join('')}</ol>`;
   }
   function sequenceScreen() {
     return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${sequenceTimeline()}<div class="auto-sequence-add">${button(`${icon('plus')} Añadir correo`,'add-mail')}</div></section>`;
@@ -196,23 +192,29 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   function reviewScreen() {
     const checks = flowChecks(flow);
+    const required = checks.filter(check => !check.ok && !check.warning);
+    const optional = checks.filter(check => !check.ok && check.warning);
+    const checkLabels = {name:'Añadir nombre',origin:'Seleccionar orígenes',mail:'Añadir un correo',subject:'Añadir asunto',blocks:'Completar contenido',links:'Corregir enlaces'};
+    const checkRows = entries => entries.map(check => `<li class="${check.ok?'is-ok':check.warning?'is-warning':'is-error'}"><span role="img" aria-label="${check.ok?'Completado':check.warning?'Opcional':'Pendiente'}">${check.ok?icon('check'):'!'}</span><div>${checkLabels[check.key]&&!check.ok?checkLabels[check.key]:check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${check.warning?'<small class="auto-check-note">Opcional · no impide activar</small>':''}</div>${!check.ok?`<button type="button" data-check="${check.key}" data-stage="${check.stage}">Corregir <span aria-hidden="true">→</span></button>`:''}</li>`).join('');
     const pending = checks.some(check => !check.ok && !check.warning);
     const readiness = !mailReady ? 'El buzón necesita configuración antes de activar.' : pending ? 'Completa las comprobaciones pendientes antes de activar.'
       : current.status === 'active' ? 'Los cambios están listos para publicar.' : `Todo está listo para activar. El envío ${current.status === 'paused' ? 'seguirá pausado' : 'seguirá desactivado'} hasta que pulses Activar.`;
-    return `<section class="auto-review-screen" aria-label="Revisión de la automatización"><header class="auto-review-heading"><div><h2>Resumen de la secuencia</h2><p class="auto-muted">${escape(flow.name)}</p></div>${badge()}</header>
-      <div class="auto-review-overview">${timeline(false)}</div>
-      <p class="auto-muted auto-review-timing">${taskScheduling ? 'Cada espera programa el siguiente correo para cuando venza el plazo. Puede haber un pequeño retraso de procesamiento. Los eventos del Hub mantienen su revisión diaria.' : 'Conecta Cloud Tasks para programar las esperas. La recuperación y los eventos del Hub mantienen su revisión diaria.'}</p>
-      <div class="auto-review-grid"><section class="auto-review-checklist" aria-label="Comprobaciones"><h3>Comprobaciones</h3><ul class="auto-checks">${checks.map(check =>
-      `<li class="${check.ok ? 'is-ok' : check.warning ? 'is-warning' : 'is-error'}"><span role="img" aria-label="${check.ok ? 'Completado' : check.warning ? 'Opcional' : 'Pendiente'}">${check.ok ? icon('check') : '!'}</span><div>${check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${!check.ok && check.warning ? '<small class="auto-check-note">Opcional · no impide activar</small>' : ''}</div>${!check.ok ? `<button type="button" data-check="${check.key}" data-stage="${check.stage}">Revisar</button>` : ''}</li>`).join('')}</ul>
+    return `<section class="auto-review-screen" aria-label="Revisión de la automatización"><header class="auto-review-heading"><div><h2>Revisar y activar</h2><p class="auto-muted">${escape(flow.name)}</p></div>${badge()}</header>
+      <div class="auto-review-overview"><h3>Resumen del flujo</h3>${timeline()}</div>
+      <div class="auto-review-grid"><section class="auto-review-checklist" aria-label="Comprobaciones"><h3 class="auto-pending-heading">${required.length?'Pendiente para activar':'Todo listo para activar'}<span class="auto-pending-count">${required.length}</span></h3>
+      <p class="auto-review-intro">${required.length?'Completa los datos pendientes para activar.':'Las comprobaciones obligatorias están completas.'}</p><ul class="auto-checks auto-pending-checks">${checkRows(required)}</ul>
+      ${optional.length?`<div class="auto-review-optional"><ul class="auto-checks">${checkRows(optional)}</ul></div>`:''}
+      <details class="auto-completed-checks"><summary>Comprobaciones completadas ${icon('chevron')}</summary><ul class="auto-checks">${checkRows(checks.filter(check=>check.ok))}</ul></details>
       <p class="auto-review-readiness" role="status">${readiness}</p></section>
-      <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Pruebas del correo</h3><div class="auto-review-mail"><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
-        </div><div class="auto-review-test-actions"><button type="button" data-auto="preview" data-form-action="text" ${selectedMail() ? '' : 'disabled'}>Ver correo final</button>${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
-        <p class="auto-muted auto-review-test-note">La prueba se envía al correo de tu cuenta administradora.</p>
-        <details class="auto-test-details" ${testDetailsOpen?'open':''}><summary>${taskScheduling?'Prueba de espera':'Información adicional'}${icon('chevron')}</summary>
+      <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Revisar el correo</h3><div class="auto-review-mail" ${mails().length<=1?'hidden':''}><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
+        </div><div class="auto-review-test-actions"><button type="button" data-auto="preview" ${selectedMail() ? '' : 'disabled'}>Vista previa</button>${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
+        <p class="auto-muted auto-review-test-note">Destino de prueba: tu correo de administración.</p>
+        <details class="auto-test-details" ${testDetailsOpen?'open':''}><summary>Pruebas avanzadas${icon('chevron')}</summary>
         ${taskScheduling ? `<div class="auto-wait-test">${button('Probar espera de 1 minuto','wait-test',false,mailReady && selectedMail() ? '' : 'disabled')}
           <p class="auto-muted">Esta prueba pausa la automatización y solo envía a tu correo.</p>
           ${waitTest ? `<p role="status">${waitTest.status === 'done' ? `Programada: ${testTime(waitTest.scheduledFor)}. Enviada: ${testTime(waitTest.sentAt)}.` : waitTest.error ? escape(waitTest.error) : `Prueba ${waitTest.status === 'review' ? 'por revisar' : waitTest.status === 'failed' ? 'fallida' : 'programada'} para ${testTime(waitTest.scheduledFor || waitTest.dueAt)}.`}</p>${button('Actualizar prueba','wait-test-status')}` : ''}</div>` : ''}
         ${!mailReady ? '<p role="status">El buzón necesita configuración para enviar correos.</p>' : ''}
+        <p class="auto-muted auto-review-timing">${taskScheduling ? 'Cada espera programa el siguiente correo para cuando venza el plazo. Puede haber un pequeño retraso de procesamiento. Los eventos del Hub mantienen su revisión diaria.' : 'Conecta Cloud Tasks para programar las esperas. La recuperación y los eventos del Hub mantienen su revisión diaria.'}</p>
         <p class="auto-muted auto-review-event-note">Cumpleaños usa fechas registradas. Los eventos comerciales envían solo a contactos suscritos.</p></details></section></div></section>`;
   }
   function confirmedScreen() {
