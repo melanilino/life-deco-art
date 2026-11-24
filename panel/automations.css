@@ -91,10 +91,10 @@
 .auto-timing-fields { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 12px; }
 .auto-timing-editor > p { font-size: var(--font-helper); }
 .auto-timing-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
-.auto-mail-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-#marketing-view .auto-mail-tabs button { text-align: left; overflow-wrap: anywhere; }
-#marketing-view .auto-mail-tabs button[aria-pressed=true] { background: var(--brown-soft); border-color: var(--brown); }
-.auto-content-timing { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; margin-bottom: 22px; background: var(--brown-soft); border-radius: var(--surface-radius); color: var(--text-muted); }
+.auto-mail-tabs { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 8px; border-bottom: 1px solid var(--mkt-line); }
+#marketing-view .auto-mail-tabs button { text-align: left; overflow-wrap: anywhere; padding: 12px 0; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--text-muted); }
+#marketing-view .auto-mail-tabs button[aria-pressed=true] { background: transparent; border-bottom-color: var(--brown); color: var(--black); }
+.auto-content-timing { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0; margin-bottom: 24px; color: var(--text-muted); font-size: var(--font-helper); }
 #marketing-view .auto-content-timing button { background: transparent; border-color: transparent; flex-shrink: 0; }
 .auto-sequence-marker { position: absolute; left: -39px; top: 16px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--cream); color: var(--text-muted); font-size: var(--font-helper); }
 .auto-sequence-marker svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; }
@@ -125,10 +125,12 @@
 .auto-mail-section > summary svg { width: 24px; height: 24px; color: var(--text-muted); flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; }
 .auto-mail-section[open] > summary svg { transform: rotate(180deg); }
 .auto-mail-section > summary:focus-visible { outline: 2px solid var(--brown); outline-offset: 4px; }
-.auto-mail-section-body { padding-top: 24px; }
-.auto-mail-meta { display: grid; grid-template-columns: minmax(0,1fr); align-items: start; gap: 12px 24px; }
+.auto-mail-section-body { padding-top: 16px; }
+.auto-mail-meta { display: grid; grid-template-columns: minmax(0,1fr); align-items: start; gap: 24px; }
 .auto-mail-meta > * { min-width: 0; }
-.auto-mail-meta .auto-field { margin-bottom: 16px; }
+.auto-mail-meta .auto-field { margin-bottom: 0; }
+.auto-mail-preheader { grid-column: 1 / -1; }
+.auto-mail-preheader .auto-preheader-suggestions { margin: 12px 0 0; gap: 8px; }
 .auto-mail-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 32px; align-items: start; }
 .auto-mail-settings { min-width: 0; }
 .auto-mail-grid > * { min-width: 0; }

@@ -75,3 +75,5 @@ Ajustes por orden de revisión (23 de noviembre de 2026): 1) se retiran los text
 Separación y numeración (23 de noviembre de 2026): se elimina el margen residual sobre los recuadros de orígenes, igualando a 12 px la separación respecto al título en ambos grupos. Los pasos conservan siempre 1, 2, 3 y 4, sin sustituirlos por checks ni signos. Verificado tras navegar entre pasos, sin envíos.
 
 Foco de selección (23 de noviembre de 2026): el contorno exterior de los recuadros de disparadores y orígenes aparece únicamente al navegar con teclado, mediante focus-visible. El clic de ratón conserva solo el borde normal y el estado de selección. Comprobados ambos modos localmente, sin envíos.
+
+Organización de Contenido (23 de noviembre de 2026): selector de correos con pestañas subrayadas, horario sin recuadro adicional y texto de vista previa a todo el ancho con sugerencias agrupadas. Se mantienen las dos secciones plegables y todas sus acciones. Verificado en escritorio y móvil, sin desbordamientos; sugerencias y apertura del editor comprobadas con datos locales y envíos bloqueados.
