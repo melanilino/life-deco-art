@@ -38,3 +38,19 @@ test('espacios exteriores y saltos de línea no pierden el formato',()=>{
   const mail=core.renderEmail(template);
   assert.match(mail.html,/<strong>Hola<br><\/strong><em>Mundo<\/em>/);
 });
+
+test('las automatizaciones parten del contenido escrito sin saludo automático',()=>{
+  const flow=starter('blank','custom-flow','custom-mail');
+  flow.steps[0].template.subject='Contenido propio';
+  flow.steps[0].template.blocks[0].text='Bienvenida, {{nombre}}';
+  flow.steps[0].template.blocks.push({kind:'image',url:'https://example.invalid/imagen.png',alt:'Imagen propia'});
+  const template=core.templateOf(normalizeFlow(flow).steps[0].template);
+  const email=core.renderEmail(template,{name:'Ana'},'https://example.invalid/baja');
+  assert.equal(template.hideGreeting,true);
+  assert.doesNotMatch(email.html,/Hola, Ana|¡Hola!/);
+  assert.match(email.html,/Bienvenida, Ana/);
+  assert.match(email.html,/src="https:\/\/example.invalid\/imagen.png"/);
+  assert.match(email.html,/alt="Imagen propia"/);
+  assert.match(email.html,/Cancelar suscripción/);
+  assert.match(core.renderEmail(core.templateOf({subject:'Otro editor',blocks:[{kind:'text',text:'Contenido'}]}),{name:'Ana'}).html,/Hola, Ana/);
+});

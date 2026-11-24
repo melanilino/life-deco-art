@@ -74,14 +74,15 @@ test('preheader es advertencia y los enlaces son obligatorios',()=>{
 
 test('los dos orígenes y los reintentos concurrentes generan un solo correo por persona y flujo',async()=>{
   const x=fixture();
-  await x.publish();
+  await x.publish('welcome',flow=>{flow.steps[0].template.blocks[0].text='Gracias, {{nombre}}';});
   const subscriber=x.contact();
   await Promise.all([x.api.subscription({source:'footer'},subscriber),x.api.subscription({source:'community'},subscriber)]);
   await x.api.subscription({source:'footer'},subscriber);
   await x.api.drain();
   assert.equal(x.messages.length,1);
   assert.match(x.messages[0].html,/Cancelar suscripción/);
-  assert.match(x.messages[0].html,/Hola, Ana/);
+  assert.match(x.messages[0].html,/Gracias, Ana/);
+  assert.doesNotMatch(x.messages[0].html,/Hola, Ana/);
 });
 
 test('se filtra el formulario de origen y se recuperan altas pendientes',async()=>{

@@ -27,7 +27,7 @@ export function https(value) {
   catch { return ''; }
 }
 export function emptyMail(id) {
-  return { id, kind: 'mail', name: 'Correo', template: { subject: '', preheader: '', blocks: [{ kind: 'text', text: '', color: '#1c1a17', align: 'left', font: 'Arial', space: 16 }] } };
+  return { id, kind: 'mail', name: 'Correo', template: { subject: '', preheader: '', hideGreeting:true, blocks: [{ kind: 'text', text: '', color: '#1c1a17', align: 'left', font: 'Arial', space: 16 }] } };
 }
 export function starter(kind, id, mailId) {
   const option = starterOptions.find(row => row[0] === kind) || starterOptions[3];
@@ -68,7 +68,7 @@ export function normalizeFlow(input) {
         space: [8,16,24,32].includes(Number(block.space)) ? Number(block.space) : 16 };
     });
     return { id, kind: 'mail', name: text(step.name, 100), template: {
-      subject: text(step.template.subject, 150), preheader: text(step.template.preheader, 150), blocks,
+      subject: text(step.template.subject, 150), preheader: text(step.template.preheader, 150), hideGreeting:true, blocks,
       headingFont: 'Montserrat', brandColors: step.template.brandColors === true,
     } };
   });

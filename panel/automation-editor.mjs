@@ -30,6 +30,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let testDetailsOpen = false;
   let mailTool = 'content', nameEditing = false;
   let richRange = null;
+  let imageOpen = false;
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -147,9 +148,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     return mails().filter(mail=>key==='subject'?!mail.template.subject.trim()||/[\r\n]/.test(mail.template.subject):key==='preheader'?!mail.template.preheader.trim():key==='blocks'?!mail.template.blocks.some(block=>block.kind==='image'||block.text?.trim()):key==='links'?mail.template.blocks.some(block=>['image','button'].includes(block.kind)&&!https(block.url)):false);
   }
   function mailPaper(mail) {
-    const greeting = '¡Hola!';
     const personalize = value => String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_all, variable) => variable === 'codigo' ? 'LDA10' : '{{nombre}}');
-    return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}"><div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span><p>${greeting}</p></div>
+    return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}"><div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span></div>
       ${mail.template.blocks.map((block,index) => `<button type="button" class="mkt-block" data-block="${index}" aria-label="Editar ${blockLabels[block.kind]}, bloque ${index + 1}" aria-pressed="${index === selectedBlock}"
         style="color:${block.color};text-align:${block.align};margin-bottom:${block.space || 16}px">${block.kind==='text'?richHTML(block,personalize):contentOf({...block,text:personalize(block.text),secondary:personalize(block.secondary)},block.kind,mail.template.brandColors)}</button>`).join('')}
       <div class="mkt-email-footer">Cancelar suscripción</div></div>`;
@@ -170,6 +170,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   const primaryText = mail => mail?.template.blocks.find(block=>block.kind==='text');
   const primaryButton = mail => mail?.template.blocks.find(block=>block.kind==='button');
+  const primaryImage = mail => mail?.template.blocks.find(block=>block.kind==='image');
   function richHTML(block, personalize=value=>value) {
     return (block?.runs || [{text:block?.text||''}]).map(run=>{
       let value=escape(personalize(run.text)).replace(/\n/g,'<br>');
@@ -203,8 +204,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function mailScreen() {
     const mail=selectedMail();
     if(!mail)return panel('Contenido',`<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
-    const textBlock=primaryText(mail), cta=primaryButton(mail);
-    const extras=mail.template.blocks.filter(block=>block!==textBlock&&block!==cta);
+    const textBlock=primaryText(mail), cta=primaryButton(mail), picture=primaryImage(mail);
+    const extras=mail.template.blocks.filter(block=>block!==textBlock&&block!==cta&&block!==picture);
     return `<section class="auto-mail-screen auto-compose" aria-label="Editor de correo"><h2>Contenido</h2>
       <div class="auto-compose-mails" role="group" aria-label="Correos de la secuencia">${mails().map((entry,index)=>`<button type="button" data-mail-tab="${entry.id}" aria-pressed="${entry.id===mail.id}">${index+1}. ${escape(entry.name||'Correo')}</button>`).join('')}</div>
       <div class="auto-compose-grid"><section class="auto-compose-fields" aria-label="Contenido del correo">
@@ -213,6 +214,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         <div class="auto-field"><label id="auto-text-label">Texto del correo</label><div class="auto-rich-shell"><div class="auto-rich-toolbar" role="toolbar" aria-label="Formato del texto"><button type="button" data-rich="bold" aria-label="Negrita"><strong>B</strong></button><button type="button" data-rich="italic" aria-label="Cursiva"><em>I</em></button><button type="button" data-rich="link" aria-label="Insertar enlace">${icon('link')}</button><button type="button" class="auto-insert-name" data-rich="name">Insertar nombre</button></div>
         <div class="auto-rich-link" hidden><label class="auto-field">Enlace HTTPS<input type="url" data-rich-url placeholder="https://"></label><button type="button" data-rich="apply-link">Aplicar</button><button type="button" data-rich="cancel-link">Cancelar</button></div>
         <div class="auto-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="auto-text-label" data-rich-editor>${richHTML(textBlock)}</div></div></div>
+        <section class="auto-compose-image" aria-label="Imagen del correo">${picture||imageOpen?`<div class="auto-image-heading"><h3>Imagen <span class="auto-muted">(opcional)</span></h3><button type="button" data-auto="remove-image" data-form-action="text">Eliminar imagen</button></div><label class="auto-field">Enlace de la imagen<input type="url" maxlength="1200" data-simple-image="url" value="${escape(picture?.url||'')}" placeholder="https://"></label><label class="auto-field">Texto alternativo<input maxlength="150" data-simple-image="alt" value="${escape(picture?.alt||'')}"></label>`:button(`${icon('plus')} Añadir imagen`,'show-image')}</section>
         <div class="auto-compose-button"><h3>Botón <span class="auto-muted">(opcional)</span></h3><div><label class="auto-field">Texto del botón<input maxlength="150" data-simple-button="text" value="${escape(cta?.text||'')}"></label><label class="auto-field">Enlace<input type="url" maxlength="1200" data-simple-button="url" value="${escape(cta?.url||'')}" placeholder="https://"></label></div></div>
         ${extras.length?`<details class="auto-compose-extras"><summary>Más contenido${icon('chevron')}</summary><ol class="auto-mail-blocks">${extras.map(block=>{const index=mail.template.blocks.indexOf(block);return `<li><button type="button" data-block="${index}">${blockLabels[block.kind]} ${index+1}</button></li>`}).join('')}</ol><div data-auto-inspector>${inspector(mail)}</div></details>`:''}
       </section><section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3>Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button><button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header>
@@ -338,6 +340,12 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
     if (!flow) return;
     if(target.matches('[data-rich-editor]')){readRichEditor(target);return;}
+    if(target.dataset.simpleImage){
+      const mail=selectedMail();let block=primaryImage(mail);
+      if(!block){if(mail.template.blocks.length>=30){report('Cada correo admite hasta 30 bloques.',true);return;}block={kind:'image',url:'',alt:'',color:'#1c1a17',align:'center',space:16,font:'Montserrat'};const cta=primaryButton(mail);mail.template.blocks.splice(cta?mail.template.blocks.indexOf(cta):mail.template.blocks.length,0,block);}
+      block[target.dataset.simpleImage]=target.value;
+      change();const paper=result.querySelector('[data-auto-paper]');if(paper)paper.innerHTML=mailPaper(mail);return;
+    }
     if(target.dataset.simpleButton){
       const mail=selectedMail();let block=primaryButton(mail);
       if(!block){if(mail.template.blocks.length>=30){report('Cada correo admite hasta 30 bloques.',true);return;}block={kind:'button',text:'',url:'',color:'#DCC9B4',align:'center',space:16,font:'Montserrat'};mail.template.brandColors=true;mail.template.blocks.push(block);}
@@ -439,6 +447,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     try {
       target.closest('[popover]')?.hidePopover();
       const action = target.dataset.auto;
+      if(action==='show-image'){imageOpen=true;render();result.querySelector('[data-simple-image=url]')?.focus();return;}
+      if(action==='remove-image'){const mail=selectedMail(),picture=primaryImage(mail);if(picture){previousTemplate=structuredClone(mail.template);mail.template.blocks.splice(mail.template.blocks.indexOf(picture),1);change();}imageOpen=false;render();return;}
       if (target.dataset.device) { mobile = target.dataset.device === 'mobile'; render(); return; }
       if (target.dataset.mailTool) { mailTool=target.dataset.mailTool;render();return; }
       if (action==='rename-mail') { nameEditing=!nameEditing;render();if(nameEditing)result.querySelector('[data-mail=name]')?.focus();return; }
