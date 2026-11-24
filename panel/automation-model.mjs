@@ -17,6 +17,11 @@ export const starterOptions = [
   ['blank', 'Desde cero', 'subscription'],
 ];
 const text = (value, size) => typeof value === 'string' ? value.slice(0, size) : '';
+export function textRuns(value, plain) {
+  if (!Array.isArray(value) || value.length > 500) return undefined;
+  const runs=value.map(run=>({text:text(run?.text,3000),...(run?.bold===true?{bold:true}:{}),...(run?.italic===true?{italic:true}:{}),...(https(run?.url)?{url:https(run.url)}:{})}));
+  return runs.map(run=>run.text).join('')===plain ? runs : undefined;
+}
 export function https(value) {
   try { const url = new URL(value); return url.protocol === 'https:' && !url.username && !url.password ? url.href : ''; }
   catch { return ''; }
@@ -56,6 +61,7 @@ export function normalizeFlow(input) {
     const blocks = step.template.blocks.map(block => {
       if (!['text','image','button','divider','columns'].includes(block.kind)) throw Error('Tipo de bloque no válido.');
       return { kind: block.kind, text: text(block.text, 3000), secondary: text(block.secondary, 3000), url: text(block.url, 1200),
+        ...(block.kind==='text' && textRuns(block.runs,text(block.text,3000))?{runs:textRuns(block.runs,text(block.text,3000))}:{}),
         alt: text(block.alt, 150), color: /^#[a-f0-9]{6}$/i.test(block.color) ? block.color : '#1c1a17',
         align: ['center','right'].includes(block.align) ? block.align : 'left',
         font: ['Arial','Arial, sans-serif','Montserrat','Montserrat, Arial, sans-serif'].includes(block.font) ? block.font : 'Arial',

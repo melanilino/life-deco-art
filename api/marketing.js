@@ -91,7 +91,7 @@ async function admin(req, res, url, action, marketing, db, sequences, scheduler)
   if (action === 'flow-test' || action === 'flow-preview') {
     const draft = core.templateOf(body?.template);
     if (!draft) return res.status(400).json({ error: 'Completa el asunto, el contenido y los enlaces del correo.' });
-    const person = { name: account.displayName || account.email.split('@')[0] };
+    const person = { name: action==='flow-preview' && body?.previewWithoutName===true ? '' : account.displayName || account.email.split('@')[0] };
     const rendered = core.renderEmail(draft, person, site + '/api/marketing?action=test-unsubscribe');
     if (action === 'flow-preview') return res.json(rendered);
     if (!gmail.configured()) return res.status(503).json({ error: 'Configura el buzón para enviar una prueba.' });

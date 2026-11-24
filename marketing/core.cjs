@@ -72,6 +72,7 @@ function templateOf(input) {
   const blocks = input.blocks.map(block => {
     if (!kinds.has(block?.kind)) return null;
     return { kind: block.kind, text: clean(block.text, 3000), secondary: clean(block.secondary, 3000),
+      ...(block.kind==='text' && validRuns(block.runs,clean(block.text,3000))?{runs:validRuns(block.runs,clean(block.text,3000))}:{}),
       url: httpsUrl(clean(block.url, 1200)), alt: clean(block.alt, 150),
       color: /^#[0-9a-f]{6}$/i.test(block.color) ? block.color : '#1c1a17',
       align: ['left', 'center', 'right'].includes(block.align) ? block.align : 'left',
@@ -93,6 +94,16 @@ function buttonInk(color) {
   return .2126 * light[0] + .7152 * light[1] + .0722 * light[2] > .179 ? '#000' : '#fff';
 }
 
+function validRuns(value, text) {
+  if (!Array.isArray(value) || value.length>500) return undefined;
+  const runs=value.map(run=>({text:typeof run?.text==='string'?run.text.slice(0,3000):'',...(run?.bold===true?{bold:true}:{}),...(run?.italic===true?{italic:true}:{}),...(httpsUrl(run?.url)?{url:httpsUrl(run.url)}:{})}));
+  const full=runs.map(run=>run.text).join('');
+  if(full.trim()!==text)return undefined;
+  const start=full.length-full.trimStart().length,end=full.trimEnd().length;
+  let offset=0;
+  return runs.map(run=>{const from=offset;offset+=run.text.length;return {...run,text:run.text.slice(Math.max(0,start-from),Math.max(0,Math.min(run.text.length,end-from)))};}).filter(run=>run.text);
+}
+
 function personalize(value, person = {}) {
   return String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_match, key) =>
     key === 'codigo' ? 'LDA10' : person.name || '');
@@ -100,7 +111,8 @@ function personalize(value, person = {}) {
 
 function renderEmail(template, person = {}, unsubscribe = '') {
   template = { ...template, preheader: personalize(template.preheader, person),
-    blocks: template.blocks.map(block => ({ ...block, text: personalize(block.text, person), secondary: personalize(block.secondary, person) })) };
+    blocks: template.blocks.map(block => ({ ...block, text: personalize(block.text, person), secondary: personalize(block.secondary, person),
+      ...(block.runs?{runs:block.runs.map(run=>({...run,text:personalize(run.text,person)}))}:{}) })) };
   const greeting = person.name ? `Hola, ${person.name}.` : '¡Hola!';
   const paragraph = text => escape(text).replace(/\r?\n/g, '<br>');
   const rows = template.blocks.map(block => {
@@ -110,7 +122,13 @@ function renderEmail(template, person = {}, unsubscribe = '') {
       case 'button': content = `<a href="${escape(block.url)}" style="display:inline-block;background:${block.color};padding:12px 20px;color:${template.brandColors ? buttonInk(block.color) : '#fff'};text-decoration:none">${paragraph(block.text)}</a>`; break;
       case 'divider': content = '<hr style="border:0;border-top:1px solid #ddd">'; break;
       case 'columns': content = `<table role="presentation" width="100%"><tr><td class="column" width="50%" valign="top">${paragraph(block.text)}</td><td class="column" width="50%" valign="top">${paragraph(block.secondary)}</td></tr></table>`; break;
-      default: content = paragraph(block.text);
+      default: content = validRuns(block.runs,block.text)?.map(run=>{
+        let value=paragraph(run.text);
+        if(run.bold)value=`<strong>${value}</strong>`;
+        if(run.italic)value=`<em>${value}</em>`;
+        if(run.url)value=`<a href="${escape(run.url)}">${value}</a>`;
+        return value;
+      }).join('') || paragraph(block.text);
     }
     return `<tr><td style="padding:0 24px ${block.space}px;color:${block.color};text-align:${block.align};font-family:${block.font}">${content}</td></tr>`;
   }).join('');

@@ -29,6 +29,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   let timingOpen = '';
   let testDetailsOpen = false;
   let mailTool = 'content', nameEditing = false, namedGreeting = true;
+  let richRange = null;
   const journal = () => {
     try { localStorage.setItem(key, JSON.stringify({ id: current?.id, version: current?.version || 0, flow, stage, waitTest, dirty: revision !== savedRevision })); }
     catch { /* Server saving remains available when browser storage is full. */ }
@@ -38,6 +39,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const mails = () => flow?.steps.filter(step => step.kind === 'mail') || [];
   const header = () => {
     const workspace = root.closest('.home-workspace');
+    workspace?.querySelector('.section-action-header')?.classList.toggle('auto-compose-header',editing && stage===3 && !confirmation);
     const title = workspace?.querySelector('.section-action-header .home-welcome h1');
     const description = workspace?.querySelector('.section-action-header .home-welcome p');
     if (title) title.textContent = !editing ? 'Automatizaciones' : !flow ? 'Nueva automatización' : confirmation ? 'Automatización activa' : stage === 4 ? 'Revisar y activar' : flow.name || 'Nueva automatización';
@@ -151,7 +153,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const personalize = value => String(value || '').replace(/\{\{\s*(nombre|name|codigo)\s*\}\}/g, (_all, variable) => variable === 'codigo' ? 'LDA10' : previewName);
     return `<div class="mkt-email-paper auto-paper ${mobile ? 'is-mobile' : ''}"><div class="mkt-email-intro"><span class="mkt-email-title">Life Deco Art</span><p>${greeting}</p></div>
       ${mail.template.blocks.map((block,index) => `<button type="button" class="mkt-block" data-block="${index}" aria-label="Editar ${blockLabels[block.kind]}, bloque ${index + 1}" aria-pressed="${index === selectedBlock}"
-        style="color:${block.color};text-align:${block.align};margin-bottom:${block.space || 16}px">${contentOf({...block,text:personalize(block.text),secondary:personalize(block.secondary)},block.kind,mail.template.brandColors)}</button>`).join('')}
+        style="color:${block.color};text-align:${block.align};margin-bottom:${block.space || 16}px">${block.kind==='text'?richHTML(block,personalize):contentOf({...block,text:personalize(block.text),secondary:personalize(block.secondary)},block.kind,mail.template.brandColors)}</button>`).join('')}
       <div class="mkt-email-footer">Cancelar suscripción</div></div>`;
   }
   function inspector(mail) {
@@ -168,27 +170,56 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       <div class="auto-inline-actions"><button type="button" data-auto="block-up" ${selectedBlock === 0 ? 'disabled' : ''}>Subir</button><button type="button" data-auto="block-down" ${selectedBlock >= mail.template.blocks.length - 1 ? 'disabled' : ''}>Bajar</button>
         <button type="button" data-auto="block-delete">Eliminar bloque</button>${previousTemplate ? '<button type="button" data-auto="undo">Deshacer</button>' : ''}</div></div>`;
   }
+  const primaryText = mail => mail?.template.blocks.find(block=>block.kind==='text');
+  const primaryButton = mail => mail?.template.blocks.find(block=>block.kind==='button');
+  function richHTML(block, personalize=value=>value) {
+    return (block?.runs || [{text:block?.text||''}]).map(run=>{
+      let value=escape(personalize(run.text)).replace(/\n/g,'<br>');
+      if(run.bold)value=`<strong>${value}</strong>`;
+      if(run.italic)value=`<em>${value}</em>`;
+      if(https(run.url))value=`<a href="${escape(https(run.url))}">${value}</a>`;
+      return value;
+    }).join('');
+  }
+  function readRichEditor(editor) {
+    const runs=[];
+    const visit=(node,style={})=>{
+      if(node.nodeType===3){if(node.textContent)runs.push({text:node.textContent,...style});return;}
+      if(node.nodeType!==1)return;
+      if(node.tagName==='BR'){runs.push({text:'\n'});return;}
+      const next={...style};
+      if(['STRONG','B'].includes(node.tagName)||Number(node.style.fontWeight)>=600)next.bold=true;
+      if(['EM','I'].includes(node.tagName)||node.style.fontStyle==='italic')next.italic=true;
+      if(node.tagName==='A'&&https(node.getAttribute('href')))next.url=https(node.getAttribute('href'));
+      if(['DIV','P'].includes(node.tagName)&&runs.length&&runs.at(-1).text.slice(-1)!=='\n')runs.push({text:'\n'});
+      for(const child of node.childNodes)visit(child,next);
+    };
+    for(const child of editor.childNodes)visit(child);
+    const text=runs.map(run=>run.text).join('');
+    if(text.length>3000||runs.length>500){editor.innerHTML=richHTML(primaryText(selectedMail()));report('El texto admite hasta 3000 caracteres.',true);return;}
+    const mail=selectedMail();let block=primaryText(mail);
+    if(!block){if(mail.template.blocks.length>=30){report('Cada correo admite hasta 30 bloques.',true);return;}block={kind:'text',text:'',color:'#1c1a17',align:'left',space:16,font:'Montserrat'};mail.template.blocks.unshift(block);}
+    block.text=text;block.runs=runs;change();
+    const paper=result.querySelector('[data-auto-paper]');if(paper)paper.innerHTML=mailPaper(mail);
+  }
   function mailScreen() {
-    const mail = selectedMail();
-    if (!mail) return panel('Correo', `<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
-    return `<section class="auto-mail-screen auto-mail-studio" aria-label="Editor de correo"><div class="auto-mail-tabs" ${mails().length<=1?'hidden':''} role="group" aria-label="Correos de la secuencia">${mails().map((entry,index)=>`<button type="button" data-mail-tab="${entry.id}" aria-pressed="${entry.id===mail.id}">${index+1}. ${escape(entry.name||'Correo')}</button>`).join('')}</div>
-      <header class="auto-studio-heading">${nameEditing?`<label class="auto-field">Nombre del correo<input maxlength="100" data-mail="name" value="${escape(mail.name)}"></label>`:`<h2>${escape(mail.name||'Correo')}</h2>`}<button type="button" data-auto="rename-mail" class="auto-icon-button" aria-label="${nameEditing?'Terminar edición del nombre':'Editar nombre del correo'}">${nameEditing?icon('check'):'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5M4 20l4-1L21 6l-4-4L4 15z"/></svg>'}</button></header>
-      <div class="auto-content-timing"><span>${deliveryTiming(flow.steps,flow.steps.indexOf(mail))}</span>${button('Cambiar','change-timing')}</div><div class="auto-mail-meta">
-      <label class="auto-field">Asunto<input maxlength="150" data-mail="subject" value="${escape(mail.template.subject)}"></label>
-      <div><label class="auto-field">Texto de vista previa · Opcional<input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
-      <details class="auto-studio-suggestions"><summary>Sugerencias${icon('chevron')}</summary><div class="auto-chips auto-preheader-suggestions" aria-label="Sugerencias de vista previa">${['Ideas y novedades de Life Deco Art','Gracias por ser parte de nuestra comunidad.'].map(text => `<button type="button" data-suggestion="${escape(text)}">${text}</button>`).join('')}</div></details></div></div>
-      <div class="auto-mail-grid"><section class="auto-mail-settings" aria-label="Contenido del correo">
-      <div class="auto-studio-tabs" role="group" aria-label="Herramientas del bloque"><button type="button" data-mail-tool="content" aria-pressed="${mailTool==='content'}">Contenido</button><button type="button" data-mail-tool="design" aria-pressed="${mailTool==='design'}">Diseño</button></div>
-      <div class="auto-studio-tools"><button type="button" data-auto="show-templates">Plantillas</button><button type="button" data-auto="brand" title="Usar estilos de Marca">Marca</button><details class="auto-studio-personalize"><summary>Personalizar${icon('chevron')}</summary><div class="auto-chips" aria-label="Insertar en el correo">${[['name','Nombre'],['code','Código LDA10'],['shop','Botón tienda'],['whatsapp','Botón WhatsApp']].map(([key,label]) => `<button type="button" data-insert="${key}">+ ${label}</button>`).join('')}</div></details></div>
-      <details class="auto-saved-templates" ${templatesOpen ? 'open' : 'hidden'}><summary>Plantillas guardadas${icon('chevron')}</summary><div class="auto-inline-actions">
-        ${!templatesLoaded ? '<button type="button" data-auto="load-templates">Cargar plantillas</button>' : copies.length ? `<select data-copy aria-label="Plantilla guardada">${selectOptions(copies.map((copy,index) => [index,copy.name]),'0')}</select><button type="button" data-auto="reuse">Usar plantilla</button>` : '<p>No hay plantillas guardadas.</p>'}
-        <button type="button" data-auto="save-copy">Guardar este correo como plantilla</button></div></details>
-      <ol class="auto-mail-blocks" aria-label="Bloques del correo">${mail.template.blocks.map((block,index)=>`<li><button type="button" data-block="${index}" aria-label="Seleccionar ${blockLabels[block.kind]}, bloque ${index+1}" aria-pressed="${index===selectedBlock}"><span>${index+1}.</span>${icon({text:'doc',image:'image',button:'link'}[block.kind]||'doc')} ${blockLabels[block.kind]}</button></li>`).join('')}</ol>
-      <details class="auto-studio-add"><summary>${icon('plus')} Añadir bloque${icon('chevron')}</summary><div class="auto-inline-actions">${['text','image','button'].map(kind => `<button type="button" data-add-block="${kind}">${icon({text:'doc',image:'image',button:'link'}[kind])}${blockLabels[kind]}</button>`).join('')}</div></details>
-      <div data-auto-inspector>${inspector(mail)}</div></section>
-      <section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3 class="auto-mail-section-title">Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button>
-        <button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header><div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div>
-        <label class="auto-preview-greeting">Probar saludo<select data-preview-greeting aria-label="Probar saludo">${selectOptions([['named',sampleName?`Con nombre: ${sampleName}`:'Con nombre (no disponible)'],['plain','Sin nombre']],namedGreeting?'named':'plain')}</select></label></section></div></section>`;
+    const mail=selectedMail();
+    if(!mail)return panel('Contenido',`<p>Agrega un correo a la secuencia para editarlo.</p>${button('Ir a Secuencia','sequence')}`);
+    const textBlock=primaryText(mail), cta=primaryButton(mail);
+    const extras=mail.template.blocks.filter(block=>block!==textBlock&&block!==cta);
+    return `<section class="auto-mail-screen auto-compose" aria-label="Editor de correo"><h2>Contenido</h2>
+      <div class="auto-compose-mails" role="group" aria-label="Correos de la secuencia">${mails().map((entry,index)=>`<button type="button" data-mail-tab="${entry.id}" aria-pressed="${entry.id===mail.id}">${index+1}. ${escape(entry.name||'Correo')}</button>`).join('')}</div>
+      <div class="auto-compose-grid"><section class="auto-compose-fields" aria-label="Contenido del correo">
+        <label class="auto-field">Asunto<input maxlength="150" data-mail="subject" value="${escape(mail.template.subject)}"></label>
+        <label class="auto-field"><span>Texto de vista previa <span class="auto-muted">(opcional)</span></span><input maxlength="150" data-mail="preheader" value="${escape(mail.template.preheader)}"></label>
+        <div class="auto-field"><label id="auto-text-label">Texto del correo</label><div class="auto-rich-shell"><div class="auto-rich-toolbar" role="toolbar" aria-label="Formato del texto"><button type="button" data-rich="bold" aria-label="Negrita"><strong>B</strong></button><button type="button" data-rich="italic" aria-label="Cursiva"><em>I</em></button><button type="button" data-rich="link" aria-label="Insertar enlace">${icon('link')}</button><button type="button" class="auto-insert-name" data-rich="name">Insertar nombre</button></div>
+        <div class="auto-rich-link" hidden><label class="auto-field">Enlace HTTPS<input type="url" data-rich-url placeholder="https://"></label><button type="button" data-rich="apply-link">Aplicar</button><button type="button" data-rich="cancel-link">Cancelar</button></div>
+        <div class="auto-rich-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="auto-text-label" data-rich-editor>${richHTML(textBlock)}</div></div></div>
+        <div class="auto-compose-button"><h3>Botón <span class="auto-muted">(opcional)</span></h3><div><label class="auto-field">Texto del botón<input maxlength="150" data-simple-button="text" value="${escape(cta?.text||'')}"></label><label class="auto-field">Enlace<input type="url" maxlength="1200" data-simple-button="url" value="${escape(cta?.url||'')}" placeholder="https://"></label></div></div>
+        ${extras.length?`<details class="auto-compose-extras"><summary>Más contenido${icon('chevron')}</summary><ol class="auto-mail-blocks">${extras.map(block=>{const index=mail.template.blocks.indexOf(block);return `<li><button type="button" data-block="${index}">${blockLabels[block.kind]} ${index+1}</button></li>`}).join('')}</ol><div data-auto-inspector>${inspector(mail)}</div></details>`:''}
+      </section><section class="auto-preview" aria-label="Vista previa del correo"><header class="auto-preview-heading"><h3>Vista previa</h3><div class="auto-inline-actions auto-preview-size" role="group" aria-label="Tamaño de vista previa"><button type="button" data-device="desktop" aria-pressed="${!mobile}">Escritorio</button><button type="button" data-device="mobile" aria-pressed="${mobile}">Móvil</button></div><button type="button" data-auto="preview" class="auto-icon-button" aria-label="Ampliar vista previa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-7 7M10 20H4v-6M4 20l7-7"/></svg></button></header>
+        <div class="mkt-stage-scroll" data-auto-paper>${mailPaper(mail)}</div><label class="auto-compose-greeting">Probar saludo<select data-preview-greeting aria-label="Probar saludo">${selectOptions([['named',sampleName?`Con nombre: ${sampleName}`:'Con nombre (no disponible)'],['plain','Sin nombre']],namedGreeting?'named':'plain')}</select></label>
+      </section></div></section>`;
   }
   function reviewScreen() {
     const checks = flowChecks(flow);
@@ -227,9 +258,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const screen = !editing ? home() : !flow ? '' : confirmation ? confirmedScreen()
       : stage <= 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
     result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a><div class="auto-editor-layout">${stepper()}<div class="auto-editor-content">${screen}</div></div>` : screen}
-      ${editing && flow && !confirmation ? `<footer class="auto-footer">
+      ${editing && flow && !confirmation ? `<footer class="auto-footer ${stage===3?'auto-compose-footer':''}">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>
+        ${stage===3?'<button type="button" data-stage="2" data-form-action="secondary">← Atrás</button>':''}
         ${stage < 4 ? `<button type="button" data-stage="${stage+1}" data-form-action="primary">Continuar</button>` :
           button(current.status === 'active' ? 'Publicar cambios' : 'Activar', 'activate', true, !mailReady || flowChecks(flow).some(c=>!c.ok&&!c.warning) ? 'disabled' : '')}</div></footer>` : ''}
       <dialog class="confirm-dialog auto-final-preview" aria-label="Vista final del correo"><button type="button" data-auto="close-preview" aria-label="Cerrar vista previa">×</button><div data-final-mail></div></dialog></section>`;
@@ -307,6 +339,14 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       return;
     }
     if (!flow) return;
+    if(target.matches('[data-rich-editor]')){readRichEditor(target);return;}
+    if(target.dataset.simpleButton){
+      const mail=selectedMail();let block=primaryButton(mail);
+      if(!block){if(mail.template.blocks.length>=30){report('Cada correo admite hasta 30 bloques.',true);return;}block={kind:'button',text:'',url:'',color:'#DCC9B4',align:'center',space:16,font:'Montserrat'};mail.template.brandColors=true;mail.template.blocks.push(block);}
+      block[target.dataset.simpleButton]=target.value;
+      if(!block.text.trim()&&!block.url.trim())mail.template.blocks.splice(mail.template.blocks.indexOf(block),1);
+      change();const paper=result.querySelector('[data-auto-paper]');if(paper)paper.innerHTML=mailPaper(mail);return;
+    }
     if (target.dataset.flow) flow[target.dataset.flow] = target.value;
     if (target.dataset.mail) {
       const mail = selectedMail();
@@ -315,7 +355,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     }
     if (target.dataset.blockField) {
       const block = selectedMail()?.template.blocks[selectedBlock];
-      if (block) block[target.dataset.blockField] = target.value;
+      if (block) {block[target.dataset.blockField] = target.value;if(target.dataset.blockField==='text')delete block.runs;}
       const paper = result.querySelector('[data-auto-paper]');
       if (paper) paper.innerHTML = mailPaper(selectedMail());
     }
@@ -359,11 +399,39 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       finally { busy = false; }
     }
   }
+  const rememberRichSelection=()=>{
+    const selection=window.getSelection(),editor=result.querySelector('[data-rich-editor]');
+    if(editor&&selection?.rangeCount&&editor.contains(selection.anchorNode)&&editor.contains(selection.focusNode))richRange=selection.getRangeAt(0).cloneRange();
+  };
+  result.addEventListener('mouseup',rememberRichSelection);
+  result.addEventListener('keyup',rememberRichSelection);
+  result.addEventListener('mousedown',event=>{
+    if(event.target.closest('[data-rich]')){rememberRichSelection();event.preventDefault();}
+  });
+  result.addEventListener('paste',event=>{
+    if(!event.target.closest('[data-rich-editor]'))return;
+    event.preventDefault();document.execCommand('insertText',false,event.clipboardData.getData('text/plain'));
+  });
   result.addEventListener('click', async event => {
     const homeLink = event.target.closest('a[href="#marketing-automation"]');
     if (homeLink) { await returnToList(event); return; }
     const target = event.target.closest('button');
     if (!target || target.disabled || busy) return;
+    if(target.dataset.rich){
+      const editor=result.querySelector('[data-rich-editor]'),kind=target.dataset.rich;
+      const panel=result.querySelector('.auto-rich-link');
+      if(kind==='cancel-link'){panel.hidden=true;return;}
+      if(kind==='link'){panel.hidden=false;panel.querySelector('input').focus();return;}
+      const url=kind==='apply-link'?https(result.querySelector('[data-rich-url]').value):'';
+      if(kind==='apply-link'&&!url){report('Añade un enlace HTTPS válido.',true);return;}
+      editor.focus();const selection=window.getSelection();
+      if(richRange&&editor.contains(richRange.commonAncestorContainer)){selection.removeAllRanges();selection.addRange(richRange);}
+      if(!selection.rangeCount||!editor.contains(selection.anchorNode)){const range=document.createRange();range.selectNodeContents(editor);range.collapse(false);selection.removeAllRanges();selection.addRange(range);}
+      if(kind==='name')document.execCommand('insertText',false,'{{nombre}}');
+      else if(kind==='apply-link'){if(selection.isCollapsed)document.execCommand('insertHTML',false,`<a href="${escape(url)}">${escape(url)}</a>`);else document.execCommand('createLink',false,url);panel.hidden=true;}
+      else document.execCommand(kind,false,null);
+      readRichEditor(editor);rememberRichSelection();return;
+    }
     if (target.dataset.actions || target.hasAttribute('data-sequence-menu')) {
       const menu = result.querySelector(`#${target.getAttribute('popovertarget')}`), bounds = target.getBoundingClientRect();
       const height=menu.querySelectorAll('button').length*44+12;
@@ -478,7 +546,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
         current=response.row;rows[rows.findIndex(row=>row.id===current.id)]=current;confirmation=true;metric=null;journal();render();await loadMetrics();
       } else if (action==='preview'||action==='test') {
         await save();
-        const response=await request(action==='test'?'flow-test':'flow-preview',{template:selectedMail().template});
+        const response=await request(action==='test'?'flow-test':'flow-preview',{template:selectedMail().template,...(action==='preview'&&stage===3&&!namedGreeting?{previewWithoutName:true}:{})});
         if(action==='test')report('Prueba aceptada por Gmail.');
         else {const dialog=result.querySelector('dialog');const frame=document.createElement('iframe');frame.title='Correo final';frame.setAttribute('sandbox','');frame.srcdoc=response.html;dialog.querySelector('[data-final-mail]').replaceChildren(frame);dialog.showModal();}
       } else if (action==='close-preview') target.closest('dialog').close();
