@@ -39,7 +39,6 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   const mails = () => flow?.steps.filter(step => step.kind === 'mail') || [];
   const header = () => {
     const workspace = root.closest('.home-workspace');
-    workspace?.querySelector('.section-action-header')?.classList.toggle('auto-compose-header',editing && stage===3 && !confirmation);
     const title = workspace?.querySelector('.section-action-header .home-welcome h1');
     const description = workspace?.querySelector('.section-action-header .home-welcome p');
     if (title) title.textContent = !editing ? 'Automatizaciones' : !flow ? 'Nueva automatización' : confirmation ? 'Automatización activa' : stage === 4 ? 'Revisar y activar' : flow.name || 'Nueva automatización';
@@ -258,7 +257,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const screen = !editing ? home() : !flow ? '' : confirmation ? confirmedScreen()
       : stage <= 1 ? triggerScreen() : stage === 2 ? sequenceScreen() : stage === 3 ? mailScreen() : reviewScreen();
     result.innerHTML = `<section class="auto-workspace">${editing ? `<a class="sales-back auto-back" href="#marketing-automation">← Volver a automatizaciones</a><div class="auto-editor-layout">${stepper()}<div class="auto-editor-content">${screen}</div></div>` : screen}
-      ${editing && flow && !confirmation ? `<footer class="auto-footer ${stage===3?'auto-compose-footer':''}">
+      ${editing && flow && !confirmation ? `<footer class="auto-footer">
         <span role="status" data-auto-saved>${revision === savedRevision && current.savedAt ? `Borrador guardado ${dateLabel(current.savedAt)}` : 'Cambios pendientes'}</span>
         <div>
         ${stage===3?'<button type="button" data-stage="2" data-form-action="secondary">← Atrás</button>':''}

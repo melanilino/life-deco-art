@@ -212,24 +212,24 @@
   .auto-mail-studio .auto-mail-settings { border-right: 1px solid var(--mkt-line); padding-right: 20px; }
 }
 .auto-review-screen { container-type: inline-size; min-width: 0; }
-.auto-compose { min-width: 0; --font-body: 16px; --font-helper: 14px; font-size: 16px; }
-#marketing-view .auto-compose > h2 { margin: 0 0 16px; font-size: 24px; font-weight: 500; }
-.auto-compose-mails { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
-#marketing-view .auto-compose-mails button { border: 1px solid var(--mkt-line); border-radius: 24px; background: var(--white); padding: 8px 16px; min-height: 40px; max-width: 100%; overflow-wrap: anywhere; }
+.auto-compose { min-width: 0; font-size: var(--font-body); }
+#marketing-view .auto-compose > h2 { margin: 0 0 14px; font-size: var(--font-section-title); font-weight: 500; }
+.auto-compose-mails { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+#marketing-view .auto-compose-mails button { border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); background: var(--white); padding: 6px 10px; min-height: 36px; max-width: 100%; overflow-wrap: anywhere; }
 #marketing-view .auto-compose-mails button[aria-pressed=true] { background: var(--black); border-color: var(--black); color: var(--white); }
 .auto-compose-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; align-items: start; }
 .auto-compose-fields, .auto-compose-grid > .auto-preview { min-width: 0; }
-.auto-compose-fields > .auto-field { margin: 0 0 20px; }
-#marketing-view .auto-compose .auto-field { font-weight: 400; font-size: 16px; }
-#marketing-view .auto-compose .auto-field input, #marketing-view .auto-compose-greeting select { font-size: 16px; }
-.auto-compose .auto-field input { min-height: 42px; }
+.auto-compose-fields > .auto-field { margin: 0 0 16px; }
+#marketing-view .auto-compose .auto-field { font-weight: 400; font-size: var(--font-body); }
+#marketing-view .auto-compose .auto-field input, #marketing-view .auto-compose-greeting select { font-size: var(--font-body); }
+.auto-compose .auto-field input { min-height: 44px; }
 .auto-rich-shell { margin-top: 8px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); overflow: hidden; }
 .auto-rich-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 4px 10px; border-bottom: 1px solid var(--mkt-line); }
 #marketing-view .auto-rich-toolbar button { border: 0; background: transparent; min-width: 34px; min-height: 36px; padding: 6px; }
 .auto-rich-toolbar strong, .auto-rich-toolbar em { font-size: 18px; }
 .auto-rich-toolbar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 #marketing-view .auto-rich-toolbar .auto-insert-name { border-left: 1px solid var(--mkt-line); border-radius: 0; margin-left: 6px; padding-left: 16px; color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; font-size: var(--font-helper); }
-.auto-rich-editor { min-height: 128px; padding: 12px 16px; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--font-body); line-height: 1.5; }
+.auto-rich-editor { min-height: 112px; padding: 10px 12px; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--font-body); line-height: 1.5; }
 .auto-rich-shell:focus-within { border-color: var(--brown); }
 .auto-rich-editor a { color: var(--text-muted); text-decoration: underline; }
 .auto-rich-link { padding: 12px; border-bottom: 1px solid var(--mkt-line); }
@@ -241,42 +241,23 @@
 #marketing-view .auto-compose .auto-preview-heading { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; min-height: 40px; }
 #marketing-view .auto-compose .auto-preview-heading h3 { margin: 0 auto 0 0; font-size: var(--font-body); font-weight: 500; }
 .auto-compose .auto-preview-size { margin-left: auto; }
-#marketing-view .auto-compose .mkt-stage-scroll { padding: 20px; border-radius: var(--surface-radius); overflow-x: hidden; }
+#marketing-view .auto-compose .mkt-stage-scroll { padding: 16px; border-radius: var(--surface-radius); overflow-x: hidden; }
 .auto-compose .auto-paper { width: 100%; min-width: 0; max-width: 600px; margin: 0 auto; }
 .auto-compose .auto-paper.is-mobile { max-width: 320px; }
 .auto-compose .auto-paper .mkt-block { overflow-wrap: anywhere; }
 .auto-compose .auto-paper img { max-width: 100%; height: auto; }
 .auto-compose .auto-paper a { color: inherit; }
 .auto-compose .mkt-email-button { border-radius: var(--surface-radius); }
-.auto-compose .mkt-email-title { font-size: 28px; }
-#marketing-view .auto-compose .mkt-email-intro p { text-align: left; font-size: 16px; font-weight: 500; }
+.auto-compose .mkt-email-title { font-size: 23px; }
+#marketing-view .auto-compose .mkt-email-intro p { text-align: left; font-size: var(--font-body); font-weight: 400; }
 #marketing-view .auto-compose-greeting { display: block; margin-top: 16px; font-size: var(--font-helper); }
 #marketing-view .auto-compose-greeting select { width: 100%; max-width: 100%; margin-top: 6px; }
 .auto-compose-extras { margin-top: 20px; }
 .auto-compose-extras > summary { display: flex; align-items: center; justify-content: space-between; list-style: none; cursor: pointer; }
 .auto-compose-extras > summary svg { width: 24px; height: 24px; }
-#marketing-view .auto-compose-footer button[data-form-action=primary] { background: #DCC9B4; border-color: #DCC9B4; color: var(--black); font-weight: 400; }
 @container (min-width: 700px) {
   .auto-compose-grid { grid-template-columns: minmax(0,.95fr) minmax(0,1.1fr); gap: 20px; }
   .auto-compose-fields { padding-right: 20px; border-right: 1px solid var(--mkt-line); }
-}
-@media (min-width: 1100px) {
-  .home-workspace:has(.auto-compose-header) { --hub-content-gutter: 24px; --hub-content-start: 20px; }
-  .auto-compose-header { grid-template-columns: 1fr 1.2fr 1fr; min-height: 64px; padding: 16px 24px; }
-  .auto-compose-header::after { display: none; }
-  .auto-compose-header .home-welcome { display: contents; }
-  .auto-compose-header .home-welcome h1 { grid-column: 2; grid-row: 1; text-align: center; font-size: 24px; font-weight: 500; margin: 0; }
-  .auto-compose-header .home-welcome .sales-back { grid-column: 1; grid-row: 1; margin: 0; }
-  .auto-compose-header .view-header-controls { grid-column: 3; grid-row: 1; justify-self: end; position: relative; gap: 0; padding: 0 12px; border: 1px solid var(--mkt-line); border-radius: 24px; background: var(--white); }
-  .auto-compose-header .current-view-control { display: contents; }
-  .auto-compose-header .current-view-control > span { position: absolute; right: calc(100% + 10px); white-space: nowrap; font-size: var(--font-helper); }
-  .auto-compose-header .current-view-menu summary { min-width: 0; min-height: 36px; padding: 4px 0; }
-  .auto-compose-header .current-view-menu summary svg { display: none; }
-  .auto-compose-header .home-notes-trigger { padding: 4px 0; min-height: 36px; background: transparent; border: 0; }
-  .auto-compose-header .home-notes-trigger svg { display: none; }
-  .auto-compose-header .home-notes-trigger::before { content: '/'; padding: 0 6px; }
-  .auto-editor-layout:has(.auto-compose) { grid-template-columns: 180px minmax(0,1fr); gap: 20px; padding: 20px; }
-  .auto-editor-content:has(.auto-compose) { padding-left: 20px; }
 }
 @media (max-width: 540px) {
   .auto-compose-button > div { grid-template-columns: minmax(0,1fr); }
