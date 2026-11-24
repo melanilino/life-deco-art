@@ -229,7 +229,8 @@
 #marketing-view .auto-rich-toolbar button { border: 0; background: transparent; min-width: 34px; min-height: 36px; padding: 6px; }
 .auto-rich-toolbar strong, .auto-rich-toolbar em { font-size: 18px; }
 .auto-rich-toolbar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-#marketing-view .auto-rich-toolbar .auto-insert-name { border-left: 1px solid var(--mkt-line); border-radius: 0; margin-left: 6px; padding-left: 16px; color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; font-size: var(--font-helper); }
+#marketing-view .auto-rich-toolbar .auto-insert-name { border-left: 1px solid var(--mkt-line); border-radius: 0; margin-left: 6px; padding-left: 16px; color: var(--text-muted); text-decoration: none; text-underline-offset: 3px; font-size: var(--font-helper); }
+#marketing-view .auto-rich-toolbar .auto-insert-name:hover { text-decoration: underline; }
 .auto-rich-editor { min-height: 112px; padding: 10px 12px; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--font-body); font-weight: 400; line-height: 1.5; }
 .auto-rich-shell:focus-within { border-color: var(--brown); }
 .auto-rich-editor a { color: var(--text-muted); text-decoration: underline; }
