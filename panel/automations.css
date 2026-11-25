@@ -292,9 +292,9 @@
 .auto-review-heading p { margin: 0; overflow-wrap: anywhere; }
 .auto-review-heading .mkt-status { flex-shrink: 0; }
 #marketing-view .auto-review-overview h3 { margin: 0 0 16px; font-size: var(--font-section-title); font-weight: 500; }
-.auto-flow-summary { display: flex; align-items: center; gap: 32px; list-style: none; padding: 16px 20px; margin: 0; overflow-x: auto; background: var(--brown-soft); border-radius: var(--surface-radius); }
+.auto-flow-summary { display: flex; align-items: center; gap: 48px; list-style: none; padding: 16px 20px; margin: 0; overflow-x: auto; background: var(--brown-soft); border-radius: var(--surface-radius); }
 .auto-flow-summary > li { position: relative; flex: 0 0 auto; max-width: 280px; min-width: 0; padding: 0; align-content: center; text-align: left; }
-.auto-summary-arrow { position: absolute; left: -28px; top: calc(50% - 10px); width: 20px; height: 20px; color: var(--text-muted); }
+.auto-summary-arrow { position: absolute; left: -34px; top: calc(50% - 10px); width: 20px; height: 20px; color: var(--text-muted); }
 .auto-summary-arrow svg { display: block; width: 20px; height: 20px; transform: rotate(-90deg); fill: none; stroke: currentColor; stroke-width: 1.8; }
 .auto-flow-summary strong { font-weight: 500; overflow-wrap: anywhere; }
 #marketing-view .auto-flow-summary p { margin: 6px 0 0; color: var(--text-muted); font-size: var(--font-helper); overflow-wrap: anywhere; }

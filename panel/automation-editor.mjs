@@ -242,7 +242,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${!pending || !mailReady?`<p class="auto-review-readiness" role="status">${readiness}</p>`:''}</section>
       <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Prueba del correo</h3><div class="auto-review-mail" ${mails().length<=1?'hidden':''}><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
         </div><div class="auto-review-destination"><span>Destino</span><p>Correo de administración</p></div>
-        <div class="auto-review-test-actions">${button('Enviar prueba','test',true,mailReady && selectedMail() ? '' : 'disabled')}
+        <div class="auto-review-test-actions">${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}
         <button type="button" data-auto="preview" data-form-action="text" class="auto-review-preview-link" ${selectedMail() ? '' : 'disabled'}>Revisar correo</button></div>
         </section></div></section>`;
   }
