@@ -23,8 +23,12 @@
 :is(a, button, summary):not(:disabled):is(.lda-active, .lda-underline-persistent, :focus-visible) > .lda-underline-label::after {
   clip-path: inset(0);
 }
+:is(a, button, summary):not(:disabled):not([aria-disabled="true"]):focus-visible > .lda-underline-label {
+  color: var(--lda-text-hover-color, #1C1A17);
+}
 @media (hover: hover) and (pointer: fine) {
   :is(a, button, summary):hover:not(:disabled) > .lda-underline-label::after { clip-path: inset(0); }
+  :is(a, button, summary):hover:not(:disabled):not([aria-disabled="true"]) > .lda-underline-label { color: var(--lda-text-hover-color, #1C1A17); }
 }
 @media (prefers-reduced-motion: reduce) {
   .lda-underline-label::after { transition: none; }

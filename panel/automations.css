@@ -230,7 +230,6 @@
 .auto-rich-toolbar strong, .auto-rich-toolbar em { font-size: 18px; }
 .auto-rich-toolbar svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
 #marketing-view .auto-rich-toolbar .auto-insert-name { border-left: 1px solid var(--mkt-line); border-radius: 0; margin-left: 6px; padding-left: 16px; color: var(--text-muted); text-decoration: none; text-underline-offset: 3px; font-size: var(--font-helper); }
-#marketing-view .auto-rich-toolbar .auto-insert-name:hover { text-decoration: underline; }
 .auto-rich-editor { min-height: 112px; padding: 10px 12px; outline: none; white-space: pre-wrap; overflow-wrap: anywhere; font-size: var(--font-body); font-weight: 400; line-height: 1.5; }
 .auto-rich-shell:focus-within { border-color: var(--brown); }
 .auto-rich-editor a { color: var(--text-muted); text-decoration: underline; }
@@ -321,7 +320,6 @@
 .auto-review-destination > span { color: var(--text-muted); font-size: var(--font-helper); }
 #marketing-view .auto-review-destination p { margin: 4px 0 0; }
 #marketing-view .auto-review-screen .auto-review-preview-link { display: flex; justify-content: flex-start; width: fit-content; margin: 0; padding: 0; min-height: 44px; text-align: left; text-underline-offset: 3px; }
-#marketing-view .auto-review-preview-link:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
 .auto-review-testing { padding-top: 24px !important; border-top: 1px solid var(--mkt-line); }
 #marketing-view .auto-review-test-note { margin: 16px 0 0; font-size: var(--font-helper); }
 .auto-test-details { margin-top: 32px; padding: 8px 14px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
@@ -348,7 +346,6 @@
 #marketing-view .auto-review-screen .auto-checks button { padding: 0; min-height: 44px; justify-content: flex-end; }
 .auto-review-screen .auto-checks li { align-items: center; }
 .auto-review-screen .auto-review-optional .auto-checks li { padding: 12px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
-#marketing-view .auto-checks button:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
 @container (min-width: 680px) {
   .auto-review-grid { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
   .auto-review-testing { padding: 0 0 0 24px !important; border-top: 0; border-left: 1px solid var(--mkt-line); }

@@ -259,3 +259,6 @@ Notas y Mis frases reservan el espacio del scroll en ambos bordes para que sus m
 ### Acceso al Hub
 
 Replica la tarjeta de acceso del CMS con el título «HUB — gestión», Montserrat y Camelia. Por fidelidad al CMS, conserva su título de 26 px, la caligrafía de 42 px y el radio exterior de 8 px. La confirmación de recuperación se muestra en la tarjeta. Al ingresar, el botón muestra «Ingresando…» hasta que se pueda abrir la vista solicitada.
+
+### Interacción de acciones de texto · 25 de noviembre de 2026
+Los enlaces y acciones de texto que usan el componente de subrayado comparten negro cálido y línea animada al pasar el cursor o enfocar con teclado. El Hub usa lda-text-action y lda-underline-label; no debe añadir subrayados nativos independientes por sección. Se preservan foco, área de interacción, estado deshabilitado y clic delegado. Sobre fondos oscuros de la web pública, el mismo componente usa blanco mediante --lda-text-hover-color para mantener contraste. Los botones con fondo y la navegación conservan su jerarquía propia.

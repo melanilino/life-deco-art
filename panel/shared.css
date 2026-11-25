@@ -754,6 +754,11 @@ body .home-main .agenda-task-head {
 
 /* Keep text actions as the pointer target for delegated clicks. */
 #app .lda-underline-label { pointer-events: none; }
+#app :is(a, button, summary).lda-text-action:not(:disabled):not([aria-disabled="true"]):is(:hover, :focus-visible),
+#app .hub-login-recover:not(:disabled):has(> .lda-underline-label):is(:hover, :focus-visible) {
+  color: var(--black);
+  text-decoration: none;
+}
 #app .hub-login .hub-login-recover:hover:not(:disabled):has(> .lda-underline-label) {
   text-decoration: none;
 }

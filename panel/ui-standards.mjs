@@ -94,11 +94,17 @@ const textActions = [
  '.finance-metric-pair a',
  '.stats-details summary',
  '.agenda-feedback button',
+ '.sales-back',
+ '.mkt-editor-back',
+ '.auto-checks button',
+ '.auto-insert-name',
+ 'button.link',
  '[data-form-action="text"]'
 ].join(',');
 
 function enhanceTextActions(root) {
  for (const action of root.querySelectorAll(textActions)) {
+  action.classList.add('lda-text-action');
   const text = Array.from(action.childNodes).find(node => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
   if (!text || action.querySelector(':scope > .lda-underline-label')) continue;
   const label = document.createElement('span');
