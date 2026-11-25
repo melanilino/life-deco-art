@@ -344,10 +344,10 @@
 .auto-checks .is-warning > span { color: var(--brown); }
 #marketing-view .auto-checks button { padding: 0 4px; min-height: 28px; border: 0; background: transparent; text-decoration: none; text-underline-offset: 3px; color: var(--text-muted); }
 .auto-pending-checks { display: grid; gap: 8px; }
-.auto-pending-checks li { padding: 12px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); align-items: center; }
+.auto-pending-checks li { padding: 9px 0; align-items: center; }
 #marketing-view .auto-review-screen .auto-checks button { padding: 0; min-height: 44px; justify-content: flex-end; }
 .auto-review-screen .auto-checks li { align-items: center; }
-.auto-review-screen .auto-review-optional .auto-checks li { padding-inline: 13px; }
+.auto-review-screen .auto-review-optional .auto-checks li { padding-inline: 0; }
 #marketing-view .auto-checks button:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
 @container (min-width: 680px) {
   .auto-review-grid { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
