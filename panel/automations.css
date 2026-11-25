@@ -29,6 +29,7 @@
 #marketing-view .auto-start-note { margin-top: 14px; color: var(--text-muted); font-size: var(--font-helper); }
 .auto-list-filters { display: grid; grid-template-columns: minmax(0, 2fr) minmax(170px, 1fr) auto; align-items: center; gap: 12px; margin-bottom: 16px; }
 .auto-list { min-width: 590px; }
+#marketing-view .auto-list td[colspan="5"] { text-align: center; }
 #marketing-view .auto-list button { border: 0; background: transparent; text-align: left; padding: 0; }
 .auto-list th:last-child { width: 90px; }
 #marketing-view .auto-list .mkt-contact-actions { padding: 0; text-align: center; }
