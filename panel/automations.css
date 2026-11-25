@@ -292,15 +292,16 @@
 .auto-review-heading p { overflow-wrap: anywhere; }
 .auto-review-heading .mkt-status { flex-shrink: 0; }
 #marketing-view .auto-review-overview h3 { margin: 0 0 16px; font-size: var(--font-section-title); font-weight: 500; }
-.auto-flow-summary { display: flex; gap: 32px; list-style: none; padding: 0; margin: 0; overflow-x: auto; }
-.auto-flow-summary > li { position: relative; flex: 1 0 180px; min-width: 0; padding: 20px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); align-content: center; }
-.auto-flow-summary > li + li::before { content: ''; position: absolute; width: 32px; left: -33px; top: 50%; border-top: 1px solid var(--border); }
+.auto-flow-summary { display: flex; align-items: center; gap: 32px; list-style: none; padding: 16px 20px; margin: 0; overflow-x: auto; background: var(--brown-soft); border-radius: var(--surface-radius); }
+.auto-flow-summary > li { position: relative; flex: 1 0 170px; min-width: 0; padding: 0; align-content: center; }
+.auto-summary-arrow { position: absolute; left: -28px; top: calc(50% - 10px); width: 20px; height: 20px; color: var(--text-muted); }
+.auto-summary-arrow svg { display: block; width: 20px; height: 20px; transform: rotate(-90deg); fill: none; stroke: currentColor; stroke-width: 1.8; }
 .auto-flow-summary strong { font-weight: 500; overflow-wrap: anywhere; }
 #marketing-view .auto-flow-summary p { margin: 6px 0 0; color: var(--text-muted); font-size: var(--font-helper); overflow-wrap: anywhere; }
 .auto-flow-summary > .auto-flow-wait { flex-basis: 140px; text-align: center; }
 #marketing-view .auto-review-timing { max-width: none; font-size: var(--font-helper); }
-.auto-review-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; align-items: stretch; margin-top: 32px; }
-.auto-review-grid > section { min-width: 0; padding: 20px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
+.auto-review-grid { display: grid; grid-template-columns: minmax(0,1fr); gap: 24px; align-items: start; margin-top: 28px; }
+.auto-review-grid > section { min-width: 0; padding: 0; }
 #marketing-view .auto-review-grid h3 { margin: 0 0 12px; font-size: var(--font-section-title); font-weight: 500; }
 .auto-pending-heading { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .auto-pending-count { display: inline-grid; place-items: center; min-width: 30px; height: 26px; padding: 0 8px; border-radius: var(--surface-radius); background: var(--brown-soft); font-size: var(--font-body); }
@@ -316,6 +317,12 @@
 .auto-review-mail .auto-field { flex: 1 1 190px; margin: 0; }
 .auto-review-test-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 #marketing-view .auto-review-test-actions button { flex: 0 1 auto; }
+.auto-review-destination { margin-top: 20px; }
+.auto-review-destination > span { color: var(--text-muted); font-size: var(--font-helper); }
+#marketing-view .auto-review-destination p { margin: 4px 0 0; }
+#marketing-view .auto-review-preview-link { display: block; margin-top: 12px; padding-inline: 0; min-height: 32px; text-align: left; text-underline-offset: 3px; }
+#marketing-view .auto-review-preview-link:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
+.auto-review-testing { padding-top: 24px !important; border-top: 1px solid var(--mkt-line); }
 #marketing-view .auto-review-test-note { margin: 16px 0 0; font-size: var(--font-helper); }
 .auto-test-details { margin-top: 32px; padding: 8px 14px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); }
 .auto-test-details > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; list-style: none; }
@@ -340,13 +347,14 @@
 .auto-pending-checks li { padding: 12px; border: 1px solid var(--mkt-line); border-radius: var(--surface-radius); align-items: center; }
 #marketing-view .auto-checks button:not(:disabled):is(:hover,:focus-visible) { text-decoration: underline; }
 @container (min-width: 680px) {
-  .auto-review-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .auto-review-grid { grid-template-columns: minmax(0,1.35fr) minmax(0,1fr); }
+  .auto-review-testing { padding: 0 0 0 24px !important; border-top: 0; border-left: 1px solid var(--mkt-line); }
 }
 @container (max-width: 599px) {
   .auto-flow-summary { flex-direction: column; gap: 20px; overflow: visible; }
-  .auto-flow-summary > li, .auto-flow-summary > .auto-flow-wait { flex-basis: auto; text-align: left; }
-  .auto-flow-summary > li + li::before { width: 0; height: 20px; left: 24px; top: -21px; border-top: 0; border-left: 1px solid var(--border); }
-  .auto-review-grid > section { padding: 16px; }
+  .auto-flow-summary > li, .auto-flow-summary > .auto-flow-wait { flex-basis: auto; text-align: left; width: 100%; }
+  .auto-summary-arrow { left: 0; top: -20px; }
+  .auto-summary-arrow svg { transform: none; }
 }
 .auto-footer { position: sticky; bottom: 0; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 0; border-top: 1px solid var(--mkt-line); background: var(--cream); }
 .auto-footer > div { display: flex; gap: 8px; margin-left: auto; }

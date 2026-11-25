@@ -125,9 +125,10 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   }
   function timeline() {
     const units={minutes:['minuto','minutos'],hours:['hora','horas'],days:['día','días']};
-    return `<ol class="auto-flow-summary" aria-label="Resumen del flujo"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${flow.steps.map(step=>step.kind==='wait'
-      ? `<li class="auto-flow-wait"><strong>Esperar ${step.duration} ${units[step.unit][step.duration===1?0:1]}</strong>${step.time?`<p>A las ${escape(step.time)} · República Dominicana</p>`:''}</li>`
-      : `<li><strong>${escape(step.name||'Correo')}</strong><p>${escape(step.template.subject||'Correo sin asunto')}</p></li>`).join('')}</ol>`;
+    const arrow=`<span class="auto-summary-arrow" aria-hidden="true">${icon('chevron')}</span>`;
+    return `<ol class="auto-flow-summary" aria-label="Resumen del flujo"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${flow.steps.map((step,index)=>step.kind==='wait'
+      ? `<li class="auto-flow-wait">${arrow}<strong>Esperar ${step.duration} ${units[step.unit][step.duration===1?0:1]}</strong>${step.time?`<p>A las ${escape(step.time)} · República Dominicana</p>`:''}</li>`
+      : `${index===0||flow.steps[index-1].kind==='mail'?`<li class="auto-flow-wait">${arrow}<strong>Sin espera</strong></li>`:''}<li>${arrow}<strong>Enviar 1 correo</strong><p>${escape(step.name||'Correo')} · ${escape(step.template.subject||'Sin asunto')}</p></li>`).join('')}</ol>`;
   }
   function sequenceScreen() {
     return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${sequenceTimeline()}<div class="auto-sequence-add">${button(`${icon('plus')} Añadir correo`,'add-mail')}</div></section>`;
@@ -233,15 +234,16 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const readiness = !mailReady ? 'El buzón necesita configuración antes de activar.'
       : current.status === 'active' ? 'Los cambios están listos para publicar.' : `Todo está listo para activar. El envío ${current.status === 'paused' ? 'seguirá pausado' : 'seguirá desactivado'} hasta que pulses Activar.`;
     return `<section class="auto-review-screen" aria-label="Revisión de la automatización"><header class="auto-review-heading"><div><h2>Revisar y activar</h2><p class="auto-muted">${escape(flow.name)}</p></div>${badge()}</header>
-      <div class="auto-review-overview"><h3>Resumen del flujo</h3>${timeline()}</div>
-      <div class="auto-review-grid"><section class="auto-review-checklist" aria-label="Comprobaciones"><h3 class="auto-pending-heading">${required.length?'Pendiente para activar':'Todo listo para activar'}<span class="auto-pending-count">${required.length}</span></h3>
+      <div class="auto-review-overview">${timeline()}</div>
+      <div class="auto-review-grid"><section class="auto-review-checklist" aria-label="Comprobaciones"><h3 class="auto-pending-heading">${required.length?`${required.length} ${required.length===1?'pendiente':'pendientes'} para activar`:'Todo listo para activar'}</h3>
       <p class="auto-review-intro">${required.length?'Completa los datos pendientes para activar.':'Las comprobaciones obligatorias están completas.'}</p><ul class="auto-checks auto-pending-checks">${checkRows(required)}</ul>
       ${optional.length?`<div class="auto-review-optional"><ul class="auto-checks">${checkRows(optional)}</ul></div>`:''}
       <details class="auto-completed-checks"><summary>Comprobaciones completadas ${icon('chevron')}</summary><ul class="auto-checks">${checkRows(checks.filter(check=>check.ok))}</ul></details>
       ${!pending || !mailReady?`<p class="auto-review-readiness" role="status">${readiness}</p>`:''}</section>
-      <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Revisar el correo</h3><div class="auto-review-mail" ${mails().length<=1?'hidden':''}><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
-        </div><div class="auto-review-test-actions">${button('Vista previa','preview',false,selectedMail() ? '' : 'disabled')}${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
-        <p class="auto-muted auto-review-test-note">Destino de prueba: tu correo de administración.</p>
+      <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Prueba del correo</h3><div class="auto-review-mail" ${mails().length<=1?'hidden':''}><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
+        </div><div class="auto-review-destination"><span>Destino</span><p>Correo de administración</p></div>
+        <div class="auto-review-test-actions">${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
+        <button type="button" data-auto="preview" data-form-action="text" class="auto-review-preview-link" ${selectedMail() ? '' : 'disabled'}>Revisar correo</button>
         </section></div></section>`;
   }
   function confirmedScreen() {
