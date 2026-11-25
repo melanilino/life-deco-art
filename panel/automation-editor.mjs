@@ -229,7 +229,7 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
     const required = checks.filter(check => !check.ok && !check.warning);
     const optional = checks.filter(check => !check.ok && check.warning);
     const checkLabels = {name:'Añadir nombre',origin:'Seleccionar orígenes',mail:'Añadir un correo',subject:'Añadir asunto',blocks:'Completar contenido',links:'Corregir enlaces'};
-    const checkRows = entries => entries.map(check => `<li class="${check.ok?'is-ok':check.warning?'is-warning':'is-error'}"><span role="img" aria-label="${check.ok?'Completado':check.warning?'Opcional':'Pendiente'}">${check.ok?icon('check'):'!'}</span><div>${checkLabels[check.key]&&!check.ok?checkLabels[check.key]:check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${check.warning?'<small class="auto-check-note">Opcional · no impide activar</small>':''}</div>${!check.ok?`<button type="button" data-check="${check.key}" data-stage="${check.stage}">Corregir <span aria-hidden="true">→</span></button>`:''}</li>`).join('');
+    const checkRows = entries => entries.map(check => `<li class="${check.ok?'is-ok':check.warning?'is-warning':'is-error'}"><span role="img" aria-label="${check.ok?'Completado':check.warning?'Opcional':'Pendiente'}">${check.ok?icon('check'):'!'}</span><div>${checkLabels[check.key]&&!check.ok?checkLabels[check.key]:check.label}${!check.ok&&affectedMails(check.key).length?`<small class="auto-check-note">${affectedMails(check.key).map(mail=>escape(mail.name||'Correo')).join(', ')}</small>`:''}${check.warning?'<small class="auto-check-note">Opcional · no impide activar</small>':''}</div>${!check.ok?`<button type="button" data-check="${check.key}" data-stage="${check.stage}">Corregir</button>`:''}</li>`).join('');
     const pending = checks.some(check => !check.ok && !check.warning);
     const readiness = !mailReady ? 'El buzón necesita configuración antes de activar.'
       : current.status === 'active' ? 'Los cambios están listos para publicar.' : `Todo está listo para activar. El envío ${current.status === 'paused' ? 'seguirá pausado' : 'seguirá desactivado'} hasta que pulses Activar.`;
@@ -242,8 +242,8 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
       ${!pending || !mailReady?`<p class="auto-review-readiness" role="status">${readiness}</p>`:''}</section>
       <section class="auto-review-testing" aria-label="Pruebas del correo"><h3>Prueba del correo</h3><div class="auto-review-mail" ${mails().length<=1?'hidden':''}><label class="auto-field">Correo a revisar<select data-mail-select aria-label="Correo de la secuencia">${selectOptions(mails().map(mail => [mail.id,mail.name || mail.template.subject || 'Correo']),flow.selectedMail)}</select></label>
         </div><div class="auto-review-destination"><span>Destino</span><p>Correo de administración</p></div>
-        <div class="auto-review-test-actions">${button('Enviar prueba','test',false,mailReady && selectedMail() ? '' : 'disabled')}</div>
-        <button type="button" data-auto="preview" data-form-action="text" class="auto-review-preview-link" ${selectedMail() ? '' : 'disabled'}>Revisar correo</button>
+        <div class="auto-review-test-actions">${button('Enviar prueba','test',true,mailReady && selectedMail() ? '' : 'disabled')}
+        <button type="button" data-auto="preview" data-form-action="text" class="auto-review-preview-link" ${selectedMail() ? '' : 'disabled'}>Revisar correo</button></div>
         </section></div></section>`;
   }
   function confirmedScreen() {
