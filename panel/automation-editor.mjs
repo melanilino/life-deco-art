@@ -126,9 +126,9 @@ export function bindAutomations(root, request, report, ask, { user, icon, getSta
   function timeline() {
     const units={minutes:['minuto','minutos'],hours:['hora','horas'],days:['día','días']};
     const arrow=`<span class="auto-summary-arrow" aria-hidden="true">${icon('chevron')}</span>`;
-    return `<ol class="auto-flow-summary" aria-label="Resumen del flujo"><li><strong>${triggerLabel(flow)}</strong><p>${flow.trigger==='subscription'?flow.origins.map(originText).join(' · ')||'Elige al menos un origen':'Contacto con suscripción activa'}</p></li>${flow.steps.map((step,index)=>step.kind==='wait'
-      ? `<li class="auto-flow-wait">${arrow}<strong>Esperar ${step.duration} ${units[step.unit][step.duration===1?0:1]}</strong>${step.time?`<p>A las ${escape(step.time)} · República Dominicana</p>`:''}</li>`
-      : `${index===0||flow.steps[index-1].kind==='mail'?`<li class="auto-flow-wait">${arrow}<strong>Sin espera</strong></li>`:''}<li>${arrow}<strong>Enviar 1 correo</strong><p>${escape(step.name||'Correo')} · ${escape(step.template.subject||'Sin asunto')}</p></li>`).join('')}</ol>`;
+    return `<ol class="auto-flow-summary" aria-label="Resumen del flujo"><li><strong>${triggerLabel(flow)}</strong></li>${flow.steps.map((step,index)=>step.kind==='wait'
+      ? `<li class="auto-flow-wait">${arrow}<strong>Esperar ${step.duration} ${units[step.unit][step.duration===1?0:1]}${step.time?` a las ${escape(step.time)}`:''}</strong></li>`
+      : `${index===0||flow.steps[index-1].kind==='mail'?`<li class="auto-flow-wait">${arrow}<strong>Sin espera</strong></li>`:''}<li>${arrow}<strong>Enviar 1 correo</strong></li>`).join('')}</ol>`;
   }
   function sequenceScreen() {
     return `<section class="auto-sequence-screen" aria-label="Secuencia de la automatización"><header class="auto-sequence-heading"><h2>Secuencia</h2>${badge()}</header>${sequenceTimeline()}<div class="auto-sequence-add">${button(`${icon('plus')} Añadir correo`,'add-mail')}</div></section>`;
